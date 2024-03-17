@@ -12,7 +12,7 @@ useHead({
 <template>
   <section id="page-demo" class="pa-2 pa-md-4">
     <h1>@home</h1>
-    <template v-for="n in 10" :key="n">
+    <template v-for="n in 5" :key="n">
       <p class="mb-4 indent-4">
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci
         temporibus quos nesciunt at quod voluptates obcaecati doloribus magnam
