@@ -89,7 +89,15 @@ export default defineNuxtPlugin((nuxtApp) => {
         dark,
       },
       variations: {
-        colors: ["primary", "secondary", "accent1", "accent2", "complement"],
+        colors: [
+          "primary",
+          "secondary",
+          "accent1",
+          "accent2",
+          "complement",
+          "primary2",
+          "primary3",
+        ],
         lighten: 2,
         darken: 2,
       },

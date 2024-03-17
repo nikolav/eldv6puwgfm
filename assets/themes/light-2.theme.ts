@@ -1,10 +1,15 @@
 import { type ThemeDefinition } from "vuetify";
-import colorsVuetify from "vuetify/util/colors";
+// import colorsVuetify from "vuetify/util/colors";
 import chroma from "chroma-js";
 import { THEME_ACCENT_SHIFT } from "@/config";
 
-const primary = colorsVuetify.blueGrey.darken3; // "#37474F"
+// const primary = colorsVuetify.blueGrey.darken3; // "#37474F"
+const primary = "0F5359"; // "#37474F"
 // primary => accent1, accent2, complement
+
+const primary2 = "C1DFD4";
+const primary3 = "FFD21F"; // "#37474F"
+const secondary = "333F40";
 
 const pHsla = chroma(primary).hsl();
 const hueShift = (amount: number) => (n: number, i: number) =>
@@ -31,7 +36,8 @@ export const light2: ThemeDefinition = {
     background: "#FFFFFF",
     surface: "#FFFFFF",
     primary,
-    secondary: "#e2e2e2",
+    // secondary: "#e2e2e2",
+    secondary,
     error: "#B00020",
     info: "#2196F3",
     success: "#4CAF50",
@@ -40,6 +46,9 @@ export const light2: ThemeDefinition = {
     accent1,
     accent2,
     complement,
+    //
+    primary2,
+    primary3,
   },
   // variables: {
   //   "border-color": "#000000",
