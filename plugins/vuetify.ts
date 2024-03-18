@@ -10,6 +10,21 @@ import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { light2, dark } from "@/assets/themes";
 
 import {
+  IconVocePovrce,
+  IconMeso,
+  IconMlecno,
+  IconUlje,
+  IconZacin,
+  IconMed,
+  IconZimnica,
+  IconPice,
+  IconBrasno,
+  IconKuhinja,
+  IconRiba,
+  IconSokovi,
+} from "@/components/icons/kantar-rs";
+
+import {
   IconShoppingCartOutline,
   IconShareOffFilled,
   IconTaskShareOutlined,
@@ -93,11 +108,15 @@ export default defineNuxtPlugin((nuxtApp) => {
         colors: [
           "primary",
           "secondary",
+          "success",
+          "info",
+          "warning",
+          "error",
+          "primary2",
+          "primary3",
           "accent1",
           "accent2",
           "complement",
-          "primary2",
-          "primary3",
         ],
         lighten: 2,
         darken: 2,
@@ -149,6 +168,20 @@ export default defineNuxtPlugin((nuxtApp) => {
         // # override
         menu: IconMenu,
         // # add: <VIcon icon="$other">
+        // # @icons:kantar.rs
+        iconMeso: IconMeso,
+        iconVocePovrce: IconVocePovrce,
+        iconMlecno: IconMlecno,
+        iconUlje: IconUlje,
+        iconZacin: IconZacin,
+        iconMed: IconMed,
+        iconZimnica: IconZimnica,
+        iconPice: IconPice,
+        iconBrasno: IconBrasno,
+        iconKuhinja: IconKuhinja,
+        iconRiba: IconRiba,
+        iconSokovi: IconSokovi,
+        //
         iconShoppingCart: IconShoppingCartOutline,
         iconShareOff: IconShareOffFilled,
         iconAttach: IconAttach,

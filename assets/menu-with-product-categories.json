@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Bašta",
+    "icon": "$iconVocePovrce",
+    "color": "info"
+  },
+  {
+    "title": "Meso",
+    "icon": "$iconMeso",
+    "color": "accent1"
+  },
+  {
+    "title": "Mleko",
+    "icon": "$iconMlecno",
+    "color": "warning-darken-1"
+  },
+  {
+    "title": "Ulje",
+    "icon": "$iconUlje",
+    "color": "accent2-lighten-1"
+  },
+  {
+    "title": "Začin",
+    "icon": "$iconZacin",
+    "color": "complement"
+  },
+  {
+    "title": "Med",
+    "icon": "$iconMed",
+    "color": "error-lighten-2"
+  },
+  {
+    "title": "Zimnica",
+    "icon": "$iconZimnica",
+    "color": "success-darken-2"
+  },
+  {
+    "title": "Piće",
+    "icon": "$iconPice",
+    "color": "info-darken-2"
+  },
+  {
+    "title": "Brašno",
+    "icon": "$iconBrasno",
+    "color": "primary3-darken-2"
+  },
+  {
+    "title": "Kuhinja",
+    "icon": "$iconKuhinja",
+    "color": "error-darken-1"
+  },
+  {
+    "title": "Sokovi",
+    "icon": "$iconSokovi",
+    "color": "primary-darken-1"
+  },
+  {
+    "title": "Riba",
+    "icon": "$iconRiba",
+    "color": "accent1-lighten-1"
+  }
+]

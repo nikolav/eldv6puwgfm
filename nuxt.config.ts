@@ -29,7 +29,7 @@ export default defineNuxtConfig({
   // # universal rendering
   //   ssr: true,
   // # client-side only rendering; no prerender
-  ssr: false,
+  // ssr: false,
   //
   modules: [
     "@vueuse/nuxt",
@@ -99,7 +99,7 @@ export default defineNuxtConfig({
       charset: "utf-8",
       viewport:
         "width=device-width, initial-scale=1.0, shrink-to-fit=no, minimum-scale=1",
-      title: "nuxtflaskapp.nikolav.rs",
+      title: "kantar@nikolav.rs",
       // https://www.geeksforgeeks.org/meta-tags-in-nuxt-js/
       meta,
       //

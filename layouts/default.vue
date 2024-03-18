@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import menuCategories from "@/assets/menu-with-product-categories.json";
+
 const appBarHeight = useAppConfig().layout.appBarHeight;
 const selectedCategory_ = ref();
+
 // # eos
 </script>
 
@@ -17,18 +20,22 @@ const selectedCategory_ = ref();
     </VAppBar>
 
     <!-- @header -->
-    <VSheet min-height="333" class="d-flex flex-col *items-center">
+    <VSheet min-height="420" class="d-flex flex-col *items-center">
       <VCard
         rounded="0"
         variant="flat"
         image="/public/header-main-03.jpg"
         class="grow *bg-primary2"
       >
+        <template #image>
+          <VImg position="0 47%" />
+        </template>
         <VCardItem>
+          <template #prepend> @pretraga: {{ selectedCategory_ }} </template>
           <template #append>
-            <div class="*bg-red d-flex items-center text-white gap-x-8">
-              <VAvatar color="primary2" size="large" variant="elevated">
-                <strong class="text-xl"> 👨🏽 </strong>
+            <div class="d-flex items-center gap-x-8">
+              <VAvatar color="primary2" size="x-large" variant="elevated">
+                <strong class="text-2xl"> 👨🏽 </strong>
               </VAvatar>
               <VBtn icon variant="elevated" color="on-surface" size="x-large">
                 <VIcon
@@ -41,22 +48,38 @@ const selectedCategory_ = ref();
           </template>
         </VCardItem>
       </VCard>
-      <div class="d-flex justify-between *items-center *border-b">
-        <template v-for="n in 12" :key="n">
+      <VSlideGroup mandatory show-arrows v-model="selectedCategory_">
+        <VSlideGroupItem
+          v-for="(node, i) in menuCategories"
+          :key="i"
+          v-slot="{ isSelected, select }"
+          :value="node.title"
+        >
           <VBtn
-            @click="selectedCategory_ = n"
+            @click="select"
             rounded="0"
-            variant="text"
-            class="grow"
+            :variant="isSelected ? 'tonal' : 'text'"
+            :color="node.color"
+            class="grow text-none group/btn"
+            height="82"
             :ripple="false"
-            :active="n == selectedCategory_"
+            :active="isSelected"
             stacked
           >
-            <strong class="mb-2">1.icon</strong>
-            <span>2.text</span>
+            <strong class="mb-2">
+              <VIcon
+                size="42"
+                :color="node.color"
+                :icon="node.icon"
+                :class="`${
+                  isSelected ? 'opacity-100 scale-105' : 'opacity-85'
+                } group-hover/btn:opacity-100 group-hover/btn:scale-105 transition`"
+              />
+            </strong>
+            <span>{{ node.title }}</span>
           </VBtn>
-        </template>
-      </div>
+        </VSlideGroupItem>
+      </VSlideGroup>
     </VSheet>
 
     <!-- @page:main -->
