@@ -10,6 +10,7 @@ import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { light2, dark } from "@/assets/themes";
 
 import {
+  IconShoppingCartOutline,
   IconShareOffFilled,
   IconTaskShareOutlined,
   IconGithubOutlined,
@@ -148,6 +149,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         // # override
         menu: IconMenu,
         // # add: <VIcon icon="$other">
+        iconShoppingCart: IconShoppingCartOutline,
         iconShareOff: IconShareOffFilled,
         iconAttach: IconAttach,
         iconChat: IconChatBubbleOutline,

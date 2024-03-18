@@ -8,7 +8,7 @@ const primary = "0F5359"; // "#37474F"
 // primary => accent1, accent2, complement
 
 const primary2 = "C1DFD4";
-const primary3 = "FFD21F"; // "#37474F"
+const primary3 = "FFD21F";
 const secondary = "333F40";
 
 const pHsla = chroma(primary).hsl();

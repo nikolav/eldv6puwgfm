@@ -29,7 +29,7 @@ export default defineNuxtConfig({
   // # universal rendering
   //   ssr: true,
   // # client-side only rendering; no prerender
-  // ssr: false,
+  ssr: false,
   //
   modules: [
     "@vueuse/nuxt",

@@ -9,7 +9,7 @@ https://codepen.io/devstreak/pen/dMYgeO
 
 .scrollbar-thin::-webkit-scrollbar,
 .scrollbar-thin-light::-webkit-scrollbar {
-  width: 0.5rem;
+  width: 0.33rem;
   background: rgba(0, 0, 0, 0.033);
 }
 
@@ -17,6 +17,6 @@ https://codepen.io/devstreak/pen/dMYgeO
   background-color: #0f172a;
 }
 .scrollbar-thin-light::-webkit-scrollbar-thumb {
-  border-radius: 0.22rem;
+  // border-radius: 0.22rem;
   background-color: #aaaaaa;
 }

@@ -101,7 +101,7 @@ export default defineAppConfig({
     LIGHT: themeLight,
   },
   layout: {
-    appBarHeight: 82,
+    appBarHeight: 32,
     // additional @VMain/padding-top
     offsetTop: "1.22rem",
   },
