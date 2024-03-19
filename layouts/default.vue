@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { PRODUCTION$ } from "@/config";
-import { pathLastSegment } from "@/utils";
 import menuCategories from "@/assets/menu-with-product-categories.json";
 
 const appBarHeight = useAppConfig().layout.appBarHeight;
-const selectedCategory_ = ref();
+const selectedCategory_ = useLocalStorage("selectedCategory_", () => "Izbor", {
+  initOnMounted: true,
+});
 const iconClasses = (isSelected: boolean) =>
   `${
     isSelected ? "opacity-100 scale-105" : "opacity-85"
@@ -12,11 +13,17 @@ const iconClasses = (isSelected: boolean) =>
 
 const search_ = ref("");
 
-onMounted(() => (selectedCategory_.value = menuCategories[0].title));
-
 const submitSearch = () => {
   console.log({ search: search_.value });
 };
+
+const route_ = useRoute();
+onMounted(() => {
+  watch(route_, () => {
+    selectedCategory_.value =
+      get(find(menuCategories, { to: route_.name }), "title") || "Izbor";
+  });
+});
 
 // # eos
 </script>
@@ -39,11 +46,11 @@ const submitSearch = () => {
       <VCard
         rounded="0"
         variant="flat"
-        image="/public/header-main-05.jpg"
+        image="/public/header-main-06.png"
         class="grow *bg-primary2"
       >
         <template #image>
-          <VImg cover position="0" />
+          <VImg cover position="0 65%" />
         </template>
         <VCardItem>
           <template #append>
@@ -84,6 +91,7 @@ const submitSearch = () => {
             </template>
             <template #append-inner>
               <VBtn
+                @click="submitSearch"
                 class="rounded-e-pill fill-height translate-x-[14px]"
                 icon
                 size="x-large"
@@ -105,6 +113,7 @@ const submitSearch = () => {
         >
           <VBtn
             @click="select"
+            :to="node.to"
             rounded="0"
             :variant="isSelected ? 'tonal' : 'text'"
             :color="node.color"

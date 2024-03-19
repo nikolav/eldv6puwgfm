@@ -20,8 +20,8 @@ const appProcessingToggle = () => {
 
 <template>
   <section id="page-demo" class="pa-2 pa-md-4">
-    <h1>👋🏽 zdravo</h1>
-    <h1>👷🏽‍♂️ aplikacija je u izradi</h1>
+    <h1>👋🏽👷🏽‍♂️ zdravo</h1>
+    <h1>@page: Izbor</h1>
     <VBtnGroup>
       <VBtn
         width="122"

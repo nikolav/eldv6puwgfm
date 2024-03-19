@@ -1,63 +1,75 @@
 [
   {
-    "title": "Selekcija",
+    "title": "Izbor",
     "icon": "$iconGlobeKantar",
-    "color": "primary"
+    "color": "primary",
+    "to": "/"
   },
   {
     "title": "Bašta",
     "icon": "$iconVocePovrce",
-    "color": "info"
+    "color": "info",
+    "to": "basta"
   },
   {
     "title": "Meso",
     "icon": "$iconMeso",
-    "color": "accent1"
+    "color": "accent1",
+    "to": "meso"
   },
   {
     "title": "Mleko",
     "icon": "$iconMlecno",
-    "color": "warning-darken-1"
+    "color": "warning-darken-1",
+    "to": "mleko"
   },
   {
     "title": "Začin, Ulje",
     "icon": "$iconUlje",
-    "color": "accent2-lighten-1"
+    "color": "accent2-lighten-1",
+    "to": "zacin-ulje"
   },
   {
     "title": "Brašno",
     "icon": "$iconBrasno",
-    "color": "primary3-darken-2"
+    "color": "primary3-darken-2",
+    "to": "brasno"
   },
   {
     "title": "Med",
     "icon": "$iconMed",
-    "color": "error-lighten-2"
+    "color": "error-lighten-2",
+    "to": "med"
   },
   {
     "title": "Zimnica",
     "icon": "$iconZimnica",
-    "color": "success-darken-2"
+    "color": "success-darken-2",
+    "to": "zimnica"
   },
   {
     "title": "Sokovi",
     "icon": "$iconSokovi",
-    "color": "primary-darken-1"
+    "color": "primary-darken-1",
+    "to": "sokovi"
   },
   {
     "title": "Piće",
     "icon": "$iconPice",
-    "color": "info-darken-2"
+    "color": "info-darken-2",
+    "to": "pice"
   },
   {
     "title": "Zanat",
     "icon": "",
     "image": "/kantar-rs/zanat.png",
-    "color": "primary2-darken-2"
+    "color": "primary2-darken-2",
+    "to": "zanat"
   },
   {
     "title": "Karta",
     "icon": "$iconSrbija",
-    "color": "complement-lighten-1"
+    "color": "complement-lighten-1",
+    "to": "karta"
   }
 ]
