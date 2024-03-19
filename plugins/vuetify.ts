@@ -22,6 +22,8 @@ import {
   IconKuhinja,
   IconRiba,
   IconSokovi,
+  IconGlobeKantar,
+  IconSrbija,
 } from "@/components/icons/kantar-rs";
 
 import {
@@ -181,6 +183,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconKuhinja: IconKuhinja,
         iconRiba: IconRiba,
         iconSokovi: IconSokovi,
+        iconGlobeKantar: IconGlobeKantar,
+        iconSrbija: IconSrbija,
         //
         iconShoppingCart: IconShoppingCartOutline,
         iconShareOff: IconShareOffFilled,

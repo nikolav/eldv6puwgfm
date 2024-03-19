@@ -34,7 +34,7 @@ useHead({
       <NuxtPage />
     </NuxtLayout>
     <NuxtLoadingIndicator color="red" />
-    <SpinnerAppProcessing />
+    <SpinnerAppProcessing opacity=".99" size="1.55rem" />
   </VApp>
 </template>
 

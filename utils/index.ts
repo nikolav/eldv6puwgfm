@@ -1,6 +1,7 @@
 // @lodash
 import lodash from "lodash";
 const {
+  escapeRegExp,
   reduce,
   filter,
   assign,
@@ -30,6 +31,7 @@ const {
   zipObject,
 } = lodash;
 export {
+  escapeRegExp,
   reduce,
   filter,
   once,
@@ -69,3 +71,5 @@ export { typeCore } from "./type-core";
 export { isNumeric } from "./is-numeric";
 export { docsSortedDesc } from "./docs-sorted-desc";
 export { matchEmailStart } from "./match-email-start";
+export { pathLastSegment } from "./path-last-segment";
+export { secureLeft } from "./secure-left";

@@ -1,8 +1,22 @@
 <script setup lang="ts">
+import { PRODUCTION$ } from "@/config";
+import { pathLastSegment } from "@/utils";
 import menuCategories from "@/assets/menu-with-product-categories.json";
 
 const appBarHeight = useAppConfig().layout.appBarHeight;
 const selectedCategory_ = ref();
+const iconClasses = (isSelected: boolean) =>
+  `${
+    isSelected ? "opacity-100 scale-105" : "opacity-85"
+  } group-hover/btn:opacity-100 group-hover/btn:scale-105 transition`;
+
+const search_ = ref("");
+
+onMounted(() => (selectedCategory_.value = menuCategories[0].title));
+
+const submitSearch = () => {
+  console.log({ search: search_.value });
+};
 
 // # eos
 </script>
@@ -21,37 +35,71 @@ const selectedCategory_ = ref();
 
     <!-- @header -->
     <VSheet min-height="420" class="d-flex flex-col *items-center">
+      <!-- @header:top -->
       <VCard
         rounded="0"
         variant="flat"
-        image="/public/header-main-03.jpg"
+        image="/public/header-main-05.jpg"
         class="grow *bg-primary2"
       >
         <template #image>
-          <VImg position="0 47%" />
+          <VImg cover position="0" />
         </template>
         <VCardItem>
-          <template #prepend> @pretraga: {{ selectedCategory_ }} </template>
           <template #append>
-            <div class="d-flex items-center gap-x-8">
+            <div class="d-flex items-center gap-x-8 me-2 me-sm-6">
               <VAvatar color="primary2" size="x-large" variant="elevated">
                 <strong class="text-2xl"> 👨🏽 </strong>
               </VAvatar>
-              <VBtn icon variant="elevated" color="on-surface" size="x-large">
-                <VIcon
-                  icon="$iconShoppingCart"
-                  size="x-large"
-                  color="primary-darken-1"
-                />
+              <VBtn
+                icon
+                variant="elevated"
+                color="primary3-lighten-1"
+                size="66"
+              >
+                <VIcon icon="$iconShoppingCart" size="x-large" />
               </VBtn>
             </div>
           </template>
         </VCardItem>
+        <VForm
+          @submit.prevent
+          class="sm:max-w-[550px] mt-6 sm:mx-auto sm:translate-x-[5rem]"
+        >
+          <VTextField
+            v-model.trim="search_"
+            name="kategorija-pretraga"
+            autofocus
+            variant="solo"
+            label="Traži:"
+            rounded="pill"
+            center-affix
+            clearable
+            single-line
+            placeholder="Voće, povrće, sir..."
+            class="opacity-90"
+          >
+            <template #prepend-inner>
+              <span class="ps-4"></span>
+            </template>
+            <template #append-inner>
+              <VBtn
+                class="rounded-e-pill fill-height translate-x-[14px]"
+                icon
+                size="x-large"
+                color="primary"
+                variant="elevated"
+                ><VIcon icon="$iconMagnifyingGlass" class="-translate-x-[2px]"
+              /></VBtn>
+            </template>
+          </VTextField>
+        </VForm>
       </VCard>
+      <!-- @header:menu -->
       <VSlideGroup mandatory show-arrows v-model="selectedCategory_">
         <VSlideGroupItem
-          v-for="(node, i) in menuCategories"
-          :key="i"
+          v-for="node in menuCategories"
+          :key="node.title"
           v-slot="{ isSelected, select }"
           :value="node.title"
         >
@@ -68,12 +116,21 @@ const selectedCategory_ = ref();
           >
             <strong class="mb-2">
               <VIcon
+                v-if="node.icon"
                 size="42"
                 :color="node.color"
                 :icon="node.icon"
-                :class="`${
-                  isSelected ? 'opacity-100 scale-105' : 'opacity-85'
-                } group-hover/btn:opacity-100 group-hover/btn:scale-105 transition`"
+                :class="iconClasses(isSelected)"
+              />
+              <VImg
+                :class="iconClasses(isSelected)"
+                v-else
+                :src="`${
+                  !PRODUCTION$
+                    ? '/' + pathLastSegment(String(node.image))
+                    : node.image
+                }`"
+                width="42"
               />
             </strong>
             <span>{{ node.title }}</span>

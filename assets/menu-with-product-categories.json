@@ -1,5 +1,10 @@
 [
   {
+    "title": "Selekcija",
+    "icon": "$iconGlobeKantar",
+    "color": "primary"
+  },
+  {
     "title": "Bašta",
     "icon": "$iconVocePovrce",
     "color": "info"
@@ -15,14 +20,14 @@
     "color": "warning-darken-1"
   },
   {
-    "title": "Ulje",
+    "title": "Začin, Ulje",
     "icon": "$iconUlje",
     "color": "accent2-lighten-1"
   },
   {
-    "title": "Začin",
-    "icon": "$iconZacin",
-    "color": "complement"
+    "title": "Brašno",
+    "icon": "$iconBrasno",
+    "color": "primary3-darken-2"
   },
   {
     "title": "Med",
@@ -35,28 +40,24 @@
     "color": "success-darken-2"
   },
   {
-    "title": "Piće",
-    "icon": "$iconPice",
-    "color": "info-darken-2"
-  },
-  {
-    "title": "Brašno",
-    "icon": "$iconBrasno",
-    "color": "primary3-darken-2"
-  },
-  {
-    "title": "Kuhinja",
-    "icon": "$iconKuhinja",
-    "color": "error-darken-1"
-  },
-  {
     "title": "Sokovi",
     "icon": "$iconSokovi",
     "color": "primary-darken-1"
   },
   {
-    "title": "Riba",
-    "icon": "$iconRiba",
-    "color": "accent1-lighten-1"
+    "title": "Piće",
+    "icon": "$iconPice",
+    "color": "info-darken-2"
+  },
+  {
+    "title": "Zanat",
+    "icon": "",
+    "image": "/kantar-rs/zanat.png",
+    "color": "primary2-darken-2"
+  },
+  {
+    "title": "Karta",
+    "icon": "$iconSrbija",
+    "color": "complement-lighten-1"
   }
 ]

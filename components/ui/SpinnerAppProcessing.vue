@@ -3,6 +3,7 @@ import { SpinnerBeat } from "@/components/spinners";
 
 const flags = useStoreFlags();
 const { APP_PROCESSING } = useAppConfig().key;
+
 // #eos
 </script>
 
@@ -10,9 +11,9 @@ const { APP_PROCESSING } = useAppConfig().key;
   <VFadeTransition>
     <strong
       v-if="flags.isSet(APP_PROCESSING)"
-      class="position-fixed top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] z-[9999]"
+      class="*bg-red-600/20 position-fixed top-16 left-1/2 -translate-x-[50%] -translate-y-[50%] z-[9999]"
     >
-      <SpinnerBeat />
+      <SpinnerBeat v-bind="$attrs" />
     </strong>
   </VFadeTransition>
 </template>

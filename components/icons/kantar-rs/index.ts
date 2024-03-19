@@ -10,3 +10,5 @@ export { default as IconBrasno } from "./IconBrasno.vue";
 export { default as IconKuhinja } from "./IconKuhinja.vue";
 export { default as IconRiba } from "./IconRiba.vue";
 export { default as IconSokovi } from "./IconSokovi.vue";
+export { default as IconGlobeKantar } from "./IconGlobeKantar.vue";
+export { default as IconSrbija } from "./IconSrbija.vue";

@@ -8,6 +8,13 @@ useHead({
 
 const toggle = useToggleFlag();
 
+const { APP_PROCESSING } = useAppConfig().key;
+const flags$ = useStoreFlags();
+const appProcessingToggle = () => {
+  toggle();
+  flags$.toggle(APP_PROCESSING);
+};
+
 // #eos
 </script>
 
@@ -16,13 +23,28 @@ const toggle = useToggleFlag();
     <h1>👋🏽 zdravo</h1>
     <h1>👷🏽‍♂️ aplikacija je u izradi</h1>
     <VBtnGroup>
-      <VBtn width="122" @click="toggle" variant="elevated" color="primary" size="large"
+      <VBtn
+        width="122"
+        @click="appProcessingToggle"
+        variant="elevated"
+        color="primary"
+        size="large"
         >:[{{ toggle.isActive.value }}]</VBtn
       >
-      <VBtn width="122" @click="toggle" variant="elevated" color="primary2" size="large"
+      <VBtn
+        width="122"
+        @click="appProcessingToggle"
+        variant="elevated"
+        color="primary2"
+        size="large"
         >:[{{ toggle.isActive.value }}]</VBtn
       >
-      <VBtn width="122" @click="toggle" variant="elevated" color="primary3" size="large"
+      <VBtn
+        width="122"
+        @click="appProcessingToggle"
+        variant="elevated"
+        color="primary3"
+        size="large"
         >:[{{ toggle.isActive.value }}]</VBtn
       >
     </VBtnGroup>
