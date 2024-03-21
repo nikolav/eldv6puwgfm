@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { debounce } from "@/utils";
 import { PRODUCTION$ } from "@/config";
 import menuCategories from "@/assets/menu-with-product-categories.json";
 
@@ -17,6 +18,7 @@ const submitSearch = () => {
   console.log({ search: search_.value });
 };
 
+// auto select menu category when navigating to a page
 const route_ = useRoute();
 onMounted(() => {
   watch(route_, () => {
@@ -24,6 +26,15 @@ onMounted(() => {
       get(find(menuCategories, { to: route_.name }), "title") || "Izbor";
   });
 });
+
+
+const debounceSearchHandle = debounce((term) => {
+  if (!term) return;
+  console.log({ term });
+}, 789);
+
+// @watchers
+watch(search_, debounceSearchHandle);
 
 // # eos
 </script>
@@ -41,7 +52,7 @@ onMounted(() => {
     </VAppBar>
 
     <!-- @header -->
-    <VSheet min-height="420" class="d-flex flex-col *items-center">
+    <VSheet min-height="452" class="d-flex flex-col *items-center">
       <!-- @header:top -->
       <VCard
         rounded="0"
@@ -50,7 +61,7 @@ onMounted(() => {
         class="grow *bg-primary2"
       >
         <template #image>
-          <VImg cover position="0 65%" />
+          <VImg cover position="0 81%" />
         </template>
         <VCardItem>
           <template #append>
@@ -71,11 +82,11 @@ onMounted(() => {
         </VCardItem>
         <VForm
           @submit.prevent
-          class="sm:max-w-[550px] mt-6 sm:mx-auto sm:translate-x-[5rem]"
+          class="sm:max-w-[550px] sm:mt-6 sm:mx-auto sm:translate-x-[3.45rem]"
         >
           <VTextField
             v-model.trim="search_"
-            name="kategorija-pretraga"
+            name="pretraga"
             autofocus
             variant="solo"
             label="Traži:"
@@ -84,20 +95,19 @@ onMounted(() => {
             clearable
             single-line
             placeholder="Voće, povrće, sir..."
-            class="opacity-90"
           >
             <template #prepend-inner>
               <span class="ps-4"></span>
             </template>
             <template #append-inner>
               <VBtn
-                @click="submitSearch"
+                @click.stop="submitSearch"
                 class="rounded-e-pill fill-height translate-x-[14px]"
                 icon
                 size="x-large"
                 color="primary"
                 variant="elevated"
-                ><VIcon icon="$iconMagnifyingGlass" class="-translate-x-[2px]"
+                ><VIcon icon="$iconMagnifyingGlass" class="*-translate-x-[2px]"
               /></VBtn>
             </template>
           </VTextField>

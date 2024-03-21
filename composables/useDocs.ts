@@ -1,12 +1,5 @@
-import {
-  M_docsRm,
-  M_docsUpsert,
-  M_docsUsersAdd,
-  Q_docsByTopic,
-  M_docsTags,
-} from "@/graphql";
+import { M_docsRm, M_docsUpsert, Q_docsByTopic, M_docsTags } from "@/graphql";
 import type { OrNull, IDoc, TDocData } from "@/types";
-import { schemaAuthCredentials, schemaUsersNotReserved } from "@/schemas";
 import {
   // get,
   // assign,
@@ -71,28 +64,6 @@ export const useDocs = <TData = TDocData>(
     if (enabled$.value) await mutateDocsRm({ topic: topic$.value, id });
   };
 
-  const { mutate: mutateDocsUsersAdd } = useMutation(M_docsUsersAdd);
-  const { TAG_USERS } = useAppConfig().docs;
-  const usersAdd = async (email: string, password: string) => {
-    if (!enabled$.value) return;
-    try {
-      if (TAG_USERS !== topic$.value) throw `--topic:${TAG_USERS}--`;
-      return await mutateDocsUsersAdd(
-        schemaAuthCredentials.parse({ email, password })
-      );
-    } catch (error) {
-      // pass
-    }
-  };
-  const usersRemove = async (id: any) => {
-    try {
-      if (TAG_USERS !== topic$.value) throw `--topic:${TAG_USERS}--`;
-      return await remove(schemaUsersNotReserved.parse(id));
-    } catch (error) {
-      // pass
-    }
-  };
-
   const { mutate: mutateDocTags } = useMutation(M_docsTags);
   const tags = async (id: number, argsTags: Record<string, boolean>) =>
     isEmpty(argsTags) ? undefined : await mutateDocTags({ id, tags: argsTags });
@@ -123,9 +94,5 @@ export const useDocs = <TData = TDocData>(
 
     // on/off
     toggleEnabled,
-
-    // users
-    usersAdd,
-    usersRemove,
   };
 };

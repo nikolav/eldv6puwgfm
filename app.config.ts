@@ -21,6 +21,7 @@ export default defineAppConfig({
     prefix_CHAT_ACTIVE: "KFrbiAW5Zm3:",
     TASKS_ALL: "@tasks:all",
     TASKS_USER_prefix: "Njvrw1gYEXd3yv:",
+    LIKES_preix: "@likes:",
   },
   //
   key: {
