@@ -9,7 +9,7 @@ export const useAppMenu = () => {
     },
   } = useAppConfig();
   const route_ = useRoute();
-  
+
   // track current page/title/category
   const current$ = useLocalStorage(
     MENU_CATEGORY,
@@ -28,6 +28,7 @@ export const useAppMenu = () => {
     },
     {
       get: () => main$.get(PAGE_CACHED),
+      clear: () => main$.put({ [PAGE_CACHED]: null }),
     }
   );
 
@@ -39,6 +40,11 @@ export const useAppMenu = () => {
     const r =
       get(find(menuCategories, { title }), "to") || menuCategories[0]["to"];
     return "/" !== r ? r : "index";
+  };
+
+  const destroy = () => {
+    cache.clear();
+    current$.value = null;
   };
 
   onMounted(() => {
@@ -57,5 +63,6 @@ export const useAppMenu = () => {
     titleByRouteName,
     routeNameByTitle,
     cache,
+    destroy,
   };
 };

@@ -25,6 +25,30 @@ useHead({
   htmlAttrs,
 });
 
+const auth = useStoreApiAuth();
+const { destroy: appMenuCacheDestroy } = useAppMenu();
+
+onMounted(() => {
+  watch(
+    () => auth.isAuth$,
+    async (isAuth) => {
+      if (!isAuth) {
+        // @logout
+        console.log(`@app-vue: !isAuth`);
+        appMenuCacheDestroy();
+        return reloadNuxtApp({
+          path: "/",
+          persistState: false,
+        });
+      }
+      // @login
+      console.log(`@app-vue: isAuth`);
+      console.log({ user: auth.user$ });
+      await navigateTo({ name: "index" });
+    }
+  );
+});
+
 // eos
 </script>
 
@@ -34,7 +58,7 @@ useHead({
       <NuxtPage />
     </NuxtLayout>
     <NuxtLoadingIndicator color="red" />
-    <SpinnerAppProcessing opacity=".99" size="1.55rem" />
+    <SpinnerAppProcessing :opacity="0.99" size="1.55rem" />
   </VApp>
 </template>
 

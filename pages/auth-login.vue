@@ -5,11 +5,21 @@ definePageMeta({
   layout: "auth",
 });
 
+const { APP_PROCESSING } = useAppConfig().key;
+const flags$ = useStoreFlags();
+const auth = useStoreApiAuth();
+
 const authEmail$ = ref("");
 const authPassword$ = ref("");
 
-const authSubmit = () => {
+const authInputsClear = () => {
+  authEmail$.value = "";
+  authPassword$.value = "";
+};
+
+const authSubmitLogin = async () => {
   let creds;
+  let error_;
   try {
     creds = schemaAuthCredentials.parse({
       email: authEmail$.value,
@@ -17,18 +27,29 @@ const authSubmit = () => {
     });
   } catch (error) {
     // pass
+    error_ = error;
     console.error({ error });
   }
   if (!creds) return;
   //
-  console.log({ creds });
+  try {
+    flags$.on(APP_PROCESSING);
+    console.log(`@authSubmit:login`);
+    await auth.login(creds);
+  } catch (error) {
+    error_ = error;
+    console.log({ "auth:error": error });
+  }
+  //
+  if (!error_) authInputsClear();
+  flags$.off(APP_PROCESSING);
 };
 
 // #eos
 </script>
 <template>
   <section class="page-auth-login">
-    <VForm @submit.prevent="authSubmit" autocomplete="off">
+    <VForm @submit.prevent="authSubmitLogin" autocomplete="off">
       <VCard
         elevation="2"
         class="pa-1 pa-sm-2 mx-auto backdrop-blur-lg"

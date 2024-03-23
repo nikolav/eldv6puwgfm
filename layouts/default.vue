@@ -5,7 +5,7 @@ import { PRODUCTION$ } from "@/config";
 import { debounce } from "@/utils";
 
 const appBarHeight = useAppConfig().layout.appBarHeight;
-const { current$, menuCategories } = useAppMenu();
+const { current$, menuCategories, cache: appMenuCache } = useAppMenu();
 const iconClasses = (isSelected: boolean) =>
   `${
     isSelected ? "opacity-100 scale-105" : "opacity-85"
@@ -29,11 +29,7 @@ watch(search_, debounceSearchHandle);
 </script>
 
 <template>
-  <section
-    id="layout-default"
-    class="*ma-0 *pa-0"
-    :style="`padding-top: ${appBarHeight}px`"
-  >
+  <section id="layout-default" :style="`padding-top: ${appBarHeight}px`">
     <!-- @appbar:main -->
     <AppBarMain :height="appBarHeight" />
 
@@ -52,9 +48,9 @@ watch(search_, debounceSearchHandle);
         <VCardItem>
           <template #append>
             <div class="d-flex items-center gap-x-8 me-2 me-sm-6">
-              <VAvatar color="primary2" size="x-large" variant="elevated">
+              <!-- <VAvatar color="primary2" size="x-large" variant="elevated">
                 <strong class="text-2xl"> 👨🏽 </strong>
-              </VAvatar>
+              </VAvatar> -->
               <VBtn
                 icon
                 variant="elevated"
@@ -108,7 +104,12 @@ watch(search_, debounceSearchHandle);
           :value="node.title"
         >
           <VBtn
-            @click="select"
+            @click="
+              () => {
+                select(true);
+                appMenuCache(current$);
+              }
+            "
             :to="node.to"
             rounded="0"
             :variant="isSelected ? 'tonal' : 'text'"

@@ -84,9 +84,12 @@ const authSubmit = () => {
           <VCheckbox
             color="primary"
             v-model="authIsCompany$"
-            label="Registrujem se kao prodavac."
             class="-translate-x-2"
-          />
+          >
+            <template #label>
+              <span class="ps-3"> Registrujem se kao prodavac. </span>
+            </template>
+          </VCheckbox>
         </VCardText>
         <VCardActions class="d-flex flex-col gap-y-6 sm:gap-y-8 pt-0">
           <NuxtLink :to="{ name: 'auth-login' }">

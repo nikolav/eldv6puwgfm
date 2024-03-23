@@ -1,37 +1,39 @@
 <script setup lang="ts">
+const pClasses = `text-body-1 !font-sans sm:indent-4`;
 // #eos
 </script>
 <template>
   <section class="service-description-auth">
-    <VSheet
-      elevation="1"
+    <VCard
+      max-width="640"
       rounded
+      class="pa-4 backdrop-blur-lg mx-auto mx-md-0"
       color="rgba(255,255,255,.55)"
-      class="pa-4 backdrop-blur-lg mx-auto"
-      max-width="720"
     >
-      <h2 class="text-h5">Ovde opis usluge za kupce/prodavce</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo iure odio
-        esse?
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias eius
-        dolore laborum libero voluptates vitae beatae earum sit ex! Ratione est
-        animi asperiores, sapiente quisquam labore eligendi in illum alias
-        eveniet ipsum praesentium nemo ex expedita voluptas tempora delectus ad,
-        maiores distinctio! Architecto obcaecati quisquam nulla sint quibusdam,
-        non molestias soluta sequi doloremque necessitatibus hic nemo repellat
-        tempore beatae corrupti, itaque nisi aut repellendus? Quaerat quidem
-        distinctio assumenda repellat alias nihil ipsum ullam necessitatibus
-        eligendi eum voluptatibus debitis inventore perspiciatis, nostrum
-        voluptate numquam, sit saepe est omnis a. Soluta, dolorum. Aut vero
-        tenetur sed aliquam, enim vitae architecto! Voluptate porro quam
-        deleniti ratione enim repudiandae magni fuga, et impedit voluptatum,
-        minima distinctio, possimus incidunt praesentium nihil repellendus velit
-        cumque? Labore, est in.
-      </p>
-    </VSheet>
+      <VCardText class="space-y-2">
+        <p :class="pClasses">
+          KANTAR.RS Vam omogućava lakše povezivanje sa kupcima u zemlji, kao i
+          jednostavnu pretragu i naručivanje proizvoda, dobara i narodnih
+          rukotvorina domaćeg porekla. Ova onlajn pijaca povezuje srpske
+          proizvođače i zanatlije sa potrošačima koji traže kvalitetne, zdravije
+          i sveže proizvode iz cele Srbije. Naša platforma se bavi povezivanjem
+          kupca i prodavca. Kupac se dogovara sa prodavcem oko vremena i načina
+          isporuke. Kupovinu iz fotelje i dostavu svih proizvoda naručenih na
+          teritoriji grada Beograda na kućnu adresu od sada je dostupno putem
+          naše platforme KANTAR.RS.
+        </p>
+        <p :class="pClasses">
+          Dostava može da bude isplanirana na dan po izboru kupca kao i po
+          načinu dostave (dostava putem kurir službe, dostava putem pošte, lična
+          dostava na kućnu adresu i dostava na određene punktove za preuzimanje.
+          KANTAR.RS olakšava način komunikacije između proizvođača i potrošača
+          ujedno štedi vreme prilikom izbor artikal i samog poručivanja.
+          Proizvođači prisutni na našoj platformi su srpski i svi su odabrani od
+          strane našeg tima na osnovu zvaničnih kriterijuma i kvaliteta domaćih
+          prehrambenih proizvoda i zanatske proizvodne prakse.
+        </p>
+      </VCardText>
+    </VCard>
   </section>
 </template>
 <style lang="scss" scoped>

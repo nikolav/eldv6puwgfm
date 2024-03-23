@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ServiceDescriptionAuth } from "@/components/app";
 
+definePageMeta({
+  middleware: "guest",
+});
+
 const { routeNameByTitle, cache } = useAppMenu();
 const route_ = useRoute();
 
@@ -38,18 +42,20 @@ const route_ = useRoute();
       </VBtn>
     </VToolbar>
 
-    <VContainer class="*bg-red mt-md-12">
-      <VRow justify="center">
-        <VCol md="5" class="*bg-blue-200">
-          <slot>
-            <p>lorem</p>
-          </slot>
-        </VCol>
-        <VCol md="7" class="*bg-red-200">
-          <ServiceDescriptionAuth />
-        </VCol>
-      </VRow>
-    </VContainer>
+    <VMain>
+      <VContainer class="*bg-red mt-sm-4 mt-lg-8" fluid>
+        <VRow justify="center">
+          <VCol md="5" class="*bg-blue-200">
+            <slot>
+              <p>lorem</p>
+            </slot>
+          </VCol>
+          <VCol md="7" class="*bg-red-200">
+            <ServiceDescriptionAuth />
+          </VCol>
+        </VRow>
+      </VContainer>
+    </VMain>
   </section>
 </template>
 <style lang="scss" scoped>

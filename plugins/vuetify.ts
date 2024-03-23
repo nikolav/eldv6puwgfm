@@ -29,6 +29,7 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconDashboardFilled,
   IconPersonFilled,
   IconAttach,
   IconChatBubbleOutline,
@@ -191,6 +192,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconDashboard: IconDashboardFilled,
         iconPerson: IconPersonFilled,
         iconAttach: IconAttach,
         iconChat: IconChatBubbleOutline,
