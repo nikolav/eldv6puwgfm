@@ -25,6 +25,7 @@ import {
   IconZacin,
   IconZimnica,
   IconLogoKantar,
+  IconLogoKantarH,
 } from "@/components/icons/kantar-rs";
 
 import {
@@ -173,6 +174,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         menu: IconMenu,
         // # add: <VIcon icon="$other">
         // # @icons:kantar.rs
+        iconLogoKantarH: IconLogoKantarH,
         iconLogoKantar: IconLogoKantar,
         iconBrasno: IconBrasno,
         iconGlobeKantar: IconGlobeKantar,

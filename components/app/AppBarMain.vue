@@ -8,23 +8,12 @@ const { current$, cache } = useAppMenu();
 </script>
 <template>
   <VAppBar flat :height="props.height" elevation="1">
-    <VAppBarTitle class="opacity-85 ms-0 hover:opacity-100">
-      <VBtn
-        :to="{ name: 'index' }"
-        color="primary-lighten-1"
-        :ripple="false"
-        variant="plain"
-        class="text-none group/logo-kantar"
-        size="large"
-      >
-        <VIcon
-          size="x-large"
-          start
-          icon="$iconLogoKantar"
-          class="-translate-y-px group-hover/logo-kantar:scale-110 transition-transform"
-        />
-        <span>kantar.rs</span>
-      </VBtn>
+    <VAppBarTitle id="appbar-main--title" class="opacity-85 hover:opacity-100">
+      <strong class="d-inline-block hover:scale-105 transition-transform">
+        <NuxtLink :to="{ name: 'index' }">
+          <VIcon color="primary-lighten-1" size="102  " icon="$iconLogoKantarH" />
+        </NuxtLink>
+      </strong>
     </VAppBarTitle>
     <template #append>
       <div v-if="!auth.isAuth$" class="-me-2.5">
@@ -52,5 +41,8 @@ const { current$, cache } = useAppMenu();
     </template>
   </VAppBar>
 </template>
-<style lang="scss" scoped>
+<style lang="scss">
+#appbar-main--title .v-toolbar-title__placeholder {
+  overflow: visible !important;
+}
 </style>
