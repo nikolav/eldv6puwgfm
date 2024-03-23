@@ -150,7 +150,7 @@ export default defineNuxtConfig({
     "video.js/dist/video-js.css",
     // https://github.com/Maronato/vue-toastification?tab=readme-ov-file#usage
     // "vue-toastification/dist/index.css",
-    "~/assets/styles/toast.scss",
+    // "~/assets/styles/toast.scss",
   ],
 
   // https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3
