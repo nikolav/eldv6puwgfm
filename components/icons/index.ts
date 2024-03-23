@@ -33,3 +33,4 @@ export { default as IconTrashFill } from "./IconTrashFill.vue";
 export { default as IconUserShield } from "./IconUserShield.vue";
 export { default as IconShareOffFilled } from "./IconShareOffFilled.vue";
 export { default as IconShoppingCartOutline } from "./IconShoppingCartOutline.vue";
+export { default as IconPersonFilled } from "./IconPersonFilled.vue";

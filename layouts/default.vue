@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { debounce } from "@/utils";
+import { AppBarMain } from "@/components/app";
+
 import { PRODUCTION$ } from "@/config";
-import menuCategories from "@/assets/menu-with-product-categories.json";
+import { debounce } from "@/utils";
 
 const appBarHeight = useAppConfig().layout.appBarHeight;
-const selectedCategory_ = useLocalStorage("selectedCategory_", () => "Izbor", {
-  initOnMounted: true,
-});
+const { current$, menuCategories } = useAppMenu();
 const iconClasses = (isSelected: boolean) =>
   `${
     isSelected ? "opacity-100 scale-105" : "opacity-85"
@@ -17,16 +16,6 @@ const search_ = ref("");
 const submitSearch = () => {
   console.log({ search: search_.value });
 };
-
-// auto select menu category when navigating to a page
-const route_ = useRoute();
-onMounted(() => {
-  watch(route_, () => {
-    selectedCategory_.value =
-      get(find(menuCategories, { to: route_.name }), "title") || "Izbor";
-  });
-});
-
 
 const debounceSearchHandle = debounce((term) => {
   if (!term) return;
@@ -46,10 +35,7 @@ watch(search_, debounceSearchHandle);
     :style="`padding-top: ${appBarHeight}px`"
   >
     <!-- @appbar:main -->
-    <VAppBar flat :height="appBarHeight" elevation="1">
-      <template #prepend> • </template>
-      <template #append> • </template>
-    </VAppBar>
+    <AppBarMain :height="appBarHeight" />
 
     <!-- @header -->
     <VSheet min-height="452" class="d-flex flex-col *items-center">
@@ -114,7 +100,7 @@ watch(search_, debounceSearchHandle);
         </VForm>
       </VCard>
       <!-- @header:menu -->
-      <VSlideGroup mandatory show-arrows v-model="selectedCategory_">
+      <VSlideGroup mandatory show-arrows v-model="current$">
         <VSlideGroupItem
           v-for="node in menuCategories"
           :key="node.title"

@@ -1,6 +1,7 @@
 // @lodash
 import lodash from "lodash";
 const {
+  first,
   escapeRegExp,
   reduce,
   filter,
@@ -31,6 +32,7 @@ const {
   zipObject,
 } = lodash;
 export {
+  first,
   escapeRegExp,
   reduce,
   filter,

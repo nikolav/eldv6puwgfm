@@ -7,6 +7,7 @@ const themeLight = "light2";
 const AUTH_LOCKED = "eq1hiOTCPNCfo20Y";
 const CHAT_EDIT_active = "rAkrT0XZJvlXbb";
 const TASK_EDIT_active = "TB2HXTaILV3eKlQAoSa8";
+const PAGE_CACHED = "WrTD0QD08cjfqC4pol";
 
 export default defineAppConfig({
   ADMIN_EMAIL: "admin@nikolav.rs",
@@ -61,11 +62,13 @@ export default defineAppConfig({
         "app:name": "nikolav.rs",
         [CHAT_EDIT_active]: null,
         [TASK_EDIT_active]: null,
+        [PAGE_CACHED]: "",
       },
       CHAT_ACTIVE: "ozbbRlAv19DO",
       CHAT_ACTIVE_title: "SFImifljHov",
       CHAT_EDIT_active,
       TASK_EDIT_active,
+      PAGE_CACHED,
     },
     flags: {
       initial: <TStoreFlags>{
@@ -113,5 +116,8 @@ export default defineAppConfig({
   urls: {
     appPublic: URL_APP_PUBLIC,
     github: "https://github.com/nikolav/nuxtflask",
+  },
+  storage: {
+    MENU_CATEGORY: "7n0FS9ZxoVN",
   },
 });

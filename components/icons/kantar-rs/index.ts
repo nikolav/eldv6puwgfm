@@ -12,3 +12,4 @@ export { default as IconRiba } from "./IconRiba.vue";
 export { default as IconSokovi } from "./IconSokovi.vue";
 export { default as IconGlobeKantar } from "./IconGlobeKantar.vue";
 export { default as IconSrbija } from "./IconSrbija.vue";
+export { default as IconLogoKantar } from "./IconLogoKantar.vue";
