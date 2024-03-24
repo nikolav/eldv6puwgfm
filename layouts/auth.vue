@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { ServiceDescriptionAuth } from "@/components/app";
 
-definePageMeta({
-  middleware: "guest",
-});
-
 const { routeNameByTitle, cache } = useAppMenu();
 const route_ = useRoute();
 

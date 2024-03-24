@@ -1,17 +1,16 @@
 // @lodash
 import lodash from "lodash";
 const {
-  first,
-  escapeRegExp,
-  reduce,
-  filter,
   assign,
   at,
   capitalize,
   debounce,
   each,
+  escapeRegExp,
   every,
+  filter,
   find,
+  first,
   forEach,
   get,
   isEmpty,
@@ -22,6 +21,7 @@ const {
   once,
   pick,
   pull,
+  reduce,
   sample,
   set,
   size: len,
@@ -32,46 +32,46 @@ const {
   zipObject,
 } = lodash;
 export {
-  first,
-  escapeRegExp,
-  reduce,
-  filter,
-  once,
-  sample,
   assign,
   at,
+  capitalize,
   debounce,
   each,
+  escapeRegExp,
   every,
+  filter,
   find,
+  first,
   forEach,
   get,
+  isEmpty,
   len,
   map,
   noop,
+  now,
   omit,
+  once,
   pick,
+  pull,
+  reduce,
+  sample,
   set,
   some,
   transform,
+  uniqueId,
   unset,
   zipObject,
-  now,
-  capitalize,
-  uniqueId,
-  isEmpty,
-  pull,
 };
 
 export * from "./re";
+export { docsSortedDesc } from "./docs-sorted-desc";
 export { False } from "./fn-false";
 export { has } from "./has";
-export { stripSlashesEnd } from "./strip-slashes-end";
 export { idGen } from "./id-gen";
-export { setBatch as batchSet } from "./set-batch";
-export { typeCore } from "./type-core";
 export { isNumeric } from "./is-numeric";
-export { docsSortedDesc } from "./docs-sorted-desc";
 export { matchEmailStart } from "./match-email-start";
 export { pathLastSegment } from "./path-last-segment";
 export { secureLeft } from "./secure-left";
+export { setBatch as batchSet } from "./set-batch";
+export { stripSlashesEnd } from "./strip-slashes-end";
+export { typeCore } from "./type-core";

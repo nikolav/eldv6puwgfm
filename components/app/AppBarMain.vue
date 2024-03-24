@@ -50,7 +50,6 @@ const authSubmitLogout = async () => {
       </strong>
       <VSpacer />
       <VSpacer />
-      <VSpacer />
     </template>
     <template #append>
       <VBtn
@@ -94,16 +93,16 @@ const authSubmitLogout = async () => {
           variant="text"
           icon
           color="primary"
-          class="ms-4 ms-sm-8"
+          class="ms-4 ms-sm-6"
         >
           <VIcon
-            :icon="auth.isCompany$ ? '$iconDashboard' : '$iconUserCircle'"
-            size="large"
+            :icon="auth.isCompany$ ? '$iconAdjustSettings' : '$iconUserCircle'"
+            :size="auth.isCompany$ ? 24 : 'x-large'"
           />
           <VTooltip
             activator="parent"
             location="bottom"
-            :text="auth.isCompany$ ? 'Profil prodavca' : 'Moj profil'"
+            :text="auth.isCompany$ ? 'Profil' : 'Moj profil'"
             open-delay="345"
           />
         </VBtn>

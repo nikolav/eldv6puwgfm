@@ -1,4 +1,6 @@
+export { default as IconAdjustSettings } from "./IconAdjustSettings.vue";
 export { default as IconAttach } from "./IconAttach.vue";
+export { default as IconBox } from "./IconBox.vue";
 export { default as IconChatBubbleOutline } from "./IconChatBubbleOutline.vue";
 export { default as IconChatDotsOutlined } from "./IconChatDotsOutlined.vue";
 export { default as IconCheck } from "./IconCheck.vue";

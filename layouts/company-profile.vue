@@ -1,43 +1,51 @@
 <script setup lang="ts">
 import { AppBarMain } from "@/components/app";
 
-definePageMeta({
-  middleware: "authorized-company",
-});
-
 const { appBarHeight } = useAppConfig().layout;
 const companyProfileDrawerWidth = 52;
 
 const sidebarLinksCompanyProfile = [
   {
-    icon: "$iconIdCardCompany",
-    tooltip: "Profil",
+    icon: "$iconHome",
+    tooltip: "Pregled",
     to: "company-profile",
     title: "profil",
+    size: 30,
   },
   {
-    icon: "$iconCheck",
-    tooltip: "Profil",
-    to: "company-profile",
-    title: "iRmgkW0YEZkeiaNprofil",
+    icon: "$iconIdCardCompany",
+    tooltip: "Lićna karta",
+    to: "company-profile-id",
+    title: "profil-id",
+    size: "large",
+  },
+  {
+    icon: "$iconBox",
+    tooltip: "Asortiman, ponuda",
+    to: "company-profile-goods",
+    title: "asortiman",
+    size: undefined,
   },
   {
     icon: "$iconCheck",
     tooltip: "Profil",
     to: "company-profile",
     title: "UWURkgUfz5K4wzCprofil",
+    size: "large",
   },
   {
     icon: "$iconCheck",
     tooltip: "Profil",
     to: "company-profile",
     title: "fdQMUfwvV1zvbCOCjj42profil",
+    size: "large",
   },
   {
     icon: "$iconCheck",
     tooltip: "Profil",
     to: "company-profile",
     title: "DzXnNXzKBLgbrprofil",
+    size: "large",
   },
 ];
 
@@ -52,12 +60,33 @@ const sidebarLinksCompanyProfile = [
       location="start"
       :width="companyProfileDrawerWidth"
     >
-      <VList class="mt-n2 text-center" variant="plain">
+      <div
+        class="d-flex flex-col mt-4 gap-y-2 sm:gap-y-4 text-center items-center"
+      >
+        <template v-for="node in sidebarLinksCompanyProfile" :key="node.title">
+          <VBtn
+            color="on-primary-darken-1"
+            variant="plain"
+            :to="{ name: node.to }"
+            icon
+          >
+            <VIcon :icon="node.icon" :size="node.size" />
+            <VTooltip
+              :offset="3"
+              activator="parent"
+              location="end center"
+              :text="node.tooltip"
+              open-delay="345"
+            />
+          </VBtn>
+        </template>
+      </div>
+      <!-- <VList class="mt-n2 text-center" variant="plain">
         <template v-for="node in sidebarLinksCompanyProfile" :key="node.title">
           <VListItem :to="{ name: node.to }" class="px-0 py-3 py-sm-4">
-            <VIcon :icon="node.icon" size="large" />
+            <VIcon :icon="node.icon" :size="node.size" />
             <VTooltip
-            :offset="2"
+              :offset="2"
               activator="parent"
               location="end center"
               :text="node.tooltip"
@@ -65,7 +94,7 @@ const sidebarLinksCompanyProfile = [
             />
           </VListItem>
         </template>
-      </VList>
+      </VList> -->
     </VNavigationDrawer>
     <VMain>
       <slot />

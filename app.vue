@@ -7,11 +7,6 @@
 // });
 import { SpinnerAppProcessing } from "@/components/ui";
 
-const appMounted$ = useAppMounted();
-onUnmounted(() => {
-  appMounted$.value = false;
-});
-
 // theme
 // import { type IThemeToggle } from "@/types";
 const { theme } = useNuxtApp().$theme;

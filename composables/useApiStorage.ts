@@ -56,6 +56,10 @@ export const useApiStorage = (initialEnabled = true) => {
     }
   );
 
+  const ioevent_ = computed(() =>
+    auth.isAuth$ ? `${IOEVENT_STORAGE_CHANGE}${get(auth.user$, "id")}` : ""
+  );
+
   // upload({
   //   '#1:fileName': {
   //     'data': {},
@@ -135,20 +139,12 @@ export const useApiStorage = (initialEnabled = true) => {
     if (enabled$.value) return await mutateRemoveFile({ fileID });
   };
 
+  const topicStorageMeta_ = computed(() =>
+    auth.isAuth$ ? `${TAG_STORAGE}${get(auth.user$, "id")}` : undefined
+  );
   // # .meta
-  const {
-    enabled: enabledMeta$,
-    topic$: topicStorageUser$,
-    upsert: metaPut,
-    IOEVENT: IOEVENT_STORAGE_META_CHANGE,
-  } = useDocs();
-
-  watch(
-    () => get(auth.user$, "id"),
-    (id) => {
-      if (!id) return;
-      topicStorageUser$.value = `${TAG_STORAGE}${id}`;
-    }
+  const { upsert: metaPut, IOEVENT: IOEVENT_STORAGE_META_CHANGE } = useDocs(
+    toValue(topicStorageMeta_)
   );
 
   const meta = async (
@@ -176,15 +172,8 @@ export const useApiStorage = (initialEnabled = true) => {
   };
 
   // @io/listen
-  watch(
-    () => get(auth.user$, "id"),
-    (id) => {
-      if (!id) return;
-      useIOEvent(`${IOEVENT_STORAGE_CHANGE}${id}`, reloadFiles);
-    }
-  );
+  useIOEvent(toValue(ioevent_), reloadFiles);
   watchEffect(() => {
-    if (!enabledMeta$.value) return;
     useIOEvent(toValue(IOEVENT_STORAGE_META_CHANGE), reloadFiles);
   });
 
@@ -198,6 +187,7 @@ export const useApiStorage = (initialEnabled = true) => {
     download,
     meta,
     publicUrl,
+    reload: reloadFiles,
 
     // # flags
     uploadStatus,

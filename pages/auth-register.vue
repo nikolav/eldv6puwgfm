@@ -3,6 +3,7 @@ import { schemaAuthCredentials } from "@/schemas";
 
 definePageMeta({
   layout: "auth",
+  middleware: "guest",
 });
 
 const auth = useStoreApiAuth();

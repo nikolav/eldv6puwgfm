@@ -6,6 +6,7 @@ const auth = useStoreApiAuth();
 
 definePageMeta({
   layout: "company-profile",
+  middleware: "authorized-company",
 });
 
 // #eos
