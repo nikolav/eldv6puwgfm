@@ -1,9 +1,20 @@
 <script setup lang="ts">
+import { emojify } from "node-emoji";
+import { get, matchEmailStart, capitalize } from "@/utils";
+
 const props = defineProps<{ height: number }>();
+
 const auth = useStoreApiAuth();
+const route_ = useRoute();
+const isRouteCompanyProfile$ = computed(
+  () => "company-profile" === route_.name
+);
+
 const { current$, routeNameByTitle, cache: appMenuCache } = useAppMenu();
+
 const { APP_PROCESSING } = useAppConfig().key;
 const flags = useStoreFlags();
+
 const authSubmitLogout = async () => {
   try {
     flags.on(APP_PROCESSING);
@@ -31,6 +42,16 @@ const authSubmitLogout = async () => {
         </NuxtLink>
       </strong>
     </VAppBarTitle>
+    <template v-if="auth.isCompany$ && isRouteCompanyProfile$">
+      <VSpacer />
+      <strong class="text-medium-emphasis text-body-1 !font-sans">
+        {{ emojify(":wave:") }} Zdravo,
+        {{ capitalize(matchEmailStart(get(auth.user$, "email"))) }}.
+      </strong>
+      <VSpacer />
+      <VSpacer />
+      <VSpacer />
+    </template>
     <template #append>
       <VBtn
         v-if="!auth.isAuth$"
@@ -48,7 +69,7 @@ const authSubmitLogout = async () => {
         <strong> Prijava/Registracija </strong>
         <VTooltip
           location="bottom"
-          text="Članovi, kupci, prodavci"
+          text="Kupci, prodavci, članovi"
           activator="parent"
           open-delay="456"
         />
@@ -82,7 +103,7 @@ const authSubmitLogout = async () => {
           <VTooltip
             activator="parent"
             location="bottom"
-            :text="auth.isCompany$ ? 'Profil firme' : 'Moj profil'"
+            :text="auth.isCompany$ ? 'Profil prodavca' : 'Moj profil'"
             open-delay="345"
           />
         </VBtn>

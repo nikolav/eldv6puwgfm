@@ -10,6 +10,7 @@ export { default as IconEnvelopeOutlined } from "./IconEnvelopeOutlined.vue";
 export { default as IconGithubOutlined } from "./IconGithubOutlined.vue";
 export { default as IconHelpSquareFilled } from "./IconHelpSquareFilled.vue";
 export { default as IconHomeFilled } from "./IconHomeFilled.vue";
+export { default as IconIdCardCompanyOutlined } from "./IconIdCardCompanyOutlined.vue";
 export { default as IconJournalOutline } from "./IconJournalOutline.vue";
 export { default as IconKey } from "./IconKey.vue";
 export { default as IconLockOpenOutline } from "./IconLockOpenOutline.vue";

@@ -30,6 +30,7 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconIdCardCompanyOutlined,
   IconAttach,
   IconChatBubbleOutline,
   IconChatDotsOutlined,
@@ -196,6 +197,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZimnica: IconZimnica,
         iconKorpaKantar: IconKorpaKantar,
         //
+        iconIdCardCompany: IconIdCardCompanyOutlined,
         iconAttach: IconAttach,
         iconChat: IconChatBubbleOutline,
         iconChatDots: IconChatDotsOutlined,

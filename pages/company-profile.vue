@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import { emojify } from "node-emoji";
+import { get, matchEmailStart, capitalize } from "@/utils";
+
+const auth = useStoreApiAuth();
+
 definePageMeta({
-  middleware: "authorized-company",
   layout: "company-profile",
 });
 

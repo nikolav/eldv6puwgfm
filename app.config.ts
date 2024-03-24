@@ -23,6 +23,7 @@ export default defineAppConfig({
     TASKS_ALL: "@tasks:all",
     TASKS_USER_prefix: "Njvrw1gYEXd3yv:",
     LIKES_preix: "@likes:",
+    TAG_COMPANY_PROFILE_prefix: "@company:profile:2DstdiK::",
   },
   //
   key: {
