@@ -101,12 +101,7 @@ const authSubmitLogin = async () => {
             </template>
           </VTextField>
         </VCardText>
-        <VCardActions class="d-flex flex-col gap-y-6 sm:gap-y-8 pt-0">
-          <NuxtLink :to="{ name: 'auth-register' }">
-            <a class="cursor-pointer hover:underline text-primary-darken-1">
-              <em> Registracija, nemam nalog. </em>
-            </a>
-          </NuxtLink>
+        <VCardActions class="d-flex flex-col gap-y-6 sm:gap-y-8 pt-4">
           <VBtn
             size="large"
             block
@@ -116,6 +111,11 @@ const authSubmitLogin = async () => {
           >
             Ok
           </VBtn>
+          <NuxtLink :to="{ name: 'auth-register' }">
+            <a class="cursor-pointer hover:underline text-primary-darken-1">
+              <em> Registracija, nemam nalog. </em>
+            </a>
+          </NuxtLink>
         </VCardActions>
       </VCard>
     </VForm>

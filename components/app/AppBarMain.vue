@@ -1,13 +1,23 @@
 <script setup lang="ts">
 const props = defineProps<{ height: number }>();
 const auth = useStoreApiAuth();
-
 const { current$, routeNameByTitle, cache: appMenuCache } = useAppMenu();
+const { APP_PROCESSING } = useAppConfig().key;
+const flags = useStoreFlags();
+const authSubmitLogout = async () => {
+  try {
+    flags.on(APP_PROCESSING);
+    await auth.logout();
+  } catch (error) {
+    console.error({ "auht:error:logout": error });
+  }
+  flags.off(APP_PROCESSING);
+};
 
 // #eos
 </script>
 <template>
-  <VAppBar flat :height="props.height" elevation="1">
+  <VAppBar flat :height="props.height" elevation="1" id="appbar--main">
     <VAppBarTitle
       id="appbar-main--title"
       class="opacity-95 hover:opacity-100 ms-6"
@@ -22,27 +32,27 @@ const { current$, routeNameByTitle, cache: appMenuCache } = useAppMenu();
       </strong>
     </VAppBarTitle>
     <template #append>
-      <div v-if="!auth.isAuth$" class="-me-2.5">
-        <VBtn
-          :to="{ name: 'auth-login' }"
-          class="text-none group/auth"
-          color="primary-darken-1"
-        >
-          <VIcon
-            size="x-large"
-            start
-            icon="$iconPerson"
-            class="group-hover/auth:scale-110 transition-transform"
-          />
-          <strong>prijava/registracija</strong>
-          <VTooltip
-            location="bottom"
-            text="Članovi, kupci, prodavci"
-            activator="parent"
-            open-delay="456"
-          />
-        </VBtn>
-      </div>
+      <VBtn
+        v-if="!auth.isAuth$"
+        :to="{ name: 'auth-login' }"
+        class="text-none group/auth fill-height"
+        color="primary-darken-1"
+        rounded="0"
+      >
+        <VIcon
+          size="xx-large"
+          start
+          icon="$iconPerson"
+          class="group-hover/auth:scale-110 transition-transform"
+        />
+        <strong> Prijava/Registracija </strong>
+        <VTooltip
+          location="bottom"
+          text="Članovi, kupci, prodavci"
+          activator="parent"
+          open-delay="456"
+        />
+      </VBtn>
       <template v-else>
         <VBtn
           :to="{ name: routeNameByTitle(appMenuCache.get()) }"
@@ -50,7 +60,7 @@ const { current$, routeNameByTitle, cache: appMenuCache } = useAppMenu();
           icon
           color="primary"
         >
-          <VIcon icon="$iconStore" size="x-large" />
+          <VIcon icon="$iconStoreFront" size="35" />
           <VTooltip
             activator="parent"
             location="bottom"
@@ -59,36 +69,41 @@ const { current$, routeNameByTitle, cache: appMenuCache } = useAppMenu();
           />
         </VBtn>
         <VBtn
-          :to="{ name: 'user-profile' }"
+          :to="{ name: auth.isCompany$ ? 'company-profile' : 'user-profile' }"
           variant="text"
           icon
           color="primary"
-          class="ms-4"
+          class="ms-4 ms-sm-8"
         >
-          <VIcon icon="$iconDashboard" size="large" />
+          <VIcon
+            :icon="auth.isCompany$ ? '$iconDashboard' : '$iconUserCircle'"
+            size="large"
+          />
           <VTooltip
             activator="parent"
             location="bottom"
-            text="Moj profil"
+            :text="auth.isCompany$ ? 'Profil firme' : 'Moj profil'"
             open-delay="345"
           />
         </VBtn>
-        <VBtn
-          @click="auth.logout()"
-          icon
-          variant="text"
-          color="primary-darken-1"
-          size="small"
-          class="ms-8 ms-sm-12"
-        >
-          <VIcon icon="$iconPowerOff" />
-          <VTooltip
-            location="bottom"
-            open-delay="345"
-            activator="parent"
-            text="Odjava, kraj"
-          />
-        </VBtn>
+        <VForm @submit.prevent="authSubmitLogout" autocomplete="off">
+          <VBtn
+            type="submit"
+            icon
+            variant="text"
+            color="primary-darken-1"
+            size="small"
+            class="ms-8 ms-sm-16"
+          >
+            <VIcon icon="$iconPowerOff" />
+            <VTooltip
+              location="bottom"
+              open-delay="345"
+              activator="parent"
+              text="Odjava/Kraj"
+            />
+          </VBtn>
+        </VForm>
       </template>
     </template>
   </VAppBar>
@@ -96,5 +111,8 @@ const { current$, routeNameByTitle, cache: appMenuCache } = useAppMenu();
 <style lang="scss">
 #appbar-main--title .v-toolbar-title__placeholder {
   overflow: visible !important;
+}
+#appbar--main .v-toolbar__append {
+  margin-inline: auto 0 !important;
 }
 </style>

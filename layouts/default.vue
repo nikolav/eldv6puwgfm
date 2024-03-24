@@ -47,19 +47,15 @@ watch(search_, debounceSearchHandle);
         </template>
         <VCardItem>
           <template #append>
-            <div class="d-flex items-center gap-x-8 me-2 me-sm-6">
-              <!-- <VAvatar color="primary2" size="x-large" variant="elevated">
-                <strong class="text-2xl"> 👨🏽 </strong>
-              </VAvatar> -->
-              <VBtn
-                icon
-                variant="elevated"
-                color="primary3-lighten-1"
-                size="66"
-              >
-                <VIcon icon="$iconShoppingCart" size="x-large" />
-              </VBtn>
-            </div>
+            <VBtn
+              icon
+              size="72"
+              variant="text"
+              elevation="4"
+              class="me-2 mt-2 me-sm-6"
+            >
+              <VIcon icon="$iconKorpaKantar" size="72" />
+            </VBtn>
           </template>
         </VCardItem>
         <VForm

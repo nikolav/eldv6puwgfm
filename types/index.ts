@@ -33,6 +33,7 @@ export interface IAuthResponse {
 export interface IAuthWhoResponse {
   id?: number | undefined;
   email?: string | undefined;
+  company?: boolean | undefined;
   error?: string | undefined;
 }
 

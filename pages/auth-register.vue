@@ -5,11 +5,16 @@ definePageMeta({
   layout: "auth",
 });
 
+const auth = useStoreApiAuth();
+
 const authEmail$ = ref("");
 const authPassword$ = ref("");
 const authIsCompany$ = ref(false);
 
-const authSubmit = () => {
+const { APP_PROCESSING } = useAppConfig().key;
+const flags = useStoreFlags();
+
+const authSubmitRegister = async () => {
   let creds;
   try {
     creds = schemaAuthCredentials.parse({
@@ -23,14 +28,21 @@ const authSubmit = () => {
   }
   if (!creds) return;
   //
-  console.log({ creds });
+  try {
+    // @@
+    flags.on(APP_PROCESSING);
+    await auth.register(creds);
+  } catch (error) {
+    console.log({ error });
+  }
+  flags.off(APP_PROCESSING);
 };
 
 // #eos
 </script>
 <template>
   <section class="page-auth-register">
-    <VForm @submit.prevent="authSubmit" autocomplete="off">
+    <VForm @submit.prevent="authSubmitRegister" autocomplete="off">
       <VCard
         elevation="2"
         class="pa-1 pa-sm-2 mx-auto *mt-sm-10 backdrop-blur-lg"
@@ -91,12 +103,7 @@ const authSubmit = () => {
             </template>
           </VCheckbox>
         </VCardText>
-        <VCardActions class="d-flex flex-col gap-y-6 sm:gap-y-8 pt-0">
-          <NuxtLink :to="{ name: 'auth-login' }">
-            <a class="cursor-pointer hover:underline text-primary-darken-1">
-              <em> Prijava, imam nalog. </em>
-            </a>
-          </NuxtLink>
+        <VCardActions class="d-flex flex-col gap-y-4 sm:gap-y-6 pt-2">
           <VBtn
             size="large"
             block
@@ -106,6 +113,11 @@ const authSubmit = () => {
           >
             Ok
           </VBtn>
+          <NuxtLink :to="{ name: 'auth-login' }">
+            <a class="cursor-pointer hover:underline text-primary-darken-1">
+              <em> Prijava, imam nalog. </em>
+            </a>
+          </NuxtLink>
         </VCardActions>
       </VCard>
     </VForm>

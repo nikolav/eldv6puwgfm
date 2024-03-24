@@ -6,3 +6,4 @@ export { schemaStorageMeta } from "./storage-meta";
 export { schemaUsersNotReserved } from "./users-is-user";
 export { schemaTask } from "./task";
 export { schemaChatTask } from "./chat-task";
+export { schemaUserIsCompany } from "./user-is-company";

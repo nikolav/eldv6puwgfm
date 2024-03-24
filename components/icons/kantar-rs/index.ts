@@ -14,3 +14,4 @@ export { default as IconGlobeKantar } from "./IconGlobeKantar.vue";
 export { default as IconSrbija } from "./IconSrbija.vue";
 export { default as IconLogoKantar } from "./IconLogoKantar.vue";
 export { default as IconLogoKantarH } from "./IconLogoKantarH.vue";
+export { default as IconKorpaKantar } from "./IconKorpaKantar.vue";

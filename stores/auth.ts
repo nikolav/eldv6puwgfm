@@ -24,6 +24,7 @@ import {
   schemaAuthDataAdmin,
   schemaJwt,
   schemaUsersNotReserved,
+  schemaUserIsCompany,
 } from "@/schemas";
 
 export const useStoreApiAuth = defineStore("auth", () => {
@@ -105,6 +106,16 @@ export const useStoreApiAuth = defineStore("auth", () => {
     try {
       return true === schemaAuthDataAdmin.safeParse(user$.value).success;
     } catch (error_) {
+      // pass
+    }
+    return false;
+  });
+
+  // user `.is_company` flag
+  const isCompany$ = computed(() => {
+    try {
+      return true === schemaUserIsCompany.safeParse(user$.value).success;
+    } catch (error) {
       // pass
     }
     return false;
@@ -204,6 +215,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
     isAuth$,
     isUser$,
     isAdmin$,
+    isCompany$,
     initialized$,
 
     // @auth/crud
