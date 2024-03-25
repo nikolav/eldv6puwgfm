@@ -1,6 +1,8 @@
 // @lodash
 import lodash from "lodash";
 const {
+  keys,
+  values,
   assign,
   at,
   capitalize,
@@ -61,6 +63,8 @@ export {
   uniqueId,
   unset,
   zipObject,
+  values,
+  keys,
 };
 
 export * from "./re";
