@@ -102,7 +102,7 @@ const authSubmitLogout = async () => {
           <VTooltip
             activator="parent"
             location="bottom"
-            :text="auth.isCompany$ ? 'Profil' : 'Moj profil'"
+            :text="auth.isCompany$ ? 'Profil gazdinstva' : 'Moj profil'"
             open-delay="345"
           />
         </VBtn>

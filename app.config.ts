@@ -23,7 +23,7 @@ export default defineAppConfig({
     TASKS_ALL: "@tasks:all",
     TASKS_USER_prefix: "Njvrw1gYEXd3yv:",
     LIKES_preix: "@likes:",
-    TAG_COMPANY_PROFILE_prefix: "@company:profile:2DstdiK::",
+    TAG_COMPANY_PROFILE_prefix: "@company:profile:7xaacB::",
   },
   //
   key: {
@@ -37,6 +37,7 @@ export default defineAppConfig({
     PROVIDE_APP_DATA: "Ud8dHoadmBgSr55P6gJ",
     THEME: "0Fgky53B2UbA1fG3lKcV",
     TASKS_SELECTED_IDS: "f6sSDP",
+    FORM_COMPANY_ID: "2wIETsis",
   },
   //
   FIELDS_OMIT_STORAGE_META: ["id", "created_at", "updated_at", "__typename"],

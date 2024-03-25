@@ -118,3 +118,11 @@ export interface IDocDataTask {
   href?: string | undefined;
   description?: string | undefined;
 }
+
+export interface ICompanyProfile {
+  name?: string | undefined;
+  address?: string | undefined;
+  phone?: string | undefined;
+  delivery?: string | undefined;
+  about?: string | undefined;
+}
