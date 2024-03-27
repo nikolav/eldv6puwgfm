@@ -62,7 +62,7 @@
   {
     "title": "Zanat",
     "icon": "",
-    "image": "/kantar-rs/zanat.png",
+    "image": "/zanat.png",
     "color": "primary2-darken-2",
     "to": "zanat"
   },

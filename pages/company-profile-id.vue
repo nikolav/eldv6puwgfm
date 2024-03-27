@@ -14,8 +14,9 @@ const tab$ = ref("kontakt");
 const {
   key: { FORM_COMPANY_ID },
   docs: { TAG_COMPANY_PROFILE_prefix },
+  com: { FIELDS },
 } = useAppConfig();
-const FIELDS = ["name", "address", "phone", "delivery", "about"];
+
 const { data: com_, put: profileUpsert } = useDoc<ICompanyProfile>(
   `${TAG_COMPANY_PROFILE_prefix}${get(auth.user$, "id")}`
 );
@@ -90,7 +91,7 @@ const submitFormCompanyId = async () => {
 
     <!-- @form: --start -->
     <VForm @submit.prevent="submitFormCompanyId">
-      <VCard max-width="856" class="mx-auto mt-12 mt-md-16">
+      <VCard max-width="812" class="mx-auto mt-4 mt-md-10">
         <VCardTitle class="bg-primary pa-4 px-6">
           <h2 class="*text-center text-h5 !font-sans *text-medium-emphasis">
             Lična karta gazdinstva
@@ -120,11 +121,36 @@ const submitFormCompanyId = async () => {
             </VTab>
           </VTabs>
         </VCardItem>
-        <VCardText class="pt-2 pt-sm-6 min-h-[302px]">
+        <VCardText class="pt-2 pt-sm-8 *min-h-[302px]">
           <VWindow v-model="tab$" mandatory class="overflow-visible" continuous>
             <VFadeTransition mode="in-out" leave-absolute>
               <VWindowItem value="kontakt">
                 <div class="px-sm-2 px-md-8 sm:space-y-4">
+                  <div class="d-sm-flex items-baseline justify-between ga-4">
+                    <VTextField
+                      v-model="form.ownerFirstName.value"
+                      name="ownerFirstName"
+                      variant="underlined"
+                      label="Gazda, Ime"
+                      clearable
+                    >
+                      <template #prepend>
+                        <VIcon
+                          color="primary-darken-2"
+                          icon="$iconOwner"
+                          size="x-large"
+                          start
+                        />
+                      </template>
+                    </VTextField>
+                    <VTextField
+                      v-model="form.ownerLastName.value"
+                      name="ownerLasttName"
+                      variant="underlined"
+                      label="Prezime"
+                      clearable
+                    />
+                  </div>
                   <VTextField
                     name="name"
                     v-model="form.name.value"

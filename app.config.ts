@@ -16,6 +16,17 @@ export default defineAppConfig({
     email: "user@nikolav.rs",
     password: "user@nikolav.rs",
   },
+  com: {
+    FIELDS: [
+      "ownerFirstName",
+      "ownerLastName",
+      "name",
+      "address",
+      "phone",
+      "delivery",
+      "about",
+    ],
+  },
   docs: {
     TAG_USERS: "@users",
     prefix_TAG_USERS_DOCS: "pH82VKaHwf3RLfZlR:",
@@ -23,7 +34,7 @@ export default defineAppConfig({
     TASKS_ALL: "@tasks:all",
     TASKS_USER_prefix: "Njvrw1gYEXd3yv:",
     LIKES_preix: "@likes:",
-    TAG_COMPANY_PROFILE_prefix: "@company:profile:7xaacB::",
+    TAG_COMPANY_PROFILE_prefix: "@company:profile:fwgM8::",
   },
   //
   key: {

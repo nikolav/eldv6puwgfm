@@ -1,24 +1,44 @@
 <script setup lang="ts">
-import { emojify } from "node-emoji";
-import { get, matchEmailStart, capitalize } from "@/utils";
-
-const auth = useStoreApiAuth();
-
 definePageMeta({
   layout: "company-profile",
   middleware: "authorized-company",
 });
 
+const perPage = 12;
+const data = Array.from({ length: 55 }, (val, key) => ({
+  id: key,
+  data: idGen(),
+  selectable: true,
+}));
+const page$ = ref(1);
+const i$ = ref();
+
 // #eos
 </script>
 <template>
   <section class="page--company-profile">
-    <h1>@page: company-profile</h1>
-    <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt odit
-      placeat laboriosam, quibusdam, id culpa vero mollitia corrupti rerum minus
-      veniam vitae laudantium natus. In itaque ipsa tenetur perspiciatis quo.
-    </p>
+    <pre>[{{ i$ }}]</pre>
+    <VPagination
+      rounded="circle"
+      :length="Math.ceil(data.length / perPage)"
+      v-model="page$"
+    />
+    <VDataIterator
+      show-select
+      item-selectable="selectable"
+      item-value="id"
+      v-model="i$"
+      :items="data"
+      :page="page$"
+      :items-per-page="perPage"
+      select-strategy="single"
+    >
+      <template #default="{ items, toggleSelect }">
+        <template v-for="node in items" :key="node.raw.id">
+          <p @click="toggleSelect(node)">{{ node.raw.data }}</p>
+        </template>
+      </template>
+    </VDataIterator>
   </section>
 </template>
 <style lang="scss" scoped>

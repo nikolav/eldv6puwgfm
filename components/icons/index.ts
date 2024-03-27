@@ -23,6 +23,7 @@ export { default as IconLocationFilled } from "./IconLocationFilled.vue";
 export { default as IconLockOpenOutline } from "./IconLockOpenOutline.vue";
 export { default as IconMagnifyingGlasLight } from "./IconMagnifyingGlasLight.vue";
 export { default as IconMenu } from "./IconMenu.vue";
+export { default as IconOwnerFilled } from "./IconOwnerFilled.vue";
 export { default as IconPaperPlaeOutline } from "./IconPaperPlaeOutline.vue";
 export { default as IconPeopleFilled } from "./IconPeopleFilled.vue";
 export { default as IconPersonAddOutline } from "./IconPersonAddOutline.vue";
