@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { emojify } from "node-emoji";
-import { get, matchEmailStart, capitalize } from "@/utils";
 
 const props = defineProps<{ height: number }>();
 
@@ -113,7 +112,7 @@ const authSubmitLogout = async () => {
             variant="text"
             color="primary-darken-1"
             size="small"
-            class="ms-8 ms-sm-16"
+            class="ms-8 ms-sm-16 me-1 me-sm-2"
           >
             <VIcon icon="$iconPowerOff" />
             <VTooltip

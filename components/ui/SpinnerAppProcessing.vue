@@ -2,7 +2,10 @@
 import { SpinnerBeat } from "@/components/spinners";
 
 const flags = useStoreFlags();
-const { APP_PROCESSING } = useAppConfig().key;
+const {
+  key: { APP_PROCESSING },
+  layout: { appBarHeight },
+} = useAppConfig();
 
 // #eos
 </script>
@@ -11,7 +14,8 @@ const { APP_PROCESSING } = useAppConfig().key;
   <VFadeTransition>
     <strong
       v-if="flags.isSet(APP_PROCESSING)"
-      class="*bg-red-600/20 position-fixed top-16 left-1/2 -translate-x-[50%] -translate-y-[50%] z-[9999]"
+      class="*bg-red-600/20 position-fixed left-1/2 -translate-x-[50%] -translate-y-[50%] z-[9999]"
+      :style="`top: calc(${Math.floor(appBarHeight / 2)}px + .25rem)`"
     >
       <SpinnerBeat v-bind="$attrs" />
     </strong>

@@ -16,6 +16,9 @@ export default defineAppConfig({
     email: "user@nikolav.rs",
     password: "user@nikolav.rs",
   },
+  app: {
+    DEFAULT_TRANSITION: "slide-y-reverse-transition",
+  },
   com: {
     FIELDS: [
       "ownerFirstName",
@@ -49,6 +52,7 @@ export default defineAppConfig({
     THEME: "0Fgky53B2UbA1fG3lKcV",
     TASKS_SELECTED_IDS: "f6sSDP",
     FORM_COMPANY_ID: "2wIETsis",
+    PRODUCT_SELECTED: "Be3Q6GMsqZPSP",
   },
   //
   FIELDS_OMIT_STORAGE_META: ["id", "created_at", "updated_at", "__typename"],
