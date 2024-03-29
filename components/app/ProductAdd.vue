@@ -36,7 +36,7 @@ const submitProductAdd = async () => {
       </h2>
       <VSpacer />
       <VBtn
-        @click="close"
+        @click="props_.close"
         icon
         variant="text"
         size="large"
