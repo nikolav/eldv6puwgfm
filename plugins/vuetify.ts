@@ -30,6 +30,12 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconImageOutlined,
+  IconProductAdd,
+  IconBatteryHalf,
+  IconCategory,
+  IconRSDinar,
+  IconEraserFilled,
   IconLink,
   IconPlusCircle,
   IconCheckbox,
@@ -211,6 +217,12 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconImage: IconImageOutlined,
+        iconProductAdd: IconProductAdd,
+        iconBattery: IconBatteryHalf,
+        iconCategory: IconCategory,
+        iconRSD: IconRSDinar,
+        iconEraser: IconEraserFilled,
         iconLink: IconLink,
         iconPlusCircle: IconPlusCircle,
         iconCheckboxOn: IconCheckbox,

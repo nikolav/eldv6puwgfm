@@ -44,10 +44,8 @@ const productIsSelected = (id: number) => id === selectedProduct$.value;
     >
       <ProductAdd :close="toggleProductAdd.off" />
     </VDialog>
-    <h1>Ponuda</h1>
-    <p>{{ JSON.stringify({ selectedProduct$ }, null, 2) }}</p>
     <div class="px-2 px-sm-6">
-      <VCard max-width="956" class="mx-auto">
+      <VCard max-width="956" class="mx-auto mt-10">
         <VToolbar height="48" color="primary" flat>
           <VToolbarTitle>
             <VIcon start size="small" class="opacity-50" icon="$iconBoxes" />
