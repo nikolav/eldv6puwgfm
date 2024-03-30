@@ -1,53 +1,40 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import type { OrNoValue } from "@/types";
 
 const props_ = defineProps<{ close: () => void }>();
 
 const { smAndUp } = useDisplay();
 
-const key_PRODUCT_ADD = "4r1Jt6kcp0";
+const FIELDS = [
+  "name",
+  "price",
+  "category",
+  "stock",
+  "stockType",
+  "onSale",
+  "description",
+];
+const { PRODUCT_ADD } = useAppConfig().key;
 const $$main = useStoreMain();
-const productName$ = computed({
-  get: () => $$main.get(`${key_PRODUCT_ADD}:name`),
-  set: (val: string) => $$main.put({ [`${key_PRODUCT_ADD}:name`]: val }),
-});
-const productPrice$ = computed({
-  get: () => $$main.get(`${key_PRODUCT_ADD}:price`),
-  set: (val: OrNoValue<number>) =>
-    $$main.put({ [`${key_PRODUCT_ADD}:price`]: val }),
-});
-const productCategory$ = computed({
-  get: () => $$main.get(`${key_PRODUCT_ADD}:category`),
-  set: (val: OrNoValue<string>) =>
-    $$main.put({ [`${key_PRODUCT_ADD}:category`]: val }),
-});
-const productStock$ = computed({
-  get: () => $$main.get(`${key_PRODUCT_ADD}:stock`),
-  set: (val: OrNoValue<number>) =>
-    $$main.put({ [`${key_PRODUCT_ADD}:stock`]: val }),
-});
-const productStockType$ = computed({
-  get: () => $$main.get(`${key_PRODUCT_ADD}:stock-type`),
-  set: (val: OrNoValue<string>) =>
-    $$main.put({ [`${key_PRODUCT_ADD}:stock-type`]: val }),
-});
-const productOnSale$ = computed({
-  get: () => $$main.get(`${key_PRODUCT_ADD}:on-sale`),
-  set: (val: OrNoValue<boolean>) =>
-    $$main.put({ [`${key_PRODUCT_ADD}:on-sale`]: val }),
-});
-const productDescription$ = computed({
-  get: () => $$main.get(`${key_PRODUCT_ADD}:description`),
-  set: (val: OrNoValue<string>) =>
-    $$main.put({ [`${key_PRODUCT_ADD}:description`]: val }),
-});
-//
+const product = reduce(
+  FIELDS,
+  (res, field) => {
+    res[field] = computed({
+      get: () => $$main.get(`${PRODUCT_ADD}:${field}`),
+      set: (val) => $$main.put({ [`${PRODUCT_ADD}:${field}`]: val }),
+    });
+    return res;
+  },
+  <Record<string, Ref>>{}
+);
+
+// @@ image1
 const fileImage01$ = ref();
 const productImage01$ = ref();
 watch(fileImage01$, async ([image1]) => {
   productImage01$.value = null == image1 ? undefined : await dataUrl(image1);
 });
+// @@ image2
 const fileImage02$ = ref();
 const productImage02$ = ref();
 watch(fileImage02$, async ([image2]) => {
@@ -58,15 +45,15 @@ const submitProductAdd = async () => {
   console.log(`@submitProductAdd`);
 };
 const fieldsReset = () => {
-  productName$.value = "";
-  productPrice$.value = undefined;
-  productCategory$.value = undefined;
-  productStock$.value = undefined;
-  productStockType$.value = undefined;
   fileImage01$.value = [];
   fileImage02$.value = [];
-  productOnSale$.value = undefined;
-  productDescription$.value = undefined;
+  product.name.value = undefined;
+  product.price.value = undefined;
+  product.category.value = undefined;
+  product.stock.value = undefined;
+  product.stockType.value = undefined;
+  product.onSale.value = undefined;
+  product.description.value = undefined;
 };
 
 // #eos
@@ -122,7 +109,7 @@ const fieldsReset = () => {
           <div class="d-sm-flex justify-between items-center mt-sm-4">
             <!-- @fields:name -->
             <VTextField
-              v-model.trim="productName$"
+              v-model.trim="product.name.value"
               variant="underlined"
               label="Naziv *"
               clearable
@@ -139,7 +126,7 @@ const fieldsReset = () => {
             </VTextField>
             <!-- @fields:price -->
             <VTextField
-              v-model.number="productPrice$"
+              v-model.number="product.price.value"
               variant="underlined"
               label="Cena po JM."
               clearable
@@ -161,7 +148,7 @@ const fieldsReset = () => {
           <div class="d-sm-flex justify-between items-center mt-4">
             <!-- @fields:category -->
             <VSelect
-              v-model="productCategory$"
+              v-model="product.category.value"
               center-affix
               label="Robna grupa *"
               :items="['foo1', 'foo2', 'bar']"
@@ -176,7 +163,7 @@ const fieldsReset = () => {
             <!-- @fields:stock-type .jm -->
             <VSpacer v-if="smAndUp" />
             <VSelect
-              v-model="productStockType$"
+              v-model="product.stockType.value"
               variant="underlined"
               :items="[
                 {
@@ -197,7 +184,7 @@ const fieldsReset = () => {
 
             <!-- @fields:stock -->
             <VTextField
-              v-model.number="productStock$"
+              v-model.number="product.stock.value"
               type="number"
               variant="underlined"
               label="Zaliha"
@@ -223,7 +210,7 @@ const fieldsReset = () => {
               <VRow dense>
                 <VCol sm="4" class="*bg-red">
                   <VCheckbox
-                    v-model="productOnSale$"
+                    v-model="product.onSale.value"
                     color="primary"
                     label="Rasprodaja"
                   />
@@ -268,14 +255,14 @@ const fieldsReset = () => {
             </VContainer>
           </div>
           <!-- @@ -->
-          <!-- @rows:3 -->
+          <!-- @rows:4 -->
           <div class="mx-auto sm:w-[550px]">
             <VTextarea
               class="pa-1"
               variant="underlined"
               clearable
               label="Opis, Detalji"
-              v-model.trim="productDescription$"
+              v-model.trim="product.description.value"
             />
           </div>
         </section>

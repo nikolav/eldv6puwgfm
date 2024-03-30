@@ -53,6 +53,7 @@ export default defineAppConfig({
     TASKS_SELECTED_IDS: "f6sSDP",
     FORM_COMPANY_ID: "2wIETsis",
     PRODUCT_SELECTED: "Be3Q6GMsqZPSP",
+    PRODUCT_ADD: "HAvQCqapN1NuJFIoS",
   },
   //
   FIELDS_OMIT_STORAGE_META: ["id", "created_at", "updated_at", "__typename"],
