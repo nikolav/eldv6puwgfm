@@ -256,7 +256,7 @@ const fieldsReset = () => {
           </div>
           <!-- @@ -->
           <!-- @rows:4 -->
-          <div class="mx-auto sm:w-[550px]">
+          <div class="mx-auto" :class="smAndUp ? 'min-w-[550px]' : 'w-100'">
             <VTextarea
               class="pa-1"
               variant="underlined"

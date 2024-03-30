@@ -12,12 +12,17 @@ const pClasses = `text-body-1 !font-sans sm:indent-4`;
     >
       <VCardText class="space-y-2">
         <p :class="pClasses">
-          KANTAR.RS Vam omogućava lakše povezivanje sa kupcima u zemlji, kao i
-          jednostavnu pretragu i naručivanje proizvoda, dobara i narodnih
-          rukotvorina domaćeg porekla. Ova onlajn pijaca povezuje srpske
-          proizvođače i zanatlije sa potrošačima koji traže kvalitetne, zdravije
-          i sveže proizvode iz cele Srbije. Naša platforma se bavi povezivanjem
-          kupca i prodavca. Kupac se dogovara sa prodavcem oko vremena i načina
+          <NuxtLink :to="{ name: 'index' }"
+            ><strong class="text-primary hover:underline"
+              >KANTAR.RS</strong
+            ></NuxtLink
+          >
+          Vam omogućava lakše povezivanje sa kupcima u zemlji, kao i jednostavnu
+          pretragu i naručivanje proizvoda, dobara i narodnih rukotvorina
+          domaćeg porekla. Ova onlajn pijaca povezuje srpske proizvođače i
+          zanatlije sa potrošačima koji traže kvalitetne, zdravije i sveže
+          proizvode iz cele Srbije. Naša platforma se bavi povezivanjem kupca i
+          prodavca. Kupac se dogovara sa prodavcem oko vremena i načina
           isporuke. Kupovinu iz fotelje i dostavu svih proizvoda naručenih na
           teritoriji grada Beograda na kućnu adresu od sada je dostupno putem
           naše platforme KANTAR.RS.
