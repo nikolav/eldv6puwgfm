@@ -128,3 +128,26 @@ export interface ICompanyProfile {
   ownerFirstName?: string | undefined;
   ownerLastName?: string | undefined;
 }
+
+export interface IProduct {
+  id: number;
+  user_id: number;
+  name: string;
+  price?: OrNoValue<number>;
+  stock?: OrNoValue<number>;
+  stockType?: OrNoValue<string>;
+  onSale?: OrNoValue<boolean>;
+  description?: OrNoValue<string>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IProductData {
+  name?: string | undefined;
+  category?: string | undefined;
+  price?: number | undefined;
+  stock?: number | undefined;
+  stockType?: string | undefined;
+  onSale?: boolean | undefined;
+  description?: string | undefined;
+}

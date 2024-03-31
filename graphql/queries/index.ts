@@ -49,3 +49,20 @@ export const Q_tagsByDocId = gql`
     tagsByDocId(id: $id)
   }
 `;
+
+export const Q_productsByUser = gql`
+  query q_productsByUser($user_id: ID!) {
+    productsListByUser(user_id: $user_id) {
+      id
+      user_id
+      name
+      description
+      price
+      stockType
+      stock
+      onSale
+      created_at
+      updated_at
+    }
+  }
+`;

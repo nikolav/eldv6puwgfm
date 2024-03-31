@@ -5,17 +5,15 @@ const props_ = defineProps<{ close: () => void }>();
 
 const { smAndUp } = useDisplay();
 
-const FIELDS = [
-  "name",
-  "price",
-  "category",
-  "stock",
-  "stockType",
-  "onSale",
-  "description",
-];
-const { PRODUCT_ADD } = useAppConfig().key;
+const {
+  key: { PRODUCT_ADD, APP_PROCESSING },
+  docs: { PRODUCT_IMAGES },
+  products: { categories: CATEGORIES, fields: FIELDS },
+} = useAppConfig();
+
 const $$main = useStoreMain();
+
+// @cache: product input
 const product = reduce(
   FIELDS,
   (res, field) => {
@@ -28,21 +26,72 @@ const product = reduce(
   <Record<string, Ref>>{}
 );
 
-// @@ image1
+// @file: image1
 const fileImage01$ = ref();
 const productImage01$ = ref();
 watch(fileImage01$, async ([image1]) => {
   productImage01$.value = null == image1 ? undefined : await dataUrl(image1);
 });
-// @@ image2
+// @file: image2
 const fileImage02$ = ref();
 const productImage02$ = ref();
 watch(fileImage02$, async ([image2]) => {
   productImage02$.value = null == image2 ? undefined : await dataUrl(image2);
 });
 
+const { upsert: productsUpsert } = useProducts();
+const { upload } = useApiStorage();
+
+const toggleSnackbarProductAddStatus = useToggleFlag();
+
+const flags = useStoreFlags();
+const { tags } = useDocs();
 const submitProductAdd = async () => {
-  console.log(`@submitProductAdd`);
+  let pid;
+  const form = reduce(
+    FIELDS,
+    (data, field) => {
+      const val = toValue(product[field]);
+      if (null != val) {
+        data[field] = val;
+      }
+      return data;
+    },
+    <Record<string, any>>{}
+  );
+  if (isEmpty(form)) return;
+  try {
+    flags.on(APP_PROCESSING);
+    pid = get(await productsUpsert(form), "data.productsUpsert.id");
+    if (isEmpty(pid)) throw "--error";
+    const resUpload = await upload({
+      image1: {
+        file: get(toValue(fileImage01$), "[0]"),
+        data: {},
+      },
+      image2: {
+        file: get(toValue(fileImage02$), "[0]"),
+        data: {},
+      },
+    });
+    //
+    const id1 = Number(get(resUpload, "image1.id"));
+    const id2 = Number(get(resUpload, "image2.id"));
+    if (id1) {
+      await tags(Number(id1), { [`${PRODUCT_IMAGES}${pid}`]: true });
+      console.log({ id1 });
+    }
+    if (id2) {
+      await tags(Number(id2), { [`${PRODUCT_IMAGES}${pid}`]: true });
+      console.log({ id2 });
+    }
+  } catch (error) {
+    console.log(`@catch: error`);
+    console.error(error);
+  }
+  if (!isEmpty(pid)) toggleSnackbarProductAddStatus.on();
+  //
+  flags.off(APP_PROCESSING);
 };
 const fieldsReset = () => {
   fileImage01$.value = [];
@@ -60,6 +109,23 @@ const fieldsReset = () => {
 </script>
 <template>
   <VSheet :rounded="0" :elevation="0" class="fill-height d-flex flex-col">
+    <VSnackbar
+      v-model="toggleSnackbarProductAddStatus.isActive.value"
+      color="transparent"
+      variant="text"
+    >
+      <VAlert type="success" prominent elevation="4">
+        <div class="d-flex justify-between items-center gap-4 sm:gap-8">
+          <p>Proizvod je uspešno sačuvan.</p>
+          <VBtn
+            @click="toggleSnackbarProductAddStatus.off"
+            color="on-success"
+            variant="tonal"
+            >ok</VBtn
+          >
+        </div>
+      </VAlert>
+    </VSnackbar>
     <!-- @toolbar -->
     <VToolbar flat color="transparent">
       <VBtn @click="props_.close" icon variant="text" size="large">
@@ -97,7 +163,10 @@ const fieldsReset = () => {
     </VToolbar>
 
     <!-- @form -->
-    <VForm @submit.prevent="submitProductAdd" class="grow d-flex flex-col">
+    <VForm
+      @submit.prevent="submitProductAdd"
+      class="grow d-flex flex-col mt-sm-4"
+    >
       <div class="grow *bg-red">
         <!-- @@ -->
         <!-- @form:fields -->
@@ -151,12 +220,17 @@ const fieldsReset = () => {
               v-model="product.category.value"
               center-affix
               label="Robna grupa *"
-              :items="['foo1', 'foo2', 'bar']"
+              :items="CATEGORIES"
               variant="solo"
               class="sm:w-1/3"
             >
               <template #prepend>
-                <VIcon color="primary-darken-2" icon="$iconCategory" start />
+                <VIcon
+                  size="large"
+                  color="primary-darken-2"
+                  icon="$IconFolderFilled"
+                  start
+                />
               </template>
             </VSelect>
 
@@ -207,12 +281,13 @@ const fieldsReset = () => {
           <!-- @rows:3 -->
           <div class="mt-2">
             <VContainer fluid>
-              <VRow dense>
+              <VRow dense justify="space-between">
                 <VCol sm="4" class="*bg-red">
                   <VCheckbox
                     v-model="product.onSale.value"
                     color="primary"
                     label="Rasprodaja"
+                    class="ps-sm-4"
                   />
                 </VCol>
                 <VCol sm="4" class="*bg-red">

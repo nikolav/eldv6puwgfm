@@ -92,10 +92,14 @@ const submitFormCompanyId = async () => {
     <!-- @form: --start -->
     <VForm @submit.prevent="submitFormCompanyId">
       <VCard max-width="812" class="mx-auto mt-4 mt-md-10">
-        <VCardTitle class="bg-primary pa-4 px-6">
+        <VCardTitle class="bg-primary pa-4 px-6 d-flex items-center">
           <h2 class="*text-center text-h5 !font-sans *text-medium-emphasis">
             Lična karta gazdinstva
           </h2>
+          <VSpacer />
+          <VBtn color="on-primary" icon variant="text">
+            <VIcon icon="$iconLink" size="x-large" />
+          </VBtn>
         </VCardTitle>
         <VCardItem>
           <VTabs

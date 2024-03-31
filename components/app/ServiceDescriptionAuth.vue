@@ -12,11 +12,11 @@ const pClasses = `text-body-1 !font-sans sm:indent-4`;
     >
       <VCardText class="space-y-2">
         <p :class="pClasses">
-          <NuxtLink :to="{ name: 'index' }"
-            ><strong class="text-primary hover:underline"
-              >KANTAR.RS</strong
-            ></NuxtLink
-          >
+          <NuxtLink :to="{ name: 'index' }">
+            <a class="hover:underline text-primary">
+              <strong>KANTAR.RS</strong>
+            </a>
+          </NuxtLink>
           Vam omogućava lakše povezivanje sa kupcima u zemlji, kao i jednostavnu
           pretragu i naručivanje proizvoda, dobara i narodnih rukotvorina
           domaćeg porekla. Ova onlajn pijaca povezuje srpske proizvođače i

@@ -1,26 +1,31 @@
 <script setup lang="ts">
 import type { OrNoValue } from "@/types";
 import { ProductAdd } from "@/components/app";
+import { useDisplay } from "vuetify";
 
 definePageMeta({
   layout: "company-profile",
   middleware: "authorized-company",
 });
 
+const { smAndUp } = useDisplay();
+
+const { products: products$, remove: productsRemove } = useProducts();
+
 const toggleProductAdd = useToggleFlag();
 
 const {
-  key: { PRODUCT_SELECTED },
+  key: { PRODUCT_SELECTED, APP_PROCESSING },
   app: { DEFAULT_TRANSITION },
+  docs: { PRODUCT_IMAGES },
+  products: { perPage },
 } = useAppConfig();
 const $$main = useStoreMain();
 
-const perPage = 10;
-const lagerPage$ = ref(1);
-const lager$ = Array.from({ length: 12 }, (_v, key) => ({
-  id: key,
-  name: `item:${key}`,
-}));
+const pageLager$ = ref(1);
+const paginationLength$ = computed(() =>
+  Math.ceil(products$.value.length / perPage)
+);
 
 const selectedProduct$ = computed({
   get: () => $$main.get(PRODUCT_SELECTED),
@@ -31,10 +36,106 @@ const selectedProduct$ = computed({
   },
 });
 const productIsSelected = (id: number) => id === selectedProduct$.value;
+
+const { topic$, data: productImages$ } = useDocs();
+watch(selectedProduct$, (pid) => {
+  if (null == pid) return;
+  topic$.value = `${PRODUCT_IMAGES}${pid}`;
+});
+
+const { $lightbox } = useNuxtApp();
+const { publicUrl } = useApiStorage();
+const showSelectedProductImages = () => {
+  const caption = get(
+    find(products$.value, { id: selectedProduct$.value }),
+    "name"
+  );
+  $lightbox.open(
+    map(productImages$.value, (node) => {
+      return {
+        type: "image",
+        src: publicUrl(get(node, "data.file_id")),
+        caption,
+      };
+    })
+  );
+};
+
+const toggleScreenProductRemove = useToggleFlag();
+const flags = useStoreFlags();
+const submitProductsRemove = async () => {
+  console.log(`@submitProductsRemove`);
+  let res;
+  const ID = toValue(selectedProduct$);
+  try {
+    if (!isNumeric(ID)) throw "--error";
+    flags.on(APP_PROCESSING);
+    res = await productsRemove(Number(ID));
+  } catch (error) {
+    // pass
+  }
+  //
+  if (!isEmpty(get(res, "data.productsRm.id"))) {
+    selectedProduct$.value = null;
+  }
+  toggleScreenProductRemove.off();
+  flags.off(APP_PROCESSING);
+};
+
 // #eos
 </script>
 <template>
   <section class="page--company-profile-goods">
+    <VBottomSheet
+      v-model="toggleScreenProductRemove.isActive.value"
+      :inset="smAndUp"
+      scrim="red-lighten-3"
+      min-height="196"
+    >
+      <VCard class="grow pa-2" rounded="t">
+        <VBtn
+          @click="toggleScreenProductRemove.off"
+          icon
+          variant="plain"
+          class="position-absolute top-px end-px"
+        >
+          <VIcon icon="$close" />
+        </VBtn>
+
+        <VCardTitle class="text-center">
+          <h2>
+            Obriši proizvod,
+            <pre class="text-disabled d-inline-block">
+#{{ selectedProduct$ }}</pre
+            >
+            :
+          </h2>
+        </VCardTitle>
+
+        <VCardText>
+          <p
+            class="text-center text-truncate font-italic text-body-1 !font-sans"
+          >
+            '{{ get(find(products$, { id: selectedProduct$ }), "name") }}'
+          </p>
+        </VCardText>
+      </VCard>
+      <VToolbar color="surface" class="px-2 px-sm-6 pb-sm-4">
+        <VForm @submit.prevent="submitProductsRemove" class="d-inline-block">
+          <VBtn color="error" type="submit" size="large" variant="text">
+            <VIcon size="large" start icon="$iconTrash" />
+            <strong>Obriši</strong>
+          </VBtn>
+        </VForm>
+        <VSpacer />
+        <VBtn
+          @click="toggleScreenProductRemove.off"
+          size="large"
+          variant="tonal"
+          >Odustani</VBtn
+        >
+      </VToolbar>
+    </VBottomSheet>
     <VDialog
       persistent
       no-click-animation
@@ -44,30 +145,63 @@ const productIsSelected = (id: number) => id === selectedProduct$.value;
     >
       <ProductAdd :close="toggleProductAdd.off" />
     </VDialog>
-    <div class="px-2 px-sm-6">
-      <VCard max-width="956" class="mx-auto mt-10">
+    <div class="px-2 px-sm-6 mt-2 mt-sm-8">
+      <VPagination
+        v-if="1 < paginationLength$"
+        id="products-pagination"
+        :length="paginationLength$"
+        v-model="pageLager$"
+        variant="text"
+        rounded="circle"
+        active-color="primary"
+      />
+      <VCard max-width="956" class="mx-auto">
         <VToolbar height="48" color="primary" flat>
           <VToolbarTitle>
             <VIcon start size="small" class="opacity-50" icon="$iconBoxes" />
-            <strong class="ps-2 *space-x-2">
+            <strong class="ps-2 space-x-2">
               <span>Lager</span>
+              <VBadge
+                v-if="0 < products$.length"
+                inline
+                floating
+                color="primary-lighten-1"
+                class="-translate-y-[2px]"
+              >
+                <template #badge>
+                  <pre>{{ products$.length }}</pre>
+                </template>
+              </VBadge>
             </strong>
           </VToolbarTitle>
           <VToolbarItems class="space-x-4 *pe-2">
             <VBtn :disabled="null == selectedProduct$" rounded="circle" icon
               ><VIcon icon="$edit"
             /></VBtn>
+            <VBtn
+              @click="showSelectedProductImages"
+              :disabled="
+                null == selectedProduct$ || !(0 < productImages$.length)
+              "
+              rounded="circle"
+              icon
+              ><VIcon icon="$iconImages" />
+              <VTooltip
+                open-delay="345"
+                activator="parent"
+                location="bottom"
+                text="Pogledaj slike proizvoda..."
+              />
+            </VBtn>
             <VBtn :disabled="null == selectedProduct$" rounded="circle" icon
-              ><VIcon icon="$iconMagnifyingGlass"
-            /></VBtn>
-            <VBtn :disabled="null == selectedProduct$" rounded="circle" icon
-              ><VIcon icon="$iconLink"
+              ><VIcon icon="$iconLink" size="large"
             /></VBtn>
             <VBtn
               color="error"
               :disabled="null == selectedProduct$"
               rounded="circle"
               icon
+              @click="toggleScreenProductRemove.on"
               ><VIcon icon="$iconTrash"
             /></VBtn>
             <VBtn
@@ -87,16 +221,21 @@ const productIsSelected = (id: number) => id === selectedProduct$.value;
           </VToolbarItems>
         </VToolbar>
         <VDataIterator
-          :items="lager$"
+          :items="products$"
           :items-per-page="perPage"
-          :page="lagerPage$"
+          :page="pageLager$"
         >
-          <template #default="{ items }">
-            <VList lines="one" density="compact">
+          <template #no-data>
+            <p>no data</p>
+          </template>
+
+          <template #default="{ items: products }">
+            <VList density="comfortable" lines="one" color="primary-lighten-1">
               <VListItem
-                v-for="node in items"
+                v-for="node in products"
                 :key="node.raw.id"
                 @click="selectedProduct$ = node.raw.id"
+                :active="node.raw.id == selectedProduct$"
               >
                 <template #prepend>
                   <VIcon
@@ -113,7 +252,7 @@ const productIsSelected = (id: number) => id === selectedProduct$.value;
                     "
                   />
                 </template>
-                <VListItemTitle>{{ node.raw.name }}</VListItemTitle>
+                <VListItemTitle> {{ node.raw.name }}</VListItemTitle>
               </VListItem>
             </VList>
           </template>
@@ -123,4 +262,7 @@ const productIsSelected = (id: number) => id === selectedProduct$.value;
   </section>
 </template>
 <style lang="scss" scoped>
+// #products-pagination .v-pagination__list {
+//   justify-content: start;
+// }
 </style>

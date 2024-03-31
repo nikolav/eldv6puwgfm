@@ -1,10 +1,5 @@
 import { M_docsRm, M_docsUpsert, Q_docsByTopic, M_docsTags } from "@/graphql";
 import type { OrNull, IDoc, TDocData } from "@/types";
-import {
-  // get,
-  // assign,
-  isEmpty,
-} from "@/utils";
 
 // .useDocs
 export const useDocs = <TData = TDocData>(
@@ -21,7 +16,8 @@ export const useDocs = <TData = TDocData>(
         mounted$.value &&
         toggleEnabled.isActive.value &&
         topic$.value &&
-        auth.token$
+        // auth.token$
+        auth.isAuth$
       )
   );
 

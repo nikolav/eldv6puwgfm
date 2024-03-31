@@ -30,6 +30,60 @@ export default defineAppConfig({
       "about",
     ],
   },
+  products: {
+    perPage: 10,
+    fields: [
+      "name",
+      "category",
+      "price",
+      "stockType",
+      "stock",
+      "onSale",
+      "description",
+    ],
+    categories: [
+      {
+        title: "Bašta",
+        value: "basta",
+      },
+      {
+        title: "Meso i prerađevine",
+        value: "meso",
+      },
+      {
+        title: "Mleko i mlečni proizvodi",
+        value: "mleko",
+      },
+      {
+        title: "Začin, Ulje",
+        value: "zacin-ulje",
+      },
+      {
+        title: "Brašno",
+        value: "brasno",
+      },
+      {
+        title: "Med",
+        value: "med",
+      },
+      {
+        title: "Zimnica",
+        value: "zimnica",
+      },
+      {
+        title: "Sokovi",
+        value: "sokovi",
+      },
+      {
+        title: "Piće",
+        value: "pice",
+      },
+      {
+        title: "Zanat",
+        value: "zanat",
+      },
+    ],
+  },
   docs: {
     TAG_USERS: "@users",
     prefix_TAG_USERS_DOCS: "pH82VKaHwf3RLfZlR:",
@@ -38,6 +92,7 @@ export default defineAppConfig({
     TASKS_USER_prefix: "Njvrw1gYEXd3yv:",
     LIKES_preix: "@likes:",
     TAG_COMPANY_PROFILE_prefix: "@company:profile:fwgM8::",
+    PRODUCT_IMAGES: "@images:product:",
   },
   //
   key: {
@@ -116,6 +171,7 @@ export default defineAppConfig({
     IOEVENT_DOCS_CHANGE_JsonData: "change:docs:JsonData:",
     IOEVENT_DOC_CHANGE_prefix: "change://doc@",
     IOEVENT_DOCS_TAGS_CHANGE_prefix: "change:docs:tags:",
+    IOEVENT_PRODUCTS_CHANGE_prefix: "change:products::",
   },
   theme: {
     DEFAULT: themeLight,
