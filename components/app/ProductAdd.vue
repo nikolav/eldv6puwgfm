@@ -39,15 +39,23 @@ watch(fileImage02$, async ([image2]) => {
   productImage02$.value = null == image2 ? undefined : await dataUrl(image2);
 });
 
+const pid$ = ref();
+const ptag$ = computed(() => `${PRODUCT_IMAGES}${pid$.value}`);
+
 const { upsert: productsUpsert } = useProducts();
 const { upload } = useApiStorage();
 
 const toggleSnackbarProductAddStatus = useToggleFlag();
 
 const flags = useStoreFlags();
-const { tags } = useDocs();
+const { tags, topic$, reload: productImagesReload } = useDocs();
+watch(ptag$, (ptag) => {
+  topic$.value = ptag;
+});
 const submitProductAdd = async () => {
-  let pid;
+  let resImage1;
+  let resImage2;
+
   const form = reduce(
     FIELDS,
     (data, field) => {
@@ -60,37 +68,46 @@ const submitProductAdd = async () => {
     <Record<string, any>>{}
   );
   if (isEmpty(form)) return;
+
   try {
     flags.on(APP_PROCESSING);
-    pid = get(await productsUpsert(form), "data.productsUpsert.id");
-    if (isEmpty(pid)) throw "--error";
+    pid$.value = get(await productsUpsert(form), "data.productsUpsert.id");
+    if (!pid$.value) throw "--error";
+
     // product saved, upload images
     const resUpload = await upload({
       image1: {
-        file: get(toValue(fileImage01$), "[0]"),
+        file: get(fileImage01$.value, "[0]"),
         data: {},
       },
       image2: {
-        file: get(toValue(fileImage02$), "[0]"),
+        file: get(fileImage02$.value, "[0]"),
         data: {},
       },
     });
     //
     const id1 = Number(get(resUpload, "image1.id"));
     const id2 = Number(get(resUpload, "image2.id"));
+    const ptag = ptag$.value;
+
     if (id1) {
-      await tags(Number(id1), { [`${PRODUCT_IMAGES}${pid}`]: true });
-      console.log({ id1 });
+      resImage1 = get(
+        await tags(id1, { [ptag]: true }),
+        `data.docsTags.${ptag}`
+      );
     }
     if (id2) {
-      await tags(Number(id2), { [`${PRODUCT_IMAGES}${pid}`]: true });
-      console.log({ id2 });
+      resImage2 = get(
+        await tags(id2, { [ptag]: true }),
+        `data.docsTags.${ptag}`
+      );
     }
   } catch (error) {
     console.log(`@catch: error`);
     console.error(error);
   }
-  if (!isEmpty(pid)) toggleSnackbarProductAddStatus.on();
+  if (resImage1 || resImage2) await productImagesReload();
+  if (pid$.value) toggleSnackbarProductAddStatus.on();
   //
   flags.off(APP_PROCESSING);
 };
