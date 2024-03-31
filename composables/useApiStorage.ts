@@ -195,5 +195,8 @@ export const useApiStorage = (initialEnabled = true) => {
     // @toggle
     enabled: enabled$,
     toggleEnabled,
+
+    // @io-event
+    IO: ioevent_,
   };
 };

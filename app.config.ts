@@ -8,6 +8,7 @@ const AUTH_LOCKED = "eq1hiOTCPNCfo20Y";
 const CHAT_EDIT_active = "rAkrT0XZJvlXbb";
 const TASK_EDIT_active = "TB2HXTaILV3eKlQAoSa8";
 const PAGE_CACHED = "WrTD0QD08cjfqC4pol";
+const PRODUCT_CATEGORY_prefix = "@product:category:";
 
 export default defineAppConfig({
   ADMIN_EMAIL: "admin@nikolav.rs",
@@ -31,6 +32,7 @@ export default defineAppConfig({
     ],
   },
   products: {
+    PRODUCT_CATEGORY_prefix,
     perPage: 10,
     fields: [
       "name",
@@ -43,44 +45,44 @@ export default defineAppConfig({
     ],
     categories: [
       {
-        title: "Bašta",
-        value: "basta",
+        title: "Bašta, voće, povrće, gljive",
+        value: `${PRODUCT_CATEGORY_prefix}basta`,
       },
       {
-        title: "Meso i prerađevine",
-        value: "meso",
+        title: "Meso, jaja, mesne prerađevine",
+        value: `${PRODUCT_CATEGORY_prefix}meso`,
       },
       {
         title: "Mleko i mlečni proizvodi",
-        value: "mleko",
+        value: `${PRODUCT_CATEGORY_prefix}mleko`,
       },
       {
-        title: "Začin, Ulje",
-        value: "zacin-ulje",
+        title: "Začin, ulje, čaj, bilje",
+        value: `${PRODUCT_CATEGORY_prefix}zacin-ulje`,
       },
       {
-        title: "Brašno",
-        value: "brasno",
+        title: "Brašno, žitarice, pekara",
+        value: `${PRODUCT_CATEGORY_prefix}brasno`,
       },
       {
-        title: "Med",
-        value: "med",
+        title: "Med, proizvodi od meda",
+        value: `${PRODUCT_CATEGORY_prefix}med`,
       },
       {
-        title: "Zimnica",
-        value: "zimnica",
+        title: "Zimnica, namazi, kompot",
+        value: `${PRODUCT_CATEGORY_prefix}zimnica`,
       },
       {
-        title: "Sokovi",
-        value: "sokovi",
+        title: "Sokovi, sirup",
+        value: `${PRODUCT_CATEGORY_prefix}sokovi`,
       },
       {
-        title: "Piće",
-        value: "pice",
+        title: "Alkoholna pića",
+        value: `${PRODUCT_CATEGORY_prefix}pice`,
       },
       {
-        title: "Zanat",
-        value: "zanat",
+        title: "Zanat, rukotvorine",
+        value: `${PRODUCT_CATEGORY_prefix}zanat`,
       },
     ],
   },
@@ -109,6 +111,7 @@ export default defineAppConfig({
     FORM_COMPANY_ID: "2wIETsis",
     PRODUCT_SELECTED: "Be3Q6GMsqZPSP",
     PRODUCT_ADD: "HAvQCqapN1NuJFIoS",
+    PRODUCT_EDIT: "fRbSc",
   },
   //
   FIELDS_OMIT_STORAGE_META: ["id", "created_at", "updated_at", "__typename"],

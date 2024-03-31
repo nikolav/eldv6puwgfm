@@ -30,6 +30,7 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconProductEdit,
   IconFolderFilled,
   IconAdjustSettings,
   IconAttach,
@@ -223,6 +224,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconProductEdit: IconProductEdit,
         IconFolderFilled: IconFolderFilled,
         iconAdjustSettings: IconAdjustSettings,
         iconAttach: IconAttach,

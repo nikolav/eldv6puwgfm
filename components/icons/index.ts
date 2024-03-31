@@ -46,6 +46,7 @@ export { default as IconPersonRemoveOutline } from "./IconPersonRemoveOutline.vu
 export { default as IconPlusCircle } from "./IconPlusCircle.vue";
 export { default as IconPowerOff } from "./IconPowerOff.vue";
 export { default as IconProductAdd } from "./IconProductAdd.vue";
+export { default as IconProductEdit } from "./IconProductEdit.vue";
 export { default as IconRedEye } from "./IconRedEye.vue";
 export { default as IconRSDinar } from "./IconRSDinar.vue";
 export { default as IconSaveFilled } from "./IconSaveFilled.vue";

@@ -138,6 +138,7 @@ export interface IProduct {
   stockType?: OrNoValue<string>;
   onSale?: OrNoValue<boolean>;
   description?: OrNoValue<string>;
+  tags: string[];
   created_at: string;
   updated_at: string;
 }

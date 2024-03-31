@@ -64,6 +64,7 @@ const submitProductAdd = async () => {
     flags.on(APP_PROCESSING);
     pid = get(await productsUpsert(form), "data.productsUpsert.id");
     if (isEmpty(pid)) throw "--error";
+    // product saved, upload images
     const resUpload = await upload({
       image1: {
         file: get(toValue(fileImage01$), "[0]"),
@@ -137,7 +138,8 @@ const fieldsReset = () => {
           location="bottom"
         />
       </VBtn>
-      <VToolbarTitle class="ms-sm-8">
+      <VSpacer v-if="smAndUp" />
+      <VToolbarTitle class="*ms-sm-8">
         <h2
           class="text-h5 !font-sans text-medium-emphasis items-center d-flex gap-4"
         >

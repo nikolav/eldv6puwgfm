@@ -86,6 +86,7 @@ export const useDocs = <TData = TDocData>(
     error,
     loading,
     IOEVENT: ioEvent$,
+    IO: ioEvent$,
     enabled: enabled$,
 
     // on/off

@@ -61,6 +61,7 @@ export const Q_productsByUser = gql`
       stockType
       stock
       onSale
+      tags
       created_at
       updated_at
     }

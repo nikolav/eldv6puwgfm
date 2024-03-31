@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OrNoValue } from "@/types";
-import { ProductAdd } from "@/components/app";
+import { ProductAdd, ProductsEdit } from "@/components/app";
 import { useDisplay } from "vuetify";
 
 definePageMeta({
@@ -13,6 +13,7 @@ const { smAndUp } = useDisplay();
 const { products: products$, remove: productsRemove } = useProducts();
 
 const toggleProductAdd = useToggleFlag();
+const toggleProductsEdit = useToggleFlag();
 
 const {
   key: { PRODUCT_SELECTED, APP_PROCESSING },
@@ -36,6 +37,9 @@ const selectedProduct$ = computed({
   },
 });
 const productIsSelected = (id: number) => id === selectedProduct$.value;
+onMounted(() => {
+  selectedProduct$.value = null;
+});
 
 const { topic$, data: productImages$ } = useDocs();
 watch(selectedProduct$, (pid) => {
@@ -145,6 +149,18 @@ const submitProductsRemove = async () => {
     >
       <ProductAdd :close="toggleProductAdd.off" />
     </VDialog>
+    <VDialog
+      persistent
+      no-click-animation
+      :transition="DEFAULT_TRANSITION"
+      fullscreen
+      v-model="toggleProductsEdit.isActive.value"
+    >
+      <ProductsEdit
+        :product_id="selectedProduct$"
+        :close="toggleProductsEdit.off"
+      />
+    </VDialog>
     <div class="px-2 px-sm-6 mt-2 mt-sm-8">
       <VPagination
         v-if="1 < paginationLength$"
@@ -175,9 +191,20 @@ const submitProductsRemove = async () => {
             </strong>
           </VToolbarTitle>
           <VToolbarItems class="space-x-4 *pe-2">
-            <VBtn :disabled="null == selectedProduct$" rounded="circle" icon
-              ><VIcon icon="$edit"
-            /></VBtn>
+            <!-- @@products.edit -->
+            <VBtn
+              @click="toggleProductsEdit.on"
+              :disabled="null == selectedProduct$"
+              rounded="circle"
+              icon
+              ><VIcon icon="$edit" />
+              <VTooltip
+                activator="parent"
+                location="bottom"
+                open-delay="345"
+                text="Uredi detalje proizvoda..."
+              />
+            </VBtn>
             <VBtn
               @click="showSelectedProductImages"
               :disabled="
