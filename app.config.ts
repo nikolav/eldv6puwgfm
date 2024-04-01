@@ -175,6 +175,7 @@ export default defineAppConfig({
     IOEVENT_DOC_CHANGE_prefix: "change://doc@",
     IOEVENT_DOCS_TAGS_CHANGE_prefix: "change:docs:tags:",
     IOEVENT_PRODUCTS_CHANGE_prefix: "change:products::",
+    IOEVENT_PRODUCT_IMAGES_CHANGE_prefix: "change:product-images:",
   },
   theme: {
     DEFAULT: themeLight,

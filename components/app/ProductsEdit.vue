@@ -21,6 +21,7 @@ const {
   key: { PRODUCT_EDIT, APP_PROCESSING },
   docs: { PRODUCT_IMAGES },
   products: { fields: FIELDS, categories: CATEGORIES, PRODUCT_CATEGORY_prefix },
+  io: { IOEVENT_PRODUCT_IMAGES_CHANGE_prefix },
 } = useAppConfig();
 const FIELDS_updatable = FIELDS.filter((field) => "category" !== field);
 
@@ -34,13 +35,17 @@ const pid$ = computed(() => get(product$.value, "id"));
 
 // product category
 const category$ = computed(() => {
-  if (!isEmpty(pid$.value)) {
-    const category_ = find(get(product$.value, "tags"), (tag: string) =>
-      tag.startsWith(PRODUCT_CATEGORY_prefix)
-    );
-    return find(CATEGORIES, (node) => node.value === category_);
-  }
+  if (!pid$.value) return;
+  const category_ = find(get(product$.value, "tags"), (tag: string) =>
+    tag.startsWith(PRODUCT_CATEGORY_prefix)
+  );
+  return find(CATEGORIES, (node) => node.value === category_);
 });
+
+// emited @manage/product:images
+const ioEventPics$ = computed(() =>
+  pid$.value ? `${IOEVENT_PRODUCT_IMAGES_CHANGE_prefix}${pid$.value}` : ""
+);
 
 // manage product images
 const { remove: productImagesRemove, upload, publicUrl, IO } = useApiStorage();
@@ -51,13 +56,17 @@ const {
   tags,
 } = useDocs();
 watch(pid$, (pid) => {
-  if (isEmpty(pid)) return;
-  topic$.value = `${PRODUCT_IMAGES}${pid}`;
+  topic$.value = pid ? `${PRODUCT_IMAGES}${pid}` : "";
 });
-useIOEvent(toValue(IO), productImagesReload);
+useIOEvent(IO.value, productImagesReload);
+watchEffect(() => {
+  useIOEvent(ioEventPics$.value, productImagesReload);
+});
 
 // cache updated product info
 const $$main = useStoreMain();
+
+// build formdata cache
 const productData = reduce(
   FIELDS_updatable,
   (data, field) => {
@@ -78,7 +87,7 @@ const { runSetup: initProductCache } = useRunSetupOnce(() => {
 });
 onMounted(() => {
   watch(pid$, (pid) => {
-    if (isEmpty(pid)) return;
+    if (!pid) return;
     initProductCache();
   });
 });
@@ -87,16 +96,19 @@ const $$flags = useStoreFlags();
 
 const fileImage1$ = ref();
 
+const toggleSnackbarProductEditStatus = useToggleFlag();
+
 const submitProductsEdit = async () => {
-  const err = new Error("--submitProductsEdit");
   let pid;
   let resUpload;
-  let res;
+
+  let statusSuccess_ = true;
+  const err = new Error("--submitProductsEdit");
 
   try {
     $$flags.on(APP_PROCESSING);
 
-    pid = toValue(pid$);
+    pid = pid$.value;
     if (!pid) throw err;
 
     const form = reduce(
@@ -109,10 +121,9 @@ const submitProductsEdit = async () => {
     );
     if (isEmpty(form)) throw err;
 
-    const resUpdate = await productsUpsert(form, pid);
-    if (!isEmpty(get(resUpdate, "data.productsUpsert.id"))) {
-      console.log({ resUpdate });
-    }
+    // @debug
+    // await productsUpsert(form, pid);
+    console.log({ "@product:updated": await productsUpsert(form, pid) });
 
     const file1 = get(toValue(fileImage1$), "[0]");
     if (file1) {
@@ -124,19 +135,15 @@ const submitProductsEdit = async () => {
       });
     }
     const docIdImage1 = Number(get(resUpload, "image.id"));
-    if (docIdImage1) {
-      res = get(
-        await tags(docIdImage1, { [`${PRODUCT_IMAGES}${pid}`]: true }),
-        `data.docsTags.${PRODUCT_IMAGES}${pid}`
-      );
-    }
+    if (docIdImage1)
+      await tags(docIdImage1, { [`${PRODUCT_IMAGES}${pid}`]: true });
   } catch (error) {
     // pass
     console.error(error);
+    statusSuccess_ = false;
   }
-
-  if (res) productImagesReload();
   $$flags.off(APP_PROCESSING);
+  if (statusSuccess_) toggleSnackbarProductEditStatus.on();
 };
 
 const onClickProductImagesRemove = async (file_id: string) => {
@@ -156,6 +163,25 @@ const onClickProductImagesRemove = async (file_id: string) => {
     :rounded="0"
     :elevation="0"
   >
+    <!-- @signal-status, --product-updated -->
+    <VSnackbar
+      v-model="toggleSnackbarProductEditStatus.isActive.value"
+      color="transparent"
+      variant="text"
+    >
+      <VAlert type="success" prominent elevation="4">
+        <div class="d-flex justify-between items-center gap-4 sm:gap-8">
+          <p>Proizvod je uspešno ažuriran.</p>
+          <VBtn
+            @click="toggleSnackbarProductEditStatus.off"
+            color="on-success"
+            variant="tonal"
+            >ok</VBtn
+          >
+        </div>
+      </VAlert>
+    </VSnackbar>
+
     <VToolbar flat color="transparent">
       <VBtn @click="props_.close" icon variant="text" size="large">
         <VIcon icon="$prev" size="large" />

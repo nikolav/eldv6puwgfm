@@ -9,6 +9,7 @@ const {
   key: { PRODUCT_ADD, APP_PROCESSING },
   docs: { PRODUCT_IMAGES },
   products: { categories: CATEGORIES, fields: FIELDS },
+  io: { IOEVENT_PRODUCT_IMAGES_CHANGE_prefix },
 } = useAppConfig();
 
 const $$main = useStoreMain();
@@ -40,7 +41,12 @@ watch(fileImage02$, async ([image2]) => {
 });
 
 const pid$ = ref();
-const ptag$ = computed(() => `${PRODUCT_IMAGES}${pid$.value}`);
+const ptag$ = computed(() =>
+  pid$.value ? `${PRODUCT_IMAGES}${pid$.value}` : ""
+);
+const ioEventPics$ = computed(() =>
+  pid$.value ? `${IOEVENT_PRODUCT_IMAGES_CHANGE_prefix}${pid$.value}` : ""
+);
 
 const { upsert: productsUpsert } = useProducts();
 const { upload } = useApiStorage();
@@ -52,10 +58,14 @@ const { tags, topic$, reload: productImagesReload } = useDocs();
 watch(ptag$, (ptag) => {
   topic$.value = ptag;
 });
-const submitProductAdd = async () => {
-  let resImage1;
-  let resImage2;
 
+// reload @product:images updates
+watchEffect(() => {
+  useIOEvent(ioEventPics$.value, productImagesReload);
+});
+
+// @@submit
+const submitProductAdd = async () => {
   const form = reduce(
     FIELDS,
     (data, field) => {
@@ -89,27 +99,15 @@ const submitProductAdd = async () => {
     const id1 = Number(get(resUpload, "image1.id"));
     const id2 = Number(get(resUpload, "image2.id"));
     const ptag = ptag$.value;
-
-    if (id1) {
-      resImage1 = get(
-        await tags(id1, { [ptag]: true }),
-        `data.docsTags.${ptag}`
-      );
-    }
-    if (id2) {
-      resImage2 = get(
-        await tags(id2, { [ptag]: true }),
-        `data.docsTags.${ptag}`
-      );
-    }
+    //
+    if (id1) await tags(id1, { [ptag]: true });
+    if (id2) await tags(id2, { [ptag]: true });
   } catch (error) {
     console.log(`@catch: error`);
     console.error(error);
   }
-  if (resImage1 || resImage2) await productImagesReload();
-  if (pid$.value) toggleSnackbarProductAddStatus.on();
-  //
   flags.off(APP_PROCESSING);
+  if (pid$.value) toggleSnackbarProductAddStatus.on();
 };
 const fieldsReset = () => {
   fileImage01$.value = [];
@@ -134,7 +132,7 @@ const fieldsReset = () => {
     >
       <VAlert type="success" prominent elevation="4">
         <div class="d-flex justify-between items-center gap-4 sm:gap-8">
-          <p>Proizvod je uspešno sačuvan.</p>
+          <p>Proizvod je uspešno ulistan.</p>
           <VBtn
             @click="toggleSnackbarProductAddStatus.off"
             color="on-success"
