@@ -204,7 +204,7 @@ const onClickProductImagesRemove = async (file_id: string) => {
             color="primary-darken-2"
             class="!opacity-60"
           />
-          <span>Uredi prozivod</span>
+          <span>Ažuriraj prozivod</span>
         </h2>
       </VToolbarTitle>
       <VSpacer v-if="smAndUp" />

@@ -36,14 +36,14 @@ const selectedProduct$ = computed({
     });
   },
 });
-const productIsSelected = (id: number) => id === selectedProduct$.value;
 onMounted(() => {
   selectedProduct$.value = null;
 });
+const productIsSelected = (id: number) => id === selectedProduct$.value;
 
 const { topic$, data: productImages$ } = useDocs();
 watch(selectedProduct$, (pid) => {
-  if (null == pid) return;
+  if (!pid) return;
   topic$.value = `${PRODUCT_IMAGES}${pid}`;
 });
 
@@ -66,30 +66,32 @@ const showSelectedProductImages = () => {
 };
 
 const toggleScreenProductRemove = useToggleFlag();
-const flags = useStoreFlags();
+const $$flags = useStoreFlags();
 const submitProductsRemove = async () => {
-  console.log(`@submitProductsRemove`);
   let res;
-  const ID = toValue(selectedProduct$);
+
+  const ID = selectedProduct$.value;
+
   try {
     if (!isNumeric(ID)) throw "--error";
-    flags.on(APP_PROCESSING);
+    $$flags.on(APP_PROCESSING);
     res = await productsRemove(Number(ID));
   } catch (error) {
     // pass
   }
-  //
-  if (!isEmpty(get(res, "data.productsRm.id"))) {
+  // unselect if product removed
+  if (get(res, "data.productsRm.id")) {
     selectedProduct$.value = null;
   }
+  $$flags.off(APP_PROCESSING);
   toggleScreenProductRemove.off();
-  flags.off(APP_PROCESSING);
 };
 
 // #eos
 </script>
 <template>
   <section class="page--company-profile-goods">
+    <!-- @@confirm --product-remove -->
     <VBottomSheet
       v-model="toggleScreenProductRemove.isActive.value"
       :inset="smAndUp"
@@ -140,6 +142,8 @@ const submitProductsRemove = async () => {
         >
       </VToolbar>
     </VBottomSheet>
+
+    <!-- @@screen --product-create -->
     <VDialog
       persistent
       no-click-animation
@@ -149,6 +153,8 @@ const submitProductsRemove = async () => {
     >
       <ProductAdd :close="toggleProductAdd.off" />
     </VDialog>
+
+    <!-- @@screen --product-edit -->
     <VDialog
       persistent
       no-click-animation
@@ -171,6 +177,8 @@ const submitProductsRemove = async () => {
         rounded="circle"
         active-color="primary"
       />
+
+      <!-- @@products:crud -->
       <VCard max-width="956" class="mx-auto">
         <VToolbar height="48" color="primary" flat>
           <VToolbarTitle>
@@ -190,8 +198,9 @@ const submitProductsRemove = async () => {
               </VBadge>
             </strong>
           </VToolbarTitle>
+
+          <!-- @@products:controlls -->
           <VToolbarItems class="space-x-4 *pe-2">
-            <!-- @@products.edit -->
             <VBtn
               @click="toggleProductsEdit.on"
               :disabled="null == selectedProduct$"
@@ -202,7 +211,7 @@ const submitProductsRemove = async () => {
                 activator="parent"
                 location="bottom"
                 open-delay="345"
-                text="Uredi detalje proizvoda..."
+                text="Ažuriraj proizvod..."
               />
             </VBtn>
             <VBtn
@@ -247,6 +256,8 @@ const submitProductsRemove = async () => {
             </VBtn>
           </VToolbarItems>
         </VToolbar>
+
+        <!-- @@products:table -->
         <VDataIterator
           :items="products$"
           :items-per-page="perPage"
