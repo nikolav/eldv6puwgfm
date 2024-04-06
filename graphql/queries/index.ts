@@ -67,3 +67,21 @@ export const Q_productsByUser = gql`
     }
   }
 `;
+
+export const Q_productsListAll = gql`
+  query q_productsListAll {
+    productsListAll {
+      id
+      user_id
+      name
+      description
+      price
+      stockType
+      stock
+      onSale
+      tags
+      created_at
+      updated_at
+    }
+  }
+`;

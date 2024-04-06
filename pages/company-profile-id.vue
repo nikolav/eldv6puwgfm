@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
+
+import menuDistricts from "@/assets/districts-serbia.json";
 import type { ICompanyProfile } from "@/types";
 
 definePageMeta({
   layout: "company-profile",
   middleware: "authorized-company",
 });
+
+const { smAndUp } = useDisplay();
 
 const auth = useStoreApiAuth();
 const toggleProfileSaved = useToggleFlag();
@@ -21,12 +26,12 @@ const { data: com_, put: profileUpsert } = useDoc<ICompanyProfile>(
   `${TAG_COMPANY_PROFILE_prefix}${get(auth.user$, "id")}`
 );
 const $$main = useStoreMain();
-const form = FIELDS.reduce((accum, field) => {
-  accum[field] = computed({
+const form = FIELDS.reduce((formdata_, field) => {
+  formdata_[field] = computed({
     get: () => $$main.get(`${FORM_COMPANY_ID}:${field}`),
     set: (val: string) => $$main.put({ [`${FORM_COMPANY_ID}:${field}`]: val }),
   });
-  return accum;
+  return formdata_;
 }, <Record<string, Ref>>{});
 
 const { runSetup: formInit } = useRunSetupOnce(() => {
@@ -138,7 +143,7 @@ const submitFormCompanyId = async () => {
                       label="Gazda, Ime"
                       clearable
                     >
-                      <template #prepend>
+                      <template v-if="smAndUp" #prepend>
                         <VIcon
                           color="primary-darken-2"
                           icon="$iconOwner"
@@ -162,7 +167,7 @@ const submitFormCompanyId = async () => {
                     label="Naziv gazdinstva"
                     clearable
                   >
-                    <template #prepend>
+                    <template v-if="smAndUp" #prepend>
                       <VIcon
                         color="primary-darken-2"
                         icon="$iconDowntown"
@@ -171,22 +176,54 @@ const submitFormCompanyId = async () => {
                       />
                     </template>
                   </VTextField>
-                  <VTextField
-                    name="address"
-                    v-model="form.address.value"
-                    variant="underlined"
-                    label="Adresa"
-                    clearable
-                  >
-                    <template #prepend>
-                      <VIcon
-                        color="primary-darken-2"
-                        icon="$iconLocation"
-                        size="x-large"
-                        start
-                      />
-                    </template>
-                  </VTextField>
+                  <div class="d-sm-flex items-end justify-between ga-4">
+                    <!-- @@ https://www.wikiwand.com/sr/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BD%D0%B8_%D0%BE%D0%BA%D1%80%D1%83%D0%B7%D0%B8_%D0%A1%D1%80%D0%B1%D0%B8%D1%98%D0%B5 -->
+                    <VSelect
+                      v-model="form.district.value"
+                      center-affix
+                      label="Okrug *"
+                      :items="menuDistricts"
+                      variant="solo"
+                      :class="smAndUp ? 'max-w-[33%]' : undefined"
+                    >
+                      <template #item="{ item, props }">
+                        <VListSubheader
+                          v-if="item.raw.subheader"
+                          :title="item.raw.title"
+                        />
+                        <VListItem
+                          v-bind="props"
+                          v-else
+                          :title="item.raw.title"
+                        />
+                      </template>
+                      <template v-if="smAndUp" #prepend>
+                        <VIcon
+                          start
+                          size="large"
+                          color="primary-darken-2"
+                          icon="$iconLocation"
+                        />
+                      </template>
+                    </VSelect>
+
+                    <VTextField
+                      name="address"
+                      v-model="form.address.value"
+                      variant="underlined"
+                      label="Adresa"
+                      clearable
+                    >
+                      <template v-if="false" #prepend>
+                        <VIcon
+                          color="primary-darken-2"
+                          icon="$iconLocation"
+                          size="x-large"
+                          start
+                        />
+                      </template>
+                    </VTextField>
+                  </div>
                   <VTextField
                     name="phone"
                     v-model="form.phone.value"
@@ -194,7 +231,7 @@ const submitFormCompanyId = async () => {
                     label="Telefon"
                     clearable
                   >
-                    <template #prepend>
+                    <template v-if="smAndUp" #prepend>
                       <VIcon
                         color="primary-darken-2"
                         icon="$iconPhone"

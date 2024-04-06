@@ -26,6 +26,7 @@ export default defineAppConfig({
       "ownerLastName",
       "name",
       "address",
+      "district",
       "phone",
       "delivery",
       "about",

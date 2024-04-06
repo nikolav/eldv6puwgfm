@@ -10,8 +10,12 @@ useHead({
 </script>
 
 <template>
-  <section id="page-demo" class="pa-2 pa-md-4">
-    <h1>@page: Izbor</h1>
+  <section id="page-demo" class="*pa-2 *pa-md-4">
+    <p>
+      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit laboriosam
+      assumenda iusto. Ipsum fugiat quam eum architecto culpa labore a sapiente
+      ratione aut aperiam ea, et dolor, qui aliquid consequuntur.
+    </p>
   </section>
 </template>
 

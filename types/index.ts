@@ -122,6 +122,7 @@ export interface IDocDataTask {
 export interface ICompanyProfile {
   name?: string | undefined;
   address?: string | undefined;
+  district?: string | undefined;
   phone?: string | undefined;
   delivery?: string | undefined;
   about?: string | undefined;
