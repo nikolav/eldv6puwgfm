@@ -30,8 +30,6 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
-  IconProductEdit,
-  IconFolderFilled,
   IconAdjustSettings,
   IconAttach,
   IconBatteryHalf,
@@ -55,6 +53,7 @@ import {
   IconEnvelopeOutlined,
   IconEraserFilled,
   IconFolder,
+  IconFolderFilled,
   IconGithubOutlined,
   IconHeadphone,
   IconHelpSquareFilled,
@@ -79,6 +78,7 @@ import {
   IconPlusCircle,
   IconPowerOff,
   IconProductAdd,
+  IconProductEdit,
   IconRedEye,
   IconRSDinar,
   IconSaveFilled,
@@ -168,7 +168,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     // @@ set component/alias props
     defaults: {
       global: {
-        ripple: true,
+        // ripple: true,
       },
       // VSheet: {
       //   elevation: 2,
@@ -224,8 +224,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
-        iconProductEdit: IconProductEdit,
-        IconFolderFilled: IconFolderFilled,
         iconAdjustSettings: IconAdjustSettings,
         iconAttach: IconAttach,
         iconBattery: IconBatteryHalf,
@@ -250,6 +248,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconEnvelopeOpenHandDrawn: IconEnvelopeOpenHandDrawn,
         iconEraser: IconEraserFilled,
         iconFolder: IconFolder,
+        IconFolderFilled: IconFolderFilled,
         iconGithub: IconGithubOutlined,
         iconHelp: IconHelpSquareFilled,
         iconHome: IconHomeFilled,
@@ -273,6 +272,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconPlusCircle: IconPlusCircle,
         iconPowerOff: IconPowerOff,
         iconProductAdd: IconProductAdd,
+        iconProductEdit: IconProductEdit,
         iconRedEye: IconRedEye,
         iconRSD: IconRSDinar,
         iconSave: IconSaveFilled,

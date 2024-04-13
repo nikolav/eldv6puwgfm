@@ -1,12 +1,13 @@
 // @lodash
 import lodash from "lodash";
 const {
-  keys,
-  values,
+  clamp,
   assign,
   at,
   capitalize,
   debounce,
+  defaults,
+  defaultsDeep,
   each,
   escapeRegExp,
   every,
@@ -16,6 +17,7 @@ const {
   forEach,
   get,
   isEmpty,
+  keys,
   map,
   noop,
   now,
@@ -31,13 +33,17 @@ const {
   transform,
   uniqueId,
   unset,
+  values,
   zipObject,
 } = lodash;
 export {
+  clamp,
   assign,
   at,
   capitalize,
   debounce,
+  defaults,
+  defaultsDeep,
   each,
   escapeRegExp,
   every,
@@ -47,6 +53,7 @@ export {
   forEach,
   get,
   isEmpty,
+  keys,
   len,
   map,
   noop,
@@ -62,9 +69,8 @@ export {
   transform,
   uniqueId,
   unset,
-  zipObject,
   values,
-  keys,
+  zipObject,
 };
 
 export * from "./re";

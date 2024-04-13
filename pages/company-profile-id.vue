@@ -9,6 +9,10 @@ definePageMeta({
   middleware: "authorized-company",
 });
 
+useHead({
+  title: "lična karta",
+});
+
 const { smAndUp } = useDisplay();
 
 const auth = useStoreApiAuth();
@@ -50,9 +54,9 @@ const submitFormCompanyId = async () => {
     await profileUpsert(
       reduce(
         FIELDS,
-        (accum, field) => {
-          accum[field] = form[field].value;
-          return accum;
+        (data_, field) => {
+          data_[field] = form[field].value;
+          return data_;
         },
         <Record<string, string>>{}
       )

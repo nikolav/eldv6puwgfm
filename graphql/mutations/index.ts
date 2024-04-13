@@ -82,6 +82,12 @@ export const M_productsRemove = gql`
   }
 `;
 
+export const M_ordersPlace = gql`
+  mutation m_ordersPlace($code: String, $description: String, $items: JsonData!) {
+    ordersPlace(code: $code, description: $description, items: $items)
+  }
+`;
+
 
 // schema {
 //   query: Query

@@ -6,6 +6,11 @@ export const useDocs = <TData = TDocData>(
   initialTag = "",
   initialEnabled = true
 ) => {
+  const {
+    graphql: { STORAGE_QUERY_POLL_INTERVAL },
+    io: { IOEVENT_DOCS_CHANGE_JsonData },
+  } = useAppConfig();
+
   const topic$ = ref(initialTag);
   const auth = useStoreApiAuth();
   const toggleEnabled = useToggleFlag(initialEnabled);
@@ -16,7 +21,6 @@ export const useDocs = <TData = TDocData>(
         mounted$.value &&
         toggleEnabled.isActive.value &&
         topic$.value &&
-        // auth.token$
         auth.isAuth$
       )
   );
@@ -28,12 +32,12 @@ export const useDocs = <TData = TDocData>(
     { topic: topic$ },
     {
       enabled: enabled$,
-      pollInterval: useAppConfig().graphql.STORAGE_QUERY_POLL_INTERVAL,
+      pollInterval: STORAGE_QUERY_POLL_INTERVAL,
     }
   );
 
   const data$ = computed(
-    () => (enabled$.value ? result.value?.docsByTopic : undefined) || []
+    () => (enabled$.value ? get(result.value, "docsByTopic") : undefined) || []
   );
   const reload = async () => await refetch();
 
@@ -43,9 +47,7 @@ export const useDocs = <TData = TDocData>(
   });
 
   const ioEvent$ = computed(() =>
-    enabled$.value
-      ? `${useAppConfig().io.IOEVENT_DOCS_CHANGE_JsonData}${topic$.value}`
-      : ""
+    enabled$.value ? `${IOEVENT_DOCS_CHANGE_JsonData}${topic$.value}` : ""
   );
 
   const { mutate: mutateDocsUpsert } = useMutation<IDoc<TData>>(M_docsUpsert);

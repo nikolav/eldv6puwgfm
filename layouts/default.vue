@@ -4,7 +4,10 @@ import { AppBarMain } from "@/components/app";
 import { PRODUCTION$ } from "@/config";
 import { debounce } from "@/utils";
 
-const appBarHeight = useAppConfig().layout.appBarHeight;
+const {
+  layout: { appBarHeight },
+  app: { CART_BADGE_OFFSET },
+} = useAppConfig();
 const { current$, menuCategories, cache: appMenuCache } = useAppMenu();
 const iconClasses = (isSelected: boolean) =>
   `${
@@ -21,6 +24,8 @@ const debounceSearchHandle = debounce((term) => {
   if (!term) return;
   console.log({ term });
 }, 789);
+
+const cart = useStoreCart();
 
 // @watchers
 watch(search_, debounceSearchHandle);
@@ -48,13 +53,24 @@ watch(search_, debounceSearchHandle);
         <VCardItem>
           <template #append>
             <VBtn
+              @click="cart.open"
               icon
               size="72"
               variant="text"
               elevation="4"
               class="me-2 mt-2 me-sm-6"
             >
-              <VIcon icon="$iconKorpaKantar" size="72" />
+              <VBadge
+                :model-value="!cart.isEmpty"
+                :offset-y="CART_BADGE_OFFSET"
+                :offset-x="CART_BADGE_OFFSET"
+                color="red"
+              >
+                <VIcon icon="$iconKorpaKantar" size="72" />
+                <template #badge>
+                  <pre>{{ cart.length }}</pre>
+                </template>
+              </VBadge>
             </VBtn>
           </template>
         </VCardItem>

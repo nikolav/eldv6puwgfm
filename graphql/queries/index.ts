@@ -85,3 +85,53 @@ export const Q_productsListAll = gql`
     }
   }
 `;
+
+export const Q_productsListPopular = gql`
+  query q_productsListPopular($length: Int) {
+    productsListPopular(length: $length) {
+      id
+      user_id
+      name
+      description
+      price
+      stockType
+      stock
+      onSale
+      tags
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const Q_ordersReceived = gql`
+  query q_ordersReceived {
+    ordersReceived {
+      id
+      code
+      description
+      user_id
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const Q_ordersReceivedProducts = gql`
+  query q_ordersReceivedProducts($order_id: ID!) {
+    ordersReceivedProducts(order_id: $order_id) {
+      amount
+      id
+      user_id
+      name
+      price
+      stock
+      stockType
+      onSale
+      description
+      tags
+      created_at
+      updated_at
+    }
+  }
+`;

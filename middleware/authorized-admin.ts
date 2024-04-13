@@ -1,3 +1,5 @@
 export default defineNuxtRouteMiddleware(async () => {
-  if (!useStoreApiAuth().isAdmin$) return await navigateTo({ name: "auth" });
+  console.info("--mw-auth-admin");
+  const auth = useStoreApiAuth();
+  if (!auth.isAdmin$) return await navigateTo({ name: "auth" });
 });

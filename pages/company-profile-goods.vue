@@ -8,6 +8,11 @@ definePageMeta({
   middleware: "authorized-company",
 });
 
+useHead({
+  title: "lager",
+});
+
+
 const { smAndUp } = useDisplay();
 
 const { products: products$, remove: productsRemove } = useProducts();

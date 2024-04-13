@@ -6,17 +6,22 @@
 //
 // });
 import { SpinnerAppProcessing } from "@/components/ui";
+import { Cart } from "@/components/app";
 
 // theme
 // import { type IThemeToggle } from "@/types";
 const { theme } = useNuxtApp().$theme;
 
-const { DARK, LIGHT } = useAppConfig().theme;
+const {
+  theme: { DARK, LIGHT },
+  io: { IOEVENT_PRODUCTS_CHANGE },
+  key: { PRODUCTS_CHANGE },
+} = useAppConfig();
 const htmlAttrs = computed(() => ({
   class: DARK === theme.value ? "dark" : LIGHT,
 }));
 useHead({
-  titleTemplate: (ttl) => (!ttl ? ".NuxtApp" : `[${ttl}] | NuxtApp`),
+  titleTemplate: (ttl) => (!ttl ? "kantar.rs" : `${ttl} | kantar.rs`),
   htmlAttrs,
 });
 
@@ -44,14 +49,37 @@ onMounted(() => {
   );
 });
 
+const $$main = useStoreMain();
+useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
+  $$main.put({ [PRODUCTS_CHANGE]: Date.now() });
+});
+
+const {
+  app: { DEFAULT_TRANSITION },
+} = useAppConfig();
+
+const cart = useStoreCart();
+
 // eos
 </script>
 
 <template>
   <VApp :theme="theme" id="app-main">
+    <!-- @screen:cart -->
+    <VDialog
+      :model-value="cart.isOpen"
+      persistent
+      no-click-animation
+      :transition="DEFAULT_TRANSITION"
+      fullscreen
+    >
+      <Cart />
+    </VDialog>
+    <!-- pages -->
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+    <!-- status ui -->
     <NuxtLoadingIndicator color="red" />
     <SpinnerAppProcessing :opacity="0.99" size="1.55rem" />
   </VApp>

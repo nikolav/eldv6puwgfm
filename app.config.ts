@@ -1,4 +1,10 @@
-import type { TStoreMain, TStoreFlags, IConfigDocs, IAppData } from "@/types";
+import type {
+  TStoreMain,
+  TStoreFlags,
+  IConfigDocs,
+  IAppData,
+  OrNoValue,
+} from "@/types";
 import { assign } from "@/utils";
 import { PRODUCTION$, URL_APP_PUBLIC } from "@/config";
 
@@ -19,6 +25,7 @@ export default defineAppConfig({
   },
   app: {
     DEFAULT_TRANSITION: "slide-y-reverse-transition",
+    CART_BADGE_OFFSET: 9,
   },
   com: {
     FIELDS: [
@@ -113,6 +120,8 @@ export default defineAppConfig({
     PRODUCT_SELECTED: "Be3Q6GMsqZPSP",
     PRODUCT_ADD: "HAvQCqapN1NuJFIoS",
     PRODUCT_EDIT: "fRbSc",
+    PRODUCTS_CHANGE: "O36Bjz6COY6i",
+    FLAG_CART_OPEN: "S46jud",
   },
   //
   FIELDS_OMIT_STORAGE_META: ["id", "created_at", "updated_at", "__typename"],
@@ -134,6 +143,23 @@ export default defineAppConfig({
   },
   //
   stores: {
+    gravatar: {
+      BASE_URL: "https://www.gravatar.com/avatar",
+      KEY: "gravatar:5RaMzh5pVx6F",
+      MODE: {
+        monsterid: true,
+        wavatar: true,
+        robohash: true,
+      },
+      SIZE: 92,
+    },
+    cart: {
+      initial: {
+        code: "",
+        descrption: "",
+        items: <Record<number, number>>{},
+      },
+    },
     main: {
       initial: <TStoreMain>{
         "app:name": "nikolav.rs",
@@ -177,6 +203,7 @@ export default defineAppConfig({
     IOEVENT_DOCS_TAGS_CHANGE_prefix: "change:docs:tags:",
     IOEVENT_PRODUCTS_CHANGE_prefix: "change:products::",
     IOEVENT_PRODUCT_IMAGES_CHANGE_prefix: "change:product-images:",
+    IOEVENT_PRODUCTS_CHANGE: "@change:products:all",
   },
   theme: {
     DEFAULT: themeLight,

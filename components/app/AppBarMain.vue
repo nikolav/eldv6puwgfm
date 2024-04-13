@@ -40,6 +40,8 @@ const authSubmitLogout = async () => {
           <VIcon color="primary-darken-1" size="122" icon="$iconLogoKantarH" />
         </NuxtLink>
       </strong>
+      <!-- @@demo.dev -->
+      <NuxtLink :to="{ name: 'demo' }">--demo</NuxtLink>
     </VAppBarTitle>
     <template v-if="auth.isCompany$ && isRouteCompanyProfile$">
       <VSpacer />
