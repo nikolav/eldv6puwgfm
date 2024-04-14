@@ -18,12 +18,6 @@ export const useStoreCart = defineStore("cart", () => {
     $$flags.off(FLAG_CART_OPEN);
   };
 
-  const cartLength_ = computed(
-    () => filter(store$.value.items, (amount) => 0 < amount).length
-  );
-  const cartIsEmpty_ = computed(() =>
-    every(store$.value.items, (amount) => !(0 < amount))
-  );
   const products_ = computed(() =>
     reduce(
       store$.value.items,
@@ -34,6 +28,8 @@ export const useStoreCart = defineStore("cart", () => {
       <number[]>[]
     )
   );
+  const cartLength_ = computed(() => products_.value.length);
+  const cartIsEmpty_ = computed(() => 0 === products_.value.length);
 
   const cartDrop = (id: number) => {
     delete store$.value.items[id];
@@ -66,17 +62,26 @@ export const useStoreCart = defineStore("cart", () => {
 
   const { mutate: mutateOrdersPlace } = useMutation(M_ordersPlace);
   const sendOrder = async () => {
-    let error_;
     if (cartIsEmpty_.value) return;
-    try {
-      await mutateOrdersPlace(store$.value);
-    } catch (error) {
-      // debug
-      error_ = error;
-      console.error(error);
-    }
-    return error_;
+    return await mutateOrdersPlace(store$.value);
   };
+
+  const { products$ } = useQueryProductsAll();
+  const total$ = computed(() =>
+    reduce(
+      products_.value,
+      (res, pid) => {
+        const price = Number(
+          get(find(products$.value, { id: String(pid) }), "price")
+        );
+        if (0 < price) {
+          res += store$.value.items[pid] * price;
+        }
+        return res;
+      },
+      0
+    )
+  );
 
   return {
     // # cart:cache
@@ -99,5 +104,8 @@ export const useStoreCart = defineStore("cart", () => {
     isOpen: cartIsOpen_,
     open: cartOpen,
     close: cartClose,
+
+    // # price total
+    total$,
   };
 });

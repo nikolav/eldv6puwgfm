@@ -15,7 +15,7 @@ const { theme } = useNuxtApp().$theme;
 const {
   theme: { DARK, LIGHT },
   io: { IOEVENT_PRODUCTS_CHANGE },
-  key: { PRODUCTS_CHANGE },
+  key: { PRODUCTS_CHANGE, ORDER_SEND_STATUS },
 } = useAppConfig();
 const htmlAttrs = computed(() => ({
   class: DARK === theme.value ? "dark" : LIGHT,
@@ -60,11 +60,32 @@ const {
 
 const cart = useStoreCart();
 
-// eos
+const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
+
+// @@eos
 </script>
 
 <template>
   <VApp :theme="theme" id="app-main">
+    <!-- @signal:order-sent -->
+    <VSnackbar
+      v-model="flagOrderSendStatus$"
+      color="transparent"
+      variant="text"
+    >
+      <VAlert type="success" prominent elevation="4">
+        <div class="d-flex justify-between items-center gap-4 sm:gap-8">
+          <p>Narudžba je uspešno poslata.</p>
+          <VBtn
+            @click="flagOrderSendStatus$ = false"
+            color="on-success"
+            variant="tonal"
+            >ok</VBtn
+          >
+        </div>
+      </VAlert>
+    </VSnackbar>
+
     <!-- @screen:cart -->
     <VDialog
       :model-value="cart.isOpen"
@@ -112,5 +133,4 @@ const cart = useStoreCart();
   opacity: 0;
   transform: translateX(30px);
 }
-
 </style>

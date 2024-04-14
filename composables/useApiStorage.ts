@@ -1,7 +1,11 @@
 import axios from "axios";
 import FormData from "form-data";
 
-import { Q_storageList, M_STORAGE_FILE_REMOVE } from "@/graphql";
+import {
+  Q_storageList,
+  Q_storageListAll,
+  M_STORAGE_FILE_REMOVE,
+} from "@/graphql";
 import { assign, each, find, get, len, omit } from "@/utils";
 import { URL_STORAGE } from "@/config";
 import type {
@@ -12,7 +16,7 @@ import type {
 import { schemaStorageMeta } from "@/schemas";
 
 // .useApiStorage
-export const useApiStorage = (initialEnabled = true) => {
+export const useApiStorage = (initialEnabled = true, __list_all = false) => {
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
     io: { IOEVENT_STORAGE_CHANGE },
@@ -33,7 +37,7 @@ export const useApiStorage = (initialEnabled = true) => {
     result,
     refetch,
   } = useLazyQuery<{ storageList: IStorageFileInfo[] }>(
-    Q_storageList,
+    true === __list_all ? Q_storageListAll : Q_storageList,
     undefined,
     {
       enabled: enabled$,
@@ -42,7 +46,10 @@ export const useApiStorage = (initialEnabled = true) => {
   );
   // @@files
   const files$ = computed(
-    () => (enabled$.value ? result.value?.storageList : undefined) || []
+    () =>
+      (enabled$.value
+        ? get(result.value, __list_all ? "storageListAll" : "storageList")
+        : undefined) || []
   );
   const reloadFiles = async () => await refetch();
 

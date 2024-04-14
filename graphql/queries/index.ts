@@ -32,6 +32,24 @@ export const Q_storageList = gql`
   }
 `;
 
+export const Q_storageListAll = gql`
+  query q_storageListAll {
+    storageListAll {
+      id
+      file_id
+      title
+      description
+      filename
+      path
+      size
+      mimetype
+      public
+      created_at
+      updated_at
+    }
+  }
+`;
+
 export const Q_docsByTopic = gql`
   query q_docsByTopic($topic: String!) {
     docsByTopic(topic: $topic)

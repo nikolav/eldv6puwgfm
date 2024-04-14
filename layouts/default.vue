@@ -35,6 +35,30 @@ watch(search_, debounceSearchHandle);
 
 <template>
   <section id="layout-default" :style="`padding-top: ${appBarHeight}px`">
+    <!-- @cart:button -->
+    <VBtn
+      @click="cart.open"
+      icon
+      size="72"
+      variant="text"
+      elevation="4"
+      class="end-4 sm:end-8 z-10"
+      :style="`top: calc(${appBarHeight}px + 1.22rem)`"
+      position="fixed"
+    >
+      <VBadge
+        :model-value="!cart.isEmpty"
+        :offset-y="CART_BADGE_OFFSET"
+        :offset-x="CART_BADGE_OFFSET"
+        color="red"
+      >
+        <VIcon icon="$iconKorpaKantar" size="72" />
+        <template #badge>
+          <pre>{{ cart.length }}</pre>
+        </template>
+      </VBadge>
+    </VBtn>
+
     <!-- @appbar:main -->
     <AppBarMain :height="appBarHeight" />
 
@@ -50,33 +74,9 @@ watch(search_, debounceSearchHandle);
         <template #image>
           <VImg cover position="0 81%" />
         </template>
-        <VCardItem>
-          <template #append>
-            <VBtn
-              @click="cart.open"
-              icon
-              size="72"
-              variant="text"
-              elevation="4"
-              class="me-2 mt-2 me-sm-6"
-            >
-              <VBadge
-                :model-value="!cart.isEmpty"
-                :offset-y="CART_BADGE_OFFSET"
-                :offset-x="CART_BADGE_OFFSET"
-                color="red"
-              >
-                <VIcon icon="$iconKorpaKantar" size="72" />
-                <template #badge>
-                  <pre>{{ cart.length }}</pre>
-                </template>
-              </VBadge>
-            </VBtn>
-          </template>
-        </VCardItem>
         <VForm
           @submit.prevent
-          class="sm:max-w-[550px] sm:mt-6 sm:mx-auto sm:translate-x-[3.45rem]"
+          class="mx-auto mt-[92px] max-w-[512px] sm:max-w-[550px] sm:mt-[122px] sm:translate-x-[3.45rem]"
         >
           <VTextField
             v-model.trim="search_"
