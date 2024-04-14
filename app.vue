@@ -102,4 +102,15 @@ const cart = useStoreCart();
   opacity: 0;
   filter: blur(0.2rem);
 }
+
+.ChatItem-enter-active,
+.ChatItem-leave-active {
+  transition: all 0.5s ease-out;
+}
+.ChatItem-enter-from,
+.ChatItem-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
 </style>

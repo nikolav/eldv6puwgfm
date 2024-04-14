@@ -153,3 +153,36 @@ export interface IProductData {
   onSale?: boolean | undefined;
   description?: string | undefined;
 }
+
+export interface IOrderReceived {
+  id: number;
+  user_id: number;
+  code?: OrNoValue<string>;
+  description?: OrNoValue<string>;
+  completed?: OrNoValue<boolean>;
+  canceled?: OrNoValue<boolean>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IOrdersProducts {
+  amount: number;
+  id: number;
+  user_id?: OrNoValue<number>;
+  name: string;
+  price?: OrNoValue<number>;
+  stock?: OrNoValue<number>;
+  stockType?: OrNoValue<string>;
+  onSale?: OrNoValue<boolean>;
+  description?: OrNoValue<string>;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IUser {
+  id: number;
+  email: string;
+  created_at: string;
+  updated_at: string;
+}

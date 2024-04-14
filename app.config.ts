@@ -26,6 +26,7 @@ export default defineAppConfig({
   app: {
     DEFAULT_TRANSITION: "slide-y-reverse-transition",
     CART_BADGE_OFFSET: 9,
+    DEFAULT_NO_PRODUCT_IMAGE_FOUND: "/no-image-available.png",
   },
   com: {
     FIELDS: [
@@ -103,6 +104,7 @@ export default defineAppConfig({
     LIKES_preix: "@likes:",
     TAG_COMPANY_PROFILE_prefix: "@company:profile:fwgM8::",
     PRODUCT_IMAGES: "@images:product:",
+    CHAT_ORDER_COM_USER_prefix: "e5iT1p1Mmx5HD@",
   },
   //
   key: {
@@ -122,6 +124,8 @@ export default defineAppConfig({
     PRODUCT_EDIT: "fRbSc",
     PRODUCTS_CHANGE: "O36Bjz6COY6i",
     FLAG_CART_OPEN: "S46jud",
+    CHAT_ORDER_MESSAGE: "SInuQBaRiY",
+    CHAT_CLIENTID_ACTIVE: "O5zl57Fui",
   },
   //
   FIELDS_OMIT_STORAGE_META: ["id", "created_at", "updated_at", "__typename"],
@@ -204,6 +208,8 @@ export default defineAppConfig({
     IOEVENT_PRODUCTS_CHANGE_prefix: "change:products::",
     IOEVENT_PRODUCT_IMAGES_CHANGE_prefix: "change:product-images:",
     IOEVENT_PRODUCTS_CHANGE: "@change:products:all",
+    IOEVENT_ORDERS_CHANGE: "@orders:change:",
+    IOEVENT_AUTH_NEWUSER: "@auth:newuser",
   },
   theme: {
     DEFAULT: themeLight,

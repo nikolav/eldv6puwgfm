@@ -107,10 +107,12 @@ export const Q_productsListPopular = gql`
 export const Q_ordersReceived = gql`
   query q_ordersReceived {
     ordersReceived {
+      user_id
       id
       code
       description
-      user_id
+      completed
+      canceled
       created_at
       updated_at
     }
@@ -135,3 +137,15 @@ export const Q_ordersReceivedProducts = gql`
     }
   }
 `;
+
+export const Q_users = gql`
+  query q_users {
+    users {
+      id
+      email
+      created_at
+      updated_at
+    }
+  }
+`;
+

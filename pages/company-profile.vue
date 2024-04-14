@@ -1,61 +1,199 @@
 <script setup lang="ts">
-import { Q_ordersReceived, Q_ordersReceivedProducts } from "@/graphql";
+import { useDisplay } from "vuetify";
+import { OrdersProduct, ChatOrder } from "@/components/app";
+import type { IOrdersProducts } from "~/types";
 
 definePageMeta({
   layout: "company-profile",
   middleware: "authorized-company",
 });
 
-const orderActive$ = ref();
-const orderIdActive = (id: number) => id == orderActive$.value;
-const { result, load } = useLazyQuery(Q_ordersReceived);
-const orders_ = computed(() => get(result.value, "ordersReceived") || []);
-const { runSetup: queryStart } = useRunSetupOnce(async () => await load());
-onMounted(queryStart);
+const ORDER_ACTIVE = "order:active:S52BW2";
 
-const perPage = 6;
+const {
+  docs: { CHAT_ORDER_COM_USER_prefix },
+  key: { APP_PROCESSING, CHAT_CLIENTID_ACTIVE },
+} = useAppConfig();
+const { $date } = useNuxtApp();
+const dateFormated = (d: string) => $date(d).format("D. MMMM YYYY.");
+
+const { xs, width } = useDisplay();
+const auth = useStoreApiAuth();
+
+const { users } = useQueryUsers();
+
+const orderActive$ = useGlobalVariable(ORDER_ACTIVE);
+const { orders: orders_, reload: ordersReload } = useQueryOrdersReceived();
+const flags$$ = useStoreFlags();
+const ordersReloadStatus = async () => {
+  try {
+    flags$$.on(APP_PROCESSING);
+    await nextTick(ordersReload);
+  } catch (error) {
+    // pass
+  }
+  flags$$.off(APP_PROCESSING);
+};
+const { order_id$, products: products_ } = useQueryOrdersProducts();
+const orderIdActive = (id: number) => id == orderActive$.value;
+watchEffect(() => {
+  order_id$.value = orderActive$.value;
+});
+
+const user_ = computed(() =>
+  0 < orderActive$.value
+    ? find(users.value, {
+        id: get(find(orders_.value, { id: orderActive$.value }), "user_id"),
+      })
+    : undefined
+);
+const emailStartByUserId = (id: any) =>
+  matchEmailStart(
+    get(
+      find(users.value, {
+        id,
+      }),
+      "email"
+    )
+  );
+const clientIdActive$ = useGlobalVariable(CHAT_CLIENTID_ACTIVE);
+watch(
+  () => user_.value?.id,
+  (id) => {
+    clientIdActive$.value = id;
+  }
+);
+
+const toggleOrderChatActive = useToggleFlag();
+const { topic$: chatId$, data: chatOrder$ } = useDocs();
+const topicChatOrderUser$ = computed(() =>
+  0 < orderActive$.value && user_.value?.id
+    ? `${CHAT_ORDER_COM_USER_prefix}${orderActive$.value}:${get(
+        auth.user$,
+        "id"
+      )}:${user_.value.id}`
+    : undefined
+);
+watch(topicChatOrderUser$, (topic) => {
+  if (!topic) return;
+  chatId$.value = topic;
+});
+
+const perPage = 10;
 const page$ = ref(1);
 const paginationLength$ = computed(() =>
   Math.ceil(orders_.value.length / perPage)
 );
 
-const productsEnabled_ = computed(() => 0 < orderActive$.value);
-const { result: resultProducts, load: loadProducts } = useLazyQuery(
-  Q_ordersReceivedProducts,
-  {
-    order_id: orderActive$,
-  },
-  {
-    fetchPolicy: "no-cache",
-    enabled: productsEnabled_,
-  }
-);
-const products_ = computed(
-  () => get(resultProducts.value, "ordersReceivedProducts") || []
-);
-const { runSetup: queryStartProducts } = useRunSetupOnce(
-  async () => await loadProducts()
-);
-onMounted(queryStartProducts);
+const calcOrderTotal = (products: IOrdersProducts[]) =>
+  reduce(
+    products,
+    (res, p) => {
+      if (p?.price) {
+        res += p.amount * p.price;
+      }
+      return res;
+    },
+    0
+  );
 
 // #eos
 </script>
 <template>
   <section class="page--company-profile">
-    <h1>@todo --company-home</h1>
-    <div class="max-w-[956px] mx-auto">
+    <VNavigationDrawer
+      v-model="toggleOrderChatActive.isActive.value"
+      location="end"
+      :width="xs ? width : 412"
+      :order="-1"
+      absolute
+      temporary
+    >
+      <ChatOrder :close="toggleOrderChatActive.off" :topic="chatId$" />
+    </VNavigationDrawer>
+    <div class="max-w-[912px] mx-auto px-1 mt-10">
       <VCard>
-        <VCardItem append-icon="$close" class="bg-primary">
-          <VCardTitle>Primljene narudžbe | {{ orderActive$ }}</VCardTitle>
+        <VCardItem class="bg-primary">
+          <template #append>
+            <div class="space-x-2">
+              <VBtn
+                icon
+                variant="text"
+                color="on-primary"
+                @click="ordersReloadStatus"
+              >
+                <VIcon icon="$loading" size="large" />
+                <VTooltip
+                  location="bottom"
+                  activator="parent"
+                  open-delay="345"
+                  text="Osveži listu narudžbi"
+                />
+              </VBtn>
+              <VBtn
+                :disabled="!topicChatOrderUser$"
+                variant="text"
+                color="on-primary"
+                icon
+                @click="toggleOrderChatActive.on"
+              >
+                <VBadge color="primary3" :model-value="0 < chatOrder$.length">
+                  <VIcon icon="$iconChatDots" size="large" />
+                  <template #badge>
+                    <pre>{{ chatOrder$.length }}</pre>
+                  </template>
+                </VBadge>
+                <VTooltip
+                  activator="parent"
+                  open-delay="345"
+                  text="Poruke..."
+                  location="bottom"
+                />
+              </VBtn>
+            </div>
+          </template>
+          <VCardTitle
+            >Primljene narudžbe
+            <VBadge inline color="primary-lighten-1" class="-translate-y-[2px]">
+              <template #badge>
+                <pre>{{ orders_.length }}</pre>
+              </template>
+            </VBadge>
+          </VCardTitle>
         </VCardItem>
         <VContainer fluid class="ma-0 pa-1">
           <VRow dense>
-            <VCol md="8">
-              <pre>{{ JSON.stringify(products_, null, 2) }}</pre>
+            <VCol :order="1" :order-sm="0" sm="8">
+              <VDataIterator :items="products_">
+                <template #default="{ items }">
+                  <div class="space-y-1 px-2 my-2">
+                    <p>
+                      <span class="text-medium-emphasis">Poručio: </span
+                      >{{ emailStartByUserId(user_?.id) }}
+                    </p>
+                    <VDivider thickness="2" class="mb-2" />
+                    <OrdersProduct
+                      v-for="p in items"
+                      :key="p.raw.id"
+                      :product="p.raw"
+                    />
+                  </div>
+                  <VDivider thickness="2" class="*mb-2" />
+                  <p class="text-end pe-4 my-4">
+                    <span class="text-medium-emphasis">Vrednost: </span>
+                    <em
+                      >{{
+                        calcOrderTotal(map(items, ({ raw }) => raw))
+                      }}din.</em
+                    >
+                  </p>
+                </template>
+              </VDataIterator>
             </VCol>
-            <VCol md="4" class="*bg-primary2-lighten-2 border-s">
+            <VCol sm="4" class="*bg-primary2-lighten-2 border-s">
               <VPagination
                 v-if="1 < paginationLength$"
+                density="comfortable"
                 id="orders-pagination"
                 active-color="primary"
                 :length="paginationLength$"
@@ -63,15 +201,19 @@ onMounted(queryStartProducts);
                 size="small"
                 rounded="circle"
                 variant="text"
-                class="grow"
               />
+
               <VDataIterator
                 :items="orders_"
                 :page="page$"
                 :items-per-page="perPage"
               >
                 <template #default="{ items }">
-                  <VList lines="one" color="primary" class="bg-transparent">
+                  <VList
+                    lines="one"
+                    color="primary"
+                    class="bg-transparent orders--list"
+                  >
                     <VListItem
                       v-for="order in items"
                       :key="order.raw.id"
@@ -80,8 +222,20 @@ onMounted(queryStartProducts);
                       class="ps-2"
                       rounded
                     >
-                      <VListItemTitle>
-                        {{ order.raw.id }}, --{{ order.raw.user_id }}
+                      <VListItemTitle class="d-flex items-center">
+                        <pre
+                          class="text-xs d-inline-block translate-y-px text-disabled me-4"
+                        >
+#{{ order.raw.id }}</pre
+                        >
+                        <span class="d-inline-block text-truncate">
+                          {{ emailStartByUserId(order.raw.user_id) }}
+                        </span>
+                        <VSpacer />
+                        <pre
+                          class="translate-y-px d-inline-block text-disabled text-xs font-italic"
+                          >{{ dateFormated(order.raw.created_at) }}</pre
+                        >
                       </VListItemTitle>
                       <template #prepend>
                         <VIcon
@@ -107,8 +261,11 @@ onMounted(queryStartProducts);
     </div>
   </section>
 </template>
-<style lang="scss" scoped>
+<style lang="scss">
 // #orders-pagination .v-pagination__list {
 //   justify-content: start;
 // }
+.orders--list .v-list-item__spacer {
+  width: 0.22rem !important;
+}
 </style>
