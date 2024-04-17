@@ -21,14 +21,14 @@ export const useAppMenu = () => {
 
   // cached page for navigation
   //  ex. return from auth.cancel
-  const main$ = useStoreMain();
+  const main$$ = useStoreMain();
   const cache = assign(
     (title: string) => {
-      main$.put({ [PAGE_CACHED]: title });
+      main$$.put({ [PAGE_CACHED]: title });
     },
     {
-      get: () => main$.get(PAGE_CACHED),
-      clear: () => main$.put({ [PAGE_CACHED]: null }),
+      get: () => main$$.get(PAGE_CACHED),
+      clear: () => main$$.put({ [PAGE_CACHED]: null }),
     }
   );
 

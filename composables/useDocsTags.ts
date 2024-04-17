@@ -5,7 +5,7 @@ export const useDocsTags = (id: number) => {
 
   const auth = useStoreApiAuth();
   const mounted$ = useMounted();
-  const enabled_ = computed(() => !!(mounted$.value && auth.token$));
+  const enabled_ = computed(() => !!(mounted$.value && auth.isAuth$));
 
   const { result, refetch, load } = useLazyQuery<{
     tagsByDocId: string[];

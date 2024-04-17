@@ -20,7 +20,7 @@ const cart = useStoreCart();
 // @@eos
 </script>
 <template>
-  <section class="component--card-product-display">
+  <section class="component--CardProductDisplay">
     <VCard rounded="lg" variant="elevated">
       <VImg
         max-height="192"
@@ -33,22 +33,20 @@ const cart = useStoreCart();
       </VCardTitle>
       <VCardActions>
         <VSpacer />
-        <VFadeTransition>
-          <VBtn
-            color="primary-darken-1"
-            variant="tonal"
-            @click="cart.increase(props.product.id, 1)"
-            ><VBadge color="error" v-if="cart.has(props.product.id)" inline>
-              <template #badge>
-                <pre>{{ cart.store$.items[props.product.id] }}</pre>
-              </template>
-            </VBadge>
-            <strong
-              :class="cart.store$.items[props.product.id] ? 'ms-1' : undefined"
-              >Korpa</strong
-            >
-          </VBtn>
-        </VFadeTransition>
+        <VBtn
+          color="primary-darken-1"
+          variant="tonal"
+          @click="cart.increase(props.product.id, 1)"
+          ><VBadge color="error" v-if="cart.has(props.product.id)" inline>
+            <template #badge>
+              <pre>{{ cart.store$.items[props.product.id] }}</pre>
+            </template>
+          </VBadge>
+          <strong
+            :class="cart.store$.items[props.product.id] ? 'ms-1' : undefined"
+            >Korpa</strong
+          >
+        </VBtn>
       </VCardActions>
     </VCard>
   </section>

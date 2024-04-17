@@ -1,17 +1,19 @@
 import type { Config } from "tailwindcss";
 // import plugin from "tailwindcss/plugin";
-import tailwindcssTypography from "@tailwindcss/typography";
-import tailwindcssAspectRatio from "@tailwindcss/aspect-ratio";
+
+// import tailwindcssTypography from "@tailwindcss/typography";
+// import tailwindcssAspectRatio from "@tailwindcss/aspect-ratio";
+
 // import defaultTheme from "tailwindcss/defaultTheme";
 
 // # full config
 // # https://github.com/tailwindlabs/tailwindcss/blob/master/stubs/config.full.js
 export default <Partial<Config>>{
   content: [
-    "../components/**/*.{vue,js,ts}",
     "../pages/**/*.vue",
-    "../layouts/**/*.vue",
+    "../components/**/*.{vue,js,ts}",
     "../plugins/**/*.{js,ts}",
+    "../layouts/**/*.vue",
     "../composables/**/*.{js,ts}",
     "../utils/**/*.{js,ts}",
     "../app.{js,ts,vue}",
@@ -24,7 +26,18 @@ export default <Partial<Config>>{
     "../app/**/*.html",
     "../nuxt.config.{js,ts}",
     "../app.config.{js,ts}",
+    // { raw: "<import content...>", extension: "html" },
   ],
+  // generate classes
+  safelist: [
+    // "safelisted",
+    // {
+    //   pattern: /bg-(red|green|blue)-(100|200|300)/,
+    //   variants: ['lg', 'hover', 'focus', 'lg:hover'],
+    // },
+  ],
+  // discard classes
+  blocklist: [],
   darkMode: "class",
   theme: {
     extend: {
@@ -36,13 +49,10 @@ export default <Partial<Config>>{
         current: "currentColor",
         transparent: "transparent",
       },
-      // fontFamily: {
-      //   sans: ["Poppins", "sans-serif"],
-      // },
       screens: {
         // 'sm': '640px',
         // 'md': '768px',
-        // lg: "1024px",
+        // 'lg': "1024px",
         // 'xl': '1280px',
         // '2xl': '1536px',
         tablet: "640px",
@@ -50,28 +60,25 @@ export default <Partial<Config>>{
         desktop: "1280px",
         tall: { raw: "(min-height: 802px)" },
       },
+      // fontFamily: {
+      //   sans: ["Poppins", "sans-serif"],
+      // },
+      // spacing: {},
+      // borderRadius: {},
     },
   },
-  // 
+  //
   corePlugins: {
-    // #disable the aspectRatio core plugin to avoid conflicts with the native aspect-ratio utilities
+    // # disable the aspectRatio core plugin to avoid conflicts
+    // # with the native aspect-ratio utilities
     aspectRatio: false,
   },
-  // generate classes
-  safelist: [
-    // "safelisted",
-    // {
-    //   pattern: /bg-(red|green|blue)-(100|200|300)/,
-    // },
-  ],
-  // discard classes
-  blocklist: [],
   plugins: [
     //   require("@tailwindcss/typography"),
-    tailwindcssTypography,
+    // tailwindcssTypography,
     // require("@tailwindcss/aspect-ratio"),
     // @https://github.com/tailwindlabs/tailwindcss-aspect-ratio?tab=readme-ov-file#usage
-    tailwindcssAspectRatio,
+    // tailwindcssAspectRatio,
     // require("@tailwindcss/line-clamp"),
     // require("@tailwindcss/forms"),
   ],

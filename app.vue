@@ -10,7 +10,9 @@ import { Cart } from "@/components/app";
 
 // theme
 // import { type IThemeToggle } from "@/types";
-const { theme } = useNuxtApp().$theme;
+const {
+  $theme: { theme },
+} = useNuxtApp();
 
 const {
   theme: { DARK, LIGHT },
@@ -33,25 +35,25 @@ onMounted(() => {
     () => auth.isAuth$,
     async (isAuth) => {
       if (!isAuth) {
-        // @logout
-        console.log(`@app-vue: !isAuth`);
+        // @logout:hard-reload
+        console.log(`/app.vue: !isAuth`);
         appMenuCacheDestroy();
         return reloadNuxtApp({
           path: "/",
           persistState: false,
         });
       }
-      // @login
-      console.log(`@app-vue: isAuth`);
+      // @login:debug
+      console.log(`/app.vue: isAuth`);
       console.log({ user: auth.user$ });
       await navigateTo({ name: "index" });
     }
   );
 });
 
-const $$main = useStoreMain();
+const main$$ = useStoreMain();
 useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
-  $$main.put({ [PRODUCTS_CHANGE]: Date.now() });
+  main$$.put({ [PRODUCTS_CHANGE]: Date.now() });
 });
 
 const {
@@ -96,11 +98,13 @@ const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
     >
       <Cart />
     </VDialog>
-    <!-- pages -->
+
+    <!-- @pages -->
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-    <!-- status ui -->
+
+    <!-- @ui:status -->
     <NuxtLoadingIndicator color="red" />
     <SpinnerAppProcessing :opacity="0.99" size="1.55rem" />
   </VApp>

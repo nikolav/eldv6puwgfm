@@ -1,7 +1,10 @@
 export default defineNuxtPlugin((_nuxtapp) => {
-  const { DARK, LIGHT, DEFAULT } = useAppConfig().theme;
-  const theme$ = useState(useAppConfig().key.THEME, () => DEFAULT);
-  const themeToggle = (mode?: string) => {
+  const {
+    theme: { DARK, LIGHT, DEFAULT },
+    key: { THEME },
+  } = useAppConfig();
+  const theme$ = useState(THEME, () => DEFAULT);
+  const themeToggle = (mode?: string | undefined) => {
     theme$.value = mode || (DARK !== theme$.value ? DARK : LIGHT);
   };
 
