@@ -1,6 +1,7 @@
 // @lodash
 import lodash from "lodash";
 const {
+  indexOf,
   clamp,
   assign,
   at,
@@ -37,6 +38,7 @@ const {
   zipObject,
 } = lodash;
 export {
+  indexOf,
   clamp,
   assign,
   at,

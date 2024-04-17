@@ -186,3 +186,8 @@ export interface IUser {
   created_at: string;
   updated_at: string;
 }
+
+export type TGravatars = Record<
+  number,
+  { src?: OrNoValue<string>; enabled?: OrNoValue<boolean> }
+>;

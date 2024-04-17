@@ -24,7 +24,8 @@ export const useDoc = <TDoc = Record<string, any>>(
   );
   const data$ = computed(
     () =>
-      (enabled$.value ? result.value?.docByDocId : undefined) || <IDoc<TDoc>>{}
+      (enabled$.value ? get(result.value, "docByDocId") : undefined) ||
+      <IDoc<TDoc>>{}
   );
   const reload = async () => await refetch();
 

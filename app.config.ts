@@ -148,9 +148,9 @@ export default defineAppConfig({
   },
   //
   stores: {
-    gravatar: {
+    gravatars: {
       BASE_URL: "https://www.gravatar.com/avatar",
-      KEY: "gravatar:5RaMzh5pVx6F",
+      GRAVATARS_CACHE: "gravatars:DKueKjfBLJlRj7k",
       MODE: {
         monsterid: true,
         wavatar: true,

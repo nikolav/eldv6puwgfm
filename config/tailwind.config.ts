@@ -1,8 +1,10 @@
 import type { Config } from "tailwindcss";
-// import plugin from "tailwindcss/plugin";
+import plugin from "tailwindcss/plugin";
 
-// import tailwindcssTypography from "@tailwindcss/typography";
-// import tailwindcssAspectRatio from "@tailwindcss/aspect-ratio";
+// import twColors from "tailwindcss/colors";
+import twTypography from "@tailwindcss/typography";
+import twAspectRatio from "@tailwindcss/aspect-ratio";
+import twContainer from "@tailwindcss/container-queries";
 
 // import defaultTheme from "tailwindcss/defaultTheme";
 
@@ -65,6 +67,9 @@ export default <Partial<Config>>{
       // },
       // spacing: {},
       // borderRadius: {},
+      containers: {
+        "2xs": "16rem",
+      },
     },
   },
   //
@@ -74,13 +79,15 @@ export default <Partial<Config>>{
     aspectRatio: false,
   },
   plugins: [
-    //   require("@tailwindcss/typography"),
-    // tailwindcssTypography,
+    // require("@tailwindcss/typography"),
     // require("@tailwindcss/aspect-ratio"),
-    // @https://github.com/tailwindlabs/tailwindcss-aspect-ratio?tab=readme-ov-file#usage
-    // tailwindcssAspectRatio,
     // require("@tailwindcss/line-clamp"),
     // require("@tailwindcss/forms"),
+    twTypography,
+    // @https://github.com/tailwindlabs/tailwindcss-aspect-ratio?tab=readme-ov-file#usage
+    twAspectRatio,
+    // @https://github.com/tailwindlabs/tailwindcss-container-queries?tab=readme-ov-file#usage
+    twContainer,
   ],
   // presets: [],
 };

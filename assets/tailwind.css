@@ -26,6 +26,21 @@
 @tailwind variants;
 
 /*
+ @layer base {
+  :root {
+    --color-foo: 000 122 255;
+  }
+ }
+
+ ... 
+ theme: {
+  colors: {
+    foo: 'rgb(var(--color-foo) / <alpha-value>)'
+  }
+ }
+ ...
+
+
  @layer components {
 
  }

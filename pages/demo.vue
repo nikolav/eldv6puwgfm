@@ -3,15 +3,14 @@ definePageMeta({
   layout: "blank",
 });
 
-const gravatar = useStoreGravatar();
+const gravatar = useStoreGravatars();
 
 // #eos
 </script>
 <template>
   <section class="page--demo">
-    <VBtn @click="gravatar.refresh">refresh</VBtn>
-    <VAvatar color="primary2" size="55" variant="elevated">
-      <VImg crossorigin="anonymous" :src="gravatar.src" cover />
+    <VAvatar size="64" @click="gravatar.refresh">
+      <VImg crossorigin="anonymous" :src="gravatar.src" />
     </VAvatar>
   </section>
 </template>
