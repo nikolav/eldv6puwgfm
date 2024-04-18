@@ -21,16 +21,19 @@ const toggleProfileUpdating = useToggleFlag();
 //
 const tab$ = ref("kontakt");
 const {
-  key: { FORM_COMPANY_ID },
-  docs: { TAG_COMPANY_PROFILE_prefix },
+  key: { FORM_COMPANY_ID, APP_PROCESSING },
+  docs: { TAG_COMPANY_PROFILE_prefix, COM_PHOTOS_prefix },
   com: { FIELDS },
   links: {
     external: { RPU: lnRPU },
   },
+  io: { IOEVENT_COM_PHOTOS_CHANGE_prefix },
+  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
 } = useAppConfig();
 
+const uid = get(auth.user$, "id");
 const { data: com_, put: profileUpsert } = useDoc<ICompanyProfile>(
-  `${TAG_COMPANY_PROFILE_prefix}${get(auth.user$, "id")}`
+  `${TAG_COMPANY_PROFILE_prefix}${uid}`
 );
 const $$main = useStoreMain();
 const form = FIELDS.reduce((formdata_, field) => {
@@ -41,11 +44,12 @@ const form = FIELDS.reduce((formdata_, field) => {
   return formdata_;
 }, <Record<string, Ref>>{});
 
-const { runSetup: formInit } = useRunSetupOnce(() => {
+const formDataInitFromStore = () => {
   forEach(FIELDS, (field) => {
     form[field].value = get(com_.value.data, field) || "";
   });
-});
+};
+const { runSetup: formInit } = useRunSetupOnce(formDataInitFromStore);
 onMounted(() => {
   watch(com_, formInit);
 });
@@ -71,7 +75,84 @@ const submitFormCompanyId = async () => {
   if (!error_) toggleProfileSaved.on();
   toggleProfileUpdating.off();
 };
-// #eos
+
+// # com.photos
+const comImage$ = ref();
+const resetComImage = () => {
+  comImage$.value = [];
+};
+const tag_COM_PHOTOS = `${COM_PHOTOS_prefix}${uid}`;
+const { upload, publicUrl, remove, IO } = useApiStorage();
+const { data: comPhotos$, tags, reload } = useDocs(tag_COM_PHOTOS);
+watchEffect(() => useIOEvent(IO.value, reload));
+useIOEvent(`${IOEVENT_COM_PHOTOS_CHANGE_prefix}${uid}`, reload);
+const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+const carouselCurrent$ = ref();
+const submitComImageUpload = async () => {
+  let err_;
+  let resUpload;
+  let id;
+
+  const file = get(comImage$.value, "[0]");
+  if (!file) return;
+
+  try {
+    appProcessing$.value = true;
+    resUpload = await upload({
+      image: {
+        file,
+        data: {},
+      },
+    });
+    id = Number(get(resUpload, "image.id"));
+    if (!id) throw "--submitComImageUpload:no-id";
+    // image uploaded; bind `doc-tag`
+    await tags(id, { [tag_COM_PHOTOS]: true });
+  } catch (error) {
+    err_ = error;
+    console.error(error);
+  }
+
+  if (!err_) {
+    // @success:signal-ok
+    resetComImage();
+    carouselCurrent$.value = get(resUpload, "image.data.file_id");
+    console.log("--comPhotos:upload:success");
+    // pass
+  }
+
+  appProcessing$.value = false;
+};
+
+const comPhotosRemove = async () => {
+  let err_;
+  let resRm;
+
+  console.log(`--comPhotosRemove:${carouselCurrent$.value}`);
+  if (!carouselCurrent$.value) return;
+  try {
+    resRm = await remove(carouselCurrent$.value);
+  } catch (error) {
+    err_ = error;
+    console.error(error);
+    // pass
+  }
+  if (!err_) {
+    console.log({ resRm });
+    // drop `doc-tag` link
+    await tags(Number(get(resRm, "data.storageRemoveFile.file.id")), {
+      [tag_COM_PHOTOS]: false,
+    });
+    // rm:success; set random current slide
+    await nextTick(() => {
+      if (!isEmpty(comPhotos$.value)) {
+        carouselCurrent$.value = get(sample(comPhotos$.value), "data.file_id");
+      }
+    });
+  }
+};
+
+// @@eos
 </script>
 <template>
   <section class="page--company-profile-id px-4 px-sm-8">
@@ -280,84 +361,71 @@ const submitFormCompanyId = async () => {
                 </div>
               </VWindowItem>
             </VFadeTransition>
+            <!-- @@window:fotografije -->
             <VFadeTransition mode="in-out" leave-absolute>
               <VWindowItem value="fotografije">
-                <VContainer fluid>
-                  <VRow>
-                    <VCol sm="4">
-                      <VCard image="/zanat.png" min-height="196">
-                        <template #image>
-                          <VImg cover />
-                        </template>
-                        <VOverlay
-                          scrim="primary2"
-                          class="cursor-pointer d-flex items-center justify-center"
-                          persistent
-                          activator="parent"
-                          contained
-                          open-on-hover
+                <VForm
+                  @submit.prevent="submitComImageUpload"
+                  autocomplete="off"
+                  class="mx-auto max-w-[550px]"
+                >
+                  <VFileInput
+                    center-affix
+                    density="compact"
+                    v-model="comImage$"
+                    name="com_image"
+                    variant="solo"
+                    :prepend-icon="smAndUp ? '$iconImage' : ''"
+                    clearable
+                  >
+                    <template #append>
+                      <VBtn
+                        type="submit"
+                        variant="tonal"
+                        color="primary-darken-1"
+                        :size="smAndUp ? 'large' : undefined"
+                      >
+                        <VIcon
+                          size="large"
+                          :start="smAndUp"
+                          icon="$iconCloudUp"
+                        />
+                        <strong v-if="smAndUp">Postavi</strong>
+                      </VBtn>
+                    </template>
+                  </VFileInput>
+                </VForm>
+                <VSheet elevation="2">
+                  <VCarousel
+                    :height="smAndUp ? 412 : 320"
+                    color="primary-darken-2"
+                    hide-delimiter-background
+                    v-model="carouselCurrent$"
+                    continuous
+                  >
+                    <VCarouselItem
+                      v-for="node in comPhotos$"
+                      :key="node.data.file_id"
+                      :src="publicUrl(node.data.file_id)"
+                      :value="node.data.file_id"
+                      cover
+                    >
+                      <div
+                        class="!h-fit *bg-red position-absolute top-0 inset-0 d-flex items-center *opacity-50 pa-1"
+                      >
+                        <VSpacer />
+                        <VBtn
+                          @click="comPhotosRemove"
+                          icon
+                          variant="text"
+                          color="error"
                         >
-                          <VBtn
-                            variant="elevated"
-                            color="primary"
-                            class="opacity-90"
-                            icon
-                          >
-                            <VIcon icon="$close" size="x-large" />
-                          </VBtn>
-                        </VOverlay>
-                      </VCard>
-                    </VCol>
-                    <VCol sm="4">
-                      <VCard image="/zanat.png" min-height="196">
-                        <template #image>
-                          <VImg cover />
-                        </template>
-                        <VOverlay
-                          scrim="primary2"
-                          class="cursor-pointer d-flex items-center justify-center"
-                          persistent
-                          activator="parent"
-                          contained
-                          open-on-hover
-                        >
-                          <VBtn
-                            variant="elevated"
-                            color="primary"
-                            class="opacity-90"
-                            icon
-                          >
-                            <VIcon icon="$close" size="x-large" />
-                          </VBtn>
-                        </VOverlay>
-                      </VCard>
-                    </VCol>
-                    <VCol sm="4">
-                      <VCard image="/zanat.png" min-height="196">
-                        <template #image>
-                          <VImg cover />
-                        </template>
-                        <VOverlay
-                          scrim="primary2"
-                          class="cursor-pointer d-flex items-center justify-center"
-                          persistent
-                          activator="parent"
-                          contained
-                          open-on-hover
-                        >
-                          <VBtn
-                            variant="elevated"
-                            color="primary"
-                            class="opacity-90"
-                            icon
-                          >
-                            <VIcon icon="$close" size="x-large" />
-                          </VBtn>
-                        </VOverlay>
-                      </VCard>
-                    </VCol>
-                  </VRow>
-                </VContainer>
+                          <VIcon icon="$iconTrash" />
+                        </VBtn>
+                      </div>
+                    </VCarouselItem>
+                  </VCarousel>
+                </VSheet>
               </VWindowItem>
             </VFadeTransition>
 
@@ -412,18 +480,36 @@ const submitFormCompanyId = async () => {
           </VWindow>
         </VCardText>
         <VCardActions class="pa-4">
+          <VBtn
+            @click="formDataInitFromStore"
+            class="px-4 px-sm-6"
+            color="secondary-lighten-1"
+            :size="smAndUp ? 'x-large' : undefined"
+            variant="text"
+          >
+            <VIcon
+              :size="smAndUp ? 'large' : undefined"
+              :start="smAndUp"
+              icon="$iconEraser"
+            />
+            <strong v-if="smAndUp">Poništi</strong>
+          </VBtn>
           <VSpacer />
           <VBtn
             class="px-4 px-sm-6"
             color="primary-darken-1"
-            size="x-large"
+            :size="smAndUp ? 'x-large' : undefined"
             variant="tonal"
             type="submit"
             :disabled="toggleProfileUpdating.isActive.value"
             :loading="toggleProfileUpdating.isActive.value"
           >
-            <VIcon size="large" start icon="$iconSave" />
-            <strong>Sačuvaj</strong>
+            <VIcon
+              :size="smAndUp ? 'large' : undefined"
+              :start="smAndUp"
+              icon="$iconSave"
+            />
+            <strong v-if="smAndUp">Sačuvaj</strong>
           </VBtn>
         </VCardActions>
       </VCard>

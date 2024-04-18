@@ -362,12 +362,12 @@ const fieldsReset = () => {
       <VToolbar flat color="transparent" class="pa-sm-4">
         <VBtn
           :size="smAndUp ? 'large' : undefined"
-          variant="tonal"
+          variant="text"
           color="secondary-lighten-1"
           @click="fieldsReset"
         >
           <VIcon icon="$iconEraser" start size="large" />
-          <strong>Resetuj</strong>
+          <strong>Poništi</strong>
         </VBtn>
         <VSpacer />
         <VBtn

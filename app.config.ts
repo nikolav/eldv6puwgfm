@@ -106,6 +106,7 @@ export default defineAppConfig({
     TAG_COMPANY_PROFILE_prefix: "@company:profile:fwgM8::",
     PRODUCT_IMAGES: "@images:product:",
     CHAT_ORDER_COM_USER_prefix: "e5iT1p1Mmx5HD@",
+    COM_PHOTOS_prefix: "@com:photos:",
   },
   //
   key: {
@@ -214,6 +215,7 @@ export default defineAppConfig({
     IOEVENT_PRODUCTS_CHANGE: "@change:products:all",
     IOEVENT_ORDERS_CHANGE: "@orders:change:",
     IOEVENT_AUTH_NEWUSER: "@auth:newuser",
+    IOEVENT_COM_PHOTOS_CHANGE_prefix: "change:com-photos:",
   },
   theme: {
     DEFAULT: themeLight,
