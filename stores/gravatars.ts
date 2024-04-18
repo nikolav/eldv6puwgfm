@@ -3,7 +3,7 @@ import type { TGravatars } from "@/types";
 
 export const useStoreGravatars = defineStore("gravatars", () => {
   const auth = useStoreApiAuth();
-  const id_ = computed(() => get(auth.user$, "id"));
+  const id = computed(() => get(auth.user$, "id"));
   const {
     stores: {
       gravatars: { BASE_URL, GRAVATARS_CACHE, MODE, SIZE },
@@ -35,19 +35,18 @@ export const useStoreGravatars = defineStore("gravatars", () => {
       <Record<string, string>>{}
     )
   );
-  const enabled_ = computed(
-    () => false !== get(g$.value, `data["${id_.value}"].enabled`)
+  const enabled = computed(
+    () => false !== get(g$.value, `data["${id.value}"].enabled`)
   );
-  const src_ = computed(
+  const src = computed(
     () =>
-      (enabled_.value
-        ? get(g$.value, `data["${id_.value}"].src`)
-        : undefined) || ""
+      (enabled.value ? get(g$.value, `data["${id.value}"].src`) : undefined) ||
+      ""
   );
   const refresh = async () =>
-    enabled_.value ? await cache({ [`${id_.value}.src`]: url_() }) : undefined;
-  const enable = async () => await cache({ [`${id_.value}.enabled`]: true });
-  const disable = async () => await cache({ [`${id_.value}.enabled`]: false });
+    enabled.value ? await cache({ [`${id.value}.src`]: url_() }) : undefined;
+  const enable = async () => await cache({ [`${id.value}.enabled`]: true });
+  const disable = async () => await cache({ [`${id.value}.enabled`]: false });
 
   //#
   return {
@@ -55,11 +54,9 @@ export const useStoreGravatars = defineStore("gravatars", () => {
     store,
 
     // #crud
-    src: src_,
+    src,
+    enabled,
     refresh,
-    enabled: enabled_,
-
-    // #toggle
     enable,
     disable,
   };

@@ -9,7 +9,7 @@ const cart = useStoreCart();
 
 const { lgAndUp } = useDisplay();
 
-const { products$, reload } = useQueryProductsAll();
+const { products$ } = useQueryProductsAll();
 
 // #eos
 </script>

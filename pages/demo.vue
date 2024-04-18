@@ -3,15 +3,31 @@ definePageMeta({
   layout: "blank",
 });
 
-const gravatar = useStoreGravatars();
+const items = [
+  {
+    title: "Dashboard",
+    disabled: false,
+    href: "breadcrumbs_dashboard",
+  },
+  {
+    title: "Link 1",
+    disabled: false,
+    href: "breadcrumbs_link_1",
+  },
+  {
+    title: "Link 2",
+    disabled: true,
+    href: "breadcrumbs_link_2",
+  },
+];
 
 // #eos
 </script>
 <template>
   <section class="page--demo">
-    <VAvatar size="64" @click="gravatar.refresh">
-      <VImg crossorigin="anonymous" :src="gravatar.src" />
-    </VAvatar>
+    <VSheet width="512" class="mx-auto">
+      <VBreadcrumbs divider="•" :items="items" />
+    </VSheet>
   </section>
 </template>
 <style lang="scss" scoped>

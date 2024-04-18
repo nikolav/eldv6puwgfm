@@ -7,8 +7,11 @@ const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
   docs: { PRODUCT_IMAGES },
 } = useAppConfig();
-const { publicUrl } = useApiStorage(true, true);
+
 const { data: docsImages$ } = useDocs(`${PRODUCT_IMAGES}${props.product.id}`);
+const { publicUrl, reload: reloadAll } = useApiStorage(true, true);
+watch(docsImages$, reloadAll);
+
 const productImageSrcSample$ = computed(() =>
   isEmpty(docsImages$.value)
     ? DEFAULT_NO_PRODUCT_IMAGE_FOUND
