@@ -12,7 +12,6 @@ useHead({
   title: "lager",
 });
 
-
 const { smAndUp } = useDisplay();
 
 const { products: products$, remove: productsRemove } = useProducts();
@@ -186,7 +185,7 @@ const submitProductsRemove = async () => {
       <!-- @@products:crud -->
       <VCard max-width="956" class="mx-auto">
         <VToolbar height="48" color="primary" flat>
-          <VToolbarTitle>
+          <VToolbarTitle v-if="smAndUp">
             <VIcon start size="small" class="opacity-50" icon="$iconBoxes" />
             <strong class="ps-2 space-x-2">
               <span>Lager</span>
@@ -204,8 +203,9 @@ const submitProductsRemove = async () => {
             </strong>
           </VToolbarTitle>
 
+          <VSpacer v-if="!smAndUp" />
           <!-- @@products:controlls -->
-          <VToolbarItems class="space-x-4 *pe-2">
+          <VToolbarItems :class="`*pe-2 ${smAndUp ? 'space-x-4' : undefined}`">
             <VBtn
               @click="toggleProductsEdit.on"
               :disabled="null == selectedProduct$"
@@ -260,6 +260,7 @@ const submitProductsRemove = async () => {
               />
             </VBtn>
           </VToolbarItems>
+          <VSpacer v-if="!smAndUp" />
         </VToolbar>
 
         <!-- @@products:table -->

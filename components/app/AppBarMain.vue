@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import { emojify } from "node-emoji";
 
 const props = defineProps<{ height: number }>();
+
+const { smAndUp } = useDisplay();
 
 const auth = useStoreApiAuth();
 const route_ = useRoute();
@@ -29,6 +32,7 @@ const authSubmitLogout = async () => {
 <template>
   <VAppBar flat :height="props.height" elevation="1" id="appbar--main">
     <VAppBarTitle
+      v-if="smAndUp"
       id="appbar-main--title"
       class="opacity-95 hover:opacity-100 ms-6"
     >

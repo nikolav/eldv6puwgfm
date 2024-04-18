@@ -340,7 +340,7 @@ const submitFormCompanyId = async () => {
                     clearable
                     label="Opis načina dostave do kupaca"
                   >
-                    <template #prepend>
+                    <template v-if="smAndUp" #prepend>
                       <VIcon
                         icon="$iconDeliveryTruck"
                         size="42"
@@ -364,7 +364,7 @@ const submitFormCompanyId = async () => {
                     clearable
                     label="Istorijat, o nama, ukratko o našim proizvodima..."
                   >
-                    <template #prepend>
+                    <template v-if="smAndUp" #prepend>
                       <VIcon
                         icon="$iconBook"
                         size="x-large"

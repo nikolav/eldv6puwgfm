@@ -8,31 +8,30 @@ definePageMeta({
   middleware: "authorized-company",
 });
 
-const ORDER_ACTIVE = "order:active:S52BW2";
-
 const {
   docs: { CHAT_ORDER_COM_USER_prefix },
-  key: { APP_PROCESSING, CHAT_CLIENTID_ACTIVE },
+  key: { APP_PROCESSING, CHAT_CLIENTID_ACTIVE, ORDER_ACTIVE },
 } = useAppConfig();
 const { $date } = useNuxtApp();
 const dateFormated = (d: string) => $date(d).format("D. MMMM YYYY.");
 
-const { xs, width } = useDisplay();
+const { xs, smAndUp, width } = useDisplay();
 const auth = useStoreApiAuth();
 
 const { users } = useQueryUsers();
 
 const orderActive$ = useGlobalVariable(ORDER_ACTIVE);
 const { orders: orders_, reload: ordersReload } = useQueryOrdersReceived();
-const flags$$ = useStoreFlags();
+// const flags$$ = useStoreFlags();
+const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const ordersReloadStatus = async () => {
   try {
-    flags$$.on(APP_PROCESSING);
+    appProcessing$.value = true;
     await nextTick(ordersReload);
   } catch (error) {
     // pass
   }
-  flags$$.off(APP_PROCESSING);
+  appProcessing$.value = false;
 };
 const { order_id$, products: products_ } = useQueryOrdersProducts();
 const orderIdActive = (id: number) => id == orderActive$.value;
@@ -79,11 +78,11 @@ watch(topicChatOrderUser$, (topic) => {
   chatId$.value = topic;
 });
 
-const perPage = 10;
-const page$ = ref(1);
-const paginationLength$ = computed(() =>
-  Math.ceil(orders_.value.length / perPage)
-);
+const {
+  perPage,
+  length: paginationLength$,
+  page$,
+} = usePaginateData({ data: orders_, perPage: 5 });
 
 const calcOrderTotal = (products: IOrdersProducts[]) =>
   reduce(
@@ -96,6 +95,12 @@ const calcOrderTotal = (products: IOrdersProducts[]) =>
     },
     0
   );
+
+watchEffect(() => {
+  if (null != orderActive$.value) return;
+  if (isEmpty(orders_.value)) return;
+  orderActive$.value = get(orders_.value, "[0].id");
+});
 
 // #eos
 </script>
@@ -111,9 +116,19 @@ const calcOrderTotal = (products: IOrdersProducts[]) =>
     >
       <ChatOrder :close="toggleOrderChatActive.off" :topic="chatId$" />
     </VNavigationDrawer>
-    <div class="max-w-[912px] mx-auto px-1 mt-10">
+    <div class="max-w-[912px] mx-auto px-1 mt-2 mt-sm-8">
       <VCard>
+        <!-- @orders-crud:toolbar -->
         <VCardItem class="bg-primary">
+          <VCardTitle
+            ><span v-if="smAndUp">Primljene narudžbe</span>
+            <VBadge inline color="primary-lighten-1" class="-translate-y-[2px]">
+              <template #badge>
+                <pre>{{ orders_.length }}</pre>
+              </template>
+            </VBadge>
+          </VCardTitle>
+          <!-- @orders-crud:actions -->
           <template #append>
             <div class="space-x-2">
               <VBtn
@@ -152,15 +167,8 @@ const calcOrderTotal = (products: IOrdersProducts[]) =>
               </VBtn>
             </div>
           </template>
-          <VCardTitle
-            >Primljene narudžbe
-            <VBadge inline color="primary-lighten-1" class="-translate-y-[2px]">
-              <template #badge>
-                <pre>{{ orders_.length }}</pre>
-              </template>
-            </VBadge>
-          </VCardTitle>
         </VCardItem>
+        <!-- @orders-crud:list -->
         <VContainer fluid class="ma-0 pa-1">
           <VRow dense>
             <VCol :order="1" :order-sm="0" sm="8">

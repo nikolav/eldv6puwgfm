@@ -127,6 +127,7 @@ export default defineAppConfig({
     CHAT_ORDER_MESSAGE: "SInuQBaRiY",
     CHAT_CLIENTID_ACTIVE: "O5zl57Fui",
     ORDER_SEND_STATUS: "Ty6qF",
+    ORDER_ACTIVE: "order:active:S52BW2",
   },
   //
   FIELDS_OMIT_STORAGE_META: ["id", "created_at", "updated_at", "__typename"],

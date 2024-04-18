@@ -42,7 +42,7 @@ const { publicUrl } = useApiStorage();
             Cena: {{ props.product.price }}din</VCardSubtitle
           >
         </VCol>
-        <VCol sm="3" class="bg-primary2 d-flex justify-center items-center"
+        <VCol sm="3" class="bg-primary3 d-flex justify-center items-center"
           ><strong class="text-h4 !font-mono"
             >{{ props.product.amount
             }}<span class="text-h6">{{ props.product.stockType }}</span></strong
