@@ -33,6 +33,7 @@ export default defineAppConfig({
       "ownerFirstName",
       "ownerLastName",
       "name",
+      "pin",
       "address",
       "district",
       "phone",
@@ -235,5 +236,10 @@ export default defineAppConfig({
   },
   storage: {
     MENU_CATEGORY: "7n0FS9ZxoVN",
+  },
+  links: {
+    external: {
+      RPU: "https://www.apr.gov.rs/registri/ugovori-o-finansiranju-poljoprivredne-proizvodnje/o-registru.2367.html#:~:text=broj%20pod%20kojim%20je%20ugovor%20o%20finansiranju%20poljoprivredne%20proizvodnje%20zaveden%20Registru%20ugovora%20o%20finansiranju%20poljoprivredne%20proizvodnje",
+    },
   },
 });

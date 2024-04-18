@@ -24,6 +24,7 @@ export { default as IconFolder } from "./IconFolder.vue";
 export { default as IconFolderFilled } from "./IconFolderFilled.vue";
 export { default as IconGithubOutlined } from "./IconGithubOutlined.vue";
 export { default as IconHeadphone } from "./IconHeadphone.vue";
+export { default as IconHelpCircleOutline } from "./IconHelpCircleOutline.vue";
 export { default as IconHelpSquareFilled } from "./IconHelpSquareFilled.vue";
 export { default as IconHomeFilled } from "./IconHomeFilled.vue";
 export { default as IconIdCardCompanyOutlined } from "./IconIdCardCompanyOutlined.vue";

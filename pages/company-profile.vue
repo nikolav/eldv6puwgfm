@@ -175,26 +175,26 @@ watchEffect(() => {
               <VDataIterator :items="products_">
                 <template #default="{ items }">
                   <div class="space-y-1 px-2 my-2">
-                    <p>
-                      <span class="text-medium-emphasis">Poručio: </span
-                      >{{ emailStartByUserId(user_?.id) }}
-                    </p>
-                    <VDivider thickness="2" class="mb-2" />
+                    <div class="d-flex justify-between items-center">
+                      <p>
+                        <span class="text-medium-emphasis">Poručio: </span
+                        >{{ emailStartByUserId(user_?.id) }}
+                      </p>
+                      <p class="text-end pe-4 my-4">
+                        <span class="text-medium-emphasis">Vrednost: </span>
+                        <em
+                          >{{
+                            calcOrderTotal(map(items, ({ raw }) => raw))
+                          }}din.</em
+                        >
+                      </p>
+                    </div>
                     <OrdersProduct
                       v-for="p in items"
                       :key="p.raw.id"
                       :product="p.raw"
                     />
                   </div>
-                  <VDivider thickness="2" class="*mb-2" />
-                  <p class="text-end pe-4 my-4">
-                    <span class="text-medium-emphasis">Vrednost: </span>
-                    <em
-                      >{{
-                        calcOrderTotal(map(items, ({ raw }) => raw))
-                      }}din.</em
-                    >
-                  </p>
                 </template>
               </VDataIterator>
             </VCol>

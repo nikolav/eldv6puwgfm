@@ -30,6 +30,7 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconHelpCircleOutline,
   IconAdjustSettings,
   IconAttach,
   IconBatteryHalf,
@@ -251,6 +252,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         IconFolderFilled: IconFolderFilled,
         iconGithub: IconGithubOutlined,
         iconHelp: IconHelpSquareFilled,
+        iconHelpCircle: IconHelpCircleOutline,
         iconHome: IconHomeFilled,
         iconIdCardCompany: IconIdCardCompanyOutlined,
         iconImage: IconImageOutlined,

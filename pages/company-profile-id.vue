@@ -24,6 +24,9 @@ const {
   key: { FORM_COMPANY_ID },
   docs: { TAG_COMPANY_PROFILE_prefix },
   com: { FIELDS },
+  links: {
+    external: { RPU: lnRPU },
+  },
 } = useAppConfig();
 
 const { data: com_, put: profileUpsert } = useDoc<ICompanyProfile>(
@@ -164,22 +167,52 @@ const submitFormCompanyId = async () => {
                       clearable
                     />
                   </div>
-                  <VTextField
-                    name="name"
-                    v-model="form.name.value"
-                    variant="underlined"
-                    label="Naziv gazdinstva"
-                    clearable
-                  >
-                    <template v-if="smAndUp" #prepend>
-                      <VIcon
-                        color="primary-darken-2"
-                        icon="$iconDowntown"
-                        size="x-large"
-                        start
-                      />
-                    </template>
-                  </VTextField>
+
+                  <div class="d-sm-flex items-baseline justify-between ga-4">
+                    <VTextField
+                      name="name"
+                      v-model="form.name.value"
+                      variant="underlined"
+                      label="Naziv gazdinstva"
+                      clearable
+                      :class="smAndUp ? '!grow-[1.122]' : undefined"
+                    >
+                      <template v-if="smAndUp" #prepend>
+                        <VIcon
+                          color="primary-darken-2"
+                          icon="$iconDowntown"
+                          size="x-large"
+                          start
+                        />
+                      </template>
+                    </VTextField>
+                    <VTextField
+                      name="pin"
+                      v-model="form.pin.value"
+                      variant="underlined"
+                      label="Broj PG"
+                      clearable
+                    >
+                      <template #prepend-inner>
+                        <pre class="text-disabled text-sm">#</pre>
+                      </template>
+                      <template v-if="smAndUp" #append>
+                        <NuxtLink
+                          :to="lnRPU"
+                          external
+                          target="_blank"
+                          class="position-absolute text-disabled"
+                        >
+                          <VIcon
+                            size="small"
+                            icon="$iconHelpCircle"
+                            class="cursor-pointer"
+                          />
+                        </NuxtLink>
+                      </template>
+                    </VTextField>
+                  </div>
+
                   <div class="d-sm-flex items-end justify-between ga-4">
                     <!-- @@ https://www.wikiwand.com/sr/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BD%D0%B8_%D0%BE%D0%BA%D1%80%D1%83%D0%B7%D0%B8_%D0%A1%D1%80%D0%B1%D0%B8%D1%98%D0%B5 -->
                     <VSelect
