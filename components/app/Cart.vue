@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { CardCartItem } from "@/components/app";
-import { useGlobalFlag } from "~/composables/useGlobalFlag";
-// cart.store { code: string; description: string; items: Record<ID, amount> }
+import { useDisplay } from "vuetify";
+import { CardCartItem, CartEmpty } from "@/components/app";
+
+const { smAndUp, width, height } = useDisplay();
+
 const cart = useStoreCart();
 const {
   key: { APP_PROCESSING, ORDER_SEND_STATUS },
 } = useAppConfig();
-const perPage = 4;
-const page$ = ref(1);
-const paginationLength$ = computed(() => Math.ceil(cart.length / perPage));
+const {
+  perPage,
+  length: paginationLength,
+  page$,
+} = usePaginateData({ data: computed(() => cart.products), perPage: 4 });
 const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
-const flags$$ = useStoreFlags();
 const flagsAppProcessing$ = useGlobalFlag(APP_PROCESSING);
 const cartOrderSend = async () => {
   let err_;
@@ -36,10 +39,59 @@ const cartOrderSend = async () => {
   return err_;
 };
 
+const toggleOrderConfirm = useToggleFlag();
+
 // @@eos
 </script>
 <template>
-  <VSheet rounded="0" elevation="0" class="d-flex items-center justify-center">
+  <VSheet rounded="0" elevation="0" class="d-flex *items-center justify-center">
+    <!-- @order:confirm:dialog -->
+    <VBottomSheet v-model="toggleOrderConfirm.isActive.value">
+       <VBtn 
+         @click="toggleOrderConfirm.off" 
+         position="absolute" class="top-6 end-6" 
+         size="large" variant="tonal"
+         icon
+        >
+        <VIcon icon="$close" size="large" />
+      </VBtn>
+      <VSheet
+        :min-height="height * 0.92"
+        rounded="t-xl"
+        class="pa-6 d-flex flex-col justify-center items-center gap-12"
+      >
+        <p class="text-h6 text-medium-emphasis">Vrednost izabranih proizvoda je <pre class="d-inline-block !text-black">{{ cart.total$ }}</pre> din.</p>
+        <VBtnGroup rounded="pill">
+          <VBtn 
+            v-if="smAndUp" @click="toggleOrderConfirm.off" 
+            variant="text" size="x-large" 
+            color="primary"
+          >Odustani</VBtn>
+          <VBtn 
+            @click="cartOrderSend" :disabled="flagsAppProcessing$" 
+            variant="elevated" 
+            class="text-none" :size="smAndUp ? 'x-large' : 'large'" color="primary"
+          >
+             <VIcon v-if="smAndUp" class="opacity-50" size="large" icon="$iconCheck" start />
+             <strong>U redu, Naručujem.</strong>
+          </VBtn>
+        </VBtnGroup>
+      </VSheet>
+    </VBottomSheet>
+    <!-- @cart:start -->
+    <p
+      v-if="!cart.isEmpty"
+      class="position-absolute top-1 text-medium-emphasis"
+    >
+      Ukupno
+      <VBadge color="error" inline class="align-baseline d-inline-block">
+        <template #badge>
+          <pre>{{ cart.length }}</pre>
+        </template>
+      </VBadge>
+      {{ 1 < cart.length ? "proizvoda" : "proizvod" }} u korpi.
+    </p>
+    <!-- @cart:exit -->
     <VBtn
       icon
       variant="text"
@@ -50,6 +102,7 @@ const cartOrderSend = async () => {
     >
       <VIcon icon="$prev" size="large" />
     </VBtn>
+    <!-- @cart:exit -->
     <VBtn
       icon
       variant="text"
@@ -60,41 +113,97 @@ const cartOrderSend = async () => {
     >
       <VIcon icon="$close" size="large" />
     </VBtn>
-    <div class="w-[712px]">
+    <!-- @@ -->
+    <!-- @cart:items -->
+    <div class="w-[812px] mt-16">
       <VDataIterator
         :items="cart.products"
         :page="page$"
         :items-per-page="perPage"
-        class="space-y-4"
+        class="space-y-1 sm:space-y-4"
       >
-        <template #no-data> --no-data-vPT8o </template>
+        <template #no-data>
+          <CartEmpty />
+        </template>
+        <!-- @@ -->
+        <!-- @cart:toolbar -->
         <template #header>
-          <VToolbar flat rounded>
+          <VPagination
+            v-if="1 < paginationLength"
+            v-model="page$"
+            :length="paginationLength"
+            density="comfortable"
+            active-color="primary3"
+            rounded="circle"
+          >
+            <template #item="{ props, page, isActive }">
+              <VBtn
+                v-bind="props"
+                density="comfortable"
+                :variant="isActive ? 'elevated' : 'text'"
+                icon
+                rounded="circle"
+              >
+                <pre>{{ page }}</pre>
+              </VBtn>
+            </template>
+          </VPagination>
+          <!-- @@ -->
+          <!-- @cart:toolbar:controlls -->
+          <VToolbar
+            elevation="1"
+            rounded
+            color="primary3"
+            :density="!smAndUp ? 'compact' : undefined"
+            :class="width < 281 ? 'px-12' : undefined"
+          >
             <h4 class="ms-4">
-              <span class="text-medium-emphasis">Vrednost: </span>
-              <strong class="me-px">{{ cart.total$ }}</strong
-              >din.
+              <span class="text-medium-emphasis" v-if="smAndUp"
+                >Vrednost:
+              </span>
+              <span
+                class="d-inline-block space-x-[2px] bg-error rounded-pill p-1 px-3 !shadow"
+              >
+                <strong class="me-px">{{ cart.total$ }}</strong>
+                <span class="opacity-70">din.</span>
+              </span>
             </h4>
             <VSpacer />
+            <!-- @@ -->
             <VBtn
-              @click="cartOrderSend"
-              size="large"
+              v-if="!cart.isEmpty"
+              @click="cart.destroy"
+              size="small"
               color="primary"
               variant="tonal"
+              icon
             >
-              <VIcon start size="large" icon="$iconSave" /><span>Naruči</span>
+              <VTooltip
+                location="bottom"
+                open-delay="345"
+                activator="parent"
+                text="Isprazni korpu"
+              />
+              <VIcon size="x-large" icon="$iconCartOff" />
+              <span class="sr-only">Isprazni korpu, Odustani</span>
+            </VBtn>
+            <VBtn
+              v-if="!cart.isEmpty"
+              @click="toggleOrderConfirm.on"
+              :size="smAndUp ? 'large' : undefined"
+              color="primary"
+              variant="elevated"
+              class="ms-1 ms-sm-2"
+              rounded="pill"
+            >
+              <VIcon v-if="smAndUp" start size="large" icon="$iconSave" /><span
+                >Naruči</span
+              >
             </VBtn>
           </VToolbar>
         </template>
-        <template #footer>
-          <VPagination
-            v-if="1 < paginationLength$"
-            v-model="page$"
-            :length="paginationLength$"
-            density="comfortable"
-            variant="text"
-          />
-        </template>
+        <!-- @@ -->
+        <!-- @cart:selected-products:render -->
         <template #default="{ items }">
           <CardCartItem v-for="i in items" :key="i.raw" :pid="i.raw" />
         </template>

@@ -5,7 +5,7 @@ const {
   docs: { PRODUCT_IMAGES },
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
 } = useAppConfig();
-const { smAndUp } = useDisplay();
+const { smAndUp, width } = useDisplay();
 const cart = useStoreCart();
 const { products$ } = useQueryProductsAll();
 const product$ = computed(() =>
@@ -30,19 +30,26 @@ const productImageSrcSample$ = computed(() =>
 </script>
 <template>
   <section class="component--CardCartItem">
+    <!-- @item:container -->
     <div class="d-flex items-center justify-between sm:gap-4">
-      <VCard class="grow d-flex">
+      <!-- @item:card-h -->
+      <VCard class="grow d-flex" :density="width < 288 ? 'compact' : undefined">
+        <!-- @item:card:image -->
         <div v-if="smAndUp" class="self-stretch">
           <VImg :src="productImageSrcSample$" class="h-100" width="92" cover />
         </div>
-        <div class="grow *bg-red">
-          <VCardTitle class="text-truncate">{{
-            get(product$, "name")
-          }}</VCardTitle>
-          <VCardSubtitle>Ref. #{{ props.pid }}</VCardSubtitle>
+        <!-- @item:card:description -->
+        <div class="grow *bg-red" :class="width < 281 ? 'text-end' : undefined">
+          <VCardTitle
+            class="text-truncate"
+            :class="width < 389 ? '!text-sm' : undefined"
+            >{{ get(product$, "name") }}</VCardTitle
+          >
+          <VCardSubtitle>Ref #{{ props.pid }}</VCardSubtitle>
         </div>
-        <div class="*bg-lime grid grid-cols-[auto,1fr] grid-rows-2 me-1">
-          <div class="*bg-red d-flex items-center justify-center me-5">
+        <div class="*bg-primary3 grid grid-cols-[auto,1fr] grid-rows-2">
+          <!-- @item:qty:cell-ts -->
+          <div class="*bg-red d-flex items-center justify-center sm:me-5">
             <strong class="text-h5 !font-mono font-semibold"
               >{{ cart.store$.items[props.pid]
               }}<small class="ms-px text-medium-emphasis">{{
@@ -50,42 +57,45 @@ const productImageSrcSample$ = computed(() =>
               }}</small></strong
             >
           </div>
+          <!-- @item:qty:cell-te -->
           <div class="d-flex items-center justify-end">
             <VBtn
               icon
               @click="cart.increase(props.pid)"
               variant="plain"
-              size="small"
+              :size="width < 412 ? 'small' : undefined"
               color="primary"
             >
               <VIcon size="large" icon="$plus" />
             </VBtn>
           </div>
-          <div class="*bg-red d-flex items-start justify-center me-5">
+          <!-- @item:qty:cell-bs -->
+          <div class="d-flex items-start justify-center sm:me-5">
             <small class="text-medium-emphasis"
               >{{
                 cart.store$.items[props.pid] * Number(get(product$, "price"))
               }}din</small
             >
           </div>
+          <!-- @item:qty:cell-be -->
           <div class="d-flex items-center justify-end">
             <VBtn
               icon
               @click="cart.increase(props.pid, -1)"
               variant="plain"
-              size="small"
+              :size="width < 412 ? 'small' : undefined"
               color="error"
               ><VIcon size="large" icon="$minus"
             /></VBtn>
           </div>
         </div>
       </VCard>
+      <!-- @@ -->
+      <!-- @item:drop-product -->
       <VBtn
-        size="large"
         icon
         variant="plain"
         color="on-surface"
-        density="comfortable"
         @click="cart.drop(props.pid)"
       >
         <VTooltip
@@ -94,7 +104,7 @@ const productImageSrcSample$ = computed(() =>
           location="bottom"
           text="Izbaci proizvod iz korpe"
         />
-        <VIcon icon="$close" size="large" />
+        <VIcon icon="$close" />
       </VBtn>
     </div>
   </section>

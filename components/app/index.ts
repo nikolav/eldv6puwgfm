@@ -8,3 +8,4 @@ export { default as ProductAdd } from "./ProductAdd.vue";
 export { default as ProductsEdit } from "./ProductsEdit.vue";
 export { default as ServiceDescriptionAuth } from "./ServiceDescriptionAuth.vue";
 export { default as CardCartItem } from "./CardCartItem.vue";
+export { default as CartEmpty } from "./CartEmpty.vue";
