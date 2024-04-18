@@ -79,12 +79,15 @@ const productData = reduce(
   <Record<string, Ref>>{}
 );
 
-// init product cache @mounted
-const { runSetup: initProductCache } = useRunSetupOnce(() => {
+const productDataInitFromStore = () => {
   FIELDS_updatable.forEach((field) => {
     productData[field].value = get(product$.value, field);
   });
-});
+};
+// init product cache @mounted
+const { runSetup: initProductCache } = useRunSetupOnce(
+  productDataInitFromStore
+);
 onMounted(() => {
   watch(pid$, (pid) => {
     if (!pid) return;
@@ -155,7 +158,8 @@ const onClickProductImagesRemove = async (file_id: string) => {
   }
   $$flags.off(APP_PROCESSING);
 };
-// #eos
+
+// @@eos
 </script>
 <template>
   <VSheet
@@ -241,7 +245,7 @@ const onClickProductImagesRemove = async (file_id: string) => {
               clearable
               :class="smAndUp ? 'w-2/3' : undefined"
             >
-              <template #prepend>
+              <template v-if="smAndUp" #prepend>
                 <VIcon
                   color="primary-darken-2"
                   icon="$iconTag"
@@ -258,7 +262,7 @@ const onClickProductImagesRemove = async (file_id: string) => {
               clearable
               type="number"
               hide-spin-buttons
-              class="*max-w-48 ms-4"
+              class="*max-w-48 ms-sm-4"
             >
               <template #append-inner>
                 <VIcon
@@ -281,7 +285,7 @@ const onClickProductImagesRemove = async (file_id: string) => {
               variant="solo"
               :model-value="category$"
             >
-              <template #prepend>
+              <template v-if="smAndUp" #prepend>
                 <VIcon
                   size="large"
                   color="primary-darken-2"
@@ -320,7 +324,7 @@ const onClickProductImagesRemove = async (file_id: string) => {
               variant="underlined"
               label="Zaliha"
               clearable
-              class="sm:w-1/4 ms-4"
+              class="sm:w-1/4 ms-sm-4"
               hide-spin-buttons
             >
               <template #append-inner>
@@ -344,7 +348,7 @@ const onClickProductImagesRemove = async (file_id: string) => {
                     v-model="productData.onSale.value"
                     color="primary"
                     label="Rasprodaja"
-                    class="ps-sm-4"
+                    class="*ps-sm-4"
                   />
                 </VCol>
                 <VCol sm="7" class="*bg-red" offset-sm="1">
@@ -464,6 +468,7 @@ const onClickProductImagesRemove = async (file_id: string) => {
           :size="smAndUp ? 'large' : undefined"
           variant="tonal"
           color="secondary-lighten-1"
+          @click="productDataInitFromStore"
         >
           <VIcon icon="$iconEraser" start size="large" />
           <strong>Resetuj</strong>

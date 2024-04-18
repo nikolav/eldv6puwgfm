@@ -201,7 +201,7 @@ const fieldsReset = () => {
               clearable
               :class="smAndUp ? 'w-2/3' : undefined"
             >
-              <template #prepend>
+              <template v-if="smAndUp" #prepend>
                 <VIcon
                   color="primary-darken-2"
                   icon="$iconTag"
@@ -218,9 +218,9 @@ const fieldsReset = () => {
               clearable
               type="number"
               hide-spin-buttons
-              class="*max-w-48 ms-4"
+              class="*max-w-48 ms-sm-4"
             >
-              <template #append-inner>
+              <template v-if="smAndUp" #append-inner>
                 <VIcon
                   color="primary-darken-2"
                   icon="$iconRSD"
@@ -241,7 +241,7 @@ const fieldsReset = () => {
               variant="solo"
               class="sm:w-1/3"
             >
-              <template #prepend>
+              <template v-if="smAndUp" #prepend>
                 <VIcon
                   size="large"
                   color="primary-darken-2"
@@ -280,7 +280,7 @@ const fieldsReset = () => {
               variant="underlined"
               label="Zaliha"
               clearable
-              class="sm:w-1/4 ms-4"
+              class="sm:w-1/4 ms-sm-4"
               hide-spin-buttons
             >
               <template #append-inner>
