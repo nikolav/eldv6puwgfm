@@ -65,8 +65,8 @@ const toggleOrderConfirm = useToggleFlag();
           <VBtn 
             v-if="smAndUp" @click="toggleOrderConfirm.off" 
             variant="text" size="x-large" 
-            color="primary"
-          >Odustani</VBtn>
+            color="error"
+          >Nazad</VBtn>
           <VBtn 
             @click="cartOrderSend" :disabled="flagsAppProcessing$" 
             variant="elevated" 
@@ -89,7 +89,7 @@ const toggleOrderConfirm = useToggleFlag();
           <pre>{{ cart.length }}</pre>
         </template>
       </VBadge>
-      {{ 1 < cart.length ? "proizvoda" : "proizvod" }} u korpi.
+      {{ 1 < cart.length ? "proizvoda" : "proizvod" }} u korpi
     </p>
     <!-- @cart:exit -->
     <VBtn

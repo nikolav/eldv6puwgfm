@@ -30,26 +30,48 @@ useHead({
 const auth = useStoreApiAuth();
 const { destroy: appMenuCacheDestroy } = useAppMenu();
 
-onMounted(() => {
-  watch(
-    () => auth.isAuth$,
-    async (isAuth) => {
-      if (!isAuth) {
-        // @logout:hard-reload
-        console.log(`/app.vue: !isAuth`);
-        appMenuCacheDestroy();
-        return reloadNuxtApp({
-          path: "/",
-          persistState: false,
-        });
-      }
-      // @login:debug
-      console.log(`/app.vue: isAuth`);
-      console.log({ user: auth.user$ });
-      await navigateTo({ name: "index" });
-    }
-  );
+const route = useRoute();
+const isViewRoute = computed(() =>
+  some(
+    [reMatchViewUser, reMatchViewProduct],
+    (re) => null != route.fullPath.match(re)
+  )
+);
+
+watchEffect(async () => {
+  console.log({ path: route.fullPath });
+  if (isViewRoute.value) return;
+  if (auth.isDefault$) await auth.logout();
 });
+watch(
+  () => auth.isAuth$,
+  async (isAuth) => {
+    // @logout:hard-reload
+    if (!isAuth) {
+      console.log(`/app.vue: !isAuth`);
+      appMenuCacheDestroy();
+      return reloadNuxtApp({
+        path: "/",
+        persistState: false,
+      });
+    }
+
+    // @auth:debug
+    console.log({ user: auth.user$ });
+
+    if (isViewRoute.value) return;
+
+    // logout user:default from app:main
+    if (auth.isDefault$) {
+      // @@todo
+      auth.tokenPut("");
+      return await auth.logout();
+    }
+
+    // regular login; goto `index`
+    await navigateTo({ name: "index" });
+  }
+);
 
 const main$$ = useStoreMain();
 useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {

@@ -25,6 +25,7 @@ import {
   schemaJwt,
   schemaUsersNotReserved,
   schemaUserIsCompany,
+  schemaUsersIsDefault,
 } from "@/schemas";
 
 export const useStoreApiAuth = defineStore("auth", () => {
@@ -115,6 +116,17 @@ export const useStoreApiAuth = defineStore("auth", () => {
   const isCompany$ = computed(() => {
     try {
       return true === schemaUserIsCompany.safeParse(user$.value).success;
+    } catch (error) {
+      // pass
+    }
+    return false;
+  });
+
+  const isDefault$ = computed(() => {
+    try {
+      return (
+        true === schemaUsersIsDefault.safeParse(get(user$.value, "id")).success
+      );
     } catch (error) {
       // pass
     }
@@ -216,6 +228,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
     isUser$,
     isAdmin$,
     isCompany$,
+    isDefault$,
     initialized$,
 
     // @auth/crud
@@ -228,5 +241,10 @@ export const useStoreApiAuth = defineStore("auth", () => {
     processing: status.processing,
     error: status.error,
     success: status.success,
+
+    //
+    tokenPut: (t: string) => {
+      token$.value = t;
+    },
   };
 });

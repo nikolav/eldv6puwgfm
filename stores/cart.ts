@@ -9,13 +9,13 @@ export const useStoreCart = defineStore("cart", () => {
   } = useAppConfig();
   const store$ = ref(initial);
 
-  const $$flags = useStoreFlags();
-  const cartIsOpen_ = computed(() => $$flags.isSet(FLAG_CART_OPEN));
+  const flags$$ = useStoreFlags();
+  const cartIsOpen_ = computed(() => flags$$.isSet(FLAG_CART_OPEN));
   const cartOpen = () => {
-    $$flags.on(FLAG_CART_OPEN);
+    flags$$.on(FLAG_CART_OPEN);
   };
   const cartClose = () => {
-    $$flags.off(FLAG_CART_OPEN);
+    flags$$.off(FLAG_CART_OPEN);
   };
 
   const products_ = computed(() =>
