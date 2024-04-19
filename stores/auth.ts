@@ -30,15 +30,21 @@ import {
 
 export const useStoreApiAuth = defineStore("auth", () => {
   const {
-    KEY_ACCESS_TOKEN,
-    KEY_USEFETCH_AUTHDATA,
-    initial: initialStorage,
-    authHeaders,
-  } = useAppConfig().stores.auth;
+    key: { CHAT_NAME },
+    stores: {
+      auth: {
+        KEY_ACCESS_TOKEN,
+        KEY_USEFETCH_AUTHDATA,
+        initial: initialStorage,
+        authHeaders,
+      },
+    },
+    APP_USER_DEFAULT: { email: APP_USER_DEFAULT_email },
+  } = useAppConfig();
 
   // .new
   // init chat name @login
-  const chatName$ = useLocalStorage(useAppConfig().key.CHAT_NAME, () => "", {
+  const chatName$ = useLocalStorage(CHAT_NAME, () => "", {
     initOnMounted: true,
   });
   //
@@ -69,13 +75,14 @@ export const useStoreApiAuth = defineStore("auth", () => {
   });
 
   // query.start@app.mount
-  const initialized$ = ref(false);
-  const mounted$ = PRODUCTION$ ? useAppMounted() : useMounted();
-  watch(mounted$, async (mounted) => {
-    if (true !== mounted) return;
-    await authDataStart();
-    initialized$.value = true;
-  });
+  const initialized$ = useRunSetupOnceOnMounted(authDataStart);
+  // const initialized$ = ref(false);
+  // const mounted$ = PRODUCTION$ ? useAppMounted() : useMounted();
+  // watch(mounted$, async (mounted) => {
+  //   if (true !== mounted) return;
+  //   await authDataStart();
+  //   initialized$.value = true;
+  // });
 
   // `logged in` .flag
   const isAuth$ = computed(() => {
@@ -148,9 +155,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
       // cache auto `chatName`
       if (chatName$.value) return;
       const chatName = matchEmailStart(get(user$.value, "email"));
-      const chatNameDefault = matchEmailStart(
-        useAppConfig().APP_USER_DEFAULT.email
-      );
+      const chatNameDefault = matchEmailStart(APP_USER_DEFAULT_email);
       if (chatNameDefault === chatName) return;
       chatName$.value = chatName;
 

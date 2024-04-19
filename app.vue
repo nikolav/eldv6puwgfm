@@ -15,6 +15,7 @@ const {
 } = useNuxtApp();
 
 const {
+  re: { viewRoutes: reViewRoutes },
   theme: { DARK, LIGHT },
   io: { IOEVENT_PRODUCTS_CHANGE },
   key: { PRODUCTS_CHANGE, ORDER_SEND_STATUS },
@@ -32,15 +33,12 @@ const { destroy: appMenuCacheDestroy } = useAppMenu();
 
 const route = useRoute();
 const isViewRoute = computed(() =>
-  some(
-    [reMatchViewUser, reMatchViewProduct],
-    (re) => null != route.fullPath.match(re)
-  )
+  some(reViewRoutes, (re) => re.test(route.fullPath))
 );
 
 watchEffect(async () => {
-  console.log({ path: route.fullPath });
   if (isViewRoute.value) return;
+  // logout @non-view-routes
   if (auth.isDefault$) await auth.logout();
 });
 watch(
@@ -64,11 +62,12 @@ watch(
     // logout user:default from app:main
     if (auth.isDefault$) {
       // @@todo
+      await auth.logout();
       auth.tokenPut("");
-      return await auth.logout();
+      return;
     }
 
-    // regular login; goto `index`
+    // regular user login; goto `index`
     await navigateTo({ name: "index" });
   }
 );

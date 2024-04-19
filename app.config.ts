@@ -1,11 +1,5 @@
-import type {
-  TStoreMain,
-  TStoreFlags,
-  IConfigDocs,
-  IAppData,
-  OrNoValue,
-} from "@/types";
-import { assign } from "@/utils";
+import type { TStoreMain, TStoreFlags, IConfigDocs, IAppData } from "@/types";
+import { assign, reMatchViewUser, reMatchViewProduct } from "@/utils";
 import { PRODUCTION$, URL_APP_PUBLIC } from "@/config";
 
 const themeDark = "dark";
@@ -97,16 +91,16 @@ export default defineAppConfig({
     ],
   },
   docs: {
-    TAG_USERS: "@users",
-    prefix_TAG_USERS_DOCS: "pH82VKaHwf3RLfZlR:",
-    prefix_CHAT_ACTIVE: "KFrbiAW5Zm3:",
-    TASKS_ALL: "@tasks:all",
-    TASKS_USER_prefix: "Njvrw1gYEXd3yv:",
-    LIKES_preix: "@likes:",
-    TAG_COMPANY_PROFILE_prefix: "@company:profile:fwgM8::",
-    PRODUCT_IMAGES: "@images:product:",
     CHAT_ORDER_COM_USER_prefix: "e5iT1p1Mmx5HD@",
     COM_PHOTOS_prefix: "@com:photos:",
+    LIKES_preix: "@likes:",
+    prefix_CHAT_ACTIVE: "KFrbiAW5Zm3:",
+    prefix_TAG_USERS_DOCS: "pH82VKaHwf3RLfZlR:",
+    PRODUCT_IMAGES: "@images:product:",
+    TAG_COMPANY_PROFILE_prefix: "@company:profile:fwgM8::",
+    TAG_USERS: "@users",
+    TASKS_ALL: "@tasks:all",
+    TASKS_USER_prefix: "Njvrw1gYEXd3yv:",
   },
   //
   key: {
@@ -114,22 +108,22 @@ export default defineAppConfig({
     APP_PROCESSING: "FlaelfhZddK",
     AUTH_CREDS: "pafer98hf",
     AUTH_LOCKED,
+    CHAT_CLIENTID_ACTIVE: "O5zl57Fui",
     CHAT_NAME: "QOPnfTw9",
+    CHAT_ORDER_MESSAGE: "SInuQBaRiY",
+    FLAG_CART_OPEN: "S46jud",
+    FORM_COMPANY_ID: "2wIETsis",
     INJECT_AUTHAPI: "WYvEK29UZIP",
     INJECT_THEME: "Aasnvy2eaxE",
-    PROVIDE_APP_DATA: "Ud8dHoadmBgSr55P6gJ",
-    THEME: "0Fgky53B2UbA1fG3lKcV",
-    TASKS_SELECTED_IDS: "f6sSDP",
-    FORM_COMPANY_ID: "2wIETsis",
-    PRODUCT_SELECTED: "Be3Q6GMsqZPSP",
+    ORDER_ACTIVE: "order:active:S52BW2",
+    ORDER_SEND_STATUS: "Ty6qF",
     PRODUCT_ADD: "HAvQCqapN1NuJFIoS",
     PRODUCT_EDIT: "fRbSc",
+    PRODUCT_SELECTED: "Be3Q6GMsqZPSP",
     PRODUCTS_CHANGE: "O36Bjz6COY6i",
-    FLAG_CART_OPEN: "S46jud",
-    CHAT_ORDER_MESSAGE: "SInuQBaRiY",
-    CHAT_CLIENTID_ACTIVE: "O5zl57Fui",
-    ORDER_SEND_STATUS: "Ty6qF",
-    ORDER_ACTIVE: "order:active:S52BW2",
+    PROVIDE_APP_DATA: "Ud8dHoadmBgSr55P6gJ",
+    TASKS_SELECTED_IDS: "f6sSDP",
+    THEME: "0Fgky53B2UbA1fG3lKcV",
   },
   //
   FIELDS_OMIT_STORAGE_META: ["id", "created_at", "updated_at", "__typename"],
@@ -204,18 +198,18 @@ export default defineAppConfig({
   },
   //
   io: {
-    IOEVENT_DOCS_CHANGE: "change:docs",
-    IOEVENT_STORAGE_CHANGE: "@storage:",
-    IOEVENT_FILES: "@files:updated",
-    IOEVENT_DOCS_CHANGE_JsonData: "change:docs:JsonData:",
-    IOEVENT_DOC_CHANGE_prefix: "change://doc@",
-    IOEVENT_DOCS_TAGS_CHANGE_prefix: "change:docs:tags:",
-    IOEVENT_PRODUCTS_CHANGE_prefix: "change:products::",
-    IOEVENT_PRODUCT_IMAGES_CHANGE_prefix: "change:product-images:",
-    IOEVENT_PRODUCTS_CHANGE: "@change:products:all",
-    IOEVENT_ORDERS_CHANGE: "@orders:change:",
     IOEVENT_AUTH_NEWUSER: "@auth:newuser",
     IOEVENT_COM_PHOTOS_CHANGE_prefix: "change:com-photos:",
+    IOEVENT_DOC_CHANGE_prefix: "change://doc@",
+    IOEVENT_DOCS_CHANGE_JsonData: "change:docs:JsonData:",
+    IOEVENT_DOCS_CHANGE: "change:docs",
+    IOEVENT_DOCS_TAGS_CHANGE_prefix: "change:docs:tags:",
+    IOEVENT_FILES: "@files:updated",
+    IOEVENT_ORDERS_CHANGE: "@orders:change:",
+    IOEVENT_PRODUCT_IMAGES_CHANGE_prefix: "change:product-images:",
+    IOEVENT_PRODUCTS_CHANGE_prefix: "change:products::",
+    IOEVENT_PRODUCTS_CHANGE: "@change:products:all",
+    IOEVENT_STORAGE_CHANGE: "@storage:",
   },
   theme: {
     DEFAULT: themeLight,
@@ -243,5 +237,9 @@ export default defineAppConfig({
     external: {
       RPU: "https://www.apr.gov.rs/registri/ugovori-o-finansiranju-poljoprivredne-proizvodnje/o-registru.2367.html#:~:text=broj%20pod%20kojim%20je%20ugovor%20o%20finansiranju%20poljoprivredne%20proizvodnje%20zaveden%20Registru%20ugovora%20o%20finansiranju%20poljoprivredne%20proizvodnje",
     },
+  },
+  re: {
+    // routes with provided 'default user' login fallback
+    viewRoutes: [reMatchViewUser, reMatchViewProduct],
   },
 });

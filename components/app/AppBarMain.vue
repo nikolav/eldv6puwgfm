@@ -45,7 +45,7 @@ const authSubmitLogout = async () => {
         </NuxtLink>
       </strong>
       <!-- @@demo.dev -->
-      <!-- <NuxtLink :to="{ name: 'demo' }">--demo</NuxtLink> -->
+      <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
       <NuxtLink to="/proizvodi/122">-foo</NuxtLink>
     </VAppBarTitle>
     <template v-if="auth.isCompany$ && isRouteCompanyProfile$">
