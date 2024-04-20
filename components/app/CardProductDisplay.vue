@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { IProduct } from "@/types";
+import { LikeDislike } from "@/components/app";
 
 const props = defineProps<{ product: IProduct }>();
 
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
   docs: { PRODUCT_IMAGES },
+  key: { PRODUCTS_LIKES_prefix },
 } = useAppConfig();
 
 const { data: docsImages$ } = useDocs(`${PRODUCT_IMAGES}${props.product.id}`);
@@ -30,7 +32,13 @@ const cart = useStoreCart();
         :aspect-ratio="1"
         cover
         :src="productImageSrcSample$"
-      />
+        class="position-relative"
+      >
+        <LikeDislike
+          class="position-absolute top-px end-px"
+          :topic="`${PRODUCTS_LIKES_prefix}${props.product.id}`"
+        />
+      </VImg>
       <VCardTitle>
         {{ props.product.name }}
       </VCardTitle>
