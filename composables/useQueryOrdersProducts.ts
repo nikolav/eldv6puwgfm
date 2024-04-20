@@ -32,21 +32,13 @@ export const useQueryOrdersProducts = () => {
   const reload = async () => await refetch();
   const { runSetup: queryStart } = useRunSetupOnce(async () => await load());
   onMounted(queryStart);
-
-  const flags$$ = useStoreFlags();
+  const processing$ = useGlobalFlag(APP_PROCESSING);
   watch(productsLoading, async (loading) => {
-    if (loading) {
-      flags$$.on(APP_PROCESSING);
-      return;
-    }
-    await nextTick(() => flags$$.off(APP_PROCESSING));
+    processing$.value = loading;
   });
-
-  // #
   return {
-    // # set `order_id$.value` to list its products
+    // # list products:  @`order_id$.value`
     order_id$,
-    //
     products: products_,
     reload,
   };

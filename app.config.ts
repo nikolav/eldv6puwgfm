@@ -104,6 +104,8 @@ export default defineAppConfig({
   },
   //
   key: {
+    LIKES_STORE: "hqYqZ31rN4xwfb2qc",
+    DISLIKES_STORE: "HwJ0dv9",
     APP_MOUNTED: "Zkcmk4BnXHU",
     APP_PROCESSING: "FlaelfhZddK",
     AUTH_CREDS: "pafer98hf",

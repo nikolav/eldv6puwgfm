@@ -17,8 +17,6 @@ export const useQueryUsers = () => {
   const users_ = computed(() => get(result.value, "users") || []);
   const { runSetup: queryStart } = useRunSetupOnce(async () => await load());
   onMounted(queryStart);
-
   watchEffect(() => useIOEvent(IOEVENT_AUTH_NEWUSER, reload));
-  //
-  return { users: users_ };
+  return { users: users_, reload };
 };

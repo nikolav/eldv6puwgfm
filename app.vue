@@ -28,19 +28,21 @@ useHead({
   htmlAttrs,
 });
 
-const auth = useStoreApiAuth();
-const { destroy: appMenuCacheDestroy } = useAppMenu();
-
 const route = useRoute();
 const isViewRoute = computed(() =>
   some(reViewRoutes, (re) => re.test(route.fullPath))
 );
 
+const auth = useStoreApiAuth();
 watchEffect(async () => {
   if (isViewRoute.value) return;
   // logout @non-view-routes
-  if (auth.isDefault$) await auth.logout();
+  if (auth.isDefault$) {
+    await auth.logout();
+    auth.tokenPut("");
+  }
 });
+const { destroy: appMenuCacheDestroy } = useAppMenu();
 watch(
   () => auth.isAuth$,
   async (isAuth) => {
@@ -72,9 +74,9 @@ watch(
   }
 );
 
-const main$$ = useStoreMain();
+const gProductsChange$ = useGlobalVariable(PRODUCTS_CHANGE);
 useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
-  main$$.put({ [PRODUCTS_CHANGE]: Date.now() });
+  gProductsChange$.value = Date.now();
 });
 
 const {

@@ -7,21 +7,25 @@ import {
 } from "@/graphql";
 
 export const useProducts = () => {
+  const {
+    io: { IOEVENT_PRODUCTS_CHANGE_prefix },
+    graphql: { STORAGE_QUERY_POLL_INTERVAL },
+  } = useAppConfig();
   const auth = useStoreApiAuth();
   const mounted$ = useMounted();
   const enabled$ = computed(() => !!(mounted$.value && auth.isAuth$));
-  const userId$ = computed(() => get(auth.user$, "id"));
+  const uid$ = computed(() => get(auth.user$, "id"));
 
   const { result, refetch, load, loading, error } = useLazyQuery<{
     productsListByUser: IProduct[];
   }>(
     Q_productsByUser,
     {
-      user_id: userId$,
+      user_id: uid$,
     },
     {
       enabled: enabled$,
-      pollInterval: useAppConfig().graphql.STORAGE_QUERY_POLL_INTERVAL,
+      pollInterval: STORAGE_QUERY_POLL_INTERVAL,
     }
   );
   const products$ = computed(
@@ -35,9 +39,7 @@ export const useProducts = () => {
   });
 
   const ioEvent$ = computed(() =>
-    enabled$.value
-      ? `${useAppConfig().io.IOEVENT_PRODUCTS_CHANGE_prefix}${toValue(userId$)}`
-      : ""
+    enabled$.value ? `${IOEVENT_PRODUCTS_CHANGE_prefix}${uid$.value}` : ""
   );
 
   const { mutate: mutateProductsUpsert } =

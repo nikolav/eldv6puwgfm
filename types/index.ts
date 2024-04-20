@@ -191,3 +191,5 @@ export type TGravatars = Record<
   number,
   { src?: OrNoValue<string>; enabled?: OrNoValue<boolean> }
 >;
+
+export type TDataLikesDislikesStore = Record<string, number>;

@@ -8,8 +8,9 @@ export const useRunSetupOnceOnMounted = (callback: any) => {
       await callback();
     } catch (error) {
       // pass
+    } finally {
+      toggleConfigured.on();
     }
-    toggleConfigured.on();
   });
   return readonly(toggleConfigured.isActive);
 };
