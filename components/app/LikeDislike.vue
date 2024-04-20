@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{ topic: string }>();
+const props = defineProps<{ topic: string; small?: boolean | undefined }>();
 const { count, like, dislike, isLiked, isDisliked } = useLikesDislikes(
   props.topic
 );
@@ -7,36 +7,50 @@ const { count, like, dislike, isLiked, isDisliked } = useLikesDislikes(
 </script>
 <template>
   <VBtnGroup
+    v-bind="$attrs"
     color="primary"
-    rounded="pill"
+    :rounded="props.small ? 'lg' : 'pill'"
     density="compact"
     class="component--LikesDislikes *:!text-lg"
-    divided
+    :class="props.small ? 'd-inline-block' : undefined"
+    :divided="!props.small ? true : undefined"
     elevation="0"
-    border
+    :border="!props.small ? true : undefined"
     variant="flat"
   >
     <VBtn
       @click="() => like(!isLiked)"
       slim
-      size="small"
+      :size="props.small ? 'x-small' : 'small'"
       class="px-0 mx-0"
-      :class="!isLiked ? 'opacity-50' : undefined"
+      :class="[
+        !isLiked ? 'opacity-50' : undefined,
+        props.small ? '!py-[2px]' : undefined,
+      ]"
     >
-      <strong class="translate-x-px -translate-y-[3px]">👍🏼</strong
-      ><small class="ps-px">
-        <pre class="text-xs">{{ count.likes.value }}</pre>
+      <strong
+        :class="props.small ? 'text-sm' : undefined"
+        class="translate-x-px -translate-y-[2px]"
+        >👍🏼</strong
+      ><small :class="!props.small ? 'ps-px' : undefined">
+        <pre class="text-xs opacity-80">{{ count.likes.value }}</pre>
       </small>
     </VBtn>
     <VBtn
       @click="() => dislike(!isDisliked)"
       slim
-      size="small"
+      :size="props.small ? 'x-small' : 'small'"
       class="px-0 mx-0"
-      :class="!isDisliked ? 'opacity-50' : undefined"
-      ><strong class="-translate-y-px">👎🏼</strong
-      ><small class="ps-px">
-        <pre class="text-xs">{{ count.dislikes.value }}</pre>
+      :class="[
+        !isDisliked ? 'opacity-50' : undefined,
+        props.small ? '!py-[2px]' : undefined,
+      ]"
+      ><strong
+        :class="props.small ? 'text-sm' : undefined"
+        class="-translate-y-px -translate-x-px"
+        >👎🏼</strong
+      ><small :class="!props.small ? 'ps-px' : undefined">
+        <pre class="text-xs -translate-x-[2px]">{{ count.dislikes.value }}</pre>
       </small></VBtn
     >
   </VBtnGroup>

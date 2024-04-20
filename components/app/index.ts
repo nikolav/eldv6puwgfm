@@ -10,3 +10,5 @@ export { default as ServiceDescriptionAuth } from "./ServiceDescriptionAuth.vue"
 export { default as CardCartItem } from "./CardCartItem.vue";
 export { default as CartEmpty } from "./CartEmpty.vue";
 export { default as LikeDislike } from "./LikeDislike.vue";
+export { default as TopicChat } from "./TopicChat.vue";
+export { default as TopicChatDisplayCard } from "./TopicChatDisplayCard.vue";

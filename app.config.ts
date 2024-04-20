@@ -104,6 +104,9 @@ export default defineAppConfig({
   },
   //
   key: {
+    TOPIC_CHAT_ACTIVE: "8H7ykahv",
+    CARD_PRODUCT_DISPLAYED_HOVERED_ID: "wPV360PastGjrwS9hr",
+    TOPIC_CHAT_PRODUCTS_prefix: "chat:products:vyuoiOe3eZW7::",
     PRODUCTS_LIKES_prefix: "MEDs6Eov9fHBM5HZ6I1X:",
     LIKES_STORE: "hqYqZ31rN4xwfb2qc",
     DISLIKES_STORE: "HwJ0dv9",

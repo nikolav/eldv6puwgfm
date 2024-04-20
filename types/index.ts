@@ -193,3 +193,10 @@ export type TGravatars = Record<
 >;
 
 export type TDataLikesDislikesStore = Record<string, number>;
+
+export interface ITopicChatMessage {
+  uid?: OrNoValue<number | string>;
+  name?: OrNoValue<string>;
+  message: string;
+}
+
