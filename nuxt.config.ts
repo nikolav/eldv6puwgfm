@@ -27,10 +27,14 @@ export default defineNuxtConfig({
   // # specify routes for nitro to prerender @nitro.prerender.routes<path[]>
 
   // # universal rendering
-  //   ssr: true,
+  // ssr: true,
+
   // # client-side only rendering; no prerender
-  // ssr: false,
-  //
+  ssr: false,
+
+  // target: "static",
+  // generate: { routes: ["/gazdinstva"] },
+
   modules: [
     "@vueuse/nuxt",
     "@pinia/nuxt",

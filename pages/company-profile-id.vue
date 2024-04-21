@@ -28,7 +28,7 @@ const {
     external: { RPU: lnRPU },
   },
   io: { IOEVENT_COM_PHOTOS_CHANGE_prefix },
-  urls: { comPages },
+  urls: { comPages, appPublic },
 } = useAppConfig();
 
 const uid = get(auth.user$, "id");
@@ -47,6 +47,7 @@ watchEffect(() => {
   form.slug.value = toLower(
     words(form.name.value).concat(String(uid)).join("-")
   );
+  // form.slug.value = String(uid);
 });
 
 const formDataInitFromStore = () => {
@@ -153,17 +154,22 @@ const comPhotosRemove = async () => {
   }
 };
 
-const comPagePublicUrl_ = computed(
-  () => `${stripSlashesEnd(comPages)}/${form.slug.value || uid}`
-);
+const comPagePublicUrl = stripSlashesEnd(comPages);
+usePermission("clipboard-read");
 usePermission("clipboard-write");
 const {
+  // isSupported: isSupportedClipboardWrite,
   text,
-  isSupported: isSupportedClipboardWrite,
   copy,
   copied,
 } = useClipboard();
-const copyComPublicUrl = async () => await copy(comPagePublicUrl_.value);
+const copyComPublicUrl = async () =>
+  await copy(
+    `${stripSlashesEnd(appPublic)}/${trim(
+      comPagePublicUrl,
+      "/"
+    )}?slug=${encodeURIComponent(form.slug.value)}`
+  );
 
 // @@eos
 </script>
@@ -200,7 +206,14 @@ const copyComPublicUrl = async () => await copy(comPagePublicUrl_.value);
       <VCard max-width="812" class="mx-auto mt-2 mt-md-8">
         <VCardTitle class="bg-primary pa-4 px-6 d-flex items-center">
           <h2 class="*text-center text-h5 !font-sans *text-medium-emphasis">
-            <NuxtLink :to="comPagePublicUrl_" external target="_blank">
+            <NuxtLink
+              :to="{
+                path: comPagePublicUrl,
+                query: { slug: `${form.slug.value}` },
+              }"
+              external
+              target="_blank"
+            >
               <a class="hover:underline">Lična karta gazdinstva</a
               ><VIcon
                 size="22"
@@ -212,7 +225,6 @@ const copyComPublicUrl = async () => await copy(comPagePublicUrl_.value);
           </h2>
           <VSpacer />
           <VBtn
-            v-if="isSupportedClipboardWrite"
             @click="copyComPublicUrl"
             color="on-primary"
             icon

@@ -24,7 +24,7 @@ watchEffect(() => {
 });
 
 const uid_ = computed(() =>
-  Number(last(String(get(route.params, "slug")).split("-")))
+  Number(last(String(get(route.query, "slug")).split("-")))
 );
 const { users } = useQueryUsers();
 const { data: comProfile } = useDoc<ICompanyProfile>(

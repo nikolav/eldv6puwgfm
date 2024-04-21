@@ -1,6 +1,7 @@
 // @lodash
 import lodash from "lodash";
 const {
+  trim,
   last,
   toLower,
   words,
@@ -41,6 +42,7 @@ const {
   zipObject,
 } = lodash;
 export {
+  trim,
   last,
   toLower,
   words,

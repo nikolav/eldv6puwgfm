@@ -8,3 +8,4 @@ export const DEBUG$ = !PRODUCTION$ && LOGGING_;
 export const URL_APP_PUBLIC = PRODUCTION$
   ? "http://70.34.223.252:3001/"
   : "http://localhost:3000/";
+  
