@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import type { ICompanyProfile } from "@/types";
 import { TOKEN_DEFAULT } from "@/config";
-import { ProductSlideImage, LikeDislike, TopicChat } from "@/components/app";
+import {
+  TopicRating,
+  ProductSlideImage,
+  LikeDislike,
+  TopicChat,
+} from "@/components/app";
 
 definePageMeta({
   layout: "blank",
@@ -10,7 +15,7 @@ definePageMeta({
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
   docs: { TAG_COMPANY_PROFILE_prefix, COM_PHOTOS_prefix },
-  key: { COM_LIKES_prefix, TOPIC_CHAT_COM_prefix },
+  key: { COM_LIKES_prefix, TOPIC_CHAT_COM_prefix, COM_RATING_prefix },
 } = useAppConfig();
 
 const auth = useStoreApiAuth();
@@ -71,6 +76,9 @@ const comDistrict_ = computed(() => get(comProfile.value, "data.district"));
                 variant="flat"
                 class="pa-0 pe-2 *bg-yellow mx-auto fill-height"
               >
+                <template #prepend>
+                  <TopicRating text :topic="`${COM_RATING_prefix}${uid_}`" />
+                </template>
                 <!-- @social -->
                 <template #append>
                   <div class="d-flex items-center gap-6">

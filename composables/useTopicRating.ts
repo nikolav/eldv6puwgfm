@@ -17,21 +17,17 @@ export const useTopicRating = (topic: string, _default = 1) => {
   const store = computed(() => get(data.value, "data"));
   // topic ratings cache
   const d = computed(() => get(data.value, `data.${topic}`));
-  const rating = computed(() => {
-    let l = 0;
-    const s = reduce(
-      d.value,
-      (res, val) => {
-        if (0 < val) {
-          res += val;
-          l += 1;
-        }
-        return res;
-      },
-      0
-    );
-    return l ? Math.round(s / l) : 0;
-  });
+  const ratingsCount = computed(() =>
+    reduce(d.value, (res, val) => (res += !(0 < val) ? 0 : 1), 0)
+  );
+  const rating = computed(
+    () =>
+      ratingsCount.value &&
+      Math.round(
+        reduce(d.value, (res, val) => (res += 0 < val ? val : 0), 0) /
+          ratingsCount.value
+      )
+  );
 
   const rate = async (r: any) => {
     if (!(0 <= r)) return;
@@ -54,6 +50,7 @@ export const useTopicRating = (topic: string, _default = 1) => {
 
   return {
     // # crud
+    ratingsCount,
     rating,
     rate,
     clear,

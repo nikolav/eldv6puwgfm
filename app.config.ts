@@ -110,6 +110,7 @@ export default defineAppConfig({
   },
   //
   key: {
+    COM_RATING_prefix: "rating:com:SiOobaXI2QXJgHs::",
     RATING_LOCAL: "hGPTySh8oXXwmRgAV16q",
     TOPIC_RATINGS: "ratings:N1cdcqMM",
     TOPIC_CHAT_ACTIVE: "8H7ykahv",
