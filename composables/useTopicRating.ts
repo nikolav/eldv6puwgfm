@@ -17,15 +17,23 @@ export const useTopicRating = (topic: string, _default = 1) => {
   const store = computed(() => get(data.value, "data"));
   // topic ratings cache
   const d = computed(() => get(data.value, `data.${topic}`));
-  const rating = computed(() =>
-    !isEmpty(d.value)
-      ? Math.round(
-          reduce(d.value, (res, val) => (res += val), 0) / len(d.value)
-        )
-      : _default
-  );
+  const rating = computed(() => {
+    let l = 0;
+    const s = reduce(
+      d.value,
+      (res, val) => {
+        if (0 < val) {
+          res += val;
+          l += 1;
+        }
+        return res;
+      },
+      0
+    );
+    return l ? Math.round(s / l) : 0;
+  });
 
-  const rate = async (r: number) => {
+  const rate = async (r: any) => {
     if (!(0 <= r)) return;
     try {
       await put({ [`${topic}.${rid$.value.key}`]: r });
@@ -35,12 +43,20 @@ export const useTopicRating = (topic: string, _default = 1) => {
     }
   };
 
+  const clear = async () => {
+    try {
+      await put({ [`${topic}.${rid$.value.key}`]: 0 });
+      set(rid$.value, `val.${topic}`, 0);
+    } catch (error) {
+      // pass
+    }
+  };
+
   return {
     // # crud
-    // average
     rating,
-    // put
     rate,
+    clear,
 
     // all
     store,
