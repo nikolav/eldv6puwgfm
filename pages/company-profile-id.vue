@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-
 import menuDistricts from "@/assets/districts-serbia.json";
 import type { ICompanyProfile } from "@/types";
+import { toLower } from "lodash";
 
 definePageMeta({
   layout: "company-profile",
@@ -28,7 +28,7 @@ const {
     external: { RPU: lnRPU },
   },
   io: { IOEVENT_COM_PHOTOS_CHANGE_prefix },
-  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
+  urls: { comPages },
 } = useAppConfig();
 
 const uid = get(auth.user$, "id");
@@ -43,10 +43,15 @@ const form = FIELDS.reduce((formdata_, field) => {
   });
   return formdata_;
 }, <Record<string, Ref>>{});
+watchEffect(() => {
+  form.slug.value = toLower(
+    words(form.name.value).concat(String(uid)).join("-")
+  );
+});
 
 const formDataInitFromStore = () => {
   forEach(FIELDS, (field) => {
-    form[field].value = get(com_.value.data, field) || "";
+    form[field].value = get(com_.value, `data.${field}`) || "";
   });
 };
 const { runSetup: formInit } = useRunSetupOnce(formDataInitFromStore);
@@ -117,8 +122,6 @@ const submitComImageUpload = async () => {
     // @success:signal-ok
     resetComImage();
     carouselCurrent$.value = get(resUpload, "image.data.file_id");
-    console.log("--comPhotos:upload:success");
-    // pass
   }
 
   appProcessing$.value = false;
@@ -128,7 +131,6 @@ const comPhotosRemove = async () => {
   let err_;
   let resRm;
 
-  console.log(`--comPhotosRemove:${carouselCurrent$.value}`);
   if (!carouselCurrent$.value) return;
   try {
     resRm = await remove(carouselCurrent$.value);
@@ -138,7 +140,6 @@ const comPhotosRemove = async () => {
     // pass
   }
   if (!err_) {
-    console.log({ resRm });
     // drop `doc-tag` link
     await tags(Number(get(resRm, "data.storageRemoveFile.file.id")), {
       [tag_COM_PHOTOS]: false,
@@ -152,10 +153,22 @@ const comPhotosRemove = async () => {
   }
 };
 
+const comPagePublicUrl_ = computed(
+  () => `${stripSlashesEnd(comPages)}/${form.slug.value || uid}`
+);
+usePermission("clipboard-write");
+const {
+  text,
+  isSupported: isSupportedClipboardWrite,
+  copy,
+  copied,
+} = useClipboard();
+const copyComPublicUrl = async () => await copy(comPagePublicUrl_.value);
+
 // @@eos
 </script>
 <template>
-  <section class="page--company-profile-id px-4 px-sm-8">
+  <section class="page--company-profile-id px-2 px-sm-8">
     <!-- @status: --profile-saved -->
     <VSnackbar
       variant="text"
@@ -184,14 +197,38 @@ const comPhotosRemove = async () => {
 
     <!-- @form: --start -->
     <VForm @submit.prevent="submitFormCompanyId">
-      <VCard max-width="812" class="mx-auto mt-4 mt-md-10">
+      <VCard max-width="812" class="mx-auto mt-2 mt-md-8">
         <VCardTitle class="bg-primary pa-4 px-6 d-flex items-center">
           <h2 class="*text-center text-h5 !font-sans *text-medium-emphasis">
-            Lična karta gazdinstva
+            <NuxtLink :to="comPagePublicUrl_" external target="_blank">
+              <a class="hover:underline">Lična karta gazdinstva</a
+              ><VIcon
+                size="22"
+                end
+                icon="$iconExternalLink"
+                class="opacity-40 -translate-y-px"
+              />
+            </NuxtLink>
           </h2>
           <VSpacer />
-          <VBtn color="on-primary" icon variant="text">
+          <VBtn
+            v-if="isSupportedClipboardWrite"
+            @click="copyComPublicUrl"
+            color="on-primary"
+            icon
+            variant="text"
+          >
             <VIcon icon="$iconLink" size="x-large" />
+            <VTooltip activator="parent" location="bottom" open-delay="345">
+              <span v-if="!copied"
+                ><VIcon start icon="$iconClipboard" /> Kopiraj link strane
+                gazdinstva.</span
+              >
+              <em v-else>
+                <VIcon start icon="$iconCheck" class="-translate-y-[2px]" />
+                <span class="opacity-50"> {{ text }}</span>
+              </em>
+            </VTooltip>
           </VBtn>
         </VCardTitle>
         <VCardItem>
@@ -202,23 +239,23 @@ const comPhotosRemove = async () => {
             fixed-tabs
             color="primary-darken-1"
             align-tabs="center"
-            class="mt-sm-2"
+            class="*mt-sm-2"
           >
             <VTab value="kontakt">
               <span>Konakt podaci</span>
             </VTab>
             <VTab value="dostava">
-              <span>Načini dostave</span>
+              <span>Dostava</span>
             </VTab>
             <VTab value="fotografije">
-              <span>fotografije</span>
+              <span>Galerija</span>
             </VTab>
             <VTab value="istorijat">
-              <span>istorijat</span>
+              <span>O nama</span>
             </VTab>
           </VTabs>
         </VCardItem>
-        <VCardText class="pt-2 pt-sm-8 *min-h-[302px]">
+        <VCardText class="pt-2 *min-h-[302px]">
           <VWindow v-model="tab$" mandatory class="overflow-visible" continuous>
             <VFadeTransition mode="in-out" leave-absolute>
               <VWindowItem value="kontakt">

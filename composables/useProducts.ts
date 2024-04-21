@@ -6,7 +6,7 @@ import {
   M_productsRemove,
 } from "@/graphql";
 
-export const useProducts = () => {
+export const useProducts = (ID?: any) => {
   const {
     io: { IOEVENT_PRODUCTS_CHANGE_prefix },
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
@@ -14,8 +14,7 @@ export const useProducts = () => {
   const auth = useStoreApiAuth();
   const mounted$ = useMounted();
   const enabled$ = computed(() => !!(mounted$.value && auth.isAuth$));
-  const uid$ = computed(() => get(auth.user$, "id"));
-
+  const uid$ = computed(() => toValue(ID) || get(auth.user$, "id"));
   const { result, refetch, load, loading, error } = useLazyQuery<{
     productsListByUser: IProduct[];
   }>(

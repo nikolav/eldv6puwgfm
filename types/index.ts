@@ -121,6 +121,7 @@ export interface IDocDataTask {
 
 export interface ICompanyProfile {
   name?: string | undefined;
+  slug?: string | undefined;
   address?: string | undefined;
   district?: string | undefined;
   phone?: string | undefined;
@@ -199,4 +200,3 @@ export interface ITopicChatMessage {
   name?: OrNoValue<string>;
   message: string;
 }
-

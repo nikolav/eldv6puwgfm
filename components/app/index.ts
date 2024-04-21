@@ -12,3 +12,4 @@ export { default as CartEmpty } from "./CartEmpty.vue";
 export { default as LikeDislike } from "./LikeDislike.vue";
 export { default as TopicChat } from "./TopicChat.vue";
 export { default as TopicChatDisplayCard } from "./TopicChatDisplayCard.vue";
+export { default as ProductSlideImage } from "./ProductSlideImage.vue";

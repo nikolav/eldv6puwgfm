@@ -68,3 +68,5 @@ export { default as IconUserCircle } from "./IconUserCircle.vue";
 export { default as IconUserShield } from "./IconUserShield.vue";
 export { default as IconCloudUp } from "./IconCloudUp.vue";
 export { default as IconCartOff } from "./IconCartOff.vue";
+export { default as IconClipboardOutline } from "./IconClipboardOutline.vue";
+export { default as IconExternalLinkOutline } from "./IconExternalLinkOutline.vue";

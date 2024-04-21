@@ -1,5 +1,10 @@
 import type { TStoreMain, TStoreFlags, IConfigDocs, IAppData } from "@/types";
-import { assign, reMatchViewUser, reMatchViewProduct } from "@/utils";
+import {
+  assign,
+  reMatchViewUser,
+  reMatchViewProduct,
+  stripSlashesEnd,
+} from "@/utils";
 import { PRODUCTION$, URL_APP_PUBLIC } from "@/config";
 
 const themeDark = "dark";
@@ -27,6 +32,7 @@ export default defineAppConfig({
       "ownerFirstName",
       "ownerLastName",
       "name",
+      "slug",
       "pin",
       "address",
       "district",
@@ -107,7 +113,9 @@ export default defineAppConfig({
     TOPIC_CHAT_ACTIVE: "8H7ykahv",
     CARD_PRODUCT_DISPLAYED_HOVERED_ID: "wPV360PastGjrwS9hr",
     TOPIC_CHAT_PRODUCTS_prefix: "chat:products:vyuoiOe3eZW7::",
-    PRODUCTS_LIKES_prefix: "MEDs6Eov9fHBM5HZ6I1X:",
+    TOPIC_CHAT_COM_prefix: "chat:com:EMs0Q::",
+    PRODUCTS_LIKES_prefix: "MEDs6Eov9fHBM5HZ6I1X::",
+    COM_LIKES_prefix: "Y9tqzJgln0B::",
     LIKES_STORE: "hqYqZ31rN4xwfb2qc",
     DISLIKES_STORE: "HwJ0dv9",
     APP_MOUNTED: "Zkcmk4BnXHU",
@@ -235,6 +243,7 @@ export default defineAppConfig({
   urls: {
     appPublic: URL_APP_PUBLIC,
     github: "https://github.com/nikolav/nuxtflask",
+    comPages: `${stripSlashesEnd(URL_APP_PUBLIC)}/gazdinstva/`,
   },
   storage: {
     MENU_CATEGORY: "7n0FS9ZxoVN",

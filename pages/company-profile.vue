@@ -7,6 +7,9 @@ definePageMeta({
   layout: "company-profile",
   middleware: "authorized-company",
 });
+useHead({
+  title: "primljene narudžbe",
+});
 
 const {
   docs: { CHAT_ORDER_COM_USER_prefix },
