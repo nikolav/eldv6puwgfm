@@ -110,6 +110,8 @@ export default defineAppConfig({
   },
   //
   key: {
+    RATING_LOCAL: "hGPTySh8oXXwmRgAV16q",
+    TOPIC_RATINGS: "ratings:N1cdcqMM",
     TOPIC_CHAT_ACTIVE: "8H7ykahv",
     CARD_PRODUCT_DISPLAYED_HOVERED_ID: "wPV360PastGjrwS9hr",
     TOPIC_CHAT_PRODUCTS_prefix: "chat:products:vyuoiOe3eZW7::",

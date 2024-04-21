@@ -41,10 +41,15 @@ const srcImageSample = computed(() =>
           class="d-flex flex-col items-center text-center justify-evenly"
           @click.stop
         >
-          <p class="text-white text-truncate text-sm">
+          <p
+            class="text-white !truncate text-truncate text-sm text-start !w-full"
+          >
             {{ props.product.name }}
           </p>
-          <p class="text-white text-truncate">{{ props.product.price }} din</p>
+          <p class="text-white text-truncate">
+            {{ props.product.price }}
+            <small class="opacity-60 ps-px">din</small>
+          </p>
           <VBtn rounded="pill" color="primary-darken-1" @click.stop>ok</VBtn>
         </VOverlay>
         <template #image>

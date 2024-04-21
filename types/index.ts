@@ -200,3 +200,10 @@ export interface ITopicChatMessage {
   name?: OrNoValue<string>;
   message: string;
 }
+
+export interface IDataRating {
+  [topic: string]: {
+    [key: string]: number;
+  };
+}
+

@@ -2,7 +2,6 @@
 import { useDisplay } from "vuetify";
 import menuDistricts from "@/assets/districts-serbia.json";
 import type { ICompanyProfile } from "@/types";
-import { toLower } from "lodash";
 
 definePageMeta({
   layout: "company-profile",
