@@ -22,3 +22,4 @@ export { default as ServiceDescriptionAuth } from "./ServiceDescriptionAuth.vue"
 export { default as TopicChat } from "./TopicChat.vue";
 export { default as TopicChatDisplayCard } from "./TopicChatDisplayCard.vue";
 export { default as TopicRating } from "./TopicRating.vue";
+export { default as ChatControllsBasic } from "./ChatControllsBasic.vue";

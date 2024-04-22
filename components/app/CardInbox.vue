@@ -51,7 +51,7 @@ const { length: comChatLength } = useDocs(
 </script>
 <template>
   <VCard class="component--CardInbox" v-bind="$attrs">
-    <VToolbar color="primary" flat extended>
+    <VToolbar color="primary" flat extended density="comfortable">
       <VToolbarTitle class="*bg-red">
         <strong>• Inbox</strong>
       </VToolbarTitle>

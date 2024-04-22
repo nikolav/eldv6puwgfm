@@ -15,7 +15,7 @@ const inboxKey = useUniqueId();
     <CardInbox
       :reload="inboxKey"
       :key="inboxKey.ID.value"
-      class="mx-auto mt-2 mt-sm-8"
+      class="mx-auto mt-2 mt-sm-4"
       elevation="1"
       max-width="812"
     />

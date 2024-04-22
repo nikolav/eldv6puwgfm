@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { ITopicChatMessage, IDoc, TDocData } from "@/types";
 import { ChatSimpleMessage } from "@/components/app";
+import { useDisplay } from "vuetify";
 const props = defineProps<{
   chat: IDoc<TDocData<ITopicChatMessage>>[];
   remove: (id: number) => void;
 }>();
+const { smAndUp } = useDisplay();
 const { $date } = useNuxtApp();
 const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
 
@@ -15,7 +17,7 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
     <VDataIterator :items="props.chat" :items-per-page="-1">
       <template #no-data> --no-data-0GN4sMW5ffx5qx3wpZ1 </template>
       <template #default="{ items }">
-        <div class="space-y-1 pa-1">
+        <div class="space-y-1 pa-1" :class="!smAndUp ? 'mt-2' : undefined">
           <template v-for="node in items" :key="node.raw.id">
             <ChatSimpleMessage
               class="pa-2 px-4"

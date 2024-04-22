@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ChatRenderSimpleList } from "@/components/app";
+import { ChatRenderSimpleList, ChatControllsBasic } from "@/components/app";
+import { useDisplay } from "vuetify";
+
+const { smAndUp } = useDisplay();
 const {
   key: { TOPIC_CHAT_COM_prefix, APP_PROCESSING },
 } = useAppConfig();
-
 const auth = useStoreApiAuth();
 const uid = computed(() => get(auth.user$, "id"));
 const {
@@ -21,16 +23,22 @@ watchEffect(() => {
 </script>
 <template>
   <section class="component--CardInboxTabMessages">
-    <VContainer fluid>
+    <VContainer fluid class="*bg-red pt-0">
       <VRow no-gutters>
-        <VCol cols="12" sm="7">
+        <VCol cols="12" sm="7" :order="1" :order-sm="0">
           <ChatRenderSimpleList
-            max-height="320"
+            max-height="492"
             :chat="chat"
             :remove="remove"
+            elevation="1"
           />
         </VCol>
-        <VCol cols="12" sm="5">2</VCol>
+        <VCol cols="12" sm="5">
+          <ChatControllsBasic
+            :class="smAndUp ? 'ms-4' : undefined"
+            elevation="1"
+          />
+        </VCol>
       </VRow>
     </VContainer>
   </section>
