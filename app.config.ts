@@ -110,6 +110,7 @@ export default defineAppConfig({
   },
   //
   key: {
+    INBOX_TAB_ACTIVE: "nuH82mKP7ZbUxtiEQ",
     COM_RATING_prefix: "rating:com:SiOobaXI2QXJgHs::",
     RATING_LOCAL: "hGPTySh8oXXwmRgAV16q",
     TOPIC_RATINGS: "ratings:N1cdcqMM",
@@ -255,6 +256,10 @@ export default defineAppConfig({
   links: {
     external: {
       RPU: "https://www.apr.gov.rs/registri/ugovori-o-finansiranju-poljoprivredne-proizvodnje/o-registru.2367.html#:~:text=broj%20pod%20kojim%20je%20ugovor%20o%20finansiranju%20poljoprivredne%20proizvodnje%20zaveden%20Registru%20ugovora%20o%20finansiranju%20poljoprivredne%20proizvodnje",
+      GOOGLE_CALENDAR_EDIT_PAGE:
+        "https://calendar.google.com/calendar/u/0?cid=dnVrb3ZpY25pa29sYTIwMTRAZ21haWwuY29t",
+      SRC_GOOGLE_CALENDAR_IFRAME:
+        "https://calendar.google.com/calendar/embed?height=480&wkst=2&ctz=Europe%2FBelgrade&bgcolor=%23ffffff&showTitle=0&showTabs=0&showCalendars=0&hl=sr&src=dnVrb3ZpY25pa29sYTIwMTRAZ21haWwuY29t&color=%230f5359",
     },
   },
   re: {

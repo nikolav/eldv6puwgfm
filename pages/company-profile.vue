@@ -119,8 +119,8 @@ watchEffect(() => {
     >
       <ChatOrder :close="toggleOrderChatActive.off" :topic="chatId$" />
     </VNavigationDrawer>
-    <div class="max-w-[912px] mx-auto px-1 mt-2 mt-sm-8">
-      <VCard>
+    <div class="*max-w-[912px] *mx-auto px-1 mt-2 mt-sm-8">
+      <VCard max-width="812" class="mx-auto">
         <!-- @orders-crud:toolbar -->
         <VCardItem class="bg-primary">
           <VCardTitle

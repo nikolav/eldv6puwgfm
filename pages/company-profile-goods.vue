@@ -183,7 +183,7 @@ const submitProductsRemove = async () => {
       />
 
       <!-- @@products:crud -->
-      <VCard max-width="956" class="mx-auto">
+      <VCard max-width="812" class="mx-auto">
         <VToolbar height="48" color="primary" flat>
           <VToolbarTitle v-if="smAndUp">
             <VIcon start size="small" class="opacity-50" icon="$iconBoxes" />

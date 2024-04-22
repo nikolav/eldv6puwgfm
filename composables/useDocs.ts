@@ -39,6 +39,7 @@ export const useDocs = <TData = TDocData>(
   const data$ = computed(
     () => (enabled$.value ? get(result.value, "docsByTopic") : undefined) || []
   );
+  const length$ = computed(() => data$.value.length);
   const reload = async () => await refetch();
 
   const { runSetup: queryStart } = useRunSetupOnce(load);
@@ -75,6 +76,7 @@ export const useDocs = <TData = TDocData>(
 
     // # data
     data: data$,
+    length: length$,
 
     // # crud
     upsert,

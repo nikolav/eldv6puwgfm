@@ -1,5 +1,6 @@
-import { unset, set, each, forEach, get as getPath } from "@/utils";
+import { unset, set, each, forEach, get as getPath, hasOwn } from "@/utils";
 import { type TStoreMain } from "@/types";
+
 // @useStoreMain
 export const useStoreMain = defineStore("main", () => {
   const {
@@ -20,11 +21,12 @@ export const useStoreMain = defineStore("main", () => {
       unset(store$.value, path);
     });
   };
-
+  const isSet = (path: string) => hasOwn(store$.value, path);
   return {
     store: store$,
     get,
     put,
     drop,
+    isSet,
   };
 });

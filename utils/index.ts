@@ -1,6 +1,7 @@
 // @lodash
 import lodash from "lodash";
 const {
+  has: hasOwn,
   assign,
   at,
   capitalize,
@@ -43,6 +44,7 @@ const {
   zipObject,
 } = lodash;
 export {
+  hasOwn,
   assign,
   at,
   capitalize,

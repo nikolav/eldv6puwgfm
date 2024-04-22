@@ -34,7 +34,7 @@ watch(search_, debounceSearchHandle);
 </script>
 
 <template>
-  <section id="layout-default" :style="`padding-top: ${appBarHeight}px`">
+  <section class="layout--default" :style="`padding-top: ${appBarHeight}px`">
     <!-- @cart:button -->
     <VBtn
       @click="cart.open"
@@ -68,12 +68,13 @@ watch(search_, debounceSearchHandle);
       <VCard
         rounded="0"
         variant="flat"
-        image="/public/header-main-06.png"
+        image="/header-main-06.png"
         class="grow *bg-primary2"
       >
         <template #image>
           <VImg cover position="0 81%" />
         </template>
+        <!-- @main:search -->
         <VForm
           @submit.prevent
           class="mx-auto mt-[92px] max-w-[512px] sm:max-w-[550px] sm:mt-[122px] sm:translate-x-[3.45rem]"
@@ -107,7 +108,7 @@ watch(search_, debounceSearchHandle);
           </VTextField>
         </VForm>
       </VCard>
-      <!-- @header:menu -->
+      <!-- @header:menu-categories -->
       <VSlideGroup mandatory show-arrows v-model="current$">
         <VSlideGroupItem
           v-for="node in menuCategories"

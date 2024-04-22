@@ -64,6 +64,17 @@ watchEffect(() => {
   useIOEvent(ioEventPics$.value, productImagesReload);
 });
 
+const fieldsReset = () => {
+  fileImage01$.value = [];
+  fileImage02$.value = [];
+  product.name.value = undefined;
+  product.price.value = undefined;
+  product.category.value = undefined;
+  product.stock.value = undefined;
+  product.stockType.value = undefined;
+  product.onSale.value = undefined;
+  product.description.value = undefined;
+};
 // @@submit
 const submitProductAdd = async () => {
   const form = reduce(
@@ -82,7 +93,7 @@ const submitProductAdd = async () => {
   try {
     flags.on(APP_PROCESSING);
     pid$.value = get(await productsUpsert(form), "data.productsUpsert.id");
-    if (!pid$.value) throw "--error";
+    if (!pid$.value) throw "--error-submitProductAdd";
 
     // product saved, upload images
     const resUpload = await upload({
@@ -107,18 +118,11 @@ const submitProductAdd = async () => {
     console.error(error);
   }
   flags.off(APP_PROCESSING);
-  if (pid$.value) toggleSnackbarProductAddStatus.on();
-};
-const fieldsReset = () => {
-  fileImage01$.value = [];
-  fileImage02$.value = [];
-  product.name.value = undefined;
-  product.price.value = undefined;
-  product.category.value = undefined;
-  product.stock.value = undefined;
-  product.stockType.value = undefined;
-  product.onSale.value = undefined;
-  product.description.value = undefined;
+  if (pid$.value) {
+    toggleSnackbarProductAddStatus.on();
+    props_.close();
+    fieldsReset();
+  }
 };
 
 // #eos

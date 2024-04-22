@@ -30,6 +30,8 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconPostOutline,
+  IconAntenaLight,
   IconExternalLinkOutline,
   IconClipboardOutline,
   IconCartOff,
@@ -229,6 +231,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconPost: IconPostOutline,
+        iconAntena: IconAntenaLight,
         iconExternalLink: IconExternalLinkOutline,
         iconClipboard: IconClipboardOutline,
         iconCartOff: IconCartOff,
