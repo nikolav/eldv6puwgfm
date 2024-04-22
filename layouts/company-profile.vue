@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { AppBarMain } from "@/components/app";
+import { useDisplay } from "vuetify";
+
+const { smAndUp } = useDisplay();
 
 const { appBarHeight } = useAppConfig().layout;
 const companyProfileDrawerWidth = 52;
@@ -47,6 +50,13 @@ const sidebarLinksCompanyProfile = [
     title: "fdQMUfwvV1zvbCOCjj42profil",
     size: "large",
   },
+  {
+    icon: "$iconSettings",
+    tooltip: "Podešavanja",
+    to: "company-profile-config",
+    title: "So6pM8ilgo2AT",
+    class: "mt-auto !opacity-20",
+  },
 ];
 
 // #eos
@@ -61,10 +71,26 @@ const sidebarLinksCompanyProfile = [
       :width="companyProfileDrawerWidth"
     >
       <div
-        class="d-flex flex-col mt-4 gap-y-2 sm:gap-y-4 text-center items-center"
+        class="d-flex flex-col gap-y-2 sm:gap-y-4 text-center items-center h-[88vh] *bg-red"
+        :class="smAndUp ? 'mt-4' : undefined"
       >
-        <template v-for="node in sidebarLinksCompanyProfile" :key="node.title">
-          <VBtn color="on-primary" variant="plain" :to="{ name: node.to }" icon>
+        <template
+          v-for="(node, i) in sidebarLinksCompanyProfile"
+          :key="node.title"
+        >
+          <VBtn
+            :class="
+              isLastIndex(sidebarLinksCompanyProfile, i)
+                ? smAndUp
+                  ? node.class
+                  : undefined
+                : undefined
+            "
+            color="on-primary"
+            variant="plain"
+            :to="{ name: node.to }"
+            icon
+          >
             <VIcon :icon="node.icon" :size="node.size" />
             <VTooltip
               :offset="3"

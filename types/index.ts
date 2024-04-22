@@ -127,6 +127,8 @@ export interface ICompanyProfile {
   phone?: string | undefined;
   delivery?: string | undefined;
   about?: string | undefined;
+  googleCalendarEmbedLink?: string | undefined;
+  googleCalendarEditPageLink?: string | undefined;
   ownerFirstName?: string | undefined;
   ownerLastName?: string | undefined;
 }

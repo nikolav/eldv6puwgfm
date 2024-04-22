@@ -31,6 +31,7 @@ watchEffect(() => {
             :chat="chat"
             :remove="remove"
             elevation="1"
+            class="pt-1 pb-2"
           />
         </VCol>
         <VCol cols="12" sm="5">
