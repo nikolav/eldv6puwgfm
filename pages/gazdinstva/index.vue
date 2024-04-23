@@ -16,6 +16,7 @@ const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
   docs: { TAG_COMPANY_PROFILE_prefix, COM_PHOTOS_prefix },
   key: { COM_LIKES_prefix, TOPIC_CHAT_COM_prefix, COM_RATING_prefix },
+  urls: { QUERY },
 } = useAppConfig();
 
 const auth = useStoreApiAuth();
@@ -29,7 +30,7 @@ watchEffect(() => {
 });
 
 const uid_ = computed(() =>
-  Number(last(String(get(route.query, "slug")).split("-")))
+  Number(last(String(get(route.query, QUERY)).split("-")))
 );
 const { users } = useQueryUsers();
 const { data: comProfile } = useDoc<ICompanyProfile>(
@@ -62,7 +63,7 @@ const comDistrict_ = computed(() => get(comProfile.value, "data.district"));
 // @@eos
 </script>
 <template>
-  <section class="page--gazdinstvo:slug fill-height pa-0 ma-0">
+  <section class="page--gazdinstvo:q fill-height pa-0 ma-0">
     <VContainer fluid class="*bg-red fill-height">
       <!-- @row:main -->
       <VRow no-gutters class="*bg-lime fill-height">

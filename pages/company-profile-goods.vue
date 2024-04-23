@@ -22,7 +22,7 @@ const {
   app: { DEFAULT_TRANSITION },
   docs: { PRODUCT_IMAGES },
   products: { perPage },
-  urls: { productPages, appPublic },
+  urls: { productPages, appPublic, QUERY },
 } = useAppConfig();
 
 const { smAndUp, width, xs } = useDisplay();
@@ -135,7 +135,7 @@ const linkExternalProductPage = () => {
   return `${trimEnd(appPublic, "/")}/${trim(
     productPages,
     "/"
-  )}?slug=${encodeURIComponent(productToSlug())}`;
+  )}?${QUERY}=${encodeURIComponent(productToSlug())}`;
 };
 const goToPublicProductPage = async () => {
   const ln = linkExternalProductPage();
@@ -383,7 +383,7 @@ const toggleChatControlls = useToggleFlag();
                 activator="parent"
                 open-delay="345"
                 location="bottom"
-                text="Prikaz..." />
+                text="Prikaži stranu..." />
               <VIcon icon="$iconExternalLink"
             /></VBtn>
             <!-- product com.channel -->

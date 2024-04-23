@@ -27,7 +27,7 @@ const {
     external: { RPU: lnRPU },
   },
   io: { IOEVENT_COM_PHOTOS_CHANGE_prefix },
-  urls: { comPages, appPublic },
+  urls: { comPages, appPublic, QUERY },
 } = useAppConfig();
 
 const uid = get(auth.user$, "id");
@@ -167,7 +167,7 @@ const copyComPublicUrl = async () =>
     `${stripSlashesEnd(appPublic)}/${trim(
       comPagePublicUrl,
       "/"
-    )}?slug=${encodeURIComponent(form.slug.value)}`
+    )}?${QUERY}=${encodeURIComponent(form.slug.value)}`
   );
 
 // @@eos
@@ -208,7 +208,7 @@ const copyComPublicUrl = async () =>
             <NuxtLink
               :to="{
                 path: comPagePublicUrl,
-                query: { slug: `${form.slug.value}` },
+                query: { [QUERY]: `${form.slug.value}` },
               }"
               external
               target="_blank"

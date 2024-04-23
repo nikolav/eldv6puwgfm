@@ -3,7 +3,8 @@ import { Q_docByDocId, M_docUpsert } from "@/graphql";
 import { get, batchSet } from "@/utils";
 
 export const useDoc = <TDoc = Record<string, any>>(
-  doc_id: string,
+  // doc_id: string,
+  doc_id?: any,
   initialEnabled = true
 ) => {
   const auth = useStoreApiAuth();
@@ -12,11 +13,15 @@ export const useDoc = <TDoc = Record<string, any>>(
   const enabled$ = computed(
     () => !!(mounted$.value && toggleEnabled.isActive.value && auth.token$)
   );
+  const doc_id$ = ref("");
+  watchEffect(() => {
+    doc_id$.value = toValue(doc_id);
+  });
   const { result, refetch, load, loading, error } = useLazyQuery<{
     docByDocId: IDoc<TDoc>;
   }>(
     Q_docByDocId,
-    { doc_id },
+    { doc_id: doc_id$ },
     {
       enabled: enabled$,
       pollInterval: useAppConfig().graphql.STORAGE_QUERY_POLL_INTERVAL,
@@ -53,6 +58,7 @@ export const useDoc = <TDoc = Record<string, any>>(
   });
 
   return {
+    doc_id$,
     // #crud
     data: data$,
     put,

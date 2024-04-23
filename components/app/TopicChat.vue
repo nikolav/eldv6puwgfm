@@ -6,7 +6,10 @@ const props = defineProps<{
   title?: string | undefined;
   small?: boolean | undefined;
 }>();
-const { length: chatLength_ } = useDocs<ITopicChatMessage>(props.topic);
+const { topic$, length: chatLength_ } = useDocs<ITopicChatMessage>(props.topic);
+watchEffect(() => {
+  topic$.value = toValue(props.topic);
+});
 
 // @@eos
 </script>

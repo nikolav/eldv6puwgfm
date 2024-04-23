@@ -110,6 +110,8 @@ export default defineAppConfig({
   },
   //
   key: {
+    SLUG_com: "gazdinstvo",
+    SLUG_product: "proizvod",
     INBOX_TAB_ACTIVE: "nuH82mKP7ZbUxtiEQ",
     COM_RATING_prefix: "rating:com:SiOobaXI2QXJgHs::",
     PRODUCT_RATING_prefix: "rating:products:FHj8C6t30equ4D::",
@@ -253,6 +255,7 @@ export default defineAppConfig({
     // comPages: `${stripSlashesEnd(URL_APP_PUBLIC)}/gazdinstva/`,
     comPages: "/gazdinstva/",
     productPages: "/proizvodi/",
+    QUERY: "q",
   },
   storage: {
     MENU_CATEGORY: "7n0FS9ZxoVN",
