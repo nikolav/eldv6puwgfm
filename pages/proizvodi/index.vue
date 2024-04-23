@@ -1,20 +1,27 @@
 <script setup lang="ts">
 // http://localhost:3000/proizvodi?slug=vestibulum-1-1
 import { useDisplay } from "vuetify";
-import type { IStorageFileInfo, ITopicChatMessage } from "@/types";
+import type { IStorageFileInfo } from "@/types";
 import { TOKEN_DEFAULT } from "@/config";
+import { TopicRating, LikeDislike, TopicChat } from "@/components/app";
 
 definePageMeta({
   layout: "blank",
 });
 
 const {
+  layout: { CAROUSEL_NAV_OFFSET_product_page },
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
   docs: { PRODUCT_IMAGES },
-  key: { TOPIC_CHAT_PRODUCTS_prefix },
+  key: {
+    TOPIC_CHAT_PRODUCTS_prefix,
+    PRODUCT_RATING_prefix,
+    PRODUCTS_LIKES_prefix,
+  },
+  products: { categories: pCategories },
 } = useAppConfig();
 
-const { height: wHeight } = useDisplay();
+const { height: wHeight, mdAndUp } = useDisplay();
 const auth = useStoreApiAuth();
 const route = useRoute();
 
@@ -22,7 +29,7 @@ const { runSetup: setupUserDefault } = useRunSetupOnce(() =>
   auth.tokenPut(TOKEN_DEFAULT)
 );
 watchEffect(() => {
-  if (auth.initialized$ && !auth.token$) setupUserDefault();
+  if (auth.initialized$ && !auth.isAuth$) setupUserDefault();
 });
 const pid = computed(() =>
   Number(last(String(get(route.query, "slug")).split("-")))
@@ -37,7 +44,11 @@ watchEffect(() => {
 const p$ = computed(() =>
   !isEmpty(products$) ? first(products$.value) : undefined
 );
+const com$ = computed(() => get(p$.value, "user"));
 const pid$ = computed(() => get(p$.value, "id"));
+const pCategory$ = computed(() =>
+  get(find(pCategories, { value: get(p$.value, "tags[0]") }), "title")
+);
 // get p.images
 const { topic$: topicProductImages, data: productImages } =
   useDocs<IStorageFileInfo>();
@@ -46,13 +57,6 @@ watchEffect(() => {
   topicProductImages.value = `${PRODUCT_IMAGES}${pid$.value}`;
 });
 const { publicUrl } = useApiStorage(true, true);
-// get p.channel
-const { topic$: topciProductChannel, data: chat } =
-  useDocs<ITopicChatMessage>();
-watchEffect(() => {
-  if (!pid$.value) return;
-  topciProductChannel.value = `${TOPIC_CHAT_PRODUCTS_prefix}${pid$.value}`;
-});
 
 // on images loaded: init carousel; run setup once
 const imageFileIdCurrent = ref("");
@@ -64,20 +68,20 @@ watchEffect(() => {
   if (!isEmpty(productImages.value)) initCarousel();
 });
 
-const CAROUSEL_NAV_OFFSET = 42;
 const carouselNav = ref();
 const { height: carouselNavHeight } = useElementSize(carouselNav);
 const carouselHeight = computed(
-  () => wHeight.value - carouselNavHeight.value - CAROUSEL_NAV_OFFSET
+  () =>
+    wHeight.value - carouselNavHeight.value - CAROUSEL_NAV_OFFSET_product_page
 );
 // @@eos
 </script>
 <template>
   <section class="page--proizvodi fill-height ma-0 pa-0 *bg-red">
-    <VContainer fluid class="bg-red ma-0 pa-0 fill-height">
-      <VRow class="bg-lime ma-0 pa-0 fill-height" no-gutters>
+    <VContainer fluid class="*bg-red ma-0 pa-0 fill-height">
+      <VRow class="*bg-lime ma-0 pa-0 fill-height" no-gutters>
         <!-- col.product:gallery -->
-        <VCol cols="12" md="6" class="bg-blue-200 ma-0 pa-0">
+        <VCol cols="12" md="6" class="*bg-blue-200 ma-0 pa-0">
           <VHover>
             <template #default="{ isHovering, props: props_ }">
               <!-- image gallery .left -->
@@ -128,12 +132,12 @@ const carouselHeight = computed(
                           width="92"
                           height="92"
                           rounded
-                          class="overflow-hidden first:!ms-0 ms-2 cursor-pointer transition-opacity"
+                          class="overflow-hidden first:!ms-0 ms-2 cursor-pointer transition"
                           :class="
                             isHovering ||
                             imageFileIdCurrent == get(node, 'data.file_id')
-                              ? 'opacity-100'
-                              : 'opacity-70'
+                              ? 'opacity-100 scale-105'
+                              : 'opacity-70 scale-100'
                           "
                         >
                           <VImg
@@ -154,7 +158,119 @@ const carouselHeight = computed(
           </VHover>
         </VCol>
         <!-- col.product:data -->
-        <VCol cols="12" md="6" class="bg-green-200 ma-0 pa-0">2</VCol>
+        <VCol
+          cols="12"
+          md="6"
+          class="*bg-green-200 ma-0 pa-0"
+        >
+          <!-- @btn:links prodavac, korpa -->
+          <Teleport to="body">
+            <div
+              class="position-fixed z-[9999] *bg-red w-full d-flex"
+              :class="mdAndUp ? 'bottom-12 *bg-lime w-1/2 end-0' : 'top-4'"
+            >
+              <VSpacer />
+              <VBtn rounded="circle" color="white" size="122" elevation="5">
+                <VAvatar
+                  image="https://nikolav.rs/nikolav.me.0.jpg"
+                  size="120"
+                />
+                <VTooltip location="end" open-delay="345" activator="parent">
+                  <em>Proizvođač</em>
+                  <VIcon
+                    class="-translate-y-[2px] opacity-40"
+                    icon="$iconExternalLink"
+                    end
+                    size="large"
+                  />
+                </VTooltip>
+              </VBtn>
+              <VSpacer />
+              <VSpacer />
+              <VBtn
+                icon
+                rounded="circle"
+                color="white"
+                size="122"
+                elevation="5"
+              >
+                <VIcon icon="$iconKorpaKantar" size="120" />
+              </VBtn>
+              <VSpacer />
+            </div>
+          </Teleport>
+          <div class="d-flex items-center justify-between px-1 pe-4 *mb-4">
+            <TopicRating text :topic="`${PRODUCT_RATING_prefix}${pid$}`" />
+            <TopicChat
+              class="ms-auto"
+              :title="p$?.name"
+              :topic="`${TOPIC_CHAT_PRODUCTS_prefix}${pid$}`"
+            />
+            <LikeDislike
+              class="ms-[1.22rem]"
+              :topic="`${PRODUCTS_LIKES_prefix}${pid$}`"
+            />
+          </div>
+          <div class="px-2 mt-6">
+            <div class="d-flex items-center pe-2">
+              <VChip size="small" v-if="pCategory$">
+                <template #prepend>
+                  <VIcon
+                    size="small"
+                    start
+                    icon="$IconFolderFilled"
+                    class="!opacity-40 ps-[2px]"
+                  />
+                </template>
+                <small class="*text-medium-emphasis">{{ pCategory$ }}</small>
+              </VChip>
+              <VChip size="small" class="ms-6">
+                <template #prepend>
+                  <VIcon
+                    size="x-large"
+                    start
+                    icon="$iconBattery"
+                    class="!opacity-40 ps-1"
+                  />
+                </template>
+                <small class="text-medium-emphasis">Zaliha</small>
+                <strong class="font--bold ms-1 tracking-wider"
+                  >{{ p$?.stock }}{{ p$?.stockType }}</strong
+                >
+              </VChip>
+              <VSpacer />
+              <VChip
+                size="x-large"
+                color="primary3-darken-1"
+                variant="elevated"
+              >
+                <template #prepend>
+                  <VIcon
+                    start
+                    icon="$iconRSD"
+                    class="!opacity-40 ps-[5px] translate-y-[2px]"
+                    size="large"
+                  />
+                </template>
+                <span class="align-bottom">
+                  <strong class="text-[112%]">{{ p$?.price }}</strong
+                  ><small class="ms-[4px] text-medium-emphasis"
+                    >/{{ p$?.stockType }}</small
+                  >
+                </span>
+              </VChip>
+            </div>
+            <h1 class="text-truncate !font-sans text-h4 font-weight-bold mt-4">
+              {{ p$?.name }}
+            </h1>
+            <VDivider thickness="2" class="border-opacity-50" />
+            <VSheet
+              class="mx-auto pa-4 overflow-auto scrollbar-thin-light indent-2 sm:prose"
+            >
+              <p class="!max-h-[211px]">{{ p$?.description }}</p>
+            </VSheet>
+          </div>
+        </VCol>
       </VRow>
     </VContainer>
     <!-- <VBtn :to="{ name: 'index' }">home</VBtn> -->
@@ -162,12 +278,10 @@ const carouselHeight = computed(
       <pre>{{
         JSON.stringify(
           {
-            carouselHeight,
-            carouselNavHeight,
-            imageFileIdCurrent,
+            com$,
+            pCategory$,
             p$,
             productImages,
-            chat,
             query: route.query,
           },
           null,
@@ -178,4 +292,7 @@ const carouselHeight = computed(
   </section>
 </template>
 <style lang="scss" scoped>
+.font--bold {
+  font-weight: bold !important;
+}
 </style>

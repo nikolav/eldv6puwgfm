@@ -6,8 +6,7 @@ const props = defineProps<{
   title?: string | undefined;
   small?: boolean | undefined;
 }>();
-const { data } = useDocs<ITopicChatMessage>(props.topic);
-const chatLength_ = computed(() => data.value.length);
+const { length: chatLength_ } = useDocs<ITopicChatMessage>(props.topic);
 
 // @@eos
 </script>

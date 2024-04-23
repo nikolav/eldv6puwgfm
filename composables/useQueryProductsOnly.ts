@@ -1,6 +1,8 @@
 import type { IProduct, OrNoValue } from "@/types";
 import { Q_productsListExact } from "@/graphql";
-export const useQueryProductsOnly = (pids?: OrNoValue<number[]>) => {
+export const useQueryProductsOnly = <TData = IProduct>(
+  pids?: OrNoValue<number[]>
+) => {
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
     key: { PRODUCTS_CHANGE },
@@ -10,7 +12,7 @@ export const useQueryProductsOnly = (pids?: OrNoValue<number[]>) => {
     pids$.value = toValue(pids) || [];
   });
   const { result, load, refetch } = useLazyQuery<{
-    productsListAll: IProduct[];
+    productsListExact: TData[];
   }>(
     Q_productsListExact,
     {

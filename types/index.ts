@@ -133,6 +133,13 @@ export interface ICompanyProfile {
   ownerLastName?: string | undefined;
 }
 
+export interface IUser {
+  id: number;
+  email: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface IProduct {
   id: number;
   user_id: number;
@@ -142,7 +149,8 @@ export interface IProduct {
   stockType?: OrNoValue<string>;
   onSale?: OrNoValue<boolean>;
   description?: OrNoValue<string>;
-  tags: string[];
+  tags?: OrNoValue<string[]>;
+  user?: OrNoValue<IUser>;
   created_at: string;
   updated_at: string;
 }
@@ -179,13 +187,6 @@ export interface IOrdersProducts {
   onSale?: OrNoValue<boolean>;
   description?: OrNoValue<string>;
   tags: string[];
-  created_at: string;
-  updated_at: string;
-}
-
-export interface IUser {
-  id: number;
-  email: string;
   created_at: string;
   updated_at: string;
 }

@@ -112,6 +112,7 @@ export default defineAppConfig({
   key: {
     INBOX_TAB_ACTIVE: "nuH82mKP7ZbUxtiEQ",
     COM_RATING_prefix: "rating:com:SiOobaXI2QXJgHs::",
+    PRODUCT_RATING_prefix: "rating:products:FHj8C6t30equ4D::",
     RATING_LOCAL: "hGPTySh8oXXwmRgAV16q",
     TOPIC_RATINGS: "ratings:N1cdcqMM",
     TOPIC_CHAT_ACTIVE: "8H7ykahv",
@@ -239,6 +240,8 @@ export default defineAppConfig({
     appBarHeight: 52,
     // additional @VMain/padding-top
     offsetTop: "1.22rem",
+    //
+    CAROUSEL_NAV_OFFSET_product_page: 42,
   },
   effect: {
     default: "headShake",

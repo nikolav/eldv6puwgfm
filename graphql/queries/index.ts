@@ -116,6 +116,12 @@ export const Q_productsListExact = gql`
       stock
       onSale
       tags
+      user {
+        id
+        email
+        created_at
+        updated_at
+      }
       created_at
       updated_at
     }
@@ -184,4 +190,3 @@ export const Q_users = gql`
     }
   }
 `;
-
