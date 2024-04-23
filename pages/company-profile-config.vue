@@ -68,7 +68,7 @@ watchEffect(() => {
             name="google_calendar_embed_link"
             v-model.trim="linkEmbed$"
             clearable
-            hint="Link deljenog javnog kalendara za intgracije sa google.calendar"
+            hint="Link deljenog javnog kalendara za integracije sa google.calendar"
             label="google.calendar link za integraciju"
             variant="outlined"
             placeholder="https://calendar.google.com/calendar/embed?..."

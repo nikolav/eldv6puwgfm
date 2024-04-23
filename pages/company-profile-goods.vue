@@ -128,7 +128,8 @@ const statusToggleProductAdded = useToggleFlag();
 const productToSlug = () =>
   words(get(product_.value, "name"))
     .concat(get(product_.value, "id") || "")
-    .join("-");
+    .join("-")
+    .toLocaleLowerCase();
 const linkExternalProductPage = () => {
   if (!product_.value) return;
   return `${trimEnd(appPublic, "/")}/${trim(
@@ -352,7 +353,7 @@ const toggleChatControlls = useToggleFlag();
                 activator="parent"
                 location="bottom"
                 open-delay="345"
-                text="Ažuriraj proizvod..."
+                text="Ažuriraj..."
               />
             </VBtn>
             <!-- product.images -->
@@ -368,7 +369,7 @@ const toggleChatControlls = useToggleFlag();
                 open-delay="345"
                 activator="parent"
                 location="bottom"
-                text="Pogledaj slike proizvoda..."
+                text="Pogledaj slike..."
               />
             </VBtn>
             <!-- @@product public link -->
@@ -382,7 +383,7 @@ const toggleChatControlls = useToggleFlag();
                 activator="parent"
                 open-delay="345"
                 location="bottom"
-                text="Strana proizvoda..." />
+                text="Prikaz..." />
               <VIcon icon="$iconExternalLink"
             /></VBtn>
             <!-- product com.channel -->
@@ -412,7 +413,7 @@ const toggleChatControlls = useToggleFlag();
                 activator="parent"
                 open-delay="345"
                 location="bottom"
-                text="Osveži listu proizvoda." />
+                text="Osveži listu." />
               <VIcon icon="$loading"
             /></VBtn>
             <VBtn

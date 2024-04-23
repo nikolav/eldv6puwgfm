@@ -159,7 +159,7 @@ export default defineAppConfig({
   },
   //
   graphql: {
-    STORAGE_QUERY_POLL_INTERVAL: 67890,
+    STORAGE_QUERY_POLL_INTERVAL: 123456,
   },
   //
   stores: {

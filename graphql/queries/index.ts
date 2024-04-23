@@ -104,6 +104,24 @@ export const Q_productsListAll = gql`
   }
 `;
 
+export const Q_productsListExact = gql`
+  query q_productsListExact($products: [ID!]!) {
+    productsListExact(products: $products) {
+      id
+      user_id
+      name
+      description
+      price
+      stockType
+      stock
+      onSale
+      tags
+      created_at
+      updated_at
+    }
+  }
+`;
+
 export const Q_productsListPopular = gql`
   query q_productsListPopular($length: Int) {
     productsListPopular(length: $length) {
