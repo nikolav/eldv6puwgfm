@@ -3,7 +3,7 @@ import type { ITopicChatMessage, IDoc, TDocData } from "@/types";
 import { mergeProps } from "vue";
 
 const props = defineProps<{
-  doc: IDoc<TDocData<ITopicChatMessage>>;
+  doc: IDoc<ITopicChatMessage>;
   dateFormated: (d: string) => string;
   remove: (id: number) => void;
 }>();

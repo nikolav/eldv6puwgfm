@@ -3,7 +3,7 @@ import type { ITopicChatMessage, IDoc, TDocData } from "@/types";
 import { ChatSimpleMessage } from "@/components/app";
 import { useDisplay } from "vuetify";
 const props = defineProps<{
-  chat: IDoc<TDocData<ITopicChatMessage>>[];
+  chat: IDoc<ITopicChatMessage>[];
   remove: (id: number) => void;
 }>();
 const { smAndUp } = useDisplay();

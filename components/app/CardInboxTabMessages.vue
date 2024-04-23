@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ITopicChatMessage } from "@/types";
 import { ChatRenderSimpleList, ChatControllsBasic } from "@/components/app";
 import { useDisplay } from "vuetify";
 
@@ -9,7 +10,11 @@ const {
 const auth = useStoreApiAuth();
 const uid = computed(() => get(auth.user$, "id"));
 const topic = `${TOPIC_CHAT_COM_prefix}${uid.value}`;
-const { data, remove, loading: chatProcessing } = useDocs(topic);
+const {
+  data,
+  remove,
+  loading: chatProcessing,
+} = useDocs<ITopicChatMessage>(topic);
 const chat = computed(() => docsSortedDesc(data.value));
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 watchEffect(() => {

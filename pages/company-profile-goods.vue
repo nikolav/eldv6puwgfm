@@ -4,6 +4,7 @@ import {
   ProductAdd,
   ProductsEdit,
   ChatRenderSimpleList,
+  ChatControllsBasic,
 } from "@/components/app";
 import { useDisplay } from "vuetify";
 
@@ -40,10 +41,10 @@ watchEffect(() => {
 const toggleProductAdd = useToggleFlag();
 const toggleProductsEdit = useToggleFlag();
 
-const pageLager$ = ref(1);
-const paginationLength$ = computed(() =>
-  Math.ceil(products$.value.length / perPage)
-);
+const { length: paginationLength$, page$: pageLager$ } = usePaginateData({
+  data: products$,
+  perPage,
+});
 
 const $$main = useStoreMain();
 const selectedProduct$ = computed({
@@ -68,7 +69,7 @@ const {
   remove: productChatRemoveMessage,
   loading: productChatLoading,
   length: productChatLength,
-} = useDocs<TDocData<ITopicChatMessage>>();
+} = useDocs<ITopicChatMessage>();
 watchEffect(() => {
   appProcessing$.value = productChatLoading.value;
 });
@@ -88,8 +89,8 @@ watch(selectedProduct$, (pid) => {
   topic$.value = `${PRODUCT_IMAGES}${pid}`;
 });
 
-const { $lightbox } = useNuxtApp();
 const { publicUrl } = useApiStorage();
+const { $lightbox } = useNuxtApp();
 const showSelectedProductImages = () =>
   $lightbox.open(
     map(productImages$.value, (node) => {
@@ -144,6 +145,7 @@ const goToPublicProductPage = async () => {
   });
 };
 const toggleProductChat = useToggleFlag();
+const toggleChatControlls = useToggleFlag();
 // @@eos
 </script>
 <template>
@@ -157,10 +159,50 @@ const toggleProductChat = useToggleFlag();
       absolute
       temporary
     >
+      <Teleport to="body">
+        <VSlideYReverseTransition>
+          <VBtn
+            color="on-primary"
+            size="x-large"
+            variant="elevated"
+            elevation="4"
+            v-if="toggleProductChat.isActive.value"
+            class="z-[9999] bottom-10 end-8"
+            position="fixed"
+            icon
+          >
+            <VIcon color="primary" size="x-large" icon="$iconPaperPlane" />
+            <VMenu
+              v-model="toggleChatControlls.isActive.value"
+              :close-on-content-click="false"
+              transition="slide-y-reverse-transition"
+              width="333"
+              activator="parent"
+              location="top"
+              :offset="[24, 12]"
+            >
+              <ChatControllsBasic
+                @message-saved="toggleChatControlls.off"
+                :topic="channelProductChat"
+              >
+                <template #submit-btn>
+                  <VBtn
+                    size="large"
+                    variant="text"
+                    color="primary"
+                    type="submit"
+                    >ok</VBtn
+                  >
+                </template>
+              </ChatControllsBasic>
+            </VMenu>
+          </VBtn>
+        </VSlideYReverseTransition>
+      </Teleport>
       <ChatRenderSimpleList
-        class="max-h-full"
         :remove="productChatRemoveMessage"
         :chat="chat"
+        class="max-h-full pa-2"
       />
       <!-- @@todo -->
     </VNavigationDrawer>

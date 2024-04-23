@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
 import type { ITopicChatMessage } from "@/types";
+const emit = defineEmits<{ (e: "messageSaved"): void }>();
 const props = defineProps<{ topic: string }>();
 const { smAndUp } = useDisplay();
 const {
@@ -30,6 +31,7 @@ const messageSubmit = async () => {
   }
   if (!err_) {
     chatMessage$.value = "";
+    emit("messageSaved");
   }
 };
 
@@ -57,16 +59,18 @@ const messageSubmit = async () => {
       />
       <VCardActions>
         <VSpacer />
-        <VBtn
-          variant="tonal"
-          type="submit"
-          icon
-          color="primary"
-          size="x-large"
-          class="mb-2 me-4"
-        >
-          <VIcon icon="$iconPaperPlane" size="35" />
-        </VBtn>
+        <slot name="submit-btn">
+          <VBtn
+            variant="tonal"
+            type="submit"
+            icon
+            color="primary"
+            size="x-large"
+            class="mb-2 me-4"
+          >
+            <VIcon icon="$iconPaperPlane" size="35" />
+          </VBtn>
+        </slot>
         <VSpacer v-if="!smAndUp" />
       </VCardActions>
     </VForm>

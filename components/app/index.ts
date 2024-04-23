@@ -8,6 +8,7 @@ export { default as CardInboxTabPosts } from "./CardInboxTabPosts.vue";
 export { default as CardProductDisplay } from "./CardProductDisplay.vue";
 export { default as Cart } from "./Cart.vue";
 export { default as CartEmpty } from "./CartEmpty.vue";
+export { default as ChatControllsBasic } from "./ChatControllsBasic.vue";
 export { default as ChatOrder } from "./ChatOrder.vue";
 export { default as ChatRenderSimpleList } from "./ChatRenderSimple.vue";
 export { default as ChatSimpleMessage } from "./ChatSimpleMessage.vue";
@@ -22,4 +23,3 @@ export { default as ServiceDescriptionAuth } from "./ServiceDescriptionAuth.vue"
 export { default as TopicChat } from "./TopicChat.vue";
 export { default as TopicChatDisplayCard } from "./TopicChatDisplayCard.vue";
 export { default as TopicRating } from "./TopicRating.vue";
-export { default as ChatControllsBasic } from "./ChatControllsBasic.vue";
