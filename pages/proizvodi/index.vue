@@ -15,14 +15,16 @@ watchEffect(() => {
   if (auth.initialized$ && !auth.token$) setupUserDefault();
 });
 const { data: vars } = useDocs("@vars");
+const pid_ = computed(() =>
+  Number(last(String(get(route.query, "slug")).split("-")))
+);
 
 // @@eos
 </script>
 <template>
   <section class="page--proizvodi:pid">
     <VBtn :to="{ name: 'index' }">home</VBtn>
-    <pre>{{ JSON.stringify(route.params) }}</pre>
-    <pre>{{ JSON.stringify(vars, null, 2) }}</pre>
+    <pre>{{ JSON.stringify({ pid_, query: route.query, vars }) }}</pre>
   </section>
 </template>
 <style lang="scss" scoped>

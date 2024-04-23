@@ -29,20 +29,15 @@ watch(
   }
 );
 
-const main$$ = useStoreMain();
-const chatMessage$ = computed({
-  get: () => main$$.get(CHAT_ORDER_MESSAGE),
-  set: (val) => main$$.put({ [CHAT_ORDER_MESSAGE]: val }),
-});
-
+const chatMessage$ = useGlobalVariable(CHAT_ORDER_MESSAGE);
 const toggleChatOrderPopup = useToggleFlag();
 const auth = useStoreApiAuth();
-const flags$$ = useStoreFlags();
+const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const submitChatOrder = async () => {
   let error_;
   if (!(0 < chatMessage$.value?.length)) return;
   try {
-    flags$$.on(APP_PROCESSING);
+    appProcessing$.value = true;
     await chatOrderSend({
       message: chatMessage$.value,
       user_id: get(auth.user$, "id"),
@@ -53,7 +48,7 @@ const submitChatOrder = async () => {
     // pass
   }
   await nextTick(() => {
-    flags$$.off(APP_PROCESSING);
+    appProcessing$.value = false;
   });
   if (!error_) {
     toggleChatOrderPopup.off();
@@ -66,13 +61,15 @@ const isClientMessage = (id: any) => id != get(auth.user$, "id");
 const chatOrderMessageRemove = async (messageId: number) => {
   let err_;
   try {
-    flags$$.on(APP_PROCESSING);
+    appProcessing$.value = true;
     await chatOrderRemove(messageId);
   } catch (error) {
     err_ = error;
   }
   if (!err_) {
-    await nextTick(() => flags$$.off(APP_PROCESSING));
+    await nextTick(() => {
+      appProcessing$.value = false;
+    });
   }
 
   return err_;

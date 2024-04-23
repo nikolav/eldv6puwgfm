@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
 import type { ITopicChatMessage } from "@/types";
+const props = defineProps<{ topic: string }>();
 const { smAndUp } = useDisplay();
 const {
-  key: { CHAT_NAME, TOPIC_CHAT_COM_prefix },
+  key: { CHAT_NAME, APP_PROCESSING },
 } = useAppConfig();
+const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const chatName$ = useLocalStorage(CHAT_NAME, () => "", { initOnMounted: true });
 const chatMessage$ = ref("");
 const auth = useStoreApiAuth();
 const uid = computed(() => get(auth.user$, "id"));
-const { upsert: save } = useDocs<ITopicChatMessage>(
-  `${TOPIC_CHAT_COM_prefix}${uid.value}`
-);
+const { upsert: save, loading } = useDocs<ITopicChatMessage>(props.topic);
+watchEffect(() => {
+  appProcessing$.value = loading.value;
+});
 const messageSubmit = async () => {
-  console.log(`@messageSubmit --ChatControllsBasic`);
   let err_: any;
   if (!chatMessage$.value) return;
   try {

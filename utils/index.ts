@@ -1,6 +1,8 @@
 // @lodash
 import lodash from "lodash";
 const {
+  trimStart,
+  trimEnd,
   has: hasOwn,
   assign,
   at,
@@ -44,6 +46,8 @@ const {
   zipObject,
 } = lodash;
 export {
+  trimStart,
+  trimEnd,
   hasOwn,
   assign,
   at,

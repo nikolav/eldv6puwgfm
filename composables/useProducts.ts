@@ -28,7 +28,9 @@ export const useProducts = (ID?: any) => {
     }
   );
   const products$ = computed(
-    () => (enabled$.value ? result.value?.productsListByUser : undefined) || []
+    () =>
+      (enabled$.value ? get(result.value, "productsListByUser") : undefined) ||
+      []
   );
   const reload = async () => await refetch();
 

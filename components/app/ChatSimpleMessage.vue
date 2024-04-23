@@ -43,9 +43,11 @@ const ownsMessage = (mid: any) => uid.value == mid;
             <VIcon icon="$iconTrash" />
           </VBtn>
         </VForm>
-        <em class="ps-2 text-medium-emphasis">122</em>
+        <em class="ps-2 text-medium-emphasis">{{
+          get(props.doc, "data.name")
+        }}</em>
         <p class="tracking-wide leading-normal">
-          {{ props.doc.data?.message }}
+          {{ get(props.doc, "data.message") }}
         </p>
         <p class="text-end text-disabled mt-1">
           <small>{{ props.dateFormated(String(props.doc.created_at)) }}</small>

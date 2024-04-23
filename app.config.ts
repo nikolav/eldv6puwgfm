@@ -249,6 +249,7 @@ export default defineAppConfig({
     github: "https://github.com/nikolav/nuxtflask",
     // comPages: `${stripSlashesEnd(URL_APP_PUBLIC)}/gazdinstva/`,
     comPages: "/gazdinstva/",
+    productPages: "/proizvodi/",
   },
   storage: {
     MENU_CATEGORY: "7n0FS9ZxoVN",

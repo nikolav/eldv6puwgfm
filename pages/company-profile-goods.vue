@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import type { OrNoValue } from "@/types";
-import { ProductAdd, ProductsEdit } from "@/components/app";
+import type { OrNoValue, TDocData, ITopicChatMessage } from "@/types";
+import {
+  ProductAdd,
+  ProductsEdit,
+  ChatRenderSimpleList,
+} from "@/components/app";
 import { useDisplay } from "vuetify";
 
 definePageMeta({
@@ -12,26 +16,36 @@ useHead({
   title: "lager",
 });
 
-const { smAndUp } = useDisplay();
-
-const { products: products$, remove: productsRemove } = useProducts();
-
-const toggleProductAdd = useToggleFlag();
-const toggleProductsEdit = useToggleFlag();
-
 const {
-  key: { PRODUCT_SELECTED, APP_PROCESSING },
+  key: { PRODUCT_SELECTED, APP_PROCESSING, TOPIC_CHAT_PRODUCTS_prefix },
   app: { DEFAULT_TRANSITION },
   docs: { PRODUCT_IMAGES },
   products: { perPage },
+  urls: { productPages, appPublic },
 } = useAppConfig();
-const $$main = useStoreMain();
+
+const { smAndUp, width, xs } = useDisplay();
+
+const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+const {
+  products: products$,
+  remove: productsRemove,
+  reload: productsReload,
+  loading: productsProcessing,
+} = useProducts();
+watchEffect(() => {
+  appProcessing$.value = productsProcessing.value;
+});
+
+const toggleProductAdd = useToggleFlag();
+const toggleProductsEdit = useToggleFlag();
 
 const pageLager$ = ref(1);
 const paginationLength$ = computed(() =>
   Math.ceil(products$.value.length / perPage)
 );
 
+const $$main = useStoreMain();
 const selectedProduct$ = computed({
   get: () => $$main.get(PRODUCT_SELECTED),
   set: (val: OrNoValue<number>) => {
@@ -40,6 +54,29 @@ const selectedProduct$ = computed({
     });
   },
 });
+const product_ = computed(() =>
+  find(products$.value, { id: selectedProduct$.value })
+);
+const channelProductChat = computed(() =>
+  product_.value
+    ? `${TOPIC_CHAT_PRODUCTS_prefix}${get(product_.value, "id")}`
+    : ""
+);
+const {
+  topic$: topicChat$,
+  data: dataProductChat,
+  remove: productChatRemoveMessage,
+  loading: productChatLoading,
+  length: productChatLength,
+} = useDocs<TDocData<ITopicChatMessage>>();
+watchEffect(() => {
+  appProcessing$.value = productChatLoading.value;
+});
+watchEffect(() => {
+  topicChat$.value = channelProductChat.value;
+});
+const chat = computed(() => docsSortedDesc(dataProductChat.value));
+
 onMounted(() => {
   selectedProduct$.value = null;
 });
@@ -53,24 +90,18 @@ watch(selectedProduct$, (pid) => {
 
 const { $lightbox } = useNuxtApp();
 const { publicUrl } = useApiStorage();
-const showSelectedProductImages = () => {
-  const caption = get(
-    find(products$.value, { id: selectedProduct$.value }),
-    "name"
-  );
+const showSelectedProductImages = () =>
   $lightbox.open(
     map(productImages$.value, (node) => {
       return {
         type: "image",
         src: publicUrl(get(node, "data.file_id")),
-        caption,
+        caption: get(product_.value, "name"),
       };
     })
   );
-};
 
 const toggleScreenProductRemove = useToggleFlag();
-const $$flags = useStoreFlags();
 const submitProductsRemove = async () => {
   let res;
 
@@ -78,7 +109,7 @@ const submitProductsRemove = async () => {
 
   try {
     if (!isNumeric(ID)) throw "--error";
-    $$flags.on(APP_PROCESSING);
+    appProcessing$.value = true;
     res = await productsRemove(Number(ID));
   } catch (error) {
     // pass
@@ -87,14 +118,53 @@ const submitProductsRemove = async () => {
   if (get(res, "data.productsRm.id")) {
     selectedProduct$.value = null;
   }
-  $$flags.off(APP_PROCESSING);
+  appProcessing$.value = false;
   toggleScreenProductRemove.off();
 };
 
-// #eos
+const statusToggleProductAdded = useToggleFlag();
+
+const productToSlug = () =>
+  words(get(product_.value, "name"))
+    .concat(get(product_.value, "id") || "")
+    .join("-");
+const linkExternalProductPage = () => {
+  if (!product_.value) return;
+  return `${trimEnd(appPublic, "/")}/${trim(
+    productPages,
+    "/"
+  )}?slug=${encodeURIComponent(productToSlug())}`;
+};
+const goToPublicProductPage = async () => {
+  const ln = linkExternalProductPage();
+  if (!ln) return;
+  return await navigateTo(ln, {
+    external: true,
+    open: { target: "_blank" },
+  });
+};
+const toggleProductChat = useToggleFlag();
+// @@eos
 </script>
 <template>
   <section class="page--company-profile-goods">
+    <!-- @com.channel:product -->
+    <VNavigationDrawer
+      v-model="toggleProductChat.isActive.value"
+      location="end"
+      :width="xs ? width : 412"
+      :order="-1"
+      absolute
+      temporary
+    >
+      <ChatRenderSimpleList
+        class="max-h-full"
+        :remove="productChatRemoveMessage"
+        :chat="chat"
+      />
+      <!-- @@todo -->
+    </VNavigationDrawer>
+
     <!-- @@confirm --product-remove -->
     <VBottomSheet
       v-model="toggleScreenProductRemove.isActive.value"
@@ -126,7 +196,7 @@ const submitProductsRemove = async () => {
           <p
             class="text-center text-truncate font-italic text-body-1 !font-sans"
           >
-            '{{ get(find(products$, { id: selectedProduct$ }), "name") }}'
+            '{{ get(product_, "name") }}'
           </p>
         </VCardText>
       </VCard>
@@ -147,6 +217,25 @@ const submitProductsRemove = async () => {
       </VToolbar>
     </VBottomSheet>
 
+    <!-- @alert:product-added -->
+    <VSnackbar
+      v-model="statusToggleProductAdded.isActive.value"
+      color="transparent"
+      variant="text"
+    >
+      <VAlert type="success" prominent elevation="4">
+        <div class="d-flex justify-between items-center gap-4 sm:gap-8">
+          <p>Proizvod je uspešno ulistan.</p>
+          <VBtn
+            @click="statusToggleProductAdded.off"
+            color="on-success"
+            variant="tonal"
+            >ok</VBtn
+          >
+        </div>
+      </VAlert>
+    </VSnackbar>
+
     <!-- @@screen --product-create -->
     <VDialog
       persistent
@@ -155,7 +244,10 @@ const submitProductsRemove = async () => {
       fullscreen
       v-model="toggleProductAdd.isActive.value"
     >
-      <ProductAdd :close="toggleProductAdd.off" />
+      <ProductAdd
+        :statusToggleProductAddedOn="statusToggleProductAdded.on"
+        :close="toggleProductAdd.off"
+      />
     </VDialog>
 
     <!-- @@screen --product-edit -->
@@ -171,7 +263,7 @@ const submitProductsRemove = async () => {
         :close="toggleProductsEdit.off"
       />
     </VDialog>
-    <div class="px-2 px-sm-6 mt-2 mt-sm-8">
+    <div class="px-2 px-sm-6 mt-2 mt-sm-4">
       <VPagination
         v-if="1 < paginationLength$"
         id="products-pagination"
@@ -188,11 +280,10 @@ const submitProductsRemove = async () => {
           <VToolbarTitle v-if="smAndUp">
             <VIcon start size="small" class="opacity-50" icon="$iconBoxes" />
             <strong class="ps-2 space-x-2">
-              <span>Lager</span>
+              <em>Lager</em>
               <VBadge
                 v-if="0 < products$.length"
                 inline
-                floating
                 color="primary-lighten-1"
                 class="-translate-y-[2px]"
               >
@@ -203,9 +294,12 @@ const submitProductsRemove = async () => {
             </strong>
           </VToolbarTitle>
 
+          <!-- push right @sm+ -->
           <VSpacer v-if="!smAndUp" />
+
           <!-- @@products:controlls -->
           <VToolbarItems :class="`*pe-2 ${smAndUp ? 'space-x-4' : undefined}`">
+            <!-- product.edit -->
             <VBtn
               @click="toggleProductsEdit.on"
               :disabled="null == selectedProduct$"
@@ -219,6 +313,7 @@ const submitProductsRemove = async () => {
                 text="Ažuriraj proizvod..."
               />
             </VBtn>
+            <!-- product.images -->
             <VBtn
               @click="showSelectedProductImages"
               :disabled="
@@ -234,8 +329,49 @@ const submitProductsRemove = async () => {
                 text="Pogledaj slike proizvoda..."
               />
             </VBtn>
-            <VBtn :disabled="null == selectedProduct$" rounded="circle" icon
-              ><VIcon icon="$iconLink" size="large"
+            <!-- @@product public link -->
+            <VBtn
+              @click="goToPublicProductPage"
+              :disabled="null == selectedProduct$"
+              rounded="circle"
+              icon
+            >
+              <VTooltip
+                activator="parent"
+                open-delay="345"
+                location="bottom"
+                text="Strana proizvoda..." />
+              <VIcon icon="$iconExternalLink"
+            /></VBtn>
+            <!-- product com.channel -->
+            <VBtn
+              @click="toggleProductChat.on"
+              :disabled="null == selectedProduct$"
+              rounded="circle"
+              icon
+            >
+              <VTooltip
+                activator="parent"
+                open-delay="345"
+                location="bottom"
+                text="Poruke..."
+              />
+
+              <VBadge color="primary3" :model-value="0 < productChatLength">
+                <template #badge>
+                  <pre>{{ productChatLength }}</pre>
+                </template>
+                <VIcon icon="$iconChatDots" />
+              </VBadge>
+            </VBtn>
+            <!-- products reload -->
+            <VBtn rounded="circle" icon @click="productsReload">
+              <VTooltip
+                activator="parent"
+                open-delay="345"
+                location="bottom"
+                text="Osveži listu proizvoda." />
+              <VIcon icon="$loading"
             /></VBtn>
             <VBtn
               color="error"

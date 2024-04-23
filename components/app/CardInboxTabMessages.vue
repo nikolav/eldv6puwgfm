@@ -8,11 +8,8 @@ const {
 } = useAppConfig();
 const auth = useStoreApiAuth();
 const uid = computed(() => get(auth.user$, "id"));
-const {
-  data,
-  remove,
-  loading: chatProcessing,
-} = useDocs(`${TOPIC_CHAT_COM_prefix}${uid.value}`);
+const topic = `${TOPIC_CHAT_COM_prefix}${uid.value}`;
+const { data, remove, loading: chatProcessing } = useDocs(topic);
 const chat = computed(() => docsSortedDesc(data.value));
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 watchEffect(() => {
@@ -36,6 +33,7 @@ watchEffect(() => {
         </VCol>
         <VCol cols="12" sm="5">
           <ChatControllsBasic
+            :topic="topic"
             :class="smAndUp ? 'ms-4' : undefined"
             elevation="1"
           />

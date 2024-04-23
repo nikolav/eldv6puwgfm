@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
 
-const props_ = defineProps<{ close: () => void }>();
+const props_ = defineProps<{
+  close: () => void;
+  statusToggleProductAddedOn: () => void;
+}>();
 
 const { smAndUp } = useDisplay();
 
@@ -50,8 +53,6 @@ const ioEventPics$ = computed(() =>
 
 const { upsert: productsUpsert } = useProducts();
 const { upload } = useApiStorage();
-
-const toggleSnackbarProductAddStatus = useToggleFlag();
 
 const flags = useStoreFlags();
 const { tags, topic$, reload: productImagesReload } = useDocs();
@@ -119,9 +120,12 @@ const submitProductAdd = async () => {
   }
   flags.off(APP_PROCESSING);
   if (pid$.value) {
-    toggleSnackbarProductAddStatus.on();
-    props_.close();
+    // show status snackbar
+    props_.statusToggleProductAddedOn();
+    // clear fields
     fieldsReset();
+    // # close widget @product-add
+    props_.close();
   }
 };
 
@@ -129,7 +133,7 @@ const submitProductAdd = async () => {
 </script>
 <template>
   <VSheet :rounded="0" :elevation="0" class="fill-height d-flex flex-col">
-    <VSnackbar
+    <!-- <VSnackbar
       v-model="toggleSnackbarProductAddStatus.isActive.value"
       color="transparent"
       variant="text"
@@ -145,7 +149,7 @@ const submitProductAdd = async () => {
           >
         </div>
       </VAlert>
-    </VSnackbar>
+    </VSnackbar> -->
     <!-- @toolbar -->
     <VToolbar flat color="transparent">
       <VBtn @click="props_.close" icon variant="text" size="large">
