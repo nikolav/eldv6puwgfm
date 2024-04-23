@@ -73,3 +73,4 @@ export { default as IconUserCircle } from "./IconUserCircle.vue";
 export { default as IconUserShield } from "./IconUserShield.vue";
 export { default as IconPostOutline } from "./IconPostOutline.vue";
 export { default as IconSettingsFill } from "./IconSettingsFill.vue";
+export { default as IconFactoryFill } from "./IconFactoryFill.vue";

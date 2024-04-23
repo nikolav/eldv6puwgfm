@@ -9,11 +9,13 @@ const companyProfileDrawerWidth = 52;
 
 const sidebarLinksCompanyProfile = [
   {
-    icon: "$iconHome",
-    tooltip: "Pregled",
+    // icon: "$iconHome",
+    // tooltip: "Pregled",
+    icon: "$iconFactory",
+    tooltip: "Narudžbe",
     to: "company-profile",
     title: "profil",
-    size: 34,
+    size: "large",
   },
   {
     icon: "$iconChatBubbles",
@@ -37,20 +39,6 @@ const sidebarLinksCompanyProfile = [
     size: undefined,
   },
   {
-    icon: "$iconCheck",
-    tooltip: "Profil",
-    to: "company-profile",
-    title: "UWURkgUfz5K4wzCprofil",
-    size: "large",
-  },
-  {
-    icon: "$iconCheck",
-    tooltip: "Profil",
-    to: "company-profile",
-    title: "fdQMUfwvV1zvbCOCjj42profil",
-    size: "large",
-  },
-  {
     icon: "$iconSettings",
     tooltip: "Podešavanja",
     to: "company-profile-config",
@@ -71,7 +59,7 @@ const sidebarLinksCompanyProfile = [
       :width="companyProfileDrawerWidth"
     >
       <div
-        class="d-flex flex-col gap-y-2 sm:gap-y-4 text-center items-center h-[88vh] *bg-red"
+        class="d-flex flex-col gap-y-2 sm:gap-y-6 text-center items-center h-[88vh] *bg-red"
         :class="smAndUp ? 'mt-4' : undefined"
       >
         <template
