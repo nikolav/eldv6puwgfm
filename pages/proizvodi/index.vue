@@ -166,7 +166,9 @@ const carouselHeight = computed(
           <Teleport to="body">
             <div
               class="!fixed position-fixed z-[9999] w-full d-flex bottom-20"
-              :class="mdAndUp ? '!w-1/2 !end-0' : '!top-4'"
+              :class="
+                mdAndUp ? '!w-1/2 !end-0' : '!top-2 h-fit *pointer-events-none'
+              "
             >
               <VSpacer />
               <!-- @@btn:com -->

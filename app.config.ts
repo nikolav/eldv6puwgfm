@@ -244,6 +244,7 @@ export default defineAppConfig({
     offsetTop: "1.22rem",
     //
     CAROUSEL_NAV_OFFSET_product_page: 42,
+    TOPIC_CHAT_DISPLAY_CARD_WIDTH: 381,
   },
   effect: {
     default: "headShake",

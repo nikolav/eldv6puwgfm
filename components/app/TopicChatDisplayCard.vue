@@ -7,6 +7,7 @@ const props = defineProps<{
 }>();
 const {
   key: { CHAT_NAME, APP_PROCESSING },
+  layout: { TOPIC_CHAT_DISPLAY_CARD_WIDTH },
 } = useAppConfig();
 const auth = useStoreApiAuth();
 const uid$ = computed(() => get(auth.user$, "id"));
@@ -55,7 +56,11 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
 // @@eos
 </script>
 <template>
-  <VCard rounded="t-lg" class="component--TopicChatDisplayCard" width="312">
+  <VCard
+    rounded="t-lg"
+    class="component--TopicChatDisplayCard"
+    :width="TOPIC_CHAT_DISPLAY_CARD_WIDTH"
+  >
     <VCardItem class="bg-primary">
       <VCardTitle class="text-truncate">{{ props.title }}</VCardTitle>
       <template #prepend>
@@ -153,7 +158,6 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
             v-model.trim="topicChatMessage$"
             single-line
             clearable
-            rows="3"
             label="Poruka *"
             density="compact"
             variant="underlined"

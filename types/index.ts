@@ -136,6 +136,7 @@ export interface ICompanyProfile {
 export interface IUser {
   id: number;
   email: string;
+  products?: OrNoValue<IProduct[]>;
   created_at: string;
   updated_at: string;
 }

@@ -190,3 +190,26 @@ export const Q_users = gql`
     }
   }
 `;
+
+export const Q_usersSingle = gql`
+  query q_usersSingle($uid: ID!) {
+    usersById(uid: $uid) {
+      id
+      email
+      products {
+        id
+        name
+        price
+        stock
+        stockType
+        onSale
+        description
+        tags
+        created_at
+        updated_at
+      }
+      created_at
+      updated_at
+    }
+  }
+`;

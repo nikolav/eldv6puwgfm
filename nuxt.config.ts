@@ -30,7 +30,7 @@ export default defineNuxtConfig({
   // ssr: true,
 
   // # client-side only rendering; no prerender
-  ssr: false,
+  // ssr: false,
 
   // target: "static",
   // generate: { routes: ["/gazdinstva"] },
