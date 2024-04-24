@@ -55,7 +55,7 @@ const goToUrediGoogleCalendar = async () =>
         /></VBtn>
       </VToolbar>
       <div class="mt-2 px-2">
-        <GoogleCalendarIframe :src="linkGoogleCalendarEmbed$" />
+        <GoogleCalendarIframe />
       </div>
     </VCard>
   </section>

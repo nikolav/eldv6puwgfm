@@ -41,13 +41,15 @@ const p$ = computed(() =>
 );
 const pid$ = computed(() => get(p$.value, "id"));
 const comId$ = computed(() => Number(get(p$.value, "user_id")));
-const tagCom$ = computed(() =>
+const tagComProfile$ = computed(() =>
   comId$.value ? `${TAG_COMPANY_PROFILE_prefix}${comId$.value}` : undefined
 );
-const { data: comProfile } = useDoc<ICompanyProfile>(tagCom$);
+const { data: comProfile } = useDoc<ICompanyProfile>(tagComProfile$);
 const comName$ = computed(() => get(comProfile.value, "data.name"));
-// // const comUser$ = computed(() => get(p$.value, "user"));
-// @@
+const pName$ = computed(() => startCase(String(get(p$.value, "name") || "")));
+useHead({
+  title: pName$,
+});
 const comPublicUrl$ = useCompanyPublicUrl(comId$, comName$);
 const pCategory$ = computed(() =>
   get(find(pCategories, { value: get(p$.value, "tags[0]") }), "title")
@@ -146,7 +148,7 @@ const carouselHeight = computed(
                           <VImg
                             class="w-full h-full"
                             cover
-                            @click.stop="
+                            @click="
                               imageFileIdCurrent = get(node, 'data.file_id')
                             "
                             :src="publicUrl(get(node, 'data.file_id'))"
@@ -173,26 +175,40 @@ const carouselHeight = computed(
               <VSpacer />
               <!-- @@btn:com -->
               <NuxtLink :to="comPublicUrl$" external target="_blank">
-                <VBtn
-                  rounded="circle"
-                  color="white"
-                  :size="mdAndUp ? 122 : 75"
-                  elevation="5"
+                <VBadge
+                  color="transparent"
+                  location="bottom start"
+                  offset-x="99"
+                  :offset-y="-8"
                 >
-                  <VAvatar
-                    image="https://nikolav.rs/nikolav.me.0.jpg"
-                    :size="mdAndUp ? 120 : 72"
-                  />
-                  <VTooltip location="end" open-delay="345" activator="parent">
-                    <em>Proizvođač</em>
-                    <VIcon
-                      class="-translate-y-[2px] opacity-40"
-                      icon="$iconExternalLink"
-                      end
+                  <template #badge>
+                    <VChip
+                      color="primary-lighten-1"
+                      variant="elevated"
                       size="large"
+                      elevation="1"
+                    >
+                      <VIcon
+                        class="translate-x-[2px]"
+                        start
+                        icon="$iconOwner"
+                        size="34"
+                      />
+                      Proizveo</VChip
+                    >
+                  </template>
+                  <VBtn
+                    rounded="circle"
+                    color="white"
+                    :size="mdAndUp ? 122 : 75"
+                    elevation="5"
+                  >
+                    <VAvatar
+                      image="https://nikolav.rs/nikolav.me.0.jpg"
+                      :size="mdAndUp ? 120 : 72"
                     />
-                  </VTooltip>
-                </VBtn>
+                  </VBtn>
+                </VBadge>
               </NuxtLink>
               <VSpacer />
               <VSpacer v-if="mdAndUp" />
@@ -238,7 +254,7 @@ const carouselHeight = computed(
                 </template>
                 <small class="*text-medium-emphasis">{{ pCategory$ }}</small>
               </VChip>
-              <VChip size="small" class="ms-6">
+              <VChip size="small" :class="pCategory$ ? 'ms-6' : undefined">
                 <template #prepend>
                   <VIcon
                     size="x-large"

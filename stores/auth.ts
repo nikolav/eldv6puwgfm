@@ -1,10 +1,3 @@
-import { PRODUCTION$ } from "@/config";
-import {
-  get,
-  // isEmpty,
-  // once,
-  matchEmailStart,
-} from "@/utils";
 import type {
   OrNoValue,
   IAuthCreds,
@@ -42,16 +35,15 @@ export const useStoreApiAuth = defineStore("auth", () => {
     APP_USER_DEFAULT: { email: APP_USER_DEFAULT_email },
   } = useAppConfig();
 
-  // .new
-  // init chat name @login
-  const chatName$ = useLocalStorage(CHAT_NAME, () => "", {
-    initOnMounted: true,
-  });
-  //
+  // jwt:cached
   const token$ = useLocalStorage(KEY_ACCESS_TOKEN, initialStorage, {
     initOnMounted: true,
   });
   const headers$ = computed(() => authHeaders(token$.value));
+  // init chat name @login
+  const chatName$ = useLocalStorage(CHAT_NAME, () => "", {
+    initOnMounted: true,
+  });
   const {
     data: user$,
     refresh: authDataReload,
@@ -71,74 +63,23 @@ export const useStoreApiAuth = defineStore("auth", () => {
       return null;
     },
     immediate: false,
-    // onResponse: onceInit,
   });
 
   // query.start@app.mount
   const initialized$ = useRunSetupOnceOnMounted(authDataStart);
-  // const initialized$ = ref(false);
-  // const mounted$ = PRODUCTION$ ? useAppMounted() : useMounted();
-  // watch(mounted$, async (mounted) => {
-  //   if (true !== mounted) return;
-  //   await authDataStart();
-  //   initialized$.value = true;
-  // });
-
-  // `logged in` .flag
-  const isAuth$ = computed(() => {
-    try {
-      return true === schemaAuthData.safeParse(user$.value).success;
-    } catch (error_) {
-      // pass
-    }
-    return false;
-  });
-
-  // `trusted user/!admin logged in` .flag
-  const isUser$ = computed(() => {
-    if (true === isAuth$.value) {
-      try {
-        return (
-          true ===
-          schemaUsersNotReserved.safeParse(get(user$.value, "id")).success
-        );
-      } catch (error_) {
-        // pass
-      }
-    }
-    return false;
-  });
-
-  // `admin logged in` .flag
-  const isAdmin$ = computed(() => {
-    try {
-      return true === schemaAuthDataAdmin.safeParse(user$.value).success;
-    } catch (error_) {
-      // pass
-    }
-    return false;
-  });
-
-  // user `.is_company` flag
-  const isCompany$ = computed(() => {
-    try {
-      return true === schemaUserIsCompany.safeParse(user$.value).success;
-    } catch (error) {
-      // pass
-    }
-    return false;
-  });
-
-  const isDefault$ = computed(() => {
-    try {
-      return (
-        true === schemaUsersIsDefault.safeParse(get(user$.value, "id")).success
-      );
-    } catch (error) {
-      // pass
-    }
-    return false;
-  });
+  const isAuth$ = computed(() => schemaAuthData.safeParse(user$.value).success);
+  const isUser$ = computed(
+    () => schemaUsersNotReserved.safeParse(get(user$.value, "id")).success
+  );
+  const isAdmin$ = computed(
+    () => schemaAuthDataAdmin.safeParse(user$.value).success
+  );
+  const isCompany$ = computed(
+    () => schemaUserIsCompany.safeParse(user$.value).success
+  );
+  const isDefault$ = computed(
+    () => schemaUsersIsDefault.safeParse(get(user$.value, "id")).success
+  );
 
   // apply auth token to Apollo client
   // ..if GraphQL API expects authentication to be passed via a HTTP header
@@ -157,7 +98,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
       const chatName = matchEmailStart(get(user$.value, "email"));
       const chatNameDefault = matchEmailStart(APP_USER_DEFAULT_email);
       if (chatNameDefault === chatName) return;
-      chatName$.value = chatName;
+      chatName$.value = startCase(chatName);
 
       // cache apollo token
       await onLoginApollo(token$.value);
@@ -191,7 +132,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
       } catch (error) {
         status.setError(error);
       } finally {
-        if (true === schemaJwt.safeParse(token).success) {
+        if (schemaJwt.safeParse(token).success) {
           token$.value = token;
           status.successful();
         }
@@ -212,7 +153,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
         headers: authHeaders(token$.value),
         onResponse: async ({ response }) => {
           if (response.ok) {
-            // logout success, token invalid
+            // logout success, cache cleared server side, set token invalid
             token$.value = "";
             status.successful();
           }
@@ -247,9 +188,18 @@ export const useStoreApiAuth = defineStore("auth", () => {
     error: status.error,
     success: status.success,
 
-    //
+    // hard login
     tokenPut: (t: string) => {
-      token$.value = t;
+      // put token:validated
+      let tok;
+      try {
+        tok = schemaJwt.parse(t);
+      } catch (error) {
+        // pass
+      }
+      if (tok) {
+        token$.value = tok;
+      }
     },
   };
 });

@@ -1,6 +1,7 @@
 // @lodash
 import lodash from "lodash";
 const {
+  startCase,
   trimStart,
   trimEnd,
   has: hasOwn,
@@ -46,6 +47,7 @@ const {
   zipObject,
 } = lodash;
 export {
+  startCase,
   trimStart,
   trimEnd,
   hasOwn,

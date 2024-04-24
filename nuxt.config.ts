@@ -113,10 +113,10 @@ export default defineNuxtConfig({
           type: "image/x-icon",
           href: "/favicon.ico",
         },
-        // {
-        //   rel: "preconnect",
-        //   href: "https://fonts.googleapis.com",
-        // },
+        {
+          rel: "preconnect",
+          href: "https://fonts.googleapis.com",
+        },
         // {
         //   rel: "stylesheet",
         //   href: "https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap",
@@ -159,6 +159,13 @@ export default defineNuxtConfig({
 
   // https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3
   vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "~/assets/styles/globals.scss" as *;',
+        },
+      },
+    },
     define: {
       "process.env.DEBUG": false,
     },

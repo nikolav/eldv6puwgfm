@@ -3,7 +3,6 @@ import { Q_docByDocId, M_docUpsert } from "@/graphql";
 import { get, batchSet } from "@/utils";
 
 export const useDoc = <TDoc = Record<string, any>>(
-  // doc_id: string,
   doc_id?: any,
   initialEnabled = true
 ) => {
@@ -13,7 +12,7 @@ export const useDoc = <TDoc = Record<string, any>>(
   const enabled$ = computed(
     () => !!(mounted$.value && toggleEnabled.isActive.value && auth.token$)
   );
-  const doc_id$ = ref("");
+  const doc_id$ = ref();
   watchEffect(() => {
     doc_id$.value = toValue(doc_id);
   });
@@ -33,7 +32,6 @@ export const useDoc = <TDoc = Record<string, any>>(
       <IDoc<TDoc>>{}
   );
   const reload = async () => await refetch();
-
   const { runSetup: queryStart } = useRunSetupOnce(load);
   watchEffect(() => {
     if (enabled$.value) queryStart();

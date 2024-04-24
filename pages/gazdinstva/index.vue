@@ -2,7 +2,12 @@
 import { useDisplay } from "vuetify";
 import type { ICompanyProfile, IStorageFileInfo } from "@/types";
 import { TOKEN_DEFAULT } from "@/config";
-import { TopicRating, LikeDislike, TopicChat } from "@/components/app";
+import {
+  TopicRating,
+  LikeDislike,
+  TopicChat,
+  GoogleCalendarIframe,
+} from "@/components/app";
 
 definePageMeta({
   layout: "blank",
@@ -11,7 +16,7 @@ definePageMeta({
 const { smAndUp, height: wHeight } = useDisplay();
 
 const {
-  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
+  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND, DEFAULT_TRANSITION },
   docs: { TAG_COMPANY_PROFILE_prefix, COM_PHOTOS_prefix },
   key: { COM_LIKES_prefix, TOPIC_CHAT_COM_prefix, COM_RATING_prefix },
   urls: { QUERY },
@@ -55,7 +60,9 @@ const carouselHeight = computed(
     wHeight.value - carouselNavHeight.value - CAROUSEL_NAV_OFFSET_product_page
 );
 
-const pageTitle = computed(() => get(comProfile.value, "data.name") || "");
+const pageTitle = computed(() =>
+  startCase(get(comProfile.value, "data.name") || "")
+);
 useHead({
   title: pageTitle,
 });
@@ -74,6 +81,9 @@ const comName_ = computed(() => get(comProfile.value, "data.name"));
 // const comAddress_ = computed(() => get(comProfile.value, "data.address"));
 // const comDistrict_ = computed(() => get(comProfile.value, "data.district"));
 
+const googleCalendarIframe = ref();
+const { width: googleCalendarIframeWidth } =
+  useElementSize(googleCalendarIframe);
 // @@eos
 </script>
 <template>
@@ -82,7 +92,7 @@ const comName_ = computed(() => get(comProfile.value, "data.name"));
       <VRow class="*bg-lime ma-0 pa-0 fill-height" no-gutters>
         <!-- col.product:data -->
         <VCol cols="12" md="6" class="*bg-green-200 ma-0 pa-0">
-          <!-- @btn:links prodavac, korpa -->
+          <!-- @row:1 social, rating, calendar -->
           <div class="d-flex items-center justify-between px-1 pe-4 *mb-4">
             <TopicRating
               :small="!smAndUp ? true : undefined"
@@ -98,8 +108,41 @@ const comName_ = computed(() => get(comProfile.value, "data.name"));
               class="ms-[1.22rem]"
               :topic="`${COM_LIKES_prefix}${uid_}`"
             />
+            <VBtn
+              elevation="2"
+              variant="elevated"
+              color="primary-lighten-1"
+              icon
+              rounded="circle"
+              size="42"
+              class="ms-[1.22rem]"
+            >
+              <VTooltip
+                activator="parent"
+                location="bottom"
+                open-delay="345"
+                text="Naš raspored događanja..."
+              />
+              <VAvatar color="primary-lighten-1" style="font-size: 1.22rem"
+                ><strong class="-translate-y-px">📆</strong></VAvatar
+              >
+              <VMenu
+                activator="parent"
+                :close-on-content-click="false"
+                :transition="DEFAULT_TRANSITION"
+                location="center"
+              >
+                <VSheet :width="googleCalendarIframeWidth + 16" class="pa-2">
+                  <GoogleCalendarIframe ref="googleCalendarIframe" />
+                </VSheet>
+              </VMenu>
+            </VBtn>
           </div>
-          <div class="px-2 mt-6">--content</div>
+          <!-- @row:2 -->
+          <div class="px-2 mt-6">
+            <h1>@todo --content</h1>
+            <h1>{{ comName_ }}</h1>
+          </div>
         </VCol>
 
         <!-- col.product:gallery -->
