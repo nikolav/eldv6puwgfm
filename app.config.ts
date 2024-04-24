@@ -273,4 +273,13 @@ export default defineAppConfig({
     // routes with provided 'default user' login fallback
     viewRoutes: [reMatchViewUser, reMatchViewProduct],
   },
+  SEO: {
+    title: "kantar.rs",
+    ogTitle: "kantar.rs, online pijaca",
+    description:
+      "KANTAR.RS Vam omogućava lakše povezivanje sa kupcima u zemlji, kao i jednostavnu pretragu i naručivanje proizvoda, dobara i narodnih rukotvorina domaćeg porekla.",
+    ogDescription:
+      "KANTAR.RS Vam omogućava lakše povezivanje sa kupcima u zemlji, kao i jednostavnu pretragu i naručivanje proizvoda, dobara i narodnih rukotvorina domaćeg porekla. Ova onlajn pijaca povezuje srpske proizvođače i zanatlije sa potrošačima koji traže kvalitetne, zdravije i sveže proizvode iz cele Srbije. Naša platforma se bavi povezivanjem kupca i prodavca. Kupac se dogovara sa prodavcem oko vremena i načina isporuke. Kupovinu iz fotelje i dostavu svih proizvoda naručenih na teritoriji grada Beograda na kućnu adresu od sada je dostupno putem naše platforme KANTAR.RS.",
+    ogImage: "https://nikolav.rs/kantar-rs-logo.png",
+  },
 });

@@ -35,8 +35,7 @@ watchEffect(() => {
       <VAvatar><strong class="!text-[1.122rem]">💬</strong></VAvatar>
       <VMenu
         activator="parent"
-        location="start top"
-        :offset="[4, 12]"
+        location="center"
         transition="slide-y-reverse-transition"
         :close-on-content-click="false"
       >

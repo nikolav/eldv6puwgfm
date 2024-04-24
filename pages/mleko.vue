@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const route_ = useRoute();
+definePageMeta({
+  scrollToTop: false,
+});
+
 
 // #eos
 </script>

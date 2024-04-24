@@ -5,7 +5,11 @@
 import { useDisplay } from "vuetify";
 import { CardProductDisplay } from "@/components/app";
 
-const cart = useStoreCart();
+definePageMeta({
+  scrollToTop: false,
+});
+
+// const cart = useStoreCart();
 
 const { lgAndUp } = useDisplay();
 

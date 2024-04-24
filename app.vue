@@ -19,6 +19,7 @@ const {
   theme: { DARK, LIGHT },
   io: { IOEVENT_PRODUCTS_CHANGE },
   key: { PRODUCTS_CHANGE, ORDER_SEND_STATUS },
+  app: { DEFAULT_TRANSITION },
 } = useAppConfig();
 const htmlAttrs = computed(() => ({
   class: DARK === theme.value ? "dark" : LIGHT,
@@ -79,10 +80,6 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
   gProductsChange$.value = Date.now();
 });
 
-const {
-  app: { DEFAULT_TRANSITION },
-} = useAppConfig();
-
 const cart = useStoreCart();
 
 const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
@@ -136,19 +133,19 @@ const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
 <style>
 .BLUR-enter-active,
 .BLUR-leave-active {
-  transition: all 0.33s;
-}
-
-.BLUR-leave-active {
-  position: absolute;
-  z-index: -1;
-  width: 100%;
+  transition: all 0.55s;
 }
 
 .BLUR-enter-from,
 .BLUR-leave-to {
   opacity: 0;
   filter: blur(0.2rem);
+}
+
+.BLUR-leave-active {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
 }
 
 .ChatItem-enter-active,

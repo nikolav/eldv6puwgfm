@@ -140,7 +140,6 @@ const { width: googleCalendarIframeWidth } =
           </div>
           <!-- @row:2 -->
           <div class="px-2 mt-6">
-            <h1>@todo --content</h1>
             <h1>{{ comName_ }}</h1>
           </div>
         </VCol>
