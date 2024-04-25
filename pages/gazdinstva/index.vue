@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Dump } from "@/components/dev";
 import { useDisplay } from "vuetify";
 import type { ICompanyProfile, IStorageFileInfo } from "@/types";
 import { TOKEN_DEFAULT } from "@/config";
@@ -7,6 +8,7 @@ import {
   LikeDislike,
   TopicChat,
   GoogleCalendarIframe,
+  CompanyDisplay,
 } from "@/components/app";
 
 definePageMeta({
@@ -34,11 +36,12 @@ watchEffect(() => {
 });
 
 const uid_ = Number(last(String(get(route.query, QUERY)).split("-")));
-const { user: comUser } = useQueryUsersSingle(uid_);
-const { data: comProfile } = useDoc<ICompanyProfile>(
-  `${TAG_COMPANY_PROFILE_prefix}${uid_}`
-);
-// const products = computed(() => get(comUser.value, "products") || []);
+const companyName = ref();
+useHead({
+  title: companyName,
+});
+
+// com:photos
 const { data: comPhotos } = useDocs<IStorageFileInfo>(
   `${COM_PHOTOS_prefix}${uid_}`
 );
@@ -60,27 +63,6 @@ const carouselHeight = computed(
     wHeight.value - carouselNavHeight.value - CAROUSEL_NAV_OFFSET_product_page
 );
 
-const pageTitle = computed(() =>
-  startCase(get(comProfile.value, "data.name") || "")
-);
-useHead({
-  title: pageTitle,
-});
-const comName_ = computed(() => get(comProfile.value, "data.name"));
-// const comOwner_ = computed(
-//   () =>
-//     `${get(comProfile.value, "data.ownerFirstName")} ${get(
-//       comProfile.value,
-//       "data.ownerLastName"
-//     )}`
-// );
-// const comAbout_ = computed(() => get(comProfile.value, "data.about"));
-// const comDeliver_ = computed(() => get(comProfile.value, "data.delivery"));
-// const comPin_ = computed(() => get(comProfile.value, "data.pin"));
-// const comTel_ = computed(() => get(comProfile.value, "data.phone"));
-// const comAddress_ = computed(() => get(comProfile.value, "data.address"));
-// const comDistrict_ = computed(() => get(comProfile.value, "data.district"));
-
 const googleCalendarIframe = ref();
 const { width: googleCalendarIframeWidth } =
   useElementSize(googleCalendarIframe);
@@ -101,7 +83,7 @@ const { width: googleCalendarIframeWidth } =
             />
             <TopicChat
               class="ms-auto"
-              :title="comName_"
+              :title="companyName"
               :topic="`${TOPIC_CHAT_COM_prefix}${uid_}`"
             />
             <LikeDislike
@@ -138,9 +120,14 @@ const { width: googleCalendarIframeWidth } =
               </VMenu>
             </VBtn>
           </div>
+          <!-- @@ -->
           <!-- @row:2 -->
           <div class="px-2 mt-6">
-            <h1>{{ comName_ }}</h1>
+            <!-- <Dump :data="comUser" /> -->
+            <CompanyDisplay
+              @company-name="(name) => (companyName = startCase(name))"
+              :uid="uid_"
+            />
           </div>
         </VCol>
 

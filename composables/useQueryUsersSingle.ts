@@ -8,7 +8,7 @@ export const useQueryUsersSingle = <TData = IUser>(mayberefUID?: any) => {
   watchEffect(() => {
     uid$.value = toValue(mayberefUID);
   });
-  const { result, load, refetch } = useLazyQuery<{
+  const { result, load, refetch, loading } = useLazyQuery<{
     usersById: TData;
   }>(
     Q_usersSingle,
@@ -27,5 +27,6 @@ export const useQueryUsersSingle = <TData = IUser>(mayberefUID?: any) => {
   return {
     user: u$,
     reload,
+    loading,
   };
 };

@@ -155,6 +155,22 @@ const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
 .ChatItem-enter-from,
 .ChatItem-leave-to {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateY(30px);
+}
+
+.Panel1-enter-active,
+.Panel1-leave-active {
+  transition: all 0.18s ease-out;
+}
+
+.Panel1-enter-from,
+.Panel1-leave-to {
+  opacity: 0;
+  scale: 1.022;
+  filter: blur(0.33rem);
+}
+.Panel1-leave-active {
+  position: absolute !important;
+  width: 100%;
 }
 </style>

@@ -36,6 +36,7 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
     load: loadStorage,
     result,
     refetch,
+    loading,
   } = useLazyQuery<{ storageList: IStorageFileInfo[] }>(
     true === __list_all ? Q_storageListAll : Q_storageList,
     undefined,
@@ -201,6 +202,7 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
     reload: reloadFiles,
 
     // # flags
+    loading,
     uploadStatus,
 
     // @toggle
