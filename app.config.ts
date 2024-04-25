@@ -110,6 +110,7 @@ export default defineAppConfig({
   },
   //
   key: {
+    FORM_DATA_FIELDS_prefix: "nIDobn5D::",
     SLUG_com: "gazdinstvo",
     SLUG_product: "proizvod",
     INBOX_TAB_ACTIVE: "nuH82mKP7ZbUxtiEQ",

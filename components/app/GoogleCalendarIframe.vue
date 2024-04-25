@@ -1,14 +1,10 @@
 <script setup lang="ts">
-const {
-  links: {
-    external: { SRC_GOOGLE_CALENDAR_IFRAME },
-  },
-} = useAppConfig();
+const props = defineProps<{ src: string }>();
 // @@eos
 </script>
 <template>
   <iframe
-    :src="SRC_GOOGLE_CALENDAR_IFRAME"
+    :src="props.src"
     v-bind="$attrs"
     class="component--GoogleCalendarIframe"
     style="border-width: 0"

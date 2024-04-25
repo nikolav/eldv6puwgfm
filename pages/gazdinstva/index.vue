@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Dump } from "@/components/dev";
 import { useDisplay } from "vuetify";
-import type { ICompanyProfile, IStorageFileInfo } from "@/types";
+import type { IStorageFileInfo } from "@/types";
 import { TOKEN_DEFAULT } from "@/config";
 import {
   TopicRating,
@@ -72,9 +71,12 @@ const { width: googleCalendarIframeWidth } =
   <section class="page--gazdinstvo:q fill-height pa-0 ma-0">
     <VContainer fluid class="*bg-red ma-0 pa-0 fill-height">
       <VRow class="*bg-lime ma-0 pa-0 fill-height" no-gutters>
+        
         <!-- col.product:data -->
-        <VCol cols="12" md="6" class="*bg-green-200 ma-0 pa-0">
+        <VCol cols="12" md="7" class="*bg-green-200 ma-0 pa-0">
+
           <!-- @row:1 social, rating, calendar -->
+          <!-- social, rating, calendar -->
           <div class="d-flex items-center justify-between px-1 pe-4 *mb-4">
             <TopicRating
               :small="!smAndUp ? true : undefined"
@@ -120,8 +122,9 @@ const { width: googleCalendarIframeWidth } =
               </VMenu>
             </VBtn>
           </div>
-          <!-- @@ -->
+
           <!-- @row:2 -->
+          <!-- company card -->
           <div class="px-2 mt-6">
             <!-- <Dump :data="comUser" /> -->
             <CompanyDisplay
@@ -132,7 +135,7 @@ const { width: googleCalendarIframeWidth } =
         </VCol>
 
         <!-- col.product:gallery -->
-        <VCol cols="12" md="6" class="*bg-blue-200 ma-0 pa-0">
+        <VCol cols="12" md="5" class="*bg-blue-200 ma-0 pa-0">
           <VHover>
             <template #default="{ isHovering, props: props_ }">
               <!-- image gallery .left -->

@@ -140,6 +140,7 @@ export default defineNuxtConfig({
     layoutTransition: { name: "BLUR", mode: "in-out" },
   },
   css: [
+    
     // default
     "~/assets/styles/main.scss",
     "animate.css",
@@ -150,11 +151,16 @@ export default defineNuxtConfig({
 
     // plugin styles
     "@fancyapps/ui/dist/fancybox/fancybox.css",
+    
     // https://github.com/surmon-china/videojs-player
     "video.js/dist/video-js.css",
+    
     // https://github.com/Maronato/vue-toastification?tab=readme-ov-file#usage
     // "vue-toastification/dist/index.css",
     // "~/assets/styles/toast.scss",
+
+    // stylesheets for the core and themes
+    "quill/dist/quill.core.css",
   ],
 
   // https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3

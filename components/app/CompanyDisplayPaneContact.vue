@@ -8,7 +8,7 @@ const props = defineProps<{ user: any; profile: any }>();
       :model-value="`${props.profile.ownerFirstName.value} ${props.profile.ownerLastName.value}`"
       readonly
       variant="underlined"
-      label="Gazda, ime i prezime"
+      label="Preduzetnik, ime i prezime"
     >
       <template #prepend>
         <VIcon class="-translate-y-1" icon="$iconOwner" size="large" />

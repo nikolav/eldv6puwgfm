@@ -4,7 +4,7 @@ const props = defineProps<{ profile: any }>();
 </script>
 <template>
   <section class="component--CompanyDisplayPaneDelivery">
-    <p class="prose indent-2 pa-2">{{ props.profile.about.value }}</p>
+    <p class="prose indent-2 pa-2">{{ props.profile.delivery.value }}</p>
   </section>
 </template>
 <style lang="scss" scoped>
