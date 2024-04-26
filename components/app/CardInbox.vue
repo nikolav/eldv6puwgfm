@@ -53,7 +53,7 @@ const { length: comChatLength } = useDocs(
   <VCard class="component--CardInbox" v-bind="$attrs">
     <VToolbar color="primary" flat extended density="comfortable">
       <VToolbarTitle class="*bg-red">
-        <strong>• Inbox</strong>
+        <strong class="tracking-wide opacity-50">Poštansko sanduče</strong>
       </VToolbarTitle>
       <VToolbarTitle class="d-flex items-center justify-end *bg-lime pe-1">
         <VBtn @click="props.reload" icon variant="plain" color="on-primary"

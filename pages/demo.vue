@@ -13,15 +13,11 @@ const { getContent, setContent, onEditor } = useQuillEditor("#editor", {
 const ok = () => {
   setContent(x);
 };
-const dump = () => {
-  getContent((value: any) => console.log({ value }));
-};
 // #eos
 </script>
 <template>
   <section class="page--demo.index">
     <VBtn @click="ok">ok</VBtn>
-    <VBtn @click="dump">dump</VBtn>
     <div
       style="min-height: 172px; max-height: 400px"
       class="overflow-auto w-fit scrollbar-thin-light pb-1 *bg-red"

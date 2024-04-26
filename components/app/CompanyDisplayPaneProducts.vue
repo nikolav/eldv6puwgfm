@@ -120,7 +120,7 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
             >
               <VChipProductPrice :product="p" />
               <span
-                class="invisible me-2"
+                class="invisible me-2 translate-y-[2px]"
                 :class="isHovering ? '!visible' : undefined"
               >
                 <TopicChat

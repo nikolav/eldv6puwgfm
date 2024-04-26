@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
 import menuDistricts from "@/assets/districts-serbia.json";
-import type { ICompanyProfile } from "@/types";
+import type { ICompanyProfile, IStorageFileInfo } from "@/types";
 
 definePageMeta({
   layout: "company-profile",
@@ -9,16 +9,15 @@ definePageMeta({
 });
 
 useHead({
-  title: "lična karta",
+  title: "Lična karta gazdinstva",
 });
+const tab$ = ref("kontakt");
 
 const { smAndUp } = useDisplay();
-
 const auth = useStoreApiAuth();
 const toggleProfileSaved = useToggleFlag();
 const toggleProfileUpdating = useToggleFlag();
-//
-const tab$ = ref("kontakt");
+
 const {
   key: { FORM_COMPANY_ID, APP_PROCESSING },
   docs: { TAG_COMPANY_PROFILE_prefix, COM_PHOTOS_prefix },
@@ -27,54 +26,48 @@ const {
     external: { RPU: lnRPU },
   },
   io: { IOEVENT_COM_PHOTOS_CHANGE_prefix },
-  urls: { comPages, appPublic, QUERY },
 } = useAppConfig();
+const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 
 const uid = get(auth.user$, "id");
-const { data: com_, put: profileUpsert } = useDoc<ICompanyProfile>(
+const { data: comProfile, put: profileUpsert } = useDoc<ICompanyProfile>(
   `${TAG_COMPANY_PROFILE_prefix}${uid}`
 );
-const $$main = useStoreMain();
-const form = FIELDS.reduce((formdata_, field) => {
-  formdata_[field] = computed({
-    get: () => $$main.get(`${FORM_COMPANY_ID}:${field}`),
-    set: (val: string) => $$main.put({ [`${FORM_COMPANY_ID}:${field}`]: val }),
-  });
-  return formdata_;
-}, <Record<string, Ref>>{});
+const {
+  form,
+  dump: dumpFormData,
+  valid: formValid,
+} = useFormDataFields(
+  FORM_COMPANY_ID,
+  // all fields True()
+  FIELDS.reduce((res, field) => {
+    res[field] = True;
+    return res;
+  }, <Record<string, any>>{})
+);
 watchEffect(() => {
   form.slug.value = toLower(
     words(form.name.value).concat(String(uid)).join("-")
   );
-  // form.slug.value = String(uid);
 });
-
+// fill fields @init
 const formDataInitFromStore = () => {
   forEach(FIELDS, (field) => {
-    form[field].value = get(com_.value, `data.${field}`) || "";
+    form[field].value = get(comProfile.value, `data.${field}`) || "";
   });
 };
 const { runSetup: formInit } = useRunSetupOnce(formDataInitFromStore);
 onMounted(() => {
-  watch(com_, formInit);
+  watch(comProfile, formInit);
 });
 
 const submitFormCompanyId = async () => {
+  if (!formValid.value) return;
   let error_;
   try {
     toggleProfileUpdating.on();
-    await profileUpsert(
-      reduce(
-        FIELDS,
-        (data_, field) => {
-          data_[field] = form[field].value;
-          return data_;
-        },
-        <Record<string, string>>{}
-      )
-    );
+    await profileUpsert(dumpFormData());
   } catch (error) {
-    // pass
     error_ = error;
   }
   if (!error_) toggleProfileSaved.on();
@@ -88,10 +81,14 @@ const resetComImage = () => {
 };
 const tag_COM_PHOTOS = `${COM_PHOTOS_prefix}${uid}`;
 const { upload, publicUrl, remove, IO } = useApiStorage();
-const { data: comPhotos$, tags, reload } = useDocs(tag_COM_PHOTOS);
+const {
+  data: comPhotos$,
+  tags,
+  reload,
+} = useDocs<IStorageFileInfo>(tag_COM_PHOTOS);
 watchEffect(() => useIOEvent(IO.value, reload));
 useIOEvent(`${IOEVENT_COM_PHOTOS_CHANGE_prefix}${uid}`, reload);
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+
 const carouselCurrent$ = ref();
 const submitComImageUpload = async () => {
   let err_;
@@ -119,7 +116,6 @@ const submitComImageUpload = async () => {
   }
 
   if (!err_) {
-    // @success:signal-ok
     resetComImage();
     carouselCurrent$.value = get(resUpload, "image.data.file_id");
   }
@@ -128,11 +124,13 @@ const submitComImageUpload = async () => {
 };
 
 const comPhotosRemove = async () => {
+  if (!carouselCurrent$.value) return;
+
   let err_;
   let resRm;
 
-  if (!carouselCurrent$.value) return;
   try {
+    appProcessing$.value = true;
     resRm = await remove(carouselCurrent$.value);
   } catch (error) {
     err_ = error;
@@ -145,35 +143,23 @@ const comPhotosRemove = async () => {
       [tag_COM_PHOTOS]: false,
     });
     // rm:success; set random current slide
+    // @nextpaint, await io
     await nextTick(() => {
       if (!isEmpty(comPhotos$.value)) {
         carouselCurrent$.value = get(sample(comPhotos$.value), "data.file_id");
       }
     });
   }
+  appProcessing$.value = false;
 };
 
-const comPagePublicUrl = stripSlashesEnd(comPages);
-usePermission("clipboard-read");
-usePermission("clipboard-write");
-const {
-  // isSupported: isSupportedClipboardWrite,
-  text,
-  copy,
-  copied,
-} = useClipboard();
-const copyComPublicUrl = async () =>
-  await copy(
-    `${stripSlashesEnd(appPublic)}/${trim(
-      comPagePublicUrl,
-      "/"
-    )}?${QUERY}=${encodeURIComponent(form.slug.value)}`
-  );
-
+const comName = computed(() => get(comProfile.value, "data.name"));
+const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
 // @@eos
 </script>
 <template>
   <section class="page--company-profile-id px-2 px-sm-8">
+    <!-- @@todo, reuse component -->
     <!-- @status: --profile-saved -->
     <VSnackbar
       variant="text"
@@ -202,47 +188,28 @@ const copyComPublicUrl = async () =>
 
     <!-- @form: --start -->
     <VForm @submit.prevent="submitFormCompanyId">
-      <VCard max-width="812" class="mx-auto mt-2 mt-md-8">
+      <VCard max-width="812" class="*bg-red mx-auto mt-2 mt-md-8">
         <VCardTitle class="bg-primary pa-4 px-6 d-flex items-center">
-          <h2 class="*text-center text-h5 !font-sans *text-medium-emphasis">
-            <NuxtLink
-              :to="{
-                path: comPagePublicUrl,
-                query: { [QUERY]: `${form.slug.value}` },
-              }"
-              external
-              target="_blank"
-            >
-              <a class="hover:underline">Lična karta gazdinstva</a
+          <h2 class="ms-1 *text-center text-h5 !font-sans">
+            <NuxtLink :to="comPagePublicUrl_" external target="_blank">
+              <a
+                class="d-inline-block transition-transform hover:scale-105 underline underline-offset-4 tracking-wide"
+                >Lična karta gazdinstva</a
               ><VIcon
-                size="22"
+                size="28"
                 end
                 icon="$iconExternalLink"
-                class="opacity-40 -translate-y-px"
+                class="opacity-40 translate-y-px ms-4"
               />
             </NuxtLink>
           </h2>
           <VSpacer />
-          <VBtn
-            @click="copyComPublicUrl"
-            color="on-primary"
-            icon
-            variant="text"
-          >
-            <VIcon icon="$iconLink" size="x-large" />
-            <VTooltip activator="parent" location="bottom" open-delay="345">
-              <span v-if="!copied"
-                ><VIcon start icon="$iconClipboard" /> Kopiraj link strane
-                gazdinstva.</span
-              >
-              <em v-else>
-                <VIcon start icon="$iconCheck" class="-translate-y-[2px]" />
-                <span class="opacity-50"> {{ text }}</span>
-              </em>
-            </VTooltip>
+          <VBtn color="on-primary" variant="text" size="small">
+            @@todo avatar
           </VBtn>
         </VCardTitle>
-        <VCardItem>
+        <VCardItem class="*bg-red">
+          <!-- @@tabs -->
           <VTabs
             show-arrows
             mandatory
@@ -253,7 +220,7 @@ const copyComPublicUrl = async () =>
             class="*mt-sm-2"
           >
             <VTab value="kontakt">
-              <span>Konakt podaci</span>
+              <span>Konakt</span>
             </VTab>
             <VTab value="dostava">
               <span>Dostava</span>
@@ -266,9 +233,10 @@ const copyComPublicUrl = async () =>
             </VTab>
           </VTabs>
         </VCardItem>
-        <VCardText class="pt-2 *min-h-[302px]">
+        <VCardText class="pt-2 *min-h-[302px] pb-1 *bg-red">
           <VWindow v-model="tab$" mandatory class="overflow-visible" continuous>
             <VFadeTransition mode="in-out" leave-absolute>
+              <!-- @@window.contact -->
               <VWindowItem value="kontakt">
                 <div class="px-sm-2 px-md-8 sm:space-y-4">
                   <div class="d-sm-flex items-baseline justify-between ga-4">
@@ -410,12 +378,13 @@ const copyComPublicUrl = async () =>
               </VWindowItem>
             </VFadeTransition>
             <!-- @@window:fotografije -->
+
             <VFadeTransition mode="in-out" leave-absolute>
               <VWindowItem value="fotografije">
                 <VForm
                   @submit.prevent="submitComImageUpload"
                   autocomplete="off"
-                  class="mx-auto max-w-[550px]"
+                  class="mx-auto max-w-[591px]"
                 >
                   <VFileInput
                     center-affix
@@ -445,7 +414,7 @@ const copyComPublicUrl = async () =>
                 </VForm>
                 <VSheet elevation="2">
                   <VCarousel
-                    :height="smAndUp ? 412 : 320"
+                    :height="smAndUp ? 333 : 256"
                     color="primary-darken-2"
                     hide-delimiter-background
                     v-model="carouselCurrent$"
@@ -456,7 +425,6 @@ const copyComPublicUrl = async () =>
                       :key="node.data.file_id"
                       :src="publicUrl(node.data.file_id)"
                       :value="node.data.file_id"
-                      cover
                     >
                       <div
                         class="!h-fit *bg-red position-absolute top-0 inset-0 d-flex items-center *opacity-50 pa-1"
@@ -477,6 +445,7 @@ const copyComPublicUrl = async () =>
               </VWindowItem>
             </VFadeTransition>
 
+            <!-- @@window:dostava -->
             <VFadeTransition mode="in-out" leave-absolute>
               <VWindowItem value="dostava">
                 <div class="px-sm-2 px-md-8 sm:space-y-4">
@@ -501,6 +470,8 @@ const copyComPublicUrl = async () =>
                 </div>
               </VWindowItem>
             </VFadeTransition>
+
+            <!-- @@window:istorija -->
             <VFadeTransition mode="in-out" leave-absolute>
               <VWindowItem value="istorijat">
                 <div class="px-sm-2 px-md-8 sm:space-y-4">

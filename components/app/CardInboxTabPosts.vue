@@ -1,12 +1,8 @@
 <script setup lang="ts">
-  
 // @@eos
 </script>
 <template>
-  <section class="">
-    objave    
-  </section>
+  <section class="component--CardInboxTabPosts *bg-red">objave</section>
 </template>
 <style lang="scss" scoped>
-  
 </style>

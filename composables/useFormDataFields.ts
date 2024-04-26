@@ -26,7 +26,7 @@ export const useFormDataFields = (
     reduce(
       FIELDS,
       (node, _v, field) => {
-        node[field] = JSON.stringify(form[field].value);
+        node[field] = form[field].value;
         return node;
       },
       <Record<string, any>>{}
