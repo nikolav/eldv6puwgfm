@@ -391,10 +391,20 @@ const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
                     density="compact"
                     v-model="comImage$"
                     name="com_image"
-                    variant="solo"
-                    :prepend-icon="smAndUp ? '$iconImage' : ''"
+                    variant="solo-filled"
+                    rounded
+                    show-size
+                    chips
+                    prepend-icon=""
                     clearable
                   >
+                    <template v-if="smAndUp" #prepend>
+                      <VIcon
+                        class="!opacity-40 -rotate-2"
+                        size="x-large"
+                        icon="$iconImage"
+                      />
+                    </template>
                     <template #append>
                       <VBtn
                         type="submit"

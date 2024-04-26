@@ -100,7 +100,7 @@ const { length: comChatLength } = useDocs(
         :show-arrows="false"
         :touch="false"
       >
-        <VWindowItem value="objave"><CardInboxTabPosts /></VWindowItem>
+        <VWindowItem value="objave"> <CardInboxTabPosts /> </VWindowItem>
         <VWindowItem value="poruke"><CardInboxTabMessages /></VWindowItem>
         <VWindowItem value="kalendar"><CardInboxTabCalendar /></VWindowItem>
         <VWindowItem value="obavestenja"

@@ -11,6 +11,7 @@ import type { ICompanyProfile } from "@/types";
 const props = defineProps<{ uid: number }>();
 const emit = defineEmits<{
   (e: "companyName", name: string): void;
+  (e: "googleCalendarEmbedLink", link: string): void;
 }>();
 const {
   docs: { TAG_COMPANY_PROFILE_prefix },
@@ -26,6 +27,7 @@ const PROFILE_FIELDS = [
   "ownerLastName",
   "phone",
   "pin",
+  "googleCalendarEmbedLink",
 ];
 
 const { user: comUser, loading: qUserLoading } = useQueryUsersSingle(props.uid);
@@ -48,6 +50,10 @@ const profile_ = computed(() =>
 );
 // const products = computed(() => get(comUser.value, "products") || []);
 watchEffect(() => emit("companyName", profile_.value.name.value));
+// watchEffect(() => emit("googleCalendarEmbedLink", comProfile.value.data.googleCalendarEmbedLink));
+watchEffect(() =>
+  emit("googleCalendarEmbedLink", profile_.value.googleCalendarEmbedLink.value)
+);
 
 // tabs
 const panelLinks = [

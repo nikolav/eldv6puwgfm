@@ -11,7 +11,7 @@ const inboxKey = useUniqueId();
 // #eos
 </script>
 <template>
-  <section class="page--company-profile-inbox *bg-red fill-height px-1">
+  <section class="page--company-profile-inbox *bg-red h-[96%] px-1 *overflow-x-hidden">
     <CardInbox
       :reload="inboxKey"
       :key="inboxKey.ID.value"

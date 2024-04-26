@@ -55,7 +55,7 @@ export interface IStorageFileInfo {
 
 export interface IFilesUpload {
   [name: string]: {
-    file?: any | undefined;
+    file?: OrNoValue<any>;
     data: {
       title?: string | undefined;
       description?: string | undefined;
@@ -210,4 +210,16 @@ export interface IDataRating {
   [topic: string]: {
     [key: string]: number;
   };
+}
+
+export interface IPost {
+  id: number;
+  title: string;
+  content: string;
+  user_id: number;
+  user?: IAuthData;
+  tags?: string[];
+  docs?: Record<string, any>[];
+  created_at: string;
+  updated_at: string;
 }

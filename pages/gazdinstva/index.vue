@@ -27,14 +27,15 @@ const {
 const auth = useStoreApiAuth();
 const route = useRoute();
 
-const { runSetup: setupUserDefault } = useRunSetupOnce(() =>
-  auth.tokenPut(TOKEN_DEFAULT)
-);
+const { runSetup: setupUserDefault } = useRunSetupOnce(() => {
+  auth.tokenPut(TOKEN_DEFAULT);
+});
 watchEffect(() => {
   if (auth.initialized$ && !auth.isAuth$) setupUserDefault();
 });
 
 const uid_ = Number(last(String(get(route.query, QUERY)).split("-")));
+
 const companyName = ref();
 useHead({
   title: companyName,
@@ -44,6 +45,11 @@ useHead({
 const { data: comPhotos } = useDocs<IStorageFileInfo>(
   `${COM_PHOTOS_prefix}${uid_}`
 );
+
+watchEffect(() => {
+  console.log({ photos: comPhotos.value });
+});
+
 const { publicUrl } = useApiStorage(true, true);
 
 // on images loaded: init carousel; run setup once
@@ -65,16 +71,15 @@ const carouselHeight = computed(
 const googleCalendarIframe = ref();
 const { width: googleCalendarIframeWidth } =
   useElementSize(googleCalendarIframe);
+const calLink$ = ref();
 // @@eos
 </script>
 <template>
   <section class="page--gazdinstvo:q fill-height pa-0 ma-0">
     <VContainer fluid class="*bg-red ma-0 pa-0 fill-height">
       <VRow class="*bg-lime ma-0 pa-0 fill-height" no-gutters>
-        
         <!-- col.product:data -->
         <VCol cols="12" md="7" class="*bg-green-200 ma-0 pa-0">
-
           <!-- @row:1 social, rating, calendar -->
           <!-- social, rating, calendar -->
           <div class="d-flex items-center justify-between px-1 pe-4 *mb-4">
@@ -117,7 +122,10 @@ const { width: googleCalendarIframeWidth } =
                 location="center"
               >
                 <VSheet :width="googleCalendarIframeWidth + 16" class="pa-2">
-                  <GoogleCalendarIframe ref="googleCalendarIframe" />
+                  <GoogleCalendarIframe
+                    :src="calLink$"
+                    ref="googleCalendarIframe"
+                  />
                 </VSheet>
               </VMenu>
             </VBtn>
@@ -129,6 +137,7 @@ const { width: googleCalendarIframeWidth } =
             <!-- <Dump :data="comUser" /> -->
             <CompanyDisplay
               @company-name="(name) => (companyName = startCase(name))"
+              @google-calendar-embed-link="(link) => (calLink$ = link)"
               :uid="uid_"
             />
           </div>

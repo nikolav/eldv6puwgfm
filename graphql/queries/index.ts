@@ -213,3 +213,22 @@ export const Q_usersSingle = gql`
     }
   }
 `;
+
+export const Q_postsList = gql`
+  query q_postsList($uid: ID) {
+    postsList(uid: $uid) {
+      id
+      title
+      content
+      user_id
+      user {
+        id
+        email
+      }
+      tags
+      docs
+      created_at
+      updated_at
+    }
+  }
+`;

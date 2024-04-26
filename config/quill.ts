@@ -8,7 +8,7 @@ export const TOOLBAR_DEFAULT = [
   ],
   [
     "link",
-    "image",
+    // "image",
     // "video",
     // "formula",
   ],
@@ -19,22 +19,22 @@ export const TOOLBAR_DEFAULT = [
     // { list: "check" },
   ],
   // [{ script: "sub" }, { script: "super" }], // superscript/subscript
-  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+  // [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
   // [{ direction: "rtl" }], // text direction
 
-  [
-    {
-      size: [
-        "small",
-        false,
-        "large",
-        // "huge",
-      ],
-    },
-  ], // custom dropdown
+  // [
+  //   {
+  //     size: [
+  //       "small",
+  //       false,
+  //       "large",
+  //       // "huge",
+  //     ],
+  //   },
+  // ], // custom dropdown
 
   [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-  [{ font: [] }],
+  // [{ font: [] }],
   [{ align: [] }],
 
   ["clean"], // remove formatting button
