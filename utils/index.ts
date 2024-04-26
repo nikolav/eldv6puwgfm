@@ -1,10 +1,6 @@
 // @lodash
 import lodash from "lodash";
 const {
-  startCase,
-  trimStart,
-  trimEnd,
-  has: hasOwn,
   assign,
   at,
   capitalize,
@@ -20,11 +16,13 @@ const {
   first,
   forEach,
   get,
+  has: hasOwn,
   indexOf,
   isEmpty,
   keys,
   last,
   map,
+  merge,
   noop,
   now,
   omit,
@@ -36,10 +34,13 @@ const {
   set,
   size: len,
   some,
+  startCase,
   sum,
   toLower,
   transform,
   trim,
+  trimEnd,
+  trimStart,
   uniqueId,
   unset,
   values,
@@ -47,10 +48,6 @@ const {
   zipObject,
 } = lodash;
 export {
-  startCase,
-  trimStart,
-  trimEnd,
-  hasOwn,
   assign,
   at,
   capitalize,
@@ -66,12 +63,14 @@ export {
   first,
   forEach,
   get,
+  hasOwn,
   indexOf,
   isEmpty,
   keys,
   last,
   len,
   map,
+  merge,
   noop,
   now,
   omit,
@@ -82,10 +81,13 @@ export {
   sample,
   set,
   some,
+  startCase,
   sum,
   toLower,
   transform,
   trim,
+  trimEnd,
+  trimStart,
   uniqueId,
   unset,
   values,
@@ -98,6 +100,7 @@ export { docsSortedDesc } from "./docs-sorted-desc";
 export { False } from "./fn-false";
 export { has } from "./has";
 export { idGen } from "./id-gen";
+export { isLastIndex } from "./is-last-index";
 export { isNumeric } from "./is-numeric";
 export { matchEmailStart } from "./match-email-start";
 export { pathLastSegment } from "./path-last-segment";
@@ -105,4 +108,3 @@ export { secureLeft } from "./secure-left";
 export { setBatch as batchSet } from "./set-batch";
 export { stripSlashesEnd } from "./strip-slashes-end";
 export { typeCore } from "./type-core";
-export { isLastIndex } from "./is-last-index";

@@ -53,12 +53,12 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
                       ? $lightbox.open(gallery(p, images))
                       : noop
                   "
-                  class="transition-transform hover:scale-105 opacity-90 hover:opacity-100 cursor-pointer *border-2 *border-white *shadow"
+                  class="h-full transition-transform hover:scale-105 opacity-90 hover:opacity-100 cursor-pointer *border-2 *border-white *shadow"
                   :max-height="PRODUCT_ITEM_MAX_HEIGHT"
                   cover
                   :src="
                     images.length
-                      ? publicUrl(get(first(images), 'data.file_id') || '')
+                      ? publicUrl(get(sample(images), 'data.file_id') || '')
                       : DEFAULT_NO_PRODUCT_IMAGE_FOUND
                   "
                 />

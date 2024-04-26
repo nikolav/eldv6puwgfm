@@ -64,9 +64,15 @@ watch(
 
     // logout user:default from app:main
     if (auth.isDefault$) {
+      // default user logedin  @app
+
       // @@todo
-      await auth.logout();
-      auth.tokenPut("");
+      // # logout, reload
+      // await auth.logout();
+      // auth.tokenPut("");
+
+      // @@todo 
+      // # keep default user logedin
       return;
     }
 
