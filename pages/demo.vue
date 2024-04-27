@@ -33,14 +33,16 @@ const items = [
   },
 ];
 
-const current = ref("a");
-const selection$ = ref([]);
-const opened$ = ref();
-// #eos
+const { posts } = useQueryPosts();
 
+// watchEffect(() => {
+//   console.log({ ID: uid.ID.value });
+// });
+// #eos
 </script>
 <template>
   <section class="page--demo.index">
+    <Dump :data="{ posts: dataSortedByDateDesc(posts) }" />
     <!-- <VList
       v-model:selected="selection$"
       v-model:open="opened$"

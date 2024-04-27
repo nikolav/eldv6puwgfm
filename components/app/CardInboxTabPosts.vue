@@ -4,7 +4,6 @@ import { FilePicker } from "@/components/ui";
 
 // import natural from "natural";
 
-
 const DUMP = 0;
 //
 const PPID = 122333;
@@ -14,10 +13,10 @@ const POSTS_IMAGE_prefix = "posts:image:4lWVfROCSaT94C8GWu4:";
 const auth = useStoreApiAuth();
 const uid_ = computed(() => get(auth.user$, "id"));
 const { posts } = useQueryPosts(uid_);
-const editor = useQuillEditor("#editor", {
-  bounds: "#quill--bounds",
-  placeholder: "Moja priča...\n   (što bogatije to bolje...)",
-});
+// const editor = useQuillEditor("#editor", {
+//   bounds: "#quill--bounds",
+//   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
+// });
 
 const fileSelected$ = ref();
 const { upload, files } = useApiStorage();
@@ -70,16 +69,14 @@ const { form, submit } = useFormDataFields(
 
         <!-- @@col.images -->
         <div class="*bg-lime-200">
-          <div
-            class="FilePicker--palcer px-2 mt-12 *bg-red d-flex justify-center"
-          >
+          <div class="FilePicker--placer px-2 mt-12 d-flex justify-center">
             <FilePicker v-model="fileSelected$" />
           </div>
         </div>
       </div>
       <VCardActions>
         <VSpacer />
-        <VBtn type="submit">ok</VBtn>
+        <VBtn variant="tonal" type="submit" size="large">ok</VBtn>
       </VCardActions>
     </VForm>
     <Dump v-if="DUMP" :data="{ files, posts }" />

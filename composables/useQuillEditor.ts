@@ -16,20 +16,20 @@ export const useQuillEditor = (el: string | HTMLElement, config?: any) => {
     ee.emit("getInstance", { callback });
   };
   const initialized = useRunSetupOnceOnMounted(async () => {
-    await nextTick(() => {
-      const quill = new Quill(el, options);
-      ee.on("getContent", ({ callback }) => {
-        callback({
-          content: quill.getContents().ops,
-          text: trim(quill.getText()),
-        });
+    // @mounted, dom rendered
+    await nextTick();
+    const quill = new Quill(el, options);
+    ee.on("getContent", ({ callback }) => {
+      callback({
+        content: quill.getContents().ops,
+        text: trim(quill.getText()),
       });
-      ee.on("setContent", (deltas) => {
-        quill.setContents(deltas);
-      });
-      ee.on("getInstance", ({ callback }) => {
-        callback(quill);
-      });
+    });
+    ee.on("setContent", (deltas) => {
+      quill.setContents(deltas);
+    });
+    ee.on("getInstance", ({ callback }) => {
+      callback(quill);
     });
   });
 

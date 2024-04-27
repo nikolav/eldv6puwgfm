@@ -5,6 +5,7 @@ import type {
   // OrNoValue
 } from "@/types";
 import { Q_postsList, M_postsUpsert, M_postsRemove } from "@/graphql";
+import { onceMountedOn } from "~/utils/once-mounted-on";
 
 export const useQueryPosts = (UID?: any) => {
   const {
@@ -36,12 +37,14 @@ export const useQueryPosts = (UID?: any) => {
   const posts_ = computed(
     () => (enabled_.value ? get(result.value, "postsList") : undefined) || []
   );
+  onceMountedOn(enabled_, load);
+  
   const reload = async () => await refetch();
 
-  const { runSetup: queryStart } = useRunSetupOnce(load);
-  watchEffect(() => {
-    if (enabled_.value) queryStart();
-  });
+  // const { runSetup: queryStart } = useRunSetupOnce(load);
+  // watchEffect(() => {
+  //   if (enabled_.value) queryStart();
+  // });
 
   // const ioEventPostsAny = computed(() =>
   //   enabled_.value ? IOEVENT_POSTS_CHANGE : ""

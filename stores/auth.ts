@@ -66,7 +66,8 @@ export const useStoreApiAuth = defineStore("auth", () => {
   });
 
   // query.start@app.mount
-  const initialized$ = useRunSetupOnceOnMounted(authDataStart);
+  // const initialized$ = useRunSetupOnceOnMounted(authDataStart);
+  const initialized$ = onceMountedOn(true, authDataStart);
   const isAuth$ = computed(() => schemaAuthData.safeParse(user$.value).success);
   const isUser$ = computed(
     () => schemaUsersNotReserved.safeParse(get(user$.value, "id")).success
