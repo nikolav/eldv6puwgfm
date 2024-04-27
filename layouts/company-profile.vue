@@ -25,18 +25,18 @@ const sidebarLinksCompanyProfile = [
     size: 26,
   },
   {
-    icon: "$iconIdCardCompany",
-    tooltip: "Lična karta",
-    to: "company-profile-id",
-    title: "profil-id",
-    size: "large",
-  },
-  {
     icon: "$iconBox",
     tooltip: "Ponuda/Asortiman",
     to: "company-profile-goods",
     title: "asortiman",
     size: undefined,
+  },
+  {
+    icon: "$iconIdCardCompany",
+    tooltip: "Lična karta",
+    to: "company-profile-id",
+    title: "profil-id",
+    size: "large",
   },
   {
     icon: "$iconSettings",

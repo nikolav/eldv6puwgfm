@@ -14,10 +14,10 @@ const POSTS_IMAGE_prefix = "posts:image:4lWVfROCSaT94C8GWu4:";
 const auth = useStoreApiAuth();
 const uid_ = computed(() => get(auth.user$, "id"));
 const { posts } = useQueryPosts(uid_);
-// const editor = useQuillEditor("#editor", {
-//   bounds: "#quill--bounds",
-//   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
-// });
+const editor = useQuillEditor("#editor", {
+  bounds: "#quill--bounds",
+  placeholder: "Moja priča...\n   (što bogatije to bolje...)",
+});
 
 const fileSelected$ = ref();
 const { upload, files } = useApiStorage();
@@ -62,6 +62,8 @@ const { form, submit } = useFormDataFields(
             </template>
           </VTextField>
           <div class="mt-5 me-1" id="quill--bounds">
+            <!-- @@ -->
+            <!-- @editor quill -->
             <section class="fill-height border-0" id="editor" />
           </div>
         </div>
