@@ -23,23 +23,24 @@ const {
 } = useAppConfig();
 
 const { height: wHeight, mdAndUp, smAndUp } = useDisplay();
-const auth = useStoreApiAuth();
 const route = useRoute();
+const auth = useStoreApiAuth();
 
+// auth sanity check
 const { runSetup: setupUserDefault } = useRunSetupOnce(() =>
   auth.tokenPut(TOKEN_DEFAULT)
 );
 watchEffect(() => {
   if (auth.initialized$ && !auth.isAuth$) setupUserDefault();
 });
+
+// product
 const pid = Number(last(String(get(route.query, QUERY)).split("-")));
-// query products by ids: ID[]
 const { products$ } = useQueryProductsOnly([pid]);
-// get product
-const p$ = computed(() =>
-  !isEmpty(products$) ? first(products$.value) : undefined
-);
+const p$ = computed(() => first(products$.value));
 const pid$ = computed(() => get(p$.value, "id"));
+
+// profile
 const comId$ = computed(() => Number(get(p$.value, "user_id")));
 const tagComProfile$ = computed(() =>
   comId$.value ? `${TAG_COMPANY_PROFILE_prefix}${comId$.value}` : undefined
@@ -54,7 +55,7 @@ const comPublicUrl$ = useCompanyPublicUrl(comId$, comName$);
 const pCategory$ = computed(() =>
   get(find(pCategories, { value: get(p$.value, "tags[0]") }), "title")
 );
-// get p.images
+// images
 const { topic$: topicProductImages, data: productImages } =
   useDocs<IStorageFileInfo>();
 watchEffect(() => {
@@ -73,6 +74,7 @@ watchEffect(() => {
   if (!isEmpty(productImages.value)) initCarousel();
 });
 
+// layout stuff
 const carouselNav = ref();
 const { height: carouselNavHeight } = useElementSize(carouselNav);
 const carouselHeight = computed(
@@ -303,22 +305,6 @@ const carouselHeight = computed(
         </VCol>
       </VRow>
     </VContainer>
-    <!-- <VBtn :to="{ name: 'index' }">home</VBtn> -->
-    <!-- <small>
-      <pre>{{
-        JSON.stringify(
-          {
-            com$,
-            pCategory$,
-            p$,
-            productImages,
-            query: route.query,
-          },
-          null,
-          2
-        )
-      }}</pre>
-    </small> -->
   </section>
 </template>
 <style lang="scss" scoped>

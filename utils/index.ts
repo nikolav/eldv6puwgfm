@@ -110,3 +110,4 @@ export { secureLeft } from "./secure-left";
 export { setBatch as batchSet } from "./set-batch";
 export { stripSlashesEnd } from "./strip-slashes-end";
 export { typeCore } from "./type-core";
+export * from "./extract-keywords";

@@ -163,7 +163,8 @@ export default defineAppConfig({
   },
   //
   graphql: {
-    STORAGE_QUERY_POLL_INTERVAL: 123456,
+    // ~5min autoreload
+    STORAGE_QUERY_POLL_INTERVAL: 345678,
   },
   //
   stores: {
@@ -228,10 +229,14 @@ export default defineAppConfig({
     IOEVENT_DOCS_TAGS_CHANGE_prefix: "change:docs:tags:",
     IOEVENT_FILES: "@files:updated",
     IOEVENT_ORDERS_CHANGE: "@orders:change:",
+    IOEVENT_POST_CHANGE_SINGLE_prefix: "@change:post:4alBPKP:",
+    IOEVENT_POSTS_CHANGE: "@change:posts:GCe5RKIXQWDh",
     IOEVENT_PRODUCT_IMAGES_CHANGE_prefix: "change:product-images:",
     IOEVENT_PRODUCTS_CHANGE_prefix: "change:products::",
+    IOEVENT_PRODUCTS_CHANGE_SINGLE_prefix: "change:products:DkL11YfpPI:",
     IOEVENT_PRODUCTS_CHANGE: "@change:products:all",
     IOEVENT_STORAGE_CHANGE: "@storage:",
+    IOEVENT_USER_POSTS_CHANGE_prefix: "@change:posts:rBN5PAj9uZM9wrOq5:",
   },
   theme: {
     DEFAULT: themeLight,

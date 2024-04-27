@@ -1,25 +1,34 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
 import { FilePicker } from "@/components/ui";
+
+// import natural from "natural";
+
+
 const DUMP = 0;
 //
+const PPID = 122333;
 const POSTS_IMAGE_prefix = "posts:image:4lWVfROCSaT94C8GWu4:";
 //
 
 const auth = useStoreApiAuth();
 const uid_ = computed(() => get(auth.user$, "id"));
 const { posts } = useQueryPosts(uid_);
-const editor = useQuillEditor("#editor", { bounds: "#quill--bounds" });
+// const editor = useQuillEditor("#editor", {
+//   bounds: "#quill--bounds",
+//   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
+// });
 
 const fileSelected$ = ref();
+const { upload, files } = useApiStorage();
 // #
 const { form, submit } = useFormDataFields(
   "QuillEditor:2JRhAAtd6",
   {
-    title: (value: string) => 0 < value?.length,
+    title: (value: string) => 1 < value?.length,
   },
   {
-    onSubmit: ({ title }) => {
+    onSubmit: async ({ title }) => {
       // editor.getContent(({ text }: { text: string }) => {
       //   console.log({
       //     title,
@@ -35,7 +44,7 @@ const { form, submit } = useFormDataFields(
 <template>
   <VCard class="component--CardInboxTabPosts" min-height="412">
     <VForm @submit.prevent="submit" autocomplete="off">
-      <div class="!grid grid-cols-[1fr,227px] *bg-red-200">
+      <div class="!grid grid-cols-[1fr,222px] *bg-red-200">
         <!-- @@col.post -->
         <div
           class="pb-2 ms-4 *bg-blue-200 min-h-[262px] !max-h-[442px] overflow-auto scrollbar-thin-light"
@@ -59,17 +68,19 @@ const { form, submit } = useFormDataFields(
 
         <!-- @@col.images -->
         <div class="*bg-lime-200">
-          <div class="FilePicker--palcer px-2 mt-12 *bg-red d-flex justify-center">
+          <div
+            class="FilePicker--palcer px-2 mt-12 *bg-red d-flex justify-center"
+          >
             <FilePicker v-model="fileSelected$" />
           </div>
         </div>
       </div>
       <VCardActions>
         <VSpacer />
-        <VBtn @click="fileSelected$ = null" type="submit">ok</VBtn>
+        <VBtn type="submit">ok</VBtn>
       </VCardActions>
     </VForm>
-    <Dump v-if="DUMP" :data="{ posts }" />
+    <Dump v-if="DUMP" :data="{ files, posts }" />
   </VCard>
 </template>
 <style lang="scss" scoped>

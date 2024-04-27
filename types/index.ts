@@ -223,3 +223,8 @@ export interface IPost {
   created_at: string;
   updated_at: string;
 }
+
+export interface IPostInputData {
+  title?: string;
+  content?: string;
+}

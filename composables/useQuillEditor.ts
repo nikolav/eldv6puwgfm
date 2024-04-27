@@ -15,22 +15,21 @@ export const useQuillEditor = (el: string | HTMLElement, config?: any) => {
   const onEditor = (callback: any) => {
     ee.emit("getInstance", { callback });
   };
-  const getText = (callback: any) => {
-    ee.emit("getText", { callback });
-  };
-  const initialized = useRunSetupOnceOnMounted(() => {
-    const quill = new Quill(el, options);
-    ee.on("getContent", ({ callback }) => {
-      callback({
-        content: quill.getContents().ops,
-        text: trim(quill.getText()),
+  const initialized = useRunSetupOnceOnMounted(async () => {
+    await nextTick(() => {
+      const quill = new Quill(el, options);
+      ee.on("getContent", ({ callback }) => {
+        callback({
+          content: quill.getContents().ops,
+          text: trim(quill.getText()),
+        });
       });
-    });
-    ee.on("setContent", (deltas) => {
-      quill.setContents(deltas);
-    });
-    ee.on("getInstance", ({ callback }) => {
-      callback(quill);
+      ee.on("setContent", (deltas) => {
+        quill.setContents(deltas);
+      });
+      ee.on("getInstance", ({ callback }) => {
+        callback(quill);
+      });
     });
   });
 

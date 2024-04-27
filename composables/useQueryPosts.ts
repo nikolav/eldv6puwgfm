@@ -1,22 +1,26 @@
-//
 import type {
   IPost,
+  IPostInputData,
+  OrNoValue,
   // OrNoValue
 } from "@/types";
-import { Q_postsList } from "@/graphql";
+import { Q_postsList, M_postsUpsert, M_postsRemove } from "@/graphql";
 
 export const useQueryPosts = (UID?: any) => {
   const {
-    // io: { IOEVENT_PRODUCTS_CHANGE_prefix },
+    io: {
+      // IOEVENT_POSTS_CHANGE,
+      IOEVENT_USER_POSTS_CHANGE_prefix,
+    },
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
   } = useAppConfig();
   const auth = useStoreApiAuth();
+  const uid_ = computed(() => get(auth.user$, "id"));
   const uid$ = ref();
   watchEffect(() => {
-    uid$.value = toValue(UID) || get(auth.user$, "id");
+    uid$.value = toValue(UID) || uid_.value;
   });
-  // const enabled$ = computed(() => !!auth.isAuth$);
-  const enabled$ = computed(() => !!uid$);
+  const enabled_ = computed(() => auth.isAuth$);
   const { result, refetch, load, loading, error } = useLazyQuery<{
     postsList: IPost[];
   }>(
@@ -25,54 +29,57 @@ export const useQueryPosts = (UID?: any) => {
       uid: uid$,
     },
     {
-      enabled: enabled$,
+      enabled: enabled_,
       pollInterval: STORAGE_QUERY_POLL_INTERVAL,
     }
   );
   const posts_ = computed(
-    () => (enabled$.value ? result.value?.postsList : undefined) || []
+    () => (enabled_.value ? get(result.value, "postsList") : undefined) || []
   );
   const reload = async () => await refetch();
 
   const { runSetup: queryStart } = useRunSetupOnce(load);
   watchEffect(() => {
-    if (enabled$.value) queryStart();
+    if (enabled_.value) queryStart();
   });
 
-  // const ioEvent$ = computed(() =>
-  //   enabled$.value ? `${IOEVENT_PRODUCTS_CHANGE_prefix}${uid$.value}` : ""
+  // const ioEventPostsAny = computed(() =>
+  //   enabled_.value ? IOEVENT_POSTS_CHANGE : ""
   // );
+  const ioEvent = computed(() =>
+    enabled_.value ? `${IOEVENT_USER_POSTS_CHANGE_prefix}${uid$.value}` : ""
+  );
 
-  // const { mutate: mutateProductsUpsert } =
-  //   useMutation<IProduct>(M_productsUpsert);
-  // const { mutate: mutateProductsRemove } =
-  //   useMutation<IProduct>(M_productsRemove);
+  const { mutate: mutatePostsUpsert } = useMutation<IPost>(M_postsUpsert);
+  const { mutate: mutatePostsRemove } = useMutation<IPost>(M_postsRemove);
 
-  // const upsert = async (
-  //   data: IProductData,
-  //   id: OrNoValue<number> = undefined
-  // ) => {
-  //   if (enabled$.value) return await mutateProductsUpsert({ data, id });
-  // };
-  // const remove = async (id: number) => {
-  //   if (enabled$.value) return await mutateProductsRemove({ id });
-  // };
+  const upsert = async (data: IPostInputData, id?: OrNoValue<number>) => {
+    if (enabled_.value) return await mutatePostsUpsert({ data, id });
+  };
+  const remove = async (id: number) => {
+    if (enabled_.value) return await mutatePostsRemove({ id });
+  };
 
   // @io/listen
-  // watchEffect(() => useIOEvent(ioEvent$.value, reload));
+  watchEffect(() => useIOEvent(ioEvent.value, reload));
+  // watchEffect(() => useIOEvent(ioEventPostsAny.value, reload));
 
   return {
+    // switch posts manually
     uid$,
+
     // # crud
     posts: posts_,
-    // upsert,
-    // remove,
+    upsert,
+    remove,
     reload,
 
     // # flags
     error,
     loading,
-    // IOEVENT: ioEvent$,
-    enabled: enabled$,
+    enabled: enabled_,
+
+    // # io
+    IO: ioEvent,
   };
 };
