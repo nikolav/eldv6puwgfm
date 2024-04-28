@@ -30,6 +30,8 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconFacebook,
+  IconInstagram,
   IconImageAdd,
   IconFeather,
   IconEmailAt,
@@ -237,6 +239,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconFacebook: IconFacebook,
+        iconInstagram: IconInstagram,
         iconImageAdd: IconImageAdd,
         iconFeather: IconFeather,
         iconEmailAt: IconEmailAt,

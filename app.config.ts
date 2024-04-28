@@ -19,8 +19,8 @@ export default defineAppConfig({
   ADMIN_EMAIL: "admin@nikolav.rs",
   DEBUG: true !== PRODUCTION$,
   APP_USER_DEFAULT: {
-    email: "user@nikolav.rs",
-    password: "user@nikolav.rs",
+    email: "korisnik@nikolav.rs",
+    password: "korisnik@nikolav.rs",
   },
   app: {
     DEFAULT_TRANSITION: "slide-y-reverse-transition",
@@ -29,16 +29,18 @@ export default defineAppConfig({
   },
   com: {
     FIELDS: [
+      "about",
+      "address",
+      "delivery",
+      "district",
+      "facebook",
+      "instagram",
+      "name",
       "ownerFirstName",
       "ownerLastName",
-      "name",
-      "slug",
-      "pin",
-      "address",
-      "district",
       "phone",
-      "delivery",
-      "about",
+      "pin",
+      "slug",
     ],
   },
   products: {
@@ -258,8 +260,7 @@ export default defineAppConfig({
   urls: {
     appPublic: URL_APP_PUBLIC,
     github: "https://github.com/nikolav/nuxtflask",
-    // comPages: `${stripSlashesEnd(URL_APP_PUBLIC)}/gazdinstva/`,
-    comPages: "/gazdinstva/",
+    comPages: "/gazdinstvo/",
     productPages: "/proizvodi/",
     QUERY: "q",
   },

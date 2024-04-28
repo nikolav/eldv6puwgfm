@@ -68,10 +68,10 @@ watch(
 
       // @@todo
       // # logout, reload
-      await auth.logout();
-      auth.tokenPut("");
+      // await auth.logout();
+      // auth.tokenPut("");
 
-      // @@todo 
+      // @@todo
       // # keep default user logedin
       return;
     }

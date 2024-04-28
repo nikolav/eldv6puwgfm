@@ -190,7 +190,7 @@ const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
     <VForm @submit.prevent="submitFormCompanyId">
       <VCard max-width="812" class="*bg-red mx-auto mt-2 mt-md-8">
         <VCardTitle class="bg-primary pa-4 px-6 d-flex items-center">
-          <h2 class="ms-1 *text-center text-h5 !font-sans">
+          <h2 v-if="smAndUp" class="ms-1 *text-center text-h5 !font-sans">
             <NuxtLink :to="comPagePublicUrl_" external target="_blank">
               <a
                 class="d-inline-block transition-transform hover:scale-105 underline underline-offset-4 tracking-wide"
@@ -203,8 +203,13 @@ const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
               />
             </NuxtLink>
           </h2>
+          <NuxtLink v-else>
+            <VBtn color="on-primary" icon variant="text">
+              <VIcon icon="$iconDowntown" />
+            </VBtn>
+          </NuxtLink>
           <VSpacer />
-          <VBtn color="on-primary" variant="text" size="small">
+          <VBtn color="on-primary" variant="text">
             @@todo avatar
           </VBtn>
         </VCardTitle>
@@ -358,27 +363,58 @@ const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
                       </template>
                     </VTextField>
                   </div>
-                  <VTextField
-                    name="phone"
-                    v-model="form.phone.value"
-                    variant="underlined"
-                    label="Telefon"
-                    clearable
-                  >
-                    <template v-if="smAndUp" #prepend>
-                      <VIcon
-                        color="primary-darken-2"
-                        icon="$iconPhone"
-                        size="x-large"
-                        start
-                      />
-                    </template>
-                  </VTextField>
+                  <div class="d-flex items-center justify-between gap-8">
+                    <VTextField
+                      name="phone"
+                      v-model="form.phone.value"
+                      variant="underlined"
+                      label="Telefon"
+                      clearable
+                    >
+                      <template v-if="smAndUp" #prepend>
+                        <VIcon
+                          color="primary-darken-2"
+                          icon="$iconPhone"
+                          size="x-large"
+                        />
+                      </template>
+                    </VTextField>
+                    <VTextField
+                      name="facebook_link"
+                      v-model="form.facebook.value"
+                      variant="underlined"
+                      label="Facebook"
+                      clearable
+                    >
+                      <template v-if="smAndUp" #prepend>
+                        <VIcon
+                          color="primary-darken-2"
+                          icon="$iconFacebook"
+                          size="x-large"
+                        />
+                      </template>
+                    </VTextField>
+                    <VTextField
+                      name="instagram_link"
+                      v-model="form.instagram.value"
+                      variant="underlined"
+                      label="Instagram"
+                      clearable
+                    >
+                      <template v-if="smAndUp" #prepend>
+                        <VIcon
+                          color="primary-darken-2"
+                          icon="$iconInstagram"
+                          size="x-large"
+                        />
+                      </template>
+                    </VTextField>
+                  </div>
                 </div>
               </VWindowItem>
             </VFadeTransition>
-            <!-- @@window:fotografije -->
 
+            <!-- @@window:fotografije -->
             <VFadeTransition mode="in-out" leave-absolute>
               <VWindowItem value="fotografije">
                 <VForm
@@ -458,7 +494,7 @@ const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
             <!-- @@window:dostava -->
             <VFadeTransition mode="in-out" leave-absolute>
               <VWindowItem value="dostava">
-                <div class="px-sm-2 px-md-8 sm:space-y-4">
+                <div class="px-sm-2 px-md-16 sm:space-y-4">
                   <VTextarea
                     rows="8"
                     name="delivery"
@@ -484,7 +520,7 @@ const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
             <!-- @@window:istorija -->
             <VFadeTransition mode="in-out" leave-absolute>
               <VWindowItem value="istorijat">
-                <div class="px-sm-2 px-md-8 sm:space-y-4">
+                <div class="px-sm-2 px-md-16 sm:space-y-4">
                   <VTextarea
                     rows="8"
                     name="about"
@@ -508,7 +544,7 @@ const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
             </VFadeTransition>
           </VWindow>
         </VCardText>
-        <VCardActions class="pa-4">
+        <VCardActions class="pa-4 mt-2">
           <VBtn
             @click="formDataInitFromStore"
             class="px-4 px-sm-6"

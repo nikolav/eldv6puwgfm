@@ -120,18 +120,20 @@ export interface IDocDataTask {
 }
 
 export interface ICompanyProfile {
-  name?: string | undefined;
-  slug?: string | undefined;
-  pin?: string | undefined;
-  address?: string | undefined;
-  district?: string | undefined;
-  phone?: string | undefined;
-  delivery?: string | undefined;
   about?: string | undefined;
-  googleCalendarEmbedLink?: string | undefined;
+  address?: string | undefined;
+  delivery?: string | undefined;
+  district?: string | undefined;
+  facebook?: string | undefined;
   googleCalendarEditPageLink?: string | undefined;
+  googleCalendarEmbedLink?: string | undefined;
+  instagram?: string | undefined;
+  name?: string | undefined;
   ownerFirstName?: string | undefined;
   ownerLastName?: string | undefined;
+  phone?: string | undefined;
+  pin?: string | undefined;
+  slug?: string | undefined;
 }
 
 export interface IUser {

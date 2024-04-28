@@ -10,6 +10,7 @@ import {
   URL_AUTH_register,
   URL_AUTH_logout,
   URL_API_who,
+  TOKEN_DEFAULT,
 } from "@/config";
 import {
   schemaAuthCredentials,
@@ -201,6 +202,9 @@ export const useStoreApiAuth = defineStore("auth", () => {
       if (tok) {
         token$.value = tok;
       }
+    },
+    tokenPutDefault: () => {
+      token$.value = TOKEN_DEFAULT;
     },
   };
 });

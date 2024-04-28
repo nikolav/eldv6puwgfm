@@ -20,6 +20,7 @@ const {
   },
   products: { categories: pCategories },
   urls: { QUERY },
+  APP_USER_DEFAULT,
 } = useAppConfig();
 
 const { height: wHeight, mdAndUp, smAndUp } = useDisplay();
@@ -27,12 +28,14 @@ const route = useRoute();
 const auth = useStoreApiAuth();
 
 // auth sanity check
-const { runSetup: setupUserDefault } = useRunSetupOnce(() =>
-  auth.tokenPut(TOKEN_DEFAULT)
+onceOn(
+  () => auth.initialized$ && !auth.isAuth$,
+  () => {
+    nextTick(() => {
+      if (!auth.token$) auth.tokenPutDefault();
+    });
+  }
 );
-watchEffect(() => {
-  if (auth.initialized$ && !auth.isAuth$) setupUserDefault();
-});
 
 // product
 const pid = Number(last(String(get(route.query, QUERY)).split("-")));

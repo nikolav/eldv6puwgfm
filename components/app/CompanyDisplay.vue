@@ -48,6 +48,7 @@ const profile_ = computed(() =>
     <Record<string, Ref>>{}
   )
 );
+
 // const products = computed(() => get(comUser.value, "products") || []);
 watchEffect(() => emit("companyName", profile_.value.name.value));
 // watchEffect(() => emit("googleCalendarEmbedLink", comProfile.value.data.googleCalendarEmbedLink));
@@ -97,7 +98,7 @@ const PANEL_COMPONENT = <Record<string, any>>{
   "O Nama": CompanyDisplayPaneAbout,
 };
 const tabSelected$ = useLocalStorage<string | undefined>(
-  "panel:active:ZEsGxaTzXbGL1QQbpYIo",
+  "panel:active:iixFGi6Kx5lBxUZ7d8s",
   undefined,
   { initOnMounted: true }
 );

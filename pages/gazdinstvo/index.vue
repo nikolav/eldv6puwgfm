@@ -14,6 +14,9 @@ definePageMeta({
   layout: "blank",
 });
 
+const auth = useStoreApiAuth();
+const route = useRoute();
+
 const { smAndUp, height: wHeight } = useDisplay();
 
 const {
@@ -24,34 +27,31 @@ const {
   layout: { CAROUSEL_NAV_OFFSET_product_page },
 } = useAppConfig();
 
-const auth = useStoreApiAuth();
-const route = useRoute();
-
-const { runSetup: setupUserDefault } = useRunSetupOnce(() => {
-  auth.tokenPut(TOKEN_DEFAULT);
-});
-watchEffect(() => {
-  if (auth.initialized$ && !auth.isAuth$) setupUserDefault();
-});
+const mounted = useMounted();
+// default login if accessed without token
+onceOn(
+  () => mounted.value && auth.initialized$ && !auth.isAuth$,
+  () => {
+    nextTick(() => {
+      if (!auth.token$) {
+        auth.tokenPutDefault();
+      }
+    });
+  }
+);
 
 const uid_ = Number(last(String(get(route.query, QUERY)).split("-")));
-
 const companyName = ref();
+const pageTitle$ = computed(() => companyName.value || "");
 useHead({
-  title: companyName,
+  title: pageTitle$,
 });
 
 // com:photos
 const { data: comPhotos } = useDocs<IStorageFileInfo>(
   `${COM_PHOTOS_prefix}${uid_}`
 );
-
-watchEffect(() => {
-  console.log({ photos: comPhotos.value });
-});
-
 const { publicUrl } = useApiStorage(true, true);
-
 // on images loaded: init carousel; run setup once
 const imageFileIdCurrent = ref("");
 const { runSetup: initCarousel } = useRunSetupOnce(() => {
@@ -72,6 +72,7 @@ const googleCalendarIframe = ref();
 const { width: googleCalendarIframeWidth } =
   useElementSize(googleCalendarIframe);
 const calLink$ = ref();
+
 // @@eos
 </script>
 <template>
