@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// import { Dump } from "@/components/dev";
 import {
   CompanyDisplayPanePosts,
   CompanyDisplayPaneProducts,
@@ -22,12 +21,14 @@ const PROFILE_FIELDS = [
   "address",
   "delivery",
   "district",
+  "facebook",
+  "googleCalendarEmbedLink",
+  "instagram",
   "name",
   "ownerFirstName",
   "ownerLastName",
   "phone",
   "pin",
-  "googleCalendarEmbedLink",
 ];
 
 const { user: comUser, loading: qUserLoading } = useQueryUsersSingle(props.uid);
@@ -42,7 +43,7 @@ const profile_ = computed(() =>
   reduce(
     PROFILE_FIELDS,
     (res, field) => {
-      res[field] = computed(() => get(comProfile.value, `data[${field}]`));
+      res[field] = computed(() => get(comProfile.value, `data.${field}`));
       return res;
     },
     <Record<string, Ref>>{}
@@ -62,13 +63,13 @@ const panelLinks = [
     title: "Objave",
     icon: "$iconPost",
     size: "x-large",
-    initial: true,
   },
   {
     title: "Proizvodi",
     icon: "$iconBox",
     size: "large",
     class: "translate-x-[2px]",
+    initial: true,
   },
   {
     title: "Dostava",
