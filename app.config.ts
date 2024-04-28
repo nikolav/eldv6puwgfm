@@ -3,7 +3,7 @@ import {
   assign,
   reMatchViewUser,
   reMatchViewProduct,
-  stripSlashesEnd,
+  reMatchViewStory,
 } from "@/utils";
 import { PRODUCTION$, URL_APP_PUBLIC } from "@/config";
 
@@ -148,6 +148,7 @@ export default defineAppConfig({
     PROVIDE_APP_DATA: "Ud8dHoadmBgSr55P6gJ",
     TASKS_SELECTED_IDS: "f6sSDP",
     THEME: "0Fgky53B2UbA1fG3lKcV",
+    POST_IMAGES_prefix: "CkJmp2R984QY@", // `${POST_IMAGES_prefix}${postId}:${imgId}`
   },
   //
   FIELDS_OMIT_STORAGE_META: ["id", "created_at", "updated_at", "__typename"],
@@ -262,6 +263,7 @@ export default defineAppConfig({
     github: "https://github.com/nikolav/nuxtflask",
     comPages: "/gazdinstvo/",
     productPages: "/proizvodi/",
+    storyPages: "/prica/",
     QUERY: "q",
   },
   storage: {
@@ -278,7 +280,7 @@ export default defineAppConfig({
   },
   re: {
     // routes with provided 'default user' login fallback
-    viewRoutes: [reMatchViewUser, reMatchViewProduct],
+    viewRoutes: [reMatchViewUser, reMatchViewProduct, reMatchViewStory],
   },
   SEO: {
     title: "kantar.rs",
@@ -288,5 +290,8 @@ export default defineAppConfig({
     ogDescription:
       "KANTAR.RS Vam omogućava lakše povezivanje sa kupcima u zemlji, kao i jednostavnu pretragu i naručivanje proizvoda, dobara i narodnih rukotvorina domaćeg porekla. Ova onlajn pijaca povezuje srpske proizvođače i zanatlije sa potrošačima koji traže kvalitetne, zdravije i sveže proizvode iz cele Srbije. Naša platforma se bavi povezivanjem kupca i prodavca. Kupac se dogovara sa prodavcem oko vremena i načina isporuke. Kupovinu iz fotelje i dostavu svih proizvoda naručenih na teritoriji grada Beograda na kućnu adresu od sada je dostupno putem naše platforme KANTAR.RS.",
     ogImage: "https://nikolav.rs/kantar-rs-logo.png",
+  },
+  story: {
+    STORY_MIN_CONTENT_LENGTH: 10,
   },
 });

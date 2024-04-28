@@ -23,6 +23,7 @@ const TABS = [
     value: "poruke",
     icon: "$iconChat",
     iconSize: "small",
+    initial: true,
   },
   {
     title: "Kalendar",
@@ -37,7 +38,7 @@ const TABS = [
   },
 ];
 
-const tabs$ = useGlobalVariable(INBOX_TAB_ACTIVE, first(TABS)?.value);
+const tabs$ = useGlobalVariable(INBOX_TAB_ACTIVE, find(TABS, "initial")?.value);
 const isSelectedTab = (value: string) => value == tabs$.value;
 
 // store:com.chat
@@ -100,7 +101,9 @@ const { length: comChatLength } = useDocs(
         :show-arrows="false"
         :touch="false"
       >
-        <VWindowItem value="objave"> <CardInboxTabPosts /> </VWindowItem>
+        <VWindowItem value="objave">
+          <CardInboxTabPosts />
+        </VWindowItem>
         <VWindowItem value="poruke"><CardInboxTabMessages /></VWindowItem>
         <VWindowItem value="kalendar"><CardInboxTabCalendar /></VWindowItem>
         <VWindowItem value="obavestenja"

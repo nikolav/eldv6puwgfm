@@ -1,14 +1,12 @@
 <script setup lang="ts">
-const mounted = useMounted();
-// const toggle = useToggleFlag();
-// const { runSetup: onMounted } = useRunSetupOnce(toggle.on);
-// watchEffect(() => {
-//   if (mounted.value) onMounted();
-// });
+const toggleMounted = useToggleFlag();
+onMounted(() => {
+  nextTick(toggleMounted.on);
+});
 // @@eos
 </script>
 <template>
-  <slot v-if="mounted" />
+  <slot v-if="toggleMounted.isActive.value" />
 </template>
 <style lang="scss" scoped>
 </style>
