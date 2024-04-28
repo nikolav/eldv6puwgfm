@@ -361,7 +361,7 @@ const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
                       </template>
                     </VTextField>
                   </div>
-                  <div class="d-flex items-center justify-between gap-8">
+                  <div class="d-flex items-center justify-between gap-4">
                     <VTextField
                       name="phone"
                       v-model="form.phone.value"
