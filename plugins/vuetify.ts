@@ -30,6 +30,7 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconGlobe,
   IconFacebook,
   IconInstagram,
   IconImageAdd,
@@ -239,6 +240,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconGlobe: IconGlobe,
         iconFacebook: IconFacebook,
         iconInstagram: IconInstagram,
         iconImageAdd: IconImageAdd,

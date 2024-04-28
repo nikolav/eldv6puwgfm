@@ -8,7 +8,7 @@ const {
 } = useAppConfig();
 const auth = useStoreApiAuth();
 const uid_ = computed(() => get(auth.user$, "id"));
-const { upsert: postsUpsert } = useQueryPosts(uid_);
+const { posts, upsert: postsUpsert } = useQueryPosts(uid_);
 const editor = useQuillEditor("#editor", {
   bounds: "#quill--bounds",
   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
@@ -139,8 +139,42 @@ const { form, submit } = useFormDataFields(
       <div class="!grid grid-cols-[1fr,222px] *bg-red-200">
         <!-- @@col.post -->
         <div
-          class="pb-2 ms-4 *bg-blue-200 min-h-[262px] !max-h-[442px] overflow-auto scrollbar-thin-light"
+          class="*bg-red pb-2 ms-4 min-h-[262px] !max-h-[442px] overflow-auto scrollbar-thin-light relative"
         >
+          <VBtn
+            position="absolute"
+            class="top-0 end-2 z-[1]"
+            variant="plain"
+            size="small"
+            color="info"
+            icon
+            density="comfortable"
+          >
+            <VIcon size="25" icon="$iconHelpCircle" />
+            <VMenu
+              activator="parent"
+              open-on-hover
+              open-delay="345"
+              :close-on-content-click="false"
+              location="bottom end"
+            >
+              <VSheet
+                max-width="320"
+                min-width="245"
+                class="pa-3 max-w-[320px] min-h-[122px] pb-6"
+              >
+                <p class="!text-sm pa-1">
+                  <strong class="text-xl d-inline-block tracking-widest pa-2">
+                    📣 🏆 📜 🥳 </strong
+                  ><br />
+                  <em class="!italic text-body-2 text-mono">Priče</em> možete da
+                  koristite da opišete trendove, najavite značajne događaje,
+                  vodite blog, članke, i istaknete dolazeću akciju. Generalan
+                  sadržaj promotivne prirode... Uključuje i prateću sliku.
+                </p>
+              </VSheet>
+            </VMenu>
+          </VBtn>
           <VTextField
             v-model.trim="form.title.value"
             clearable
@@ -150,10 +184,15 @@ const { form, submit } = useFormDataFields(
             hint="Treba da sadrži ključne reči, može da pomogne u pretrazi..."
           >
             <template #prepend>
-              <VIcon class="!opacity-20" start icon="$iconFeather" />
+              <VIcon
+                size="large"
+                class="!opacity-20"
+                start
+                icon="$iconFeather"
+              />
             </template>
           </VTextField>
-          <div class="mt-5 me-1" id="quill--bounds">
+          <div class="mt-5 me-1 *bg-red" id="quill--bounds">
             <!-- @@ -->
             <!-- @editor quill -->
             <section class="fill-height border-0" id="editor" />
@@ -167,9 +206,18 @@ const { form, submit } = useFormDataFields(
           </div>
         </div>
       </div>
-      <VCardActions>
+      <VCardActions class="mt-6">
         <VSpacer />
-        <VBtn variant="tonal" type="submit" size="large">ok</VBtn>
+        <VBtn class="px-5" variant="tonal" type="submit" size="x-large">
+          <VIcon size="x-large" start icon="$iconCloudUp" /> Objavi priču
+          <VTooltip activator="parent" open-delay="345" location="top">
+            <em
+              >Priča je odmah vidljiva i otvorena za reakcije, deljenje,
+              pretragu</em
+            >
+            <VIcon class="mb-[2px] ms-4 opacity-30" end icon="$iconGlobe" />
+          </VTooltip>
+        </VBtn>
       </VCardActions>
     </VForm>
   </VCard>
