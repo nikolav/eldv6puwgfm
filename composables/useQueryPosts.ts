@@ -9,8 +9,9 @@ import { Q_postsList, M_postsUpsert, M_postsRemove } from "@/graphql";
 export const useQueryPosts = (UID?: any) => {
   const {
     io: {
-      // IOEVENT_POSTS_CHANGE,
+      // IOEVENT_POST_CHANGE_SINGLE_prefix,
       IOEVENT_USER_POSTS_CHANGE_prefix,
+      // IOEVENT_POSTS_CHANGE,
     },
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
   } = useAppConfig();
@@ -37,20 +38,17 @@ export const useQueryPosts = (UID?: any) => {
     () => (enabled_.value ? get(result.value, "postsList") : undefined) || []
   );
   onceMountedOn(enabled_, load);
-
   const reload = async () => await refetch();
 
-  // const { runSetup: queryStart } = useRunSetupOnce(load);
-  // watchEffect(() => {
-  //   if (enabled_.value) queryStart();
-  // });
-
-  // const ioEventPostsAny = computed(() =>
-  //   enabled_.value ? IOEVENT_POSTS_CHANGE : ""
+  // const ioEventPostsSingle = computed(() =>
+  //   enabled_.value ? `${IOEVENT_POST_CHANGE_SINGLE_prefix}${uid$.value}` : ""
   // );
   const ioEvent = computed(() =>
     enabled_.value ? `${IOEVENT_USER_POSTS_CHANGE_prefix}${uid$.value}` : ""
   );
+  // const ioEventPostsAny = computed(() =>
+  //   enabled_.value ? IOEVENT_POSTS_CHANGE : ""
+  // );
 
   const { mutate: mutatePostsUpsert } = useMutation<IPost>(M_postsUpsert);
   const { mutate: mutatePostsRemove } = useMutation<IPost>(M_postsRemove);
@@ -63,6 +61,7 @@ export const useQueryPosts = (UID?: any) => {
   };
 
   // @io/listen
+  // watchEffect(() => useIOEvent(ioEventPostsSingle.value, reload));
   watchEffect(() => useIOEvent(ioEvent.value, reload));
   // watchEffect(() => useIOEvent(ioEventPostsAny.value, reload));
 

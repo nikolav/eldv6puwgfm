@@ -203,15 +203,13 @@ const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
               />
             </NuxtLink>
           </h2>
-          <NuxtLink v-else>
+          <NuxtLink v-else :to="comPagePublicUrl_" external target="_blank">
             <VBtn color="on-primary" icon variant="text">
               <VIcon icon="$iconDowntown" />
             </VBtn>
           </NuxtLink>
           <VSpacer />
-          <VBtn color="on-primary" variant="text">
-            @@todo avatar
-          </VBtn>
+          <VBtn color="on-primary" variant="text"> @@todo avatar </VBtn>
         </VCardTitle>
         <VCardItem class="*bg-red">
           <!-- @@tabs -->

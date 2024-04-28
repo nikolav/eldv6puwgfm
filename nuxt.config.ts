@@ -33,7 +33,7 @@ export default defineNuxtConfig({
   // ssr: false,
 
   // target: "static",
-  // generate: { routes: ["/gazdinstva"] },
+  // generate: { routes: ["/gazdinstvo"] },
 
   modules: [
     "@vueuse/nuxt",

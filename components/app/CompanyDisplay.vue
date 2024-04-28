@@ -97,11 +97,7 @@ const PANEL_COMPONENT = <Record<string, any>>{
   Kontakt: CompanyDisplayPaneContact,
   "O Nama": CompanyDisplayPaneAbout,
 };
-const tabSelected$ = useLocalStorage<string | undefined>(
-  "panel:active:iixFGi6Kx5lBxUZ7d8s",
-  undefined,
-  { initOnMounted: true }
-);
+const tabSelected$ = useGlobalVariable("panel:active:KYnYvJZfdX2zYlHDrG8N");
 onMounted(() => {
   if (!tabSelected$.value) {
     tabSelected$.value = find(panelLinks, "initial")?.title;

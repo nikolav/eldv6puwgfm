@@ -27,15 +27,11 @@ const {
   layout: { CAROUSEL_NAV_OFFSET_product_page },
 } = useAppConfig();
 
-const mounted = useMounted();
-// default login if accessed without token
 onceOn(
-  () => mounted.value && auth.initialized$ && !auth.isAuth$,
+  () => auth.initialized$ && !auth.isAuth$,
   () => {
     nextTick(() => {
-      if (!auth.token$) {
-        auth.tokenPutDefault();
-      }
+      if (!auth.token$) auth.tokenPutDefault();
     });
   }
 );
