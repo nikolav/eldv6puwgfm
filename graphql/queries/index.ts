@@ -232,3 +232,10 @@ export const Q_postsList = gql`
     }
   }
 `;
+
+export const Q_postsImages = gql`
+  query q_postsImages($id: ID!) {
+    postsImages(id: $id)
+  }
+`;
+

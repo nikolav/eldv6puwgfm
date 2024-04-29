@@ -1,109 +1,134 @@
 <script setup lang="ts">
 // import { Dump } from "@/components/dev";
 import { FilePicker } from "@/components/ui";
+import { PostsItem } from "@/components/app";
 
 const {
-  story: { STORY_MIN_CONTENT_LENGTH },
+  // story: { STORY_MIN_CONTENT_LENGTH },
   key: { POST_IMAGES_prefix, APP_PROCESSING },
 } = useAppConfig();
 const auth = useStoreApiAuth();
 const uid_ = computed(() => get(auth.user$, "id"));
-const { posts, upsert: postsUpsert } = useQueryPosts(uid_);
-const editor = useQuillEditor("#editor", {
-  bounds: "#quill--bounds",
-  placeholder: "Moja priča...\n   (što bogatije to bolje...)",
-});
+const {
+  posts,
+  upsert: postsUpsert,
+  remove: postsRemove,
+  reload: postsReload,
+  loading: postsLoading,
+} = useQueryPosts(uid_);
+// const editor = useQuillEditor("#editorMyyL2ThnLsV", {
+//   bounds: "#quill--bounds",
+//   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
+// });
 
+const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const fileSelected$ = ref();
 const { upload } = useApiStorage();
 const { tags } = useDocs();
-// #
-const storyIdSaved$ = ref();
-const storyTitleSaved$ = ref();
-const storyPublicUrl$ = useStoryPublicUrl(storyIdSaved$, storyTitleSaved$);
-// #
 const upl = useProcessMonitor();
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const postSaved$ = computed({
   get: () => !upl.processing.value && upl.success.value,
   set: (flag: boolean) => (upl.success.value = flag),
 });
 watchEffect(() => {
-  appProcessing$.value = upl.processing.value;
+  appProcessing$.value = upl.processing.value || postsLoading.value;
 });
-const { form, submit } = useFormDataFields(
-  "QuillEditor:2JRhAAtd6",
+const storyIdSaved$ = ref();
+const storyTitleSaved$ = ref();
+const storyPublicUrl$ = useStoryPublicUrl(storyIdSaved$, storyTitleSaved$);
+const postIdSelected$ = ref();
+watch(storyIdSaved$, (id) => {
+  if (id) postIdSelected$.value = id;
+});
+const title_ = ref();
+const { submit } = useFormDataFields(
+  "QuillEditor:CbmEHEEF",
   {
-    title: (value: string) => 1 < value?.length,
+    // title: (value: string) => 1 < value?.length,
   },
-  {
-    onSubmit: async ({ title }) => {
-      editor.getContent(
-        async ({ text, content }: { text: string; content: any }) => {
-          if (!(STORY_MIN_CONTENT_LENGTH < text.length)) return;
-          console.log(`@saving-story`);
-          // @post upload
-          // @@todo reuse component
-          upl.begin();
-          try {
-            const postId = Number(
-              get(
-                await postsUpsert({
-                  title,
-                  content: JSON.stringify(content),
-                }),
-                "data.postsUpsert.id"
-              )
-            );
+  // {
+  //   onSubmit: async () => {
+  //     // @@todo reuse component
+  //     editor.getContent(
+  //       async ({ text, content }: { text: string; content: any }) => {
+  //         if (!text) return;
+  //         if (!title_.value) return;
+  //         let postId;
+  //         upl.begin();
+  //         try {
+  //           postId = Number(
+  //             get(
+  //               await postsUpsert(
+  //                 {
+  //                   title: title_.value,
+  //                   content: JSON.stringify(content),
+  //                 },
+  //                 postSelected$.value?.id || undefined
+  //               ),
+  //               "data.postsUpsert.id"
+  //             )
+  //           );
 
-            storyIdSaved$.value = postId;
-            storyTitleSaved$.value = title;
+  //           if (!postId) throw "--error-post-failed";
+  //           if (!fileSelected$.value) {
+  //             upl.successful();
+  //             return;
+  //           }
 
-            if (!fileSelected$.value) {
-              upl.successful();
-              return;
-            }
+  //           const imageId = Number(
+  //             get(
+  //               await upload({
+  //                 image: {
+  //                   file: fileSelected$.value,
+  //                   data: {},
+  //                 },
+  //               }),
+  //               "image.id"
+  //             )
+  //           );
 
-            const imageId = postId
-              ? Number(
-                  get(
-                    await upload({
-                      image: {
-                        file: fileSelected$.value,
-                        data: {},
-                      },
-                    }),
-                    "image.id"
-                  )
-                )
-              : undefined;
+  //           if (!imageId) throw "--failed-image-upload";
 
-            if (postId && imageId) {
-              // bind/tag image to post
-              if (
-                !isEmpty(
-                  get(
-                    await tags(imageId, {
-                      [`${POST_IMAGES_prefix}${postId}:${imageId}`]: true,
-                    }),
-                    "data.docsTags"
-                  )
-                )
-              )
-                upl.successful();
-            }
-            // console.log({ res });
-          } catch (error) {
-            upl.setError(error);
-          } finally {
-            upl.done();
-          }
-        }
-      );
-    },
-  }
+  //           // bind/tag image to post
+  //           if (
+  //             !isEmpty(
+  //               get(
+  //                 await tags(imageId, {
+  //                   [`${POST_IMAGES_prefix}${postId}:${imageId}`]: true,
+  //                 }),
+  //                 "data.docsTags"
+  //               )
+  //             )
+  //           )
+  //             upl.successful();
+  //         } catch (error) {
+  //           upl.setError(error);
+  //         } finally {
+  //           storyIdSaved$.value = postId;
+  //           storyTitleSaved$.value = title_.value;
+  //           upl.done();
+  //         }
+  //       }
+  //     );
+  //   },
+  // }
 );
-
+const toggleMenuPostsList = useToggleFlag();
+const postSelected$ = computed(() =>
+  find(posts.value, { id: postIdSelected$.value })
+);
+watchEffect(() => {
+  if (!postIdSelected$.value) return;
+  title_.value = postSelected$.value?.title || title_.value;
+  const jsondata = postSelected$.value?.content;
+  // if (jsondata) editor.setContent(JSON.parse(jsondata));
+});
+const clearStory = () => {
+  title_.value = undefined;
+  // editor.clear();
+  fileSelected$.value = null;
+  postIdSelected$.value = undefined;
+};
 // @@eos
 </script>
 <template>
@@ -114,14 +139,14 @@ const { form, submit } = useFormDataFields(
       v-model="postSaved$"
       color="transparent"
       variant="text"
-      close-delay="12345"
+      close-delay="122333"
     >
-      <VAlert type="success" prominent elevation="4">
+      <VAlert prominent rounded="lg" type="success" elevation="4">
         <div class="d-flex justify-between items-center">
           <NuxtLink :to="storyPublicUrl$" external target="_blank">
-            <strong class="me-4">Sačuvano...</strong>
+            <strong class="me-4 text-xl">👌🏻 </strong>
             <a class="text-truncate text-decoration-underline"
-              >📜 {{ storyTitleSaved$ }}</a
+              >📃 {{ storyTitleSaved$ }}</a
             >
           </NuxtLink>
           <VBtn
@@ -176,7 +201,7 @@ const { form, submit } = useFormDataFields(
             </VMenu>
           </VBtn>
           <VTextField
-            v-model.trim="form.title.value"
+            v-model.trim="title_"
             clearable
             label="Naslov artikla *"
             variant="underlined"
@@ -195,7 +220,7 @@ const { form, submit } = useFormDataFields(
           <div class="mt-5 me-1 *bg-red" id="quill--bounds">
             <!-- @@ -->
             <!-- @editor quill -->
-            <section class="fill-height border-0" id="editor" />
+            <section class="fill-height border-0" id="editorMyyL2ThnLsV" />
           </div>
         </div>
 
@@ -208,9 +233,105 @@ const { form, submit } = useFormDataFields(
       </div>
       <VCardActions class="mt-6">
         <VSpacer />
-        <VBtn class="px-5" variant="tonal" type="submit" size="x-large">
-          <VIcon size="x-large" start icon="$iconCloudUp" /> Objavi priču
-          <VTooltip activator="parent" open-delay="345" location="top">
+        <!-- @@menu manage post -->
+        <VBtn
+          @click="clearStory"
+          class="me-4"
+          icon
+          size="large"
+          color="on-surface"
+          variant="elevated"
+          elevation="4"
+        >
+          <VIcon icon="$plus" size="38" />
+          <VTooltip activator="parent" open-delay="345" location="bottom">
+            <em>Nova priča</em>
+          </VTooltip>
+        </VBtn>
+        <VBtn
+          class="me-4"
+          icon
+          size="large"
+          color="on-surface"
+          variant="elevated"
+          elevation="5"
+        >
+          <VIcon icon="$menu" size="33" />
+          <VTooltip activator="parent" open-delay="345" location="bottom">
+            <em>Moje priče...</em>
+          </VTooltip>
+
+          <!-- @@ -->
+          <!-- manage posts, popup -->
+          <VMenu
+            class="rounded-lg"
+            location="center"
+            :close-on-content-click="false"
+            activator="parent"
+            v-model="toggleMenuPostsList.isActive.value"
+          >
+            <VCard
+              border="b-lg"
+              rounded="lg"
+              class="*pa-4 border-surface"
+              position="relative"
+            >
+              <!-- @@ posts toolbar  -->
+              <VToolbar
+                elevation="2"
+                color="primary"
+                absolute
+                class="top-0 inset-x-0 z-[1]"
+              >
+                <VSpacer />
+                <VBtn icon="$loading" @click="postsReload" />
+                <VBtn icon="$close" @click="toggleMenuPostsList.off" />
+              </VToolbar>
+              <!-- post items spacer -->
+              <div
+                class="p-4 !pt-[92px] min-h-64 !h-[492px] w-[412px] scrollbar-thin-light overflow-auto"
+              >
+                <!-- @@ posts start -->
+                <VDataIterator
+                  :items="dataSortedByDateDesc(posts)"
+                  :items-per-page="-1"
+                  class="space-y-4"
+                >
+                  <template #no-data>
+                    <p class="text-center text-disabled font-italic pa-4">
+                      Trenuto nemate priče.
+                    </p>
+                  </template>
+                  <template #default="{ items }">
+                    <template v-for="p in items" :key="p.raw.id">
+                      <!-- @@PostItems -->
+                      <PostsItem
+                        :post="p.raw"
+                        @posts-remove="postsRemove"
+                        @posts-edit="
+                          (ppid) => {
+                            postIdSelected$ = ppid;
+                          }
+                        "
+                      />
+                    </template>
+                  </template>
+                </VDataIterator>
+              </div>
+            </VCard>
+          </VMenu>
+        </VBtn>
+        <VBtn
+          elevation="4"
+          color="on-surface"
+          class="px-5 !min-w-[242px]"
+          variant="elevated"
+          type="submit"
+          size="x-large"
+        >
+          <VIcon size="x-large" start icon="$iconCloudUp" />
+          {{ postIdSelected$ ? "Ažuriraj" : "Objavi" }} priču
+          <VTooltip activator="parent" open-delay="892" location="top">
             <em
               >Priča je odmah vidljiva i otvorena za reakcije, deljenje,
               pretragu</em

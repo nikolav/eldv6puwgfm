@@ -57,6 +57,8 @@ const sidebarLinksCompanyProfile = [
       permanent
       location="start"
       :width="companyProfileDrawerWidth"
+      rounded="0"
+      elevation="1"
     >
       <div
         class="d-flex flex-col gap-y-2 sm:gap-y-6 text-center items-center h-[88vh] *bg-red"

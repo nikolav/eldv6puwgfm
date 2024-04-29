@@ -15,8 +15,12 @@ export const useQuillEditor = (el: string | HTMLElement, config?: any) => {
   const onEditor = (callback: any) => {
     ee.emit("getInstance", { callback });
   };
-  const initialized = useRunSetupOnceOnMounted(async () => {
-    // @mounted, dom rendered
+  const clear = () => {
+    ee.emit("clearContent");
+  };
+  // const initialized = useRunSetupOnceOnMounted(async () => {
+  const initialized = onceMountedOn(true, async () => {
+    // @mounted, dom rendered; requires dom env
     await nextTick();
     const quill = new Quill(el, options);
     ee.on("getContent", ({ callback }) => {
@@ -31,6 +35,9 @@ export const useQuillEditor = (el: string | HTMLElement, config?: any) => {
     ee.on("getInstance", ({ callback }) => {
       callback(quill);
     });
+    ee.on("clearContent", () => {
+      quill.setText("\n");
+    });
   });
 
   return {
@@ -38,5 +45,6 @@ export const useQuillEditor = (el: string | HTMLElement, config?: any) => {
     onEditor,
     getContent,
     setContent,
+    clear,
   };
 };
