@@ -4,45 +4,14 @@ definePageMeta({
   layout: "blank",
 });
 
-const items = [
-  {
-    title: "item.1",
-    value: "a",
-  },
-  {
-    title: "item.2",
-    value: "b",
-    children: [
-      {
-        title: "item.2-1",
-        value: "b.1",
-      },
-      {
-        title: "item.2-2",
-        value: "b.2",
-      },
-      {
-        title: "item.2-3",
-        value: "b.4",
-      },
-    ],
-  },
-  {
-    title: "item.3",
-    value: "c",
-  },
-];
+const id$ = ref()
+const { image } = useStoryImage(id$);
+id$.value = 2;
 
-const { posts } = useQueryPosts();
-
-// watchEffect(() => {
-//   console.log({ ID: uid.ID.value });
-// });
 // #eos
 </script>
 <template>
   <section class="page--demo.index">
-    <Dump :data="{ posts: dataSortedByDateDesc(posts) }" />
     <!-- <VList
       v-model:selected="selection$"
       v-model:open="opened$"
@@ -64,7 +33,7 @@ const { posts } = useQueryPosts();
       <VBtn v-if="!isSelected" block>ok</VBtn>
     </template>
   </VList> -->
-    <!-- <Dump :data="selection$" /> -->
+    <Dump :data="image" />
   </section>
 </template>
 <style lang="scss" scoped>

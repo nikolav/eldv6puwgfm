@@ -22,6 +22,8 @@ export { default as GoogleCalendarIframe } from "./GoogleCalendarIframe.vue";
 export { default as LikeDislike } from "./LikeDislike.vue";
 export { default as NoDataChatOrder } from "./NoDataChatOrder.vue";
 export { default as OrdersProduct } from "./OrdersProduct.vue";
+export { default as PostPublicLink } from "./PostPublicLink.vue";
+export { default as PostsItem } from "./PostsItem.vue";
 export { default as ProductAdd } from "./ProductAdd.vue";
 export { default as ProductCategory } from "./ProductCategory.vue";
 export { default as ProductImages } from "./ProductImages.vue";
