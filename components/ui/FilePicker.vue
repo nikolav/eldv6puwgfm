@@ -8,6 +8,7 @@ const props = withDefaults(
     modelValue: File;
     size?: number | undefined;
     tip?: string | undefined;
+    fallback?: string | undefined;
     //__
     accept?: string | undefined;
   }>(),
@@ -19,6 +20,7 @@ const props = withDefaults(
 );
 const emit = defineEmits<{
   (e: "update:modelValue", file: File): void;
+  (e: "fallbackImageRemoved"): void;
 }>();
 
 const togglePostImagePointerDown = useToggleFlag();
@@ -32,6 +34,11 @@ watchEffect(() => {
   fileSelected$.value = file;
 });
 const fileClear = () => {
+  // no file, image clicked; remove
+  if (!fileSelected$.value) {
+    emit("fallbackImageRemoved");
+    return;
+  }
   fileSelected$.value = null;
 };
 
@@ -39,7 +46,7 @@ const fileClear = () => {
 </script>
 <template>
   <FileDataUrl :file="fileSelected$" v-slot="{ url }">
-    <VHover v-if="!url">
+    <VHover v-if="!(url || props.fallback)">
       <template #default="{ isHovering, props: props_ }">
         <VAvatar
           v-bind="props_"
@@ -81,7 +88,7 @@ const fileClear = () => {
         <template #default="{ isHovering: h, props: p }">
           <VImg
             v-bind="mergeProps($attrs, p)"
-            :src="url"
+            :src="url || props.fallback"
             draggable
             rounded
             cover

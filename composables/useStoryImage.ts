@@ -6,6 +6,7 @@ export const useStoryImage = (SID?: any) => {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
   } = useAppConfig();
   const sid$ = ref();
+  const enabled_ = computed(() => !!sid$.value);
   watchEffect(() => {
     sid$.value = toValue(SID);
   });
@@ -17,6 +18,7 @@ export const useStoryImage = (SID?: any) => {
       id: sid$,
     },
     {
+      enabled: enabled_,
       pollInterval: STORAGE_QUERY_POLL_INTERVAL,
     }
   );

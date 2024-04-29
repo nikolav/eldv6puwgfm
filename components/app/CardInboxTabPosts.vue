@@ -1,6 +1,9 @@
 <script setup lang="ts">
 // import { Dump } from "@/components/dev";
-import { FilePicker } from "@/components/ui";
+import {
+  FilePicker,
+  // SelectedPostImage,
+} from "@/components/ui";
 import { PostsItem } from "@/components/app";
 
 const {
@@ -16,10 +19,11 @@ const {
   reload: postsReload,
   loading: postsLoading,
 } = useQueryPosts(uid_);
-// const editor = useQuillEditor("#editorMyyL2ThnLsV", {
-//   bounds: "#quill--bounds",
-//   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
-// });
+// @@
+const editor = useQuillEditor("#editorMyyL2ThnLsV", {
+  bounds: "#quill--bounds",
+  placeholder: "Moja priča...\n   (što bogatije to bolje...)",
+});
 
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const fileSelected$ = ref();
@@ -46,72 +50,73 @@ const { submit } = useFormDataFields(
   {
     // title: (value: string) => 1 < value?.length,
   },
-  // {
-  //   onSubmit: async () => {
-  //     // @@todo reuse component
-  //     editor.getContent(
-  //       async ({ text, content }: { text: string; content: any }) => {
-  //         if (!text) return;
-  //         if (!title_.value) return;
-  //         let postId;
-  //         upl.begin();
-  //         try {
-  //           postId = Number(
-  //             get(
-  //               await postsUpsert(
-  //                 {
-  //                   title: title_.value,
-  //                   content: JSON.stringify(content),
-  //                 },
-  //                 postSelected$.value?.id || undefined
-  //               ),
-  //               "data.postsUpsert.id"
-  //             )
-  //           );
+  // @@
+  {
+    onSubmit: async () => {
+      // @@todo reuse component
+      editor.getContent(
+        async ({ text, content }: { text: string; content: any }) => {
+          if (!text) return;
+          if (!title_.value) return;
+          let postId;
+          upl.begin();
+          try {
+            postId = Number(
+              get(
+                await postsUpsert(
+                  {
+                    title: title_.value,
+                    content: JSON.stringify(content),
+                  },
+                  postSelected$.value?.id || undefined
+                ),
+                "data.postsUpsert.id"
+              )
+            );
 
-  //           if (!postId) throw "--error-post-failed";
-  //           if (!fileSelected$.value) {
-  //             upl.successful();
-  //             return;
-  //           }
+            if (!postId) throw "--error-post-failed";
+            if (!fileSelected$.value) {
+              upl.successful();
+              return;
+            }
 
-  //           const imageId = Number(
-  //             get(
-  //               await upload({
-  //                 image: {
-  //                   file: fileSelected$.value,
-  //                   data: {},
-  //                 },
-  //               }),
-  //               "image.id"
-  //             )
-  //           );
+            const imageId = Number(
+              get(
+                await upload({
+                  image: {
+                    file: fileSelected$.value,
+                    data: {},
+                  },
+                }),
+                "image.id"
+              )
+            );
 
-  //           if (!imageId) throw "--failed-image-upload";
+            if (!imageId) throw "--failed-image-upload";
 
-  //           // bind/tag image to post
-  //           if (
-  //             !isEmpty(
-  //               get(
-  //                 await tags(imageId, {
-  //                   [`${POST_IMAGES_prefix}${postId}:${imageId}`]: true,
-  //                 }),
-  //                 "data.docsTags"
-  //               )
-  //             )
-  //           )
-  //             upl.successful();
-  //         } catch (error) {
-  //           upl.setError(error);
-  //         } finally {
-  //           storyIdSaved$.value = postId;
-  //           storyTitleSaved$.value = title_.value;
-  //           upl.done();
-  //         }
-  //       }
-  //     );
-  //   },
-  // }
+            // bind/tag image to post
+            if (
+              !isEmpty(
+                get(
+                  await tags(imageId, {
+                    [`${POST_IMAGES_prefix}${postId}:${imageId}`]: true,
+                  }),
+                  "data.docsTags"
+                )
+              )
+            )
+              upl.successful();
+          } catch (error) {
+            upl.setError(error);
+          } finally {
+            storyIdSaved$.value = postId;
+            storyTitleSaved$.value = title_.value;
+            upl.done();
+          }
+        }
+      );
+    },
+  }
 );
 const toggleMenuPostsList = useToggleFlag();
 const postSelected$ = computed(() =>
@@ -121,14 +126,36 @@ watchEffect(() => {
   if (!postIdSelected$.value) return;
   title_.value = postSelected$.value?.title || title_.value;
   const jsondata = postSelected$.value?.content;
-  // if (jsondata) editor.setContent(JSON.parse(jsondata));
+  if (jsondata) editor.setContent(JSON.parse(jsondata));
+});
+
+const { publicUrl } = useApiStorage();
+const { image } = useStoryImage(postIdSelected$);
+const storyImageRemoved$ = ref(false);
+const fallbackUrl_ = computed(() =>
+  !(!storyImageRemoved$.value && postIdSelected$.value)
+    ? undefined
+    : publicUrl(get(image.value, "data.file_id") || "")
+);
+watch(fileSelected$, (fileSelected) => {
+  if (storyImageRemoved$.value) return;
+  storyImageRemoved$.value = !fileSelected;
 });
 const clearStory = () => {
   title_.value = undefined;
-  // editor.clear();
-  fileSelected$.value = null;
+  editor.clear();
+  fileSelected$.value = undefined;
   postIdSelected$.value = undefined;
 };
+
+watchEffect(() => {
+  console.clear();
+  console.log({ postIdSelected$: postIdSelected$.value });
+  console.log({ storyImageRemoved$: storyImageRemoved$.value });
+  console.log({ image: image.value });
+  console.log({ fallbackUrl_: fallbackUrl_.value });
+  console.log({ fileSelected$: fileSelected$.value });
+});
 // @@eos
 </script>
 <template>
@@ -160,8 +187,8 @@ const clearStory = () => {
       </VAlert>
     </VSnackbar>
 
-    <VForm @submit.prevent="submit" autocomplete="off">
-      <div class="!grid grid-cols-[1fr,222px] *bg-red-200">
+    <VForm class="*bg-red" @submit.prevent="submit" autocomplete="off">
+      <div class="!grid grid-cols-[1fr,222px] *bg-red-200 min-h-[412px]">
         <!-- @@col.post -->
         <div
           class="*bg-red pb-2 ms-4 min-h-[262px] !max-h-[442px] overflow-auto scrollbar-thin-light relative"
@@ -227,7 +254,11 @@ const clearStory = () => {
         <!-- @@col.images -->
         <div class="*bg-lime-200">
           <div class="FilePicker--placer px-2 mt-12 d-flex justify-center">
-            <FilePicker v-model="fileSelected$" />
+            <FilePicker
+              @fallback-image-removed="storyImageRemoved$ = true"
+              v-model="fileSelected$"
+              :fallback="fallbackUrl_"
+            />
           </div>
         </div>
       </div>
@@ -281,8 +312,22 @@ const clearStory = () => {
                 elevation="2"
                 color="primary"
                 absolute
-                class="top-0 inset-x-0 z-[1]"
+                class="ps-4 top-0 inset-x-0 z-[1]"
               >
+                <VIcon class="opacity-30" icon="$iconPage" />
+                <VToolbarTitle class="opacity-80 me-0"
+                  >Moje priče</VToolbarTitle
+                >
+                <VBadge
+                  :model-value="0 < len(posts)"
+                  inline
+                  color="primary2"
+                  class="opacity-50 ms-0 -translate-x-2 translate-y-px"
+                >
+                  <template #badge>
+                    <pre style="font-size: 108%">{{ len(posts) }}</pre>
+                  </template>
+                </VBadge>
                 <VSpacer />
                 <VBtn icon="$loading" @click="postsReload" />
                 <VBtn icon="$close" @click="toggleMenuPostsList.off" />
@@ -310,6 +355,8 @@ const clearStory = () => {
                         @posts-remove="postsRemove"
                         @posts-edit="
                           (ppid) => {
+                            fileSelected$ = null;
+                            storyImageRemoved$ = false;
                             postIdSelected$ = ppid;
                           }
                         "

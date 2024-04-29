@@ -60,16 +60,16 @@ watchEffect(() =>
 // tabs
 const panelLinks = [
   {
-    title: "Objave",
-    icon: "$iconPost",
-    size: "x-large",
-  },
-  {
     title: "Proizvodi",
     icon: "$iconBox",
     size: "large",
     class: "translate-x-[2px]",
     initial: true,
+  },
+  {
+    title: "Objave",
+    icon: "$iconPost",
+    size: "x-large",
   },
   {
     title: "Kontakt",

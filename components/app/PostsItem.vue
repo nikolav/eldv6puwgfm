@@ -29,8 +29,10 @@ const emit = defineEmits<{
               density="comfortable"
               variant="plain"
               size="small"
-              icon="$edit"
-            />
+              icon
+            >
+              <VIcon color="primary-darken-1" size="large" icon="$edit" />
+            </VBtn>
             <VBtn
               @click="$emit('postsRemove', post.id)"
               density="comfortable"
@@ -38,7 +40,7 @@ const emit = defineEmits<{
               size="small"
               icon="$iconTrash"
               color="error"
-              class="ms-[2px]"
+              class="ms-1"
             />
           </div>
         </VFadeTransition>
