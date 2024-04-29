@@ -23,7 +23,6 @@ export default defineNuxtPlugin(() => {
     reduce(
       products,
       (res, p) => {
-        console.log(p.price_history);
         // get order related price;
         // price where hist.day ~ order.date
         //  find hist.entry where (order.day < day).prev
