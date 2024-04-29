@@ -149,6 +149,7 @@ export interface IProduct {
   user_id: number;
   name: string;
   price?: OrNoValue<number>;
+  price_history: { day: string; price: number }[];
   stock?: OrNoValue<number>;
   stockType?: OrNoValue<string>;
   onSale?: OrNoValue<boolean>;
@@ -186,6 +187,7 @@ export interface IOrdersProducts {
   user_id?: OrNoValue<number>;
   name: string;
   price?: OrNoValue<number>;
+  price_history: { day: string; price: number }[];
   stock?: OrNoValue<number>;
   stockType?: OrNoValue<string>;
   onSale?: OrNoValue<boolean>;

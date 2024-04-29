@@ -155,6 +155,10 @@ const comPhotosRemove = async () => {
 
 const comName = computed(() => get(comProfile.value, "data.name"));
 const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
+watchEffect(() => {
+  console.log({ uid, comName: comName.value });
+});
+
 // @@eos
 </script>
 <template>

@@ -76,6 +76,7 @@ export const Q_productsByUser = gql`
       name
       description
       price
+      price_history
       stockType
       stock
       onSale
@@ -94,6 +95,7 @@ export const Q_productsListAll = gql`
       name
       description
       price
+      price_history
       stockType
       stock
       onSale
@@ -112,6 +114,7 @@ export const Q_productsListExact = gql`
       name
       description
       price
+      price_history
       stockType
       stock
       onSale
@@ -136,6 +139,7 @@ export const Q_productsListPopular = gql`
       name
       description
       price
+      price_history
       stockType
       stock
       onSale
@@ -169,6 +173,7 @@ export const Q_ordersReceivedProducts = gql`
       user_id
       name
       price
+      price_history
       stock
       stockType
       onSale
@@ -200,6 +205,7 @@ export const Q_usersSingle = gql`
         id
         name
         price
+        price_history
         stock
         stockType
         onSale

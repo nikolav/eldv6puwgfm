@@ -72,15 +72,15 @@ const panelLinks = [
     initial: true,
   },
   {
-    title: "Dostava",
-    icon: "$iconDeliveryTruck",
-    size: 28,
-    class: "-translate-x-[5px]",
-  },
-  {
     title: "Kontakt",
     icon: "$iconInfo",
     size: 26,
+    class: "-translate-x-[5px]",
+  },
+  {
+    title: "Dostava",
+    icon: "$iconDeliveryTruck",
+    size: 28,
     class: "-translate-x-[5px]",
   },
   {

@@ -7,21 +7,18 @@ export const useQueryOrdersReceived = () => {
     io: { IOEVENT_ORDERS_CHANGE },
   } = useAppConfig();
   const auth = useStoreApiAuth();
-  const { result, load, refetch } = useLazyQuery<{
+  const uid = computed(() => get(auth.user$, "id"));
+  const { result, load, refetch, loading } = useLazyQuery<{
     ordersReceived: IOrderReceived[];
   }>(Q_ordersReceived, undefined, {
     pollInterval: STORAGE_QUERY_POLL_INTERVAL,
   });
   const reload = async () => await refetch();
   const orders_ = computed(() => get(result.value, "ordersReceived") || []);
-  const { runSetup: queryStart } = useRunSetupOnce(async () => await load());
-  onMounted(async () => {
-    queryStart();
-    // await nextTick(reload);
-  });
+  onceMountedOn(uid, load);
 
   const ioEvent_ = computed(() =>
-    auth.isAuth$ ? `${IOEVENT_ORDERS_CHANGE}${get(auth.user$, "id")}` : ""
+    uid.value ? `${IOEVENT_ORDERS_CHANGE}${uid.value}` : ""
   );
   // @io:listen
   watchEffect(() => useIOEvent(ioEvent_.value, reload));
@@ -30,5 +27,6 @@ export const useQueryOrdersReceived = () => {
   return {
     orders: orders_,
     reload,
+    loading,
   };
 };

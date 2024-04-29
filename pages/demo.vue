@@ -4,10 +4,7 @@ definePageMeta({
   layout: "blank",
 });
 
-const id$ = ref()
-const { image } = useStoryImage(id$);
-id$.value = 2;
-
+const { products } = useProducts()
 // #eos
 </script>
 <template>
@@ -33,7 +30,7 @@ id$.value = 2;
       <VBtn v-if="!isSelected" block>ok</VBtn>
     </template>
   </VList> -->
-    <Dump :data="image" />
+    <Dump :data="products" />
   </section>
 </template>
 <style lang="scss" scoped>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Dump } from "@/components/dev";
 import { useDisplay } from "vuetify";
 import { OrdersProduct, ChatOrder } from "@/components/app";
 import type { IOrdersProducts } from "~/types";
@@ -8,15 +9,14 @@ definePageMeta({
   middleware: "authorized-company",
 });
 useHead({
-  title: "primljene narudžbe",
+  title: "Primljene narudžbe",
 });
 
 const {
   docs: { CHAT_ORDER_COM_USER_prefix },
   key: { APP_PROCESSING, CHAT_CLIENTID_ACTIVE, ORDER_ACTIVE },
 } = useAppConfig();
-const { $date } = useNuxtApp();
-const dateFormated = (d: string) => $date(d).format("D. MMMM YYYY.");
+const { $calcOrderTotalOriginal, $formated_DMMMYYYY } = useNuxtApp();
 
 const { xs, smAndUp, width } = useDisplay();
 const auth = useStoreApiAuth();
@@ -24,24 +24,26 @@ const auth = useStoreApiAuth();
 const { users } = useQueryUsers();
 
 const orderActive$ = useGlobalVariable(ORDER_ACTIVE);
-const { orders: orders_, reload: ordersReload } = useQueryOrdersReceived();
-// const flags$$ = useStoreFlags();
+const {
+  orders: orders_,
+  reload: ordersReload,
+  loading: ordersLoading,
+} = useQueryOrdersReceived();
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
-const ordersReloadStatus = async () => {
-  try {
-    appProcessing$.value = true;
-    await nextTick(ordersReload);
-  } catch (error) {
-    // pass
-  }
-  appProcessing$.value = false;
-};
+watchEffect(() => {
+  appProcessing$.value = ordersLoading.value;
+});
 const { order_id$, products: products_ } = useQueryOrdersProducts();
 const orderIdActive = (id: number) => id == orderActive$.value;
 watchEffect(() => {
   order_id$.value = orderActive$.value;
 });
-
+// order @id
+const order_ = computed(() =>
+  orderActive$.value
+    ? find(orders_.value, { id: orderActive$.value })
+    : undefined
+);
 const user_ = computed(() =>
   0 < orderActive$.value
     ? find(users.value, {
@@ -58,13 +60,6 @@ const emailStartByUserId = (id: any) =>
       "email"
     )
   );
-const clientIdActive$ = useGlobalVariable(CHAT_CLIENTID_ACTIVE);
-watch(
-  () => user_.value?.id,
-  (id) => {
-    clientIdActive$.value = id;
-  }
-);
 
 const toggleOrderChatActive = useToggleFlag();
 const { topic$: chatId$, data: chatOrder$ } = useDocs();
@@ -76,9 +71,8 @@ const topicChatOrderUser$ = computed(() =>
       )}:${user_.value.id}`
     : undefined
 );
-watch(topicChatOrderUser$, (topic) => {
-  if (!topic) return;
-  chatId$.value = topic;
+watchEffect(() => {
+  chatId$.value = topicChatOrderUser$.value || "";
 });
 
 const {
@@ -86,18 +80,6 @@ const {
   length: paginationLength$,
   page$,
 } = usePaginateData({ data: orders_, perPage: 5 });
-
-const calcOrderTotal = (products: IOrdersProducts[]) =>
-  reduce(
-    products,
-    (res, p) => {
-      if (p?.price) {
-        res += p.amount * p.price;
-      }
-      return res;
-    },
-    0
-  );
 
 watchEffect(() => {
   if (null != orderActive$.value) return;
@@ -109,6 +91,7 @@ watchEffect(() => {
 </script>
 <template>
   <section class="page--company-profile">
+    <!-- <Dump :data="{ orders_, products_ }" /> -->
     <VNavigationDrawer
       v-model="toggleOrderChatActive.isActive.value"
       location="end"
@@ -138,7 +121,7 @@ watchEffect(() => {
                 icon
                 variant="text"
                 color="on-primary"
-                @click="ordersReloadStatus"
+                @click="ordersReload"
               >
                 <VIcon icon="$loading" size="large" />
                 <VTooltip
@@ -187,7 +170,10 @@ watchEffect(() => {
                         <span class="text-medium-emphasis">Vrednost: </span>
                         <em
                           >{{
-                            calcOrderTotal(map(items, ({ raw }) => raw))
+                            $calcOrderTotalOriginal(
+                              order_,
+                              map(items, ({ raw }) => raw)
+                            )
                           }}din.</em
                         >
                       </p>
@@ -245,7 +231,7 @@ watchEffect(() => {
                         <VSpacer />
                         <pre
                           class="translate-y-px d-inline-block text-disabled text-xs font-italic"
-                          >{{ dateFormated(order.raw.created_at) }}</pre
+                          >{{ $formated_DMMMYYYY(order.raw.created_at) }}</pre
                         >
                       </VListItemTitle>
                       <template #prepend>
