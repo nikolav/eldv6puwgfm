@@ -231,7 +231,7 @@ export const Q_postsList = gql`
       updated_at
     }
   }
-`;
+`; 
 
 export const Q_postsImages = gql`
   query q_postsImages($id: ID) {
