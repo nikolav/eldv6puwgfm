@@ -6,7 +6,6 @@ import {
   Q_storageListAll,
   M_STORAGE_FILE_REMOVE,
 } from "@/graphql";
-import { assign, each, find, get, len, omit } from "@/utils";
 import { URL_STORAGE } from "@/config";
 import type {
   IStorageFileInfo,
@@ -15,7 +14,6 @@ import type {
 } from "@/types";
 import { schemaStorageMeta } from "@/schemas";
 
-// .useApiStorage
 export const useApiStorage = (initialEnabled = true, __list_all = false) => {
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
@@ -27,6 +25,7 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
   const auth = useStoreApiAuth();
   const toggleEnabled = useToggleFlag(initialEnabled);
   const mounted$ = useMounted();
+  const uid$ = computed(() => get(auth.user$, "id"));
   // @@enabled
   const enabled$ = computed(
     () => !!(mounted$.value && toggleEnabled.isActive.value && auth.isAuth$)
@@ -38,7 +37,7 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
     refetch,
     loading,
   } = useLazyQuery<{ storageList: IStorageFileInfo[] }>(
-    true === __list_all ? Q_storageListAll : Q_storageList,
+    __list_all ? Q_storageListAll : Q_storageList,
     undefined,
     {
       enabled: enabled$,
@@ -53,24 +52,21 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
         : undefined) || []
   );
   const reloadFiles = async () => await refetch();
-
-  const { runSetup: queryStart } = useRunSetupOnce(loadStorage);
-  watchEffect(() => {
-    if (enabled$.value) queryStart();
-  });
+  onceMountedOn(enabled$, loadStorage);
 
   watch([() => auth.isAuth$, enabled$], ([isAuth, enabled]) => {
     if (isAuth && enabled) reloadFiles();
   });
 
   const ioevent_ = computed(() =>
-    auth.isAuth$ ? `${IOEVENT_STORAGE_CHANGE}${get(auth.user$, "id")}` : ""
+    enabled$.value ? `${IOEVENT_STORAGE_CHANGE}${uid$.value}` : ""
   );
 
   // upload({
-  //   '#1:fileName': {
-  //     'data': {},
+  //   [name: string]: {
   //     'file': File{}
+  //     'data'?: { title, description },
+  //     'meta'?: {},
   //   },
   //   // ...
   // })
@@ -84,10 +80,11 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
 
     const fdata = new FormData();
     let numfiles = 0;
-    each(uplFiles, ({ file, data }, name) => {
+    each(uplFiles, ({ file, data, meta }, name) => {
       if (!file) return;
       fdata.append(name, file);
-      fdata.append(name, JSON.stringify(data));
+      fdata.append(`${name}:data`, JSON.stringify(data || {}));
+      fdata.append(`${name}:meta`, JSON.stringify(meta || {}));
       numfiles += 1;
     });
     if (!numfiles) return;
@@ -103,66 +100,48 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
         },
         data: fdata,
       });
-      try {
-        for (let _ in data) {
-          // files uploaded; set flag =true; resolve
-          uploadStatus.successful();
-          return data;
-        }
-      } catch (error) {
-        // pass
+      if (len(data)) {
+        uploadStatus.successful();
+        return data;
       }
-    } catch (error_) {
-      uploadStatus.setError(error_);
+    } catch (error) {
+      uploadStatus.setError(error);
     } finally {
       uploadStatus.done();
     }
   };
 
   // @@publicUrl
-  const publicUrl = (file_id: string) =>
-    !find(files$.value, { file_id, public: true })
-      ? ""
-      : `${URL_STORAGE}/${file_id}`;
+  const publicUrl = (file_id: string = "") =>
+    file_id && find(files$.value, { file_id, public: true })
+      ? `${URL_STORAGE}/${file_id}`
+      : "";
 
   // @@download
-  const download = async (file_id: string) => {
+  const download = async (file_id: string = "") => {
     const path = publicUrl(file_id);
-    return !path
-      ? null
-      : await navigateTo(
-          {
-            path,
-          },
-          {
-            external: true,
-          }
-        );
+    return file_id && path
+      ? await navigateTo(path, {
+          external: true,
+          open: { target: "_blank" },
+        })
+      : undefined;
   };
 
   // @@remove
   const { mutate: mutateRemoveFile } = useMutation(M_STORAGE_FILE_REMOVE);
-  const remove = async (fileID: string) => {
-    if (enabled$.value) return await mutateRemoveFile({ fileID });
+  const remove = async (fileID: string = "") => {
+    if (fileID && enabled$.value) return await mutateRemoveFile({ fileID });
   };
 
   const topicStorageMeta_ = computed(() =>
-    auth.isAuth$ ? `${TAG_STORAGE}${get(auth.user$, "id")}` : ""
+    enabled$.value ? `${TAG_STORAGE}${uid$.value}` : ""
   );
 
   // @@meta
-  const {
-    topic$,
-    upsert: metaPut,
-    IOEVENT: IOEVENT_STORAGE_META_CHANGE,
-  } = useDocs(topicStorageMeta_.value);
-  watch(topicStorageMeta_, (topic) => {
-    topic$.value = topic;
-  });
-  const meta = async (
-    values: Record<string, string | number | boolean>,
-    file_id: string
-  ) => {
+  const { upsert: metaPut, IOEVENT: IOEVENT_STORAGE_META_CHANGE } =
+    useDocs(topicStorageMeta_);
+  const meta = async (values: Record<string, any>, file_id: string) => {
     if (!enabled$.value) return;
 
     const doc = find(files$.value, { file_id });
@@ -175,7 +154,7 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
       // skip
       return;
     }
-    if (!len(values_)) return;
+    if (!(values_ || len(values_))) return;
 
     return await metaPut(
       omit(assign({}, doc, values_), FIELDS_OMIT_STORAGE_META),
@@ -184,7 +163,9 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
   };
 
   // @io/listen
-  useIOEvent(ioevent_.value, reloadFiles);
+  watchEffect(() => {
+    useIOEvent(toValue(ioevent_), reloadFiles);
+  });
   watchEffect(() => {
     useIOEvent(toValue(IOEVENT_STORAGE_META_CHANGE), reloadFiles);
   });

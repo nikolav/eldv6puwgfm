@@ -1,13 +1,9 @@
 <script setup lang="ts">
 // import { Dump } from "@/components/dev";
-import {
-  FilePicker,
-  // SelectedPostImage,
-} from "@/components/ui";
+import { FilePicker } from "@/components/ui";
 import { PostsItem } from "@/components/app";
 
 const {
-  // story: { STORY_MIN_CONTENT_LENGTH },
   key: { POST_IMAGES_prefix, APP_PROCESSING },
 } = useAppConfig();
 const auth = useStoreApiAuth();
@@ -20,19 +16,25 @@ const {
   loading: postsLoading,
 } = useQueryPosts(uid_);
 // @@
-const editor = useQuillEditor("#editorMyyL2ThnLsV", {
-  bounds: "#quill--bounds",
-  placeholder: "Moja priča...\n   (što bogatije to bolje...)",
-});
+// const editor = useQuillEditor("#editorMyyL2ThnLsV", {
+//   bounds: "#quill--bounds",
+//   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
+// });
 
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+const title_ = ref();
 const fileSelected$ = ref();
-const { upload } = useApiStorage();
+const { upload, publicUrl } = useApiStorage();
 const { tags } = useDocs();
 const upl = useProcessMonitor();
 const postSaved$ = computed({
   get: () => !upl.processing.value && upl.success.value,
   set: (flag: boolean) => (upl.success.value = flag),
+});
+watch(postSaved$, (saved) => {
+  if (saved) {
+    fileSelected$.value = undefined;
+  }
 });
 watchEffect(() => {
   appProcessing$.value = upl.processing.value || postsLoading.value;
@@ -44,7 +46,12 @@ const postIdSelected$ = ref();
 watch(storyIdSaved$, (id) => {
   if (id) postIdSelected$.value = id;
 });
-const title_ = ref();
+const storyImageRemoved$ = ref(false);
+const {
+  image,
+  dropImages: storyImagesDrop,
+  reload: storyImagesReload,
+} = useStoryImage(postIdSelected$);
 const { submit } = useFormDataFields(
   "QuillEditor:CbmEHEEF",
   {
@@ -52,70 +59,68 @@ const { submit } = useFormDataFields(
   },
   // @@
   {
-    onSubmit: async () => {
-      // @@todo reuse component
-      editor.getContent(
-        async ({ text, content }: { text: string; content: any }) => {
-          if (!text) return;
-          if (!title_.value) return;
-          let postId;
-          upl.begin();
-          try {
-            postId = Number(
-              get(
-                await postsUpsert(
-                  {
-                    title: title_.value,
-                    content: JSON.stringify(content),
-                  },
-                  postSelected$.value?.id || undefined
-                ),
-                "data.postsUpsert.id"
-              )
-            );
+    // onSubmit: async () => {
+    //   // @@todo reuse component
+    //   editor.getContent(
+    //     async ({ text, content }: { text: string; content: any }) => {
+    //       if (!text) return;
+    //       if (!title_.value) return;
+    //       let postId;
+    //       upl.begin();
+    //       try {
+    //         //
+    //         if (storyImageRemoved$.value) {
+    //           await storyImagesDrop();
+    //         }
 
-            if (!postId) throw "--error-post-failed";
-            if (!fileSelected$.value) {
-              upl.successful();
-              return;
-            }
+    //         postId = Number(
+    //           get(
+    //             await postsUpsert(
+    //               {
+    //                 title: title_.value,
+    //                 content: JSON.stringify(content),
+    //               },
+    //               postIdSelected$.value
+    //             ),
+    //             "data.postsUpsert.id"
+    //           )
+    //         );
 
-            const imageId = Number(
-              get(
-                await upload({
-                  image: {
-                    file: fileSelected$.value,
-                    data: {},
-                  },
-                }),
-                "image.id"
-              )
-            );
+    //         if (!postId) throw "--error-post-failed";
+    //         if (!fileSelected$.value) {
+    //           upl.successful();
+    //           return;
+    //         }
 
-            if (!imageId) throw "--failed-image-upload";
+    //         const imageId = Number(
+    //           get(
+    //             await upload({
+    //               image: {
+    //                 file: fileSelected$.value,
+    //                 data: {},
+    //               },
+    //             }),
+    //             "image.id"
+    //           )
+    //         );
 
-            // bind/tag image to post
-            if (
-              !isEmpty(
-                get(
-                  await tags(imageId, {
-                    [`${POST_IMAGES_prefix}${postId}:${imageId}`]: true,
-                  }),
-                  "data.docsTags"
-                )
-              )
-            )
-              upl.successful();
-          } catch (error) {
-            upl.setError(error);
-          } finally {
-            storyIdSaved$.value = postId;
-            storyTitleSaved$.value = title_.value;
-            upl.done();
-          }
-        }
-      );
-    },
+    //         if (!imageId) throw "--failed-image-upload";
+    //         // bind/tag image to post
+    //         await tags(imageId, {
+    //           [`${POST_IMAGES_prefix}${postId}:${imageId}`]: true,
+    //         });
+    //         upl.successful(storyImagesReload);
+    //         console.log({ status: "👌🏻", postId, imageId });
+    //       } catch (error) {
+    //         upl.setError(error);
+    //       } finally {
+    //         storyIdSaved$.value = postId;
+    //         storyTitleSaved$.value = title_.value;
+    //         upl.done();
+    //       }
+    //     }
+    //   );
+    // },
   }
 );
 const toggleMenuPostsList = useToggleFlag();
@@ -126,30 +131,37 @@ watchEffect(() => {
   if (!postIdSelected$.value) return;
   title_.value = postSelected$.value?.title || title_.value;
   const jsondata = postSelected$.value?.content;
-  if (jsondata) editor.setContent(JSON.parse(jsondata));
+  // if (jsondata) editor.setContent(JSON.parse(jsondata));
+});
+watch(postIdSelected$, (ppid) => {
+  // new story loaded; release flag
+  if (ppid) storyImageRemoved$.value = false;
 });
 
-const { publicUrl } = useApiStorage();
-const { image } = useStoryImage(postIdSelected$);
-const storyImageRemoved$ = ref(false);
 const fallbackUrl_ = computed(() =>
   !(!storyImageRemoved$.value && postIdSelected$.value)
     ? undefined
     : publicUrl(get(image.value, "data.file_id") || "")
 );
-watch(fileSelected$, (fileSelected) => {
-  if (storyImageRemoved$.value) return;
-  storyImageRemoved$.value = !fileSelected;
-});
 const clearStory = () => {
   title_.value = undefined;
-  editor.clear();
+  // editor.clear();
   fileSelected$.value = undefined;
   postIdSelected$.value = undefined;
+  storyImageRemoved$.value = false;
+};
+
+// @@
+const postEditOnClick = (ppid: number) => {
+  setTimeout(toggleMenuPostsList.off, 23);
+  fileSelected$.value = null;
+  storyImageRemoved$.value = false;
+  // close post list when new item is selected
+  postIdSelected$.value = ppid;
 };
 
 watchEffect(() => {
-  console.clear();
+  // console.clear();
   console.log({ postIdSelected$: postIdSelected$.value });
   console.log({ storyImageRemoved$: storyImageRemoved$.value });
   console.log({ image: image.value });
@@ -230,7 +242,7 @@ watchEffect(() => {
           <VTextField
             v-model.trim="title_"
             clearable
-            label="Naslov artikla *"
+            label="Naslov *"
             variant="underlined"
             class="ms-4 w-[91%] *mx-auto mt-5 *bg-red"
             hint="Treba da sadrži ključne reči, može da pomogne u pretrazi..."
@@ -247,7 +259,11 @@ watchEffect(() => {
           <div class="mt-5 me-1 *bg-red" id="quill--bounds">
             <!-- @@ -->
             <!-- @editor quill -->
-            <section class="fill-height border-0" id="editorMyyL2ThnLsV" />
+            <section
+              id="editorMyyL2ThnLsV"
+              class="fill-height border-0"
+              style="font-size: 111%"
+            />
           </div>
         </div>
 
@@ -329,7 +345,15 @@ watchEffect(() => {
                   </template>
                 </VBadge>
                 <VSpacer />
-                <VBtn icon="$loading" @click="postsReload" />
+                <VBtn
+                  icon="$loading"
+                  @click="
+                    () => {
+                      postsReload();
+                      storyImagesReload();
+                    }
+                  "
+                />
                 <VBtn icon="$close" @click="toggleMenuPostsList.off" />
               </VToolbar>
               <!-- post items spacer -->
@@ -353,13 +377,7 @@ watchEffect(() => {
                       <PostsItem
                         :post="p.raw"
                         @posts-remove="postsRemove"
-                        @posts-edit="
-                          (ppid) => {
-                            fileSelected$ = null;
-                            storyImageRemoved$ = false;
-                            postIdSelected$ = ppid;
-                          }
-                        "
+                        @posts-edit="postEditOnClick"
                       />
                     </template>
                   </template>

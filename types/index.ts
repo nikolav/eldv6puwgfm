@@ -55,11 +55,12 @@ export interface IStorageFileInfo {
 
 export interface IFilesUpload {
   [name: string]: {
-    file?: OrNoValue<any>;
-    data: {
+    file: any;
+    data?: {
       title?: string | undefined;
       description?: string | undefined;
     };
+    meta?: Record<string, any>;
   };
 }
 

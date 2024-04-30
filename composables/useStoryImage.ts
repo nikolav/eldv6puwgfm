@@ -1,9 +1,10 @@
 import type { IDoc, IStorageFileInfo } from "@/types";
-import { Q_postsImages } from "@/graphql";
+import { Q_postsImages, M_postsImagesDrop } from "@/graphql";
 
 export const useStoryImage = (SID?: any) => {
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
+    io: { IOEVENT_STORY_PHOTOS_CHANGE_prefix },
   } = useAppConfig();
   const sid$ = ref();
   const enabled_ = computed(() => !!sid$.value);
@@ -26,16 +27,18 @@ export const useStoryImage = (SID?: any) => {
   onceMountedOn(true, load);
   const reload = async () => await refetch();
 
-  // const ioEvent = computed(() =>
-  //   enabled_.value ? `${IOEVENT_USER_POSTS_CHANGE_prefix}${uid$.value}` : ""
-  // );
+  const { mutate: mutatePostsImagesDrop } = useMutation(M_postsImagesDrop);
+  const dropImages = async () =>
+    enabled_.value && (await mutatePostsImagesDrop({ id: sid$.value }));
 
-  // @io
-  // watchEffect(() => useIOEvent(ioEvent.value, reload));
-
+  const ioEvent = computed(() =>
+    enabled_.value ? `${IOEVENT_STORY_PHOTOS_CHANGE_prefix}${sid$.value}` : ""
+  );
+  watchEffect(() => useIOEvent(ioEvent.value, reload));
   return {
     sid$,
     image,
+    dropImages,
     reload,
     error,
     loading,
