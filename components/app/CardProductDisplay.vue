@@ -8,6 +8,8 @@ import {
   WithComPublicUrl,
   GetCategoryTitleFromTag,
   VChipProductPrice,
+  CardProductDisplayToolbarSocial,
+  TopicRating,
 } from "@/components/app";
 
 const props = defineProps<{ product: IProduct }>();
@@ -15,7 +17,11 @@ const props = defineProps<{ product: IProduct }>();
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
   docs: { PRODUCT_IMAGES },
-  key: { PRODUCTS_LIKES_prefix, TOPIC_CHAT_PRODUCTS_prefix },
+  key: {
+    PRODUCTS_LIKES_prefix,
+    TOPIC_CHAT_PRODUCTS_prefix,
+    PRODUCT_RATING_prefix,
+  },
 } = useAppConfig();
 
 const { data: docsImages$ } = useDocs(`${PRODUCT_IMAGES}${props.product.id}`);
@@ -33,7 +39,7 @@ const cart = useStoreCart();
 </script>
 <template>
   <section class="component--CardProductDisplay">
-    <VHover open-delay="456">
+    <VHover open-delay="567">
       <template #default="{ isHovering, props: props_ }">
         <VCard
           v-bind="mergeProps($attrs, props_)"
@@ -48,6 +54,20 @@ const cart = useStoreCart();
               :company-name="profile?.name"
               v-slot="{ companyUrl }"
             >
+              <VSlideYTransition>
+                <VToolbar
+                  density="compact"
+                  elevation="2"
+                  :class="isHovering ? '!visible' : ''"
+                  class="top-0 inset-x-0 z-10 invisible"
+                  color="#f5f5f480"
+                  absolute
+                >
+                  <VToolbarTitle> 12 </VToolbarTitle>
+
+                  <CardProductDisplayToolbarSocial :product="props.product" />
+                </VToolbar>
+              </VSlideYTransition>
               <VImg
                 max-height="252"
                 :aspect-ratio="1"
@@ -56,18 +76,6 @@ const cart = useStoreCart();
                 class="position-relative"
               >
                 <!-- PDisplay:toolbar -->
-                <div
-                  class="position-absolute top-px start-1/2 -translate-x-[50%] d-flex items-center gap-4 justify-end"
-                  :class="isHovering ? 'visible' : 'invisible'"
-                >
-                  <TopicChat
-                    :topic="`${TOPIC_CHAT_PRODUCTS_prefix}${props.product.id}`"
-                    :title="props.product.name"
-                  />
-                  <LikeDislike
-                    :topic="`${PRODUCTS_LIKES_prefix}${props.product.id}`"
-                  />
-                </div>
               </VImg>
               <!-- content:div -->
               <div class="ma-0 pa-0 w-full *bg-red position-relative">
@@ -133,7 +141,13 @@ const cart = useStoreCart();
                 >
                   {{ profile?.name }}
                 </VCardTitle>
-                <VCardTitle class="pt-2 pe-0 ps-3" style="font-size: 128%">
+                <div class="spacer--TopicRating ps-2 pt-2">
+                  <TopicRating
+                  small
+                    :topic="`${PRODUCT_RATING_prefix}${props.product.id}`"
+                  />
+                </div>
+                <VCardTitle class="pt-0 pe-0 ps-3" style="font-size: 128%">
                   {{ props.product.name }}
                   <!-- Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis illo aperiam aut quidem ipsum enim distinctio, alias molestiae inventore impedit est asperiores unde sunt praesentium? Labore, sint sed! Incidunt, neque! -->
                 </VCardTitle>
@@ -174,36 +188,41 @@ const cart = useStoreCart();
               <VCardText class="mt-2 line-clamp-3 *text-truncate">
                 {{ props.product.description }}
               </VCardText>
-              <VCardActions class="pa-4 mt-5">
-                <VChipProductPrice :product="props.product" />
-                <VSpacer />
+              <VCardActions class="pa-4 mt-5 d-block">
+                <div class="d-flex justify-end">
+                  <VChipProductPrice :product="props.product" />
+                </div>
                 <VBtn
-                  class="px-4 group/btn-korpa"
+                  @click="cart.increase(props.product.id, 1)"
+                  block
+                  class="*px-4 group/btn-korpa mt-4 justify-end pe-7"
                   color="transparent"
                   variant="flat"
                   border
-                  size="large"
-                  rounded="pill"
-                  @click="cart.increase(props.product.id, 1)"
+                  size="x-large"
+                  rounded="xl"
                 >
-                  <strong class="ms-1">Korpa</strong>
-                  <VBadge
-                    v-if="cart.store$.items[props.product.id]"
-                    color="primary3-darken-1"
-                    inline
-                    class="ms-1"
-                  >
-                    <template #badge>
+                  <div class="*bg-red space-x-3 position-absolute start-7 pa-0">
+                    <VIcon
+                      icon="$iconKantarKorpa2"
+                      size="39"
+                      class="opacity-80 group-hover/btn-korpa:opacity-100 group-hover/btn-korpa:-rotate-1 group-hover/btn-korpa:scale-[118%] transition-transform"
+                    />
+
+                    <VAvatar
+                      density="comfortable"
+                      v-if="cart.store$.items[props.product.id]"
+                      color="primary3-darken-1"
+                      inline
+                    >
                       <pre>{{ cart.store$.items[props.product.id] }}</pre>
-                    </template>
-                  </VBadge>
-                  <VIcon
-                    v-else
-                    end
-                    icon="$iconKantarKorpa2"
-                    size="29"
-                    class="opacity-80 group-hover/btn-korpa:opacity-100 group-hover/btn-korpa:-rotate-1 group-hover/btn-korpa:scale-110 transition-transform"
-                  />
+                    </VAvatar>
+                  </div>
+                  <em
+                    class="d-inline-block tracking-[.122rem]"
+                    style="font-size: 112%"
+                    >Korpa</em
+                  >
                 </VBtn>
               </VCardActions>
             </WithComPublicUrl>

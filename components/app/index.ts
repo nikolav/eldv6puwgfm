@@ -38,4 +38,5 @@ export { default as VChipProductPrice } from "./VChipProductPrice.vue";
 export { default as WithComProfile } from "./WithComProfile.vue";
 export { default as WithComPublicUrl } from "./WithComPublicUrl.vue";
 export { default as GetCategoryTitleFromTag } from "./GetCategoryTitleFromTag.vue";
+export { default as CardProductDisplayToolbarSocial } from "./CardProductDisplayToolbarSocial.vue";
 

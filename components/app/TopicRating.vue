@@ -17,9 +17,12 @@ const {
 <template>
   <section class="component--TopicRating">
     <div class="d-flex items-center">
-      <strong v-if="!props.small" class="text-[112%] px-2 align-self-center">
-        <pre>{{ rating }}</pre>
-      </strong>
+      <small
+        class="text-[107%] px-2 align-self-center font-mono"
+        :class="props.small && 'text-[88%] translate-y-[2px] opacity-30'"
+      >
+        {{ rating }}
+      </small>
       <VDivider v-if="!props.small" vertical />
       <VRating
         v-bind="$attrs"
