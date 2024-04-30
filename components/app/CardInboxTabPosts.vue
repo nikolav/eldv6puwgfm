@@ -91,6 +91,7 @@ const { submit } = useFormDataFields(
               return;
             }
             postIdSelected$.value = postId;
+            await nextTick();
             await storyImageUpdate(fileSelected$.value);
             upl.successful();
           } catch (error) {
@@ -184,7 +185,7 @@ watchEffect(() => {
     </VSnackbar>
 
     <VForm class="*bg-red" @submit.prevent="submit" autocomplete="off">
-      <div class="!grid grid-cols-[1fr,222px] *bg-red-200 min-h-[412px]">
+      <div class="!grid grid-cols-[1fr,222px] *bg-red-200 min-h-[392px]">
         <!-- @@col.post -->
         <div
           class="*bg-red pb-2 ms-4 min-h-[262px] !max-h-[442px] overflow-auto scrollbar-thin-light relative"

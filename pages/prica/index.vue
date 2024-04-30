@@ -14,6 +14,7 @@ const sid_ = Number(last(String(get(route.query, QUERY)).split("-")));
 </script>
 <template>
   <section class="component--prica:sid">
+    <h1>@todo</h1>
     <h1>📜 @strana Prica [Ref# {{ sid_ }}]</h1>
     <NuxtLink :to="{ name: 'index' }">
       <VBtn variant="elevated" color="primary" size="x-large"><strong class="text-2xl me-2">🏪</strong> Pijaca</VBtn>
