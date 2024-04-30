@@ -8,10 +8,10 @@ export const useStoryImage = (SID?: any) => {
     key: { POST_IMAGES_prefix },
   } = useAppConfig();
   const sid$ = ref();
-  const enabled_ = computed(() => !!sid$.value);
   watchEffect(() => {
     sid$.value = toValue(SID);
   });
+  const enabled_ = computed(() => !!sid$.value);
   const { upload, publicUrl } = useApiStorage();
   const { tags } = useDocs();
   const { result, refetch, load, loading, error } = useLazyQuery<{
@@ -22,6 +22,7 @@ export const useStoryImage = (SID?: any) => {
       id: sid$,
     },
     {
+      fetchPolicy: "no-cache",
       enabled: enabled_,
       pollInterval: STORAGE_QUERY_POLL_INTERVAL,
     }
@@ -41,7 +42,6 @@ export const useStoryImage = (SID?: any) => {
   const update = async (file: OrNoValue<File> = null) => {
     if (!enabled_.value) return;
     if (!file) return;
-
     if (image.value) {
       await dropImages();
     }
@@ -53,6 +53,7 @@ export const useStoryImage = (SID?: any) => {
         "image.id"
       )
     );
+    console.log({ newImageId });
     if (newImageId) {
       await tags(newImageId, {
         [`${POST_IMAGES_prefix}${sid$.value}:${newImageId}`]: true,

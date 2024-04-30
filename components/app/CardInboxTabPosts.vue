@@ -4,7 +4,7 @@ import { FilePicker } from "@/components/ui";
 import { PostsItem } from "@/components/app";
 
 const {
-  key: { POST_IMAGES_prefix, APP_PROCESSING },
+  key: { APP_PROCESSING },
 } = useAppConfig();
 const auth = useStoreApiAuth();
 const uid_ = computed(() => get(auth.user$, "id"));
@@ -16,16 +16,14 @@ const {
   loading: postsLoading,
 } = useQueryPosts(uid_);
 // @@
-// const editor = useQuillEditor("#editorMyyL2ThnLsV", {
-//   bounds: "#quill--bounds",
-//   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
-// });
+const editor = useQuillEditor("#editorMyyL2ThnLsV", {
+  bounds: "#quill--bounds",
+  placeholder: "Moja priča...\n   (što bogatije to bolje...)",
+});
 
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const title_ = ref();
 const fileSelected$ = ref();
-const { upload, publicUrl } = useApiStorage();
-const { tags } = useDocs();
 const upl = useProcessMonitor();
 const postSaved$ = computed({
   get: () => !upl.processing.value && upl.success.value,
@@ -48,9 +46,11 @@ watch(storyIdSaved$, (id) => {
 });
 const storyImageRemoved$ = ref(false);
 const {
-  image,
+  image: storyImage,
   dropImages: storyImagesDrop,
   reload: storyImagesReload,
+  update: storyImageUpdate,
+  src: storyImageSrc,
 } = useStoryImage(postIdSelected$);
 const { submit } = useFormDataFields(
   "QuillEditor:CbmEHEEF",
@@ -59,68 +59,50 @@ const { submit } = useFormDataFields(
   },
   // @@
   {
-    // onSubmit: async () => {
-    //   // @@todo reuse component
-    //   editor.getContent(
-    //     async ({ text, content }: { text: string; content: any }) => {
-    //       if (!text) return;
-    //       if (!title_.value) return;
-    //       let postId;
-    //       upl.begin();
-    //       try {
-    //         //
-    //         if (storyImageRemoved$.value) {
-    //           await storyImagesDrop();
-    //         }
+    onSubmit: async () => {
+      // @@todo reuse component
+      editor.getContent(
+        async ({ text, content }: { text: string; content: any }) => {
+          if (!text) return;
+          if (!title_.value) return;
+          let postId;
+          upl.begin();
+          try {
+            if (storyImageRemoved$.value) {
+              await storyImagesDrop();
+            }
 
-    //         postId = Number(
-    //           get(
-    //             await postsUpsert(
-    //               {
-    //                 title: title_.value,
-    //                 content: JSON.stringify(content),
-    //               },
-    //               postIdSelected$.value
-    //             ),
-    //             "data.postsUpsert.id"
-    //           )
-    //         );
+            postId = Number(
+              get(
+                await postsUpsert(
+                  {
+                    title: title_.value,
+                    content: JSON.stringify(content),
+                  },
+                  postIdSelected$.value
+                ),
+                "data.postsUpsert.id"
+              )
+            );
+            if (!postId) throw "--error-post-failed";
 
-    //         if (!postId) throw "--error-post-failed";
-    //         if (!fileSelected$.value) {
-    //           upl.successful();
-    //           return;
-    //         }
-
-    //         const imageId = Number(
-    //           get(
-    //             await upload({
-    //               image: {
-    //                 file: fileSelected$.value,
-    //                 data: {},
-    //               },
-    //             }),
-    //             "image.id"
-    //           )
-    //         );
-
-    //         if (!imageId) throw "--failed-image-upload";
-    //         // bind/tag image to post
-    //         await tags(imageId, {
-    //           [`${POST_IMAGES_prefix}${postId}:${imageId}`]: true,
-    //         });
-    //         upl.successful(storyImagesReload);
-    //         console.log({ status: "👌🏻", postId, imageId });
-    //       } catch (error) {
-    //         upl.setError(error);
-    //       } finally {
-    //         storyIdSaved$.value = postId;
-    //         storyTitleSaved$.value = title_.value;
-    //         upl.done();
-    //       }
-    //     }
-    //   );
-    // },
+            if (!fileSelected$.value) {
+              upl.successful();
+              return;
+            }
+            postIdSelected$.value = postId;
+            await storyImageUpdate(fileSelected$.value);
+            upl.successful();
+          } catch (error) {
+            upl.setError(error);
+          } finally {
+            storyIdSaved$.value = postId;
+            storyTitleSaved$.value = title_.value;
+            upl.done();
+          }
+        }
+      );
+    },
   }
 );
 const toggleMenuPostsList = useToggleFlag();
@@ -131,7 +113,7 @@ watchEffect(() => {
   if (!postIdSelected$.value) return;
   title_.value = postSelected$.value?.title || title_.value;
   const jsondata = postSelected$.value?.content;
-  // if (jsondata) editor.setContent(JSON.parse(jsondata));
+  if (jsondata) editor.setContent(JSON.parse(jsondata));
 });
 watch(postIdSelected$, (ppid) => {
   // new story loaded; release flag
@@ -141,11 +123,11 @@ watch(postIdSelected$, (ppid) => {
 const fallbackUrl_ = computed(() =>
   !(!storyImageRemoved$.value && postIdSelected$.value)
     ? undefined
-    : publicUrl(get(image.value, "data.file_id") || "")
+    : storyImageSrc.value
 );
 const clearStory = () => {
   title_.value = undefined;
-  // editor.clear();
+  editor.clear();
   fileSelected$.value = undefined;
   postIdSelected$.value = undefined;
   storyImageRemoved$.value = false;
@@ -161,10 +143,10 @@ const postEditOnClick = (ppid: number) => {
 };
 
 watchEffect(() => {
-  // console.clear();
+  console.clear();
   console.log({ postIdSelected$: postIdSelected$.value });
   console.log({ storyImageRemoved$: storyImageRemoved$.value });
-  console.log({ image: image.value });
+  console.log({ image: storyImage.value });
   console.log({ fallbackUrl_: fallbackUrl_.value });
   console.log({ fileSelected$: fileSelected$.value });
 });
@@ -174,19 +156,21 @@ watchEffect(() => {
   <VCard class="component--CardInboxTabPosts" min-height="412">
     <!-- @signal:order-sent -->
     <VSnackbar
-      min-width="555"
       v-model="postSaved$"
       color="transparent"
       variant="text"
-      close-delay="122333"
+      width="489"
     >
-      <VAlert prominent rounded="lg" type="success" elevation="4">
-        <div class="d-flex justify-between items-center">
-          <NuxtLink :to="storyPublicUrl$" external target="_blank">
-            <strong class="me-4 text-xl">👌🏻 </strong>
-            <a class="text-truncate text-decoration-underline"
-              >📃 {{ storyTitleSaved$ }}</a
-            >
+      <VAlert :icon="false" prominent rounded="lg" type="success" elevation="4">
+        <div class="d-flex justify-between items-center gap-4">
+          <NuxtLink
+            :to="storyPublicUrl$"
+            external
+            target="_blank"
+            class="d-flex items-center text-truncate"
+          >
+            <strong class="me-4 text-3xl">👌🏻 </strong>
+            <a class="text-decoration-underline"> 📃 {{ storyTitleSaved$ }} </a>
           </NuxtLink>
           <VBtn
             class="ma-4"
