@@ -3,7 +3,7 @@ import { Q_docByDocId, M_docUpsert } from "@/graphql";
 import { get, batchSet } from "@/utils";
 
 export const useDoc = <TDoc = Record<string, any>>(
-  doc_id?: any,
+  doc_id: any = undefined,
   initialEnabled = true
 ) => {
   const auth = useStoreApiAuth();

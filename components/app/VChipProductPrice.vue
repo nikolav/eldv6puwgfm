@@ -11,14 +11,15 @@ const props = defineProps<{ product: IProduct }>();
     size="large"
   >
     <template #prepend>
-      <VIcon start class="translate-x-[2px] opacity-40" icon="$iconRSD" />
+      <VIcon start class="translate-x-[3px] translate-y-px opacity-30" icon="$iconRSD" />
     </template>
-    <strong class="text-lg">{{ product.price }}</strong>
+    <strong class="text-lg ms-[3px]">{{ product.price }}</strong>
     <template #append>
       <small
         style="font-size: 71%"
-        class="text-medium-emphasis translate-y-[3px] ps-px"
-        >/{{ product.stockType }}</small
+        class="text-medium-emphasis translate-y-[3px] ps-[3px]"
+      >
+        {{ product.stockType }}</small
       >
     </template>
   </VChip>

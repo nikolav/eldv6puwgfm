@@ -87,19 +87,27 @@ export const Q_productsByUser = gql`
   }
 `;
 
+
 export const Q_productsListAll = gql`
   query q_productsListAll {
     productsListAll {
       id
-      user_id
       name
-      description
       price
       price_history
+      description
       stockType
       stock
       onSale
+      user_id
+      user {
+        id
+        email
+        created_at
+        updated_at
+      }
       tags
+      docs
       created_at
       updated_at
     }

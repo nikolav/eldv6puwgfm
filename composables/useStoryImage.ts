@@ -53,7 +53,6 @@ export const useStoryImage = (SID?: any) => {
         "image.id"
       )
     );
-    console.log({ newImageId });
     if (newImageId) {
       await tags(newImageId, {
         [`${POST_IMAGES_prefix}${sid$.value}:${newImageId}`]: true,

@@ -29,9 +29,8 @@ watchEffect(() => emit("update:modelValue", fileSelected$.value));
 watchEffect(() => (fileSelected$.value = props.modelValue));
 const { files, open: fileDialogOpen } = useFileDialog({ accept: props.accept });
 watchEffect(() => {
-  const file = get(files.value, "[0]");
-  if (!file) return;
-  fileSelected$.value = file;
+  const file = first(files.value);
+  if (file) fileSelected$.value = file;
 });
 const fileClear = () => {
   // no file, image clicked; remove

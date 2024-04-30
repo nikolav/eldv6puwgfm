@@ -133,24 +133,7 @@ const submitProductAdd = async () => {
 </script>
 <template>
   <VSheet :rounded="0" :elevation="0" class="fill-height d-flex flex-col">
-    <!-- <VSnackbar
-      v-model="toggleSnackbarProductAddStatus.isActive.value"
-      color="transparent"
-      variant="text"
-    >
-      <VAlert type="success" prominent elevation="4">
-        <div class="d-flex justify-between items-center gap-4 sm:gap-8">
-          <p>Proizvod je uspešno ulistan.</p>
-          <VBtn
-            @click="toggleSnackbarProductAddStatus.off"
-            color="on-success"
-            variant="tonal"
-            >ok</VBtn
-          >
-        </div>
-      </VAlert>
-    </VSnackbar> -->
-    <!-- @toolbar -->
+    <!-- @toolbar:top -->
     <VToolbar flat color="transparent">
       <VBtn @click="props_.close" icon variant="text" size="large">
         <VIcon icon="$prev" size="large" />
@@ -162,19 +145,28 @@ const submitProductAdd = async () => {
         />
       </VBtn>
       <VSpacer v-if="smAndUp" />
-      <VToolbarTitle class="*ms-sm-8">
-        <h2
-          class="text-h5 !font-sans text-medium-emphasis items-center d-flex gap-4"
-        >
-          <VIcon
-            start
-            icon="$iconProductAdd"
-            color="primary-darken-2"
-            class="!opacity-60"
-          />
-          <span>Ulistaj prozivod</span>
-        </h2>
-      </VToolbarTitle>
+      <VBtn
+        :size="smAndUp ? 'large' : undefined"
+        variant="text"
+        color="secondary-lighten-1"
+        @click="fieldsReset"
+      >
+        <VIcon icon="$iconEraser" start size="large" />
+        <strong>Poništi</strong>
+      </VBtn>
+      <VSpacer v-if="smAndUp" />
+      <!-- <VSpacer v-if="smAndUp" /> -->
+      <VBtn
+        @click="submitProductAdd"
+        :size="smAndUp ? 'x-large' : undefined"
+        variant="elevated"
+        class="*ms-4"
+        color="primary"
+        elevation="1"
+      >
+        <VIcon icon="$iconProductAdd" start size="x-large" />
+        <strong>Ulistaj</strong>
+      </VBtn>
       <VSpacer v-if="smAndUp" />
       <VBtn @click="props_.close" icon variant="text" size="large">
         <VIcon icon="$close" size="large" />
@@ -192,11 +184,11 @@ const submitProductAdd = async () => {
       @submit.prevent="submitProductAdd"
       class="grow d-flex flex-col mt-sm-4"
     >
-      <div class="grow *bg-red">
+      <div class="grow">
         <!-- @@ -->
         <!-- @form:fields -->
         <section
-          class="form--product-add mx-auto max-w-[796px] d-flex flex-col *sm:gap-y-2"
+          class="form--product-add mx-auto max-w-[812px] d-flex flex-col sm:gap-y-4"
         >
           <!-- @@ -->
           <!-- @rows:1 -->
@@ -367,29 +359,6 @@ const submitProductAdd = async () => {
           </div>
         </section>
       </div>
-      <VToolbar flat color="transparent" class="pa-sm-4">
-        <VBtn
-          :size="smAndUp ? 'large' : undefined"
-          variant="text"
-          color="secondary-lighten-1"
-          @click="fieldsReset"
-        >
-          <VIcon icon="$iconEraser" start size="large" />
-          <strong>Poništi</strong>
-        </VBtn>
-        <VSpacer />
-        <VBtn
-          :size="smAndUp ? 'large' : undefined"
-          variant="elevated"
-          type="submit"
-          class="*ms-4"
-          color="primary"
-          elevation="1"
-        >
-          <VIcon icon="$iconSave" start size="large" />
-          <strong>Ulistaj</strong>
-        </VBtn>
-      </VToolbar>
     </VForm>
   </VSheet>
 </template>

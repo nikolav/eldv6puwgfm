@@ -16,10 +16,10 @@ const {
   loading: postsLoading,
 } = useQueryPosts(uid_);
 // @@
-const editor = useQuillEditor("#editorMyyL2ThnLsV", {
-  bounds: "#quill--bounds",
-  placeholder: "Moja priča...\n   (što bogatije to bolje...)",
-});
+// const editor = useQuillEditor("#editorMyyL2ThnLsV", {
+//   bounds: "#quill--bounds",
+//   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
+// });
 
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const title_ = ref();
@@ -58,53 +58,53 @@ const { submit } = useFormDataFields(
     // title: (value: string) => 1 < value?.length,
   },
   // @@
-  {
-    onSubmit: async () => {
-      // @@todo reuse component
-      editor.getContent(
-        async ({ text, content }: { text: string; content: any }) => {
-          if (!text) return;
-          if (!title_.value) return;
-          let postId;
-          upl.begin();
-          try {
-            if (storyImageRemoved$.value) {
-              await storyImagesDrop();
-            }
+  // {
+  //   onSubmit: async () => {
+  //     // @@todo reuse component
+  //     editor.getContent(
+  //       async ({ text, content }: { text: string; content: any }) => {
+  //         if (!text) return;
+  //         if (!title_.value) return;
+  //         upl.begin();
 
-            postId = Number(
-              get(
-                await postsUpsert(
-                  {
-                    title: title_.value,
-                    content: JSON.stringify(content),
-                  },
-                  postIdSelected$.value
-                ),
-                "data.postsUpsert.id"
-              )
-            );
-            if (!postId) throw "--error-post-failed";
+  //         let postId;
+  //         try {
+  //           if (storyImageRemoved$.value) {
+  //             await storyImagesDrop();
+  //           }
 
-            if (!fileSelected$.value) {
-              upl.successful();
-              return;
-            }
-            postIdSelected$.value = postId;
-            await nextTick();
-            await storyImageUpdate(fileSelected$.value);
-            upl.successful();
-          } catch (error) {
-            upl.setError(error);
-          } finally {
-            storyIdSaved$.value = postId;
-            storyTitleSaved$.value = title_.value;
-            upl.done();
-          }
-        }
-      );
-    },
-  }
+  //           postId = Number(
+  //             get(
+  //               await postsUpsert(
+  //                 {
+  //                   title: title_.value,
+  //                   content: JSON.stringify(content),
+  //                 },
+  //                 postIdSelected$.value
+  //               ),
+  //               "data.postsUpsert.id"
+  //             )
+  //           );
+  //           if (!postId) throw "--error-post-failed";
+  //           storyTitleSaved$.value = title_.value;
+  //           postIdSelected$.value = postId;
+
+  //           if (!fileSelected$.value) {
+  //             upl.successful();
+  //             return;
+  //           }
+  //           await nextTick();
+  //           await storyImageUpdate(fileSelected$.value);
+  //           upl.successful();
+  //         } catch (error) {
+  //           upl.setError(error);
+  //         } finally {
+  //           upl.done();
+  //         }
+  //       }
+  //     );
+  //   },
+  // }
 );
 const toggleMenuPostsList = useToggleFlag();
 const postSelected$ = computed(() =>
@@ -114,7 +114,7 @@ watchEffect(() => {
   if (!postIdSelected$.value) return;
   title_.value = postSelected$.value?.title || title_.value;
   const jsondata = postSelected$.value?.content;
-  if (jsondata) editor.setContent(JSON.parse(jsondata));
+  // if (jsondata) editor.setContent(JSON.parse(jsondata));
 });
 watch(postIdSelected$, (ppid) => {
   // new story loaded; release flag
@@ -127,30 +127,29 @@ const fallbackUrl_ = computed(() =>
     : storyImageSrc.value
 );
 const clearStory = () => {
-  title_.value = undefined;
-  editor.clear();
-  fileSelected$.value = undefined;
   postIdSelected$.value = undefined;
   storyImageRemoved$.value = false;
+  fileSelected$.value = undefined;
+  // editor.clear();
+  title_.value = undefined;
 };
 
 // @@
 const postEditOnClick = (ppid: number) => {
   setTimeout(toggleMenuPostsList.off, 23);
+  postIdSelected$.value = ppid;
   fileSelected$.value = null;
   storyImageRemoved$.value = false;
-  // close post list when new item is selected
-  postIdSelected$.value = ppid;
 };
 
-watchEffect(() => {
-  console.clear();
-  console.log({ postIdSelected$: postIdSelected$.value });
-  console.log({ storyImageRemoved$: storyImageRemoved$.value });
-  console.log({ image: storyImage.value });
-  console.log({ fallbackUrl_: fallbackUrl_.value });
-  console.log({ fileSelected$: fileSelected$.value });
-});
+// watchEffect(() => {
+//   console.clear();
+//   console.log({ postIdSelected$: postIdSelected$.value });
+//   console.log({ storyImageRemoved$: storyImageRemoved$.value });
+//   console.log({ image: storyImage.value });
+//   console.log({ fallbackUrl_: fallbackUrl_.value });
+//   console.log({ fileSelected$: fileSelected$.value });
+// });
 // @@eos
 </script>
 <template>

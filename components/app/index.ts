@@ -35,3 +35,7 @@ export { default as TopicChat } from "./TopicChat.vue";
 export { default as TopicChatDisplayCard } from "./TopicChatDisplayCard.vue";
 export { default as TopicRating } from "./TopicRating.vue";
 export { default as VChipProductPrice } from "./VChipProductPrice.vue";
+export { default as WithComProfile } from "./WithComProfile.vue";
+export { default as WithComPublicUrl } from "./WithComPublicUrl.vue";
+export { default as GetCategoryTitleFromTag } from "./GetCategoryTitleFromTag.vue";
+

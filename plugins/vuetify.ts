@@ -10,6 +10,7 @@ import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { light2, dark } from "@/assets/themes";
 
 import {
+  IconAddToCart as IconKantarKorpa2,
   IconBrasno,
   IconGlobeKantar,
   IconKorpaKantar,
@@ -223,6 +224,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         menu: IconMenu,
         // # add: <VIcon icon="$other">
         // # @icons:kantar.rs
+        iconKantarKorpa2: IconKantarKorpa2,
         iconBrasno: IconBrasno,
         iconGlobeKantar: IconGlobeKantar,
         iconKorpaKantar: IconKorpaKantar,
