@@ -49,7 +49,7 @@ const cart = useStoreCart();
               v-slot="{ companyUrl }"
             >
               <VImg
-                max-height="256"
+                max-height="252"
                 :aspect-ratio="1"
                 cover
                 :src="productImageSrcSample$"
@@ -178,7 +178,7 @@ const cart = useStoreCart();
                 <VChipProductPrice :product="props.product" />
                 <VSpacer />
                 <VBtn
-                  class="px-4"
+                  class="px-4 group/btn-korpa"
                   color="transparent"
                   variant="flat"
                   border
@@ -202,7 +202,7 @@ const cart = useStoreCart();
                     end
                     icon="$iconKantarKorpa2"
                     size="29"
-                    class="opacity-90"
+                    class="opacity-80 group-hover/btn-korpa:opacity-100 group-hover/btn-korpa:-rotate-1 group-hover/btn-korpa:scale-110 transition-transform"
                   />
                 </VBtn>
               </VCardActions>
