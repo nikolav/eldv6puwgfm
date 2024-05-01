@@ -37,9 +37,11 @@ watch(search_, debounceSearchHandle);
   <section class="layout--default" :style="`padding-top: ${appBarHeight}px`">
     <!-- @cart:button -->
     <CartOpenBadgePrimary
+      :badge-offset="11"
       class="end-4 sm:end-8 z-10"
       position="fixed"
       :style="`top: calc(${appBarHeight}px + 1.22rem)`"
+      color="white"
     />
 
     <!-- @appbar:main -->
