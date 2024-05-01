@@ -17,12 +17,12 @@ const cart = useStoreCart();
 </script>
 <template>
   <VBtn
+    variant="elevated"
     @click="cart.open"
     icon
     rounded="circle"
     :size="props.size"
     elevation="3"
-    variant="text"
     v-bind="$attrs"
   >
     <VBadge
@@ -32,7 +32,7 @@ const cart = useStoreCart();
       color="error"
     >
       <!-- <VIcon icon="$iconKorpaKantar" :size="props.size" /> -->
-      <VIcon icon="$iconKorpaKantar" :size="props.size" />
+      <VIcon icon="$iconKorpaKantar" :size="props.size * 0.97" />
       <template #badge>
         <pre>{{ cart.length }}</pre>
       </template>

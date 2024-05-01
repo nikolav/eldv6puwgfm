@@ -8,6 +8,7 @@ import {
   TopicChat,
   GoogleCalendarIframe,
   CompanyDisplay,
+  CartOpenBadgePrimary,
 } from "@/components/app";
 
 definePageMeta({
@@ -79,53 +80,68 @@ const calLink$ = ref();
         <VCol cols="12" md="7" class="*bg-green-200 ma-0 pa-0">
           <!-- @row:1 social, rating, calendar -->
           <!-- social, rating, calendar -->
-          <div class="d-flex items-center justify-between px-1 pe-4 *mb-4">
-            <TopicRating
-              :small="!smAndUp ? true : undefined"
-              text
-              :topic="`${COM_RATING_prefix}${uid_}`"
-            />
-            <TopicChat
-              class="ms-auto"
-              :title="companyName"
-              :topic="`${TOPIC_CHAT_COM_prefix}${uid_}`"
-            />
-            <LikeDislike
-              class="ms-[1.22rem]"
-              :topic="`${COM_LIKES_prefix}${uid_}`"
-            />
-            <VBtn
-              elevation="2"
-              variant="elevated"
-              color="primary-lighten-1"
-              icon
-              rounded="circle"
-              size="42"
-              class="ms-[1.22rem]"
-            >
-              <VTooltip
-                activator="parent"
-                location="bottom"
-                open-delay="345"
-                text="Naš raspored događanja..."
-              />
-              <VAvatar color="primary-lighten-1" style="font-size: 1.22rem"
-                ><strong class="-translate-y-px">📆</strong></VAvatar
-              >
-              <VMenu
-                activator="parent"
-                :close-on-content-click="false"
-                :transition="DEFAULT_TRANSITION"
-                location="center"
-              >
-                <VSheet :width="googleCalendarIframeWidth + 16" class="pa-2">
-                  <GoogleCalendarIframe
-                    :src="calLink$"
-                    ref="googleCalendarIframe"
+          <div>
+            <div class="position-relative">
+              <div class="d-flex items-center justify-between px-1 pe-4 *mb-4">
+                <TopicRating
+                  :small="!smAndUp ? true : undefined"
+                  text
+                  :topic="`${COM_RATING_prefix}${uid_}`"
+                />
+                <TopicChat
+                  class="ms-auto"
+                  :title="companyName"
+                  :topic="`${TOPIC_CHAT_COM_prefix}${uid_}`"
+                />
+                <LikeDislike
+                  class="ms-[1.22rem]"
+                  :topic="`${COM_LIKES_prefix}${uid_}`"
+                />
+                <!-- @@g.calendar -->
+                <VBtn
+                  elevation="2"
+                  variant="elevated"
+                  color="primary-lighten-1"
+                  icon
+                  rounded="circle"
+                  size="42"
+                  class="ms-[1.22rem]"
+                >
+                  <VTooltip
+                    activator="parent"
+                    location="bottom"
+                    open-delay="345"
+                    text="Naš raspored događanja..."
                   />
-                </VSheet>
-              </VMenu>
-            </VBtn>
+                  <VAvatar color="primary-lighten-1" style="font-size: 1.22rem"
+                    ><strong class="-translate-y-px">📆</strong></VAvatar
+                  >
+                  <VMenu
+                    activator="parent"
+                    :close-on-content-click="false"
+                    :transition="DEFAULT_TRANSITION"
+                    location="center"
+                  >
+                    <VSheet
+                      :width="googleCalendarIframeWidth + 16"
+                      class="pa-2"
+                    >
+                      <GoogleCalendarIframe
+                        :src="calLink$"
+                        ref="googleCalendarIframe"
+                      />
+                    </VSheet>
+                  </VMenu>
+                </VBtn>
+              </div>
+              <div class="position-absolute end-2 mt-2">
+                <CartOpenBadgePrimary
+                  :badge-offset="10"
+                  elevation="4"
+                  color="white"
+                />
+              </div>
+            </div>
           </div>
 
           <!-- @row:2 -->

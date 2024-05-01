@@ -6,12 +6,13 @@ import {
   ProductPublicUrl,
   ProductCategory,
   TopicChat,
+  AddToCartButtonPrimary,
 } from "@/components/app";
 const emit = defineEmits<{
   (e: "productsLength", length: OrNoValue<number>): void;
 }>();
 const props = defineProps<{ user: any; profile: any }>();
-const PRODUCT_ITEM_MAX_HEIGHT = 92;
+const PRODUCT_ITEM_MAX_HEIGHT = 107;
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
   key: { APP_PROCESSING, TOPIC_CHAT_PRODUCTS_prefix },
@@ -118,7 +119,11 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
             <div
               class="*bg-green-200 d-flex flex-col items-end justify-between pa-1"
             >
-              <VChipProductPrice :product="p" />
+              <div>
+                <!-- @@ -->
+                <AddToCartButtonPrimary :size="48" :product-id="p?.id" />
+                <VChipProductPrice class="ms-4" :product="p" />
+              </div>
               <span
                 class="invisible me-2 translate-y-[2px]"
                 :class="isHovering ? '!visible' : undefined"
