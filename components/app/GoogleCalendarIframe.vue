@@ -4,9 +4,9 @@ const props = defineProps<{ src: string }>();
 </script>
 <template>
   <iframe
+    class="component--GoogleCalendarIframe"
     :src="props.src"
     v-bind="$attrs"
-    class="component--GoogleCalendarIframe"
     style="border-width: 0"
     width="640"
     height="480"
@@ -14,5 +14,3 @@ const props = defineProps<{ src: string }>();
     scrolling="no"
   ></iframe>
 </template>
-<style lang="scss" scoped>
-</style>

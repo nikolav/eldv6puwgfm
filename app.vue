@@ -66,7 +66,7 @@ watch(
     // @auth:debug
     console.log({ user: auth.user$ });
     // regular user login; goto `index`
-    if (!auth.isDefault$) await navigateTo({ name: "index" });
+    // if (!auth.isDefault$) await navigateTo({ name: "index" });
   }
 );
 

@@ -18,6 +18,7 @@ const {
   forEach,
   get,
   has: hasOwn,
+  has: hasPath,
   indexOf,
   isEmpty,
   keys,
@@ -49,7 +50,6 @@ const {
   zipObject,
 } = lodash;
 export {
-  invoke,
   assign,
   at,
   capitalize,
@@ -66,7 +66,9 @@ export {
   forEach,
   get,
   hasOwn,
+  hasPath,
   indexOf,
+  invoke,
   isEmpty,
   keys,
   last,

@@ -1,14 +1,14 @@
-import { get, isNumeric, noop } from "@/utils";
-
 export default defineNuxtPlugin((nuxtapp) => {
   // declare `v-effect:<type>="<{ watch, duration?, onEnd? }>"` directive
   // apply `animate.css` effects to dom elements
   nuxtapp.vueApp.directive("effect", (el, binding) => {
+    const {
+      effect: { default: defaultType, duration: defaultDuration },
+    } = useAppConfig();
     const value$ = get(binding, "value.watch");
-    const duration =
-      get(binding, "value.duration") || useAppConfig().effect.duration;
+    const duration = get(binding, "value.duration") || defaultDuration;
     const onEnd = get(binding, "value.onEnd") || noop;
-    const type = get(binding, "arg") || useAppConfig().effect.default;
+    const type = get(binding, "arg") || defaultType;
     const ANIMATED_ = "animate__animated";
     const animation_ = `animate__${type}`;
 
@@ -41,7 +41,7 @@ export default defineNuxtPlugin((nuxtapp) => {
     });
   });
 });
-// <div v-effect:headShake="{ watch: isActive$ }"/>
+// <CartButton v-effect:headShake="{ watch: isActive$ }"/>
 
 // @@Attention seekers
 // bounce: 1,

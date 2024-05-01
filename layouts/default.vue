@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { AppBarMain, CartOpenBadgePrimary } from "@/components/app";
-
 import { PRODUCTION$ } from "@/config";
-import { debounce } from "@/utils";
 
 const {
   layout: { appBarHeight },
-  app: { CART_BADGE_OFFSET },
 } = useAppConfig();
 const { current$, menuCategories, cache: appMenuCache } = useAppMenu();
 const iconClasses = (isSelected: boolean) =>

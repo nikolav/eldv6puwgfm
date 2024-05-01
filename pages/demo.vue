@@ -1,21 +1,27 @@
 <script setup lang="ts">
-import { Dump } from "@/components/dev"
+import { Dump } from "@/components/dev";
 definePageMeta({
   layout: "blank",
 });
-const { products$ } = useQueryProductsPrices()
-
+const { store, isLiked, isDisliked, likesCount, dislikesCount, like, dislike } =
+  useLikeDislikeTopic("foo:12");
 // #eos
 </script>
 <template>
   <section class="page--demo.index">
-    <Dump :data="products$" />
-    <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi velit
-      excepturi ipsa, temporibus voluptates delectus soluta exercitationem earum
-      commodi. Veniam neque repellat ipsa eum nemo cum aliquam dolores. Aut,
-      accusantium?
-    </p>
+    <VBtn @click="like(true)">like</VBtn>
+    <VBtn @click="like(false)">unlike</VBtn>
+    <VBtn @click="dislike(true)">dislike</VBtn>
+    <VBtn @click="dislike(false)">undislike</VBtn>
+    <Dump
+      :data="{
+        isLiked,
+        isDisliked,
+        likesCount,
+        dislikesCount,
+        store,
+      }"
+    />
   </section>
 </template>
 <style lang="scss" scoped>
