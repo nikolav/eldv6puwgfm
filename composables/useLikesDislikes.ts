@@ -3,17 +3,13 @@ export const useLikesDislikes = (topic: any = "") => {
   watchEffect(() => {
     target$.value = toValue(topic);
   });
-  const { isLiked, isDisliked } = useLocalStorageLikeDislikeTargets();
+  const { isLiked, isDisliked } = useStoreLocalStorageLikesDislikes();
   const likes = useStoreLikes();
   const dislikes = useStoreDislikes();
   const isLiked_ = computed(() => isLiked(target$.value));
   const isDisliked_ = computed(() => isDisliked(target$.value));
-  const countLikes = computed(
-    () => Number(get(likes.store, target$.value)) || 0
-  );
-  const countDislikes = computed(
-    () => Number(get(dislikes.store, target$.value)) || 0
-  );
+  const countLikes = computed(() => get(likes.store, target$.value) || 0);
+  const countDislikes = computed(() => get(dislikes.store, target$.value) || 0);
   const like = async (flag = true) => {
     if (isDisliked_.value && flag) {
       await dislikes.dislike(target$.value, false);

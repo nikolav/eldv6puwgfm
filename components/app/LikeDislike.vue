@@ -3,6 +3,8 @@ const props = defineProps<{ topic: string; small?: boolean | undefined }>();
 const { count, like, dislike, isLiked, isDisliked } = useLikesDislikes(
   props.topic
 );
+const countLikes = computed(() => count.likes.value);
+const countDisLikes = computed(() => count.dislikes.value);
 // @@eos
 </script>
 <template>
@@ -33,7 +35,7 @@ const { count, like, dislike, isLiked, isDisliked } = useLikesDislikes(
         class="translate-x-px -translate-y-[2px]"
         >👍🏼</strong
       ><small :class="!props.small ? 'ps-px' : undefined">
-        <pre class="text-xs opacity-80">{{ count.likes.value }}</pre>
+        <pre class="text-xs opacity-80">{{ countLikes }}</pre>
       </small>
     </VBtn>
     <VBtn
@@ -50,7 +52,7 @@ const { count, like, dislike, isLiked, isDisliked } = useLikesDislikes(
         class="-translate-y-px -translate-x-px"
         >👎🏼</strong
       ><small :class="!props.small ? 'ps-px' : undefined">
-        <pre class="text-xs -translate-x-[2px]">{{ count.dislikes.value }}</pre>
+        <pre class="text-xs -translate-x-[2px]">{{ countDisLikes }}</pre>
       </small></VBtn
     >
   </VBtnGroup>

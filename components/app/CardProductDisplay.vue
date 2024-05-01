@@ -54,22 +54,20 @@ const cart = useStoreCart();
               :company-name="profile?.name"
               v-slot="{ companyUrl }"
             >
-              <VSlideYTransition>
-                <VToolbar
-                  density="compact"
-                  elevation="2"
-                  :class="isHovering ? '!visible' : ''"
-                  class="top-0 inset-x-0 z-10 invisible"
-                  color="#f5f5f480"
-                  absolute
-                >
-                  <VToolbarTitle> 12 </VToolbarTitle>
+              <VToolbar
+                density="compact"
+                elevation="2"
+                :class="isHovering ? '!visible' : ''"
+                class="top-0 inset-x-0 z-10 invisible"
+                color="#f5f5f480"
+                absolute
+              >
+                <VToolbarTitle> 12 </VToolbarTitle>
 
-                  <CardProductDisplayToolbarSocial :product="props.product" />
-                </VToolbar>
-              </VSlideYTransition>
+                <CardProductDisplayToolbarSocial :product="props.product" />
+              </VToolbar>
               <VImg
-                max-height="252"
+                max-height="320"
                 :aspect-ratio="1"
                 cover
                 :src="productImageSrcSample$"
@@ -143,7 +141,7 @@ const cart = useStoreCart();
                 </VCardTitle>
                 <div class="spacer--TopicRating ps-2 pt-2">
                   <TopicRating
-                  small
+                    small
                     :topic="`${PRODUCT_RATING_prefix}${props.product.id}`"
                   />
                 </div>
@@ -185,7 +183,7 @@ const cart = useStoreCart();
                   </VChip>
                 </VChipGroup>
               </div>
-              <VCardText class="mt-2 line-clamp-3 *text-truncate">
+              <VCardText class="mt-2 line-clamp-4 *text-truncate">
                 {{ props.product.description }}
               </VCardText>
               <VCardActions class="pa-4 mt-5 d-block">

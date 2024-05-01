@@ -4,7 +4,8 @@ import { get, batchSet } from "@/utils";
 
 export const useDoc = <TDoc = Record<string, any>>(
   doc_id: any = undefined,
-  initialEnabled = true
+  initialEnabled = true,
+  graphqlOptions?: Record<string, any>
 ) => {
   const auth = useStoreApiAuth();
   const toggleEnabled = useToggleFlag(initialEnabled);
@@ -24,6 +25,8 @@ export const useDoc = <TDoc = Record<string, any>>(
     {
       enabled: enabled$,
       pollInterval: useAppConfig().graphql.STORAGE_QUERY_POLL_INTERVAL,
+      ...(graphqlOptions || {}),
+      // fetchPolicy: "no-cache",
     }
   );
   const data$ = computed(

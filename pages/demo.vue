@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Dump } from "@/components/dev";
-
 definePageMeta({
   layout: "blank",
 });
@@ -9,8 +7,12 @@ definePageMeta({
 </script>
 <template>
   <section class="page--demo.index">
-    <hr />
-    <!-- <Dump :data="{ image }" /> -->
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi velit
+      excepturi ipsa, temporibus voluptates delectus soluta exercitationem earum
+      commodi. Veniam neque repellat ipsa eum nemo cum aliquam dolores. Aut,
+      accusantium?
+    </p>
   </section>
 </template>
 <style lang="scss" scoped>
