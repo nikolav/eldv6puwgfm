@@ -32,6 +32,11 @@ const productImageSrcSample$ = computed(() =>
 );
 const uid = computed(() => props.product.user_id);
 const { profile, companyPublicUrl: companyUrl } = useUserData(uid);
+const productPublicUrl_ = useProductPublicUrl(
+  () => props.product?.id,
+  props.product?.name
+);
+
 const cart = useStoreCart();
 // @@eos
 </script>
@@ -54,7 +59,7 @@ const cart = useStoreCart();
             color="#f5f5f480"
             absolute
           >
-            <VToolbarTitle> 12 </VToolbarTitle>
+            <VToolbarTitle> @@ </VToolbarTitle>
 
             <CardProductDisplayToolbarSocial :product="props.product" />
           </VToolbar>
@@ -126,17 +131,24 @@ const cart = useStoreCart();
             >
               {{ profile?.name }}
             </VCardTitle>
-            <div class="spacer--TopicRating ps-2 pt-2">
+            <div class="spacer--TopicRating ps-2 pt-3">
               <TopicRating
                 small
                 :topic="`${PRODUCT_RATING_prefix}${props.product.id}`"
               />
             </div>
-            <VCardTitle class="pt-0 pe-0 ps-3" style="font-size: 128%">
-              {{ props.product.name }}
+            <VCardTitle class="pt-1 pe-0 ps-3" style="font-size: 128%">
+              <!-- @@ -->
+              <NuxtLink :to="productPublicUrl_" external target="_blank">
+                <a
+                  class="d-inline-block transition-transform hover:scale-[102%] text-decoration-underline text-primary-darken-1 cursor-pointer"
+                >
+                  {{ props.product.name }}
+                </a>
+              </NuxtLink>
               <!-- Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis illo aperiam aut quidem ipsum enim distinctio, alias molestiae inventore impedit est asperiores unde sunt praesentium? Labore, sint sed! Incidunt, neque! -->
             </VCardTitle>
-            <VChipGroup column class="ms-2">
+            <VChipGroup column class="ms-2 pt-3">
               <VChip size="x-small" :link="false">
                 <template #prepend>
                   <VIcon
