@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppBarMain } from "@/components/app";
+import { AppBarMain, CartOpenBadgePrimary } from "@/components/app";
 
 import { PRODUCTION$ } from "@/config";
 import { debounce } from "@/utils";
@@ -36,28 +36,11 @@ watch(search_, debounceSearchHandle);
 <template>
   <section class="layout--default" :style="`padding-top: ${appBarHeight}px`">
     <!-- @cart:button -->
-    <VBtn
-      @click="cart.open"
-      icon
-      size="72"
-      variant="text"
-      elevation="4"
+    <CartOpenBadgePrimary
       class="end-4 sm:end-8 z-10"
-      :style="`top: calc(${appBarHeight}px + 1.22rem)`"
       position="fixed"
-    >
-      <VBadge
-        :model-value="!cart.isEmpty"
-        :offset-y="CART_BADGE_OFFSET"
-        :offset-x="CART_BADGE_OFFSET"
-        color="red"
-      >
-        <VIcon icon="$iconKorpaKantar" size="72" />
-        <template #badge>
-          <pre>{{ cart.length }}</pre>
-        </template>
-      </VBadge>
-    </VBtn>
+      :style="`top: calc(${appBarHeight}px + 1.22rem)`"
+    />
 
     <!-- @appbar:main -->
     <AppBarMain :height="appBarHeight" />

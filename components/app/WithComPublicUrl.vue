@@ -4,5 +4,5 @@ const url = useCompanyPublicUrl(props.companyId, props.companyName);
 // @@eos
 </script>
 <template>
-  <slot :companyUrl="url" />
+  <slot :company-url="url" />
 </template>

@@ -1,3 +1,4 @@
+export * from "./korpa";
 export { default as AppBarMain } from "./AppBarMain.vue";
 export { default as CardCartItem } from "./CardCartItem.vue";
 export { default as CardInbox } from "./CardInbox.vue";
@@ -39,4 +40,3 @@ export { default as WithComProfile } from "./WithComProfile.vue";
 export { default as WithComPublicUrl } from "./WithComPublicUrl.vue";
 export { default as GetCategoryTitleFromTag } from "./GetCategoryTitleFromTag.vue";
 export { default as CardProductDisplayToolbarSocial } from "./CardProductDisplayToolbarSocial.vue";
-

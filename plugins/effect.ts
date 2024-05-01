@@ -32,7 +32,7 @@ export default defineNuxtPlugin((nuxtapp) => {
       });
 
     watchEffect(async () => {
-      if (!value$) return;
+      if (!toValue(value$)) return;
       try {
         onEnd(await animatecss_());
       } catch (error_) {

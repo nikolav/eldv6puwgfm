@@ -1,5 +1,10 @@
-@use "vuetify/settings";
+// @use "vuetify/settings";
 
-// @use "vuetify/settings" with (
-//   // $override-vuetify-variables: true
-// );
+@use "vuetify/settings" with (
+  $badge-font-size: .88rem,
+  // $badge-padding: 10px 10px,
+  $badge-height: 22px,
+  $badge-min-width: 22px,
+  $badge-border-radius: 11px,
+);
+

@@ -4,25 +4,23 @@ const props = defineProps<{ product: IProduct }>();
 // @@eos
 </script>
 <template>
-  <VChip
-    class="component--VChipProductPrice"
-    variant="elevated"
-    color="primary3-darken-1"
-    size="large"
-  >
+  <VChip size="large" color="primary3-darken-1" variant="elevated">
     <template #prepend>
-      <VIcon start class="translate-x-[3px] translate-y-px opacity-30" icon="$iconRSD" />
+      <VIcon
+        start
+        icon="$iconRSD"
+        class="!opacity-40 translate-y-[2px] ps-1 translate-x-px"
+        :size="25"
+      />
     </template>
-    <strong class="text-lg ms-[3px]">{{ product.price }}</strong>
-    <template #append>
-      <small
-        style="font-size: 71%"
-        class="text-medium-emphasis translate-y-[3px] ps-[3px]"
-      >
-        {{ product.stockType }}</small
-      >
-    </template>
+    <span class="align-bottom">
+      <strong class="text-[122%] font--bold">{{ product?.price }}</strong
+      ><small class="ms-[3px] opacity-50">{{ product?.stockType }}</small>
+    </span>
   </VChip>
 </template>
 <style lang="scss" scoped>
+.font--bold {
+  font-weight: bold !important;
+}
 </style>

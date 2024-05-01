@@ -4,17 +4,15 @@
 
 import { useDisplay } from "vuetify";
 import { CardProductDisplay } from "@/components/app";
+import { Dump } from "@/components/dev";
 
 definePageMeta({
   scrollToTop: false,
 });
 
 // const cart = useStoreCart();
-
 const { lgAndUp } = useDisplay();
-
 const { products$ } = useQueryProductsAll();
-
 // #eos
 </script>
 

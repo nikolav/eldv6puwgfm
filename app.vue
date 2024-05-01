@@ -15,69 +15,58 @@ const {
 } = useNuxtApp();
 
 const {
-  re: { viewRoutes: reViewRoutes },
+  // re: {
+  //   viewRoutes:
+  //   reViewRoutes
+  // },
   theme: { DARK, LIGHT },
   io: { IOEVENT_PRODUCTS_CHANGE },
   key: { PRODUCTS_CHANGE, ORDER_SEND_STATUS },
   app: { DEFAULT_TRANSITION },
 } = useAppConfig();
+
 const htmlAttrs = computed(() => ({
   class: DARK === theme.value ? "dark" : LIGHT,
 }));
 useHead({
-  titleTemplate: (ttl) => (!ttl ? "kantar.rs" : `${ttl} | kantar.rs`),
+  titleTemplate: (ttl) => (ttl ? `${ttl} | kantar.rs` : "kantar.rs"),
   htmlAttrs,
 });
 
-const route = useRoute();
-const isViewRoute = computed(() =>
-  some(reViewRoutes, (re) => re.test(route.fullPath))
-);
+// const route = useRoute();
+// const isViewRoute = computed(() =>
+//   some(reViewRoutes, (re) => re.test(route.fullPath))
+// );
 
-const auth = useStoreApiAuth();
-watchEffect(async () => {
-  if (isViewRoute.value) return;
-  // logout @non-view-routes
-  if (auth.isDefault$) {
-    await auth.logout();
-    auth.tokenPut("");
-  }
-});
 const { destroy: appMenuCacheDestroy } = useAppMenu();
+const auth = useStoreApiAuth();
+
+// ensure defaultauth .readonly
+onceOn(
+  () => auth.initialized$ && !auth.isAuth$,
+  () => {
+    nextTick(() => {
+      if (!auth.token$) auth.tokenPutDefault();
+    });
+  }
+);
 watch(
   () => auth.isAuth$,
   async (isAuth) => {
-    // @logout:hard-reload
     if (!isAuth) {
+      // @logout:hard-reload
       console.log(`/app.vue: !isAuth`);
       appMenuCacheDestroy();
-      return reloadNuxtApp({
+      reloadNuxtApp({
         path: "/",
         persistState: false,
       });
-    }
-
-    // @auth:debug
-    console.log({ user: auth.user$ });
-
-    if (isViewRoute.value) return;
-
-    // logout user:default from app:main
-    if (auth.isDefault$) {
-      // default user logedin  @app
-
-      // @@todo
-      // # logout, reload
-      // await auth.logout();
-      // auth.tokenPut("");
-
-      // @@todo
-      // # keep default user logedin
       return;
     }
-
+    // @auth:debug
+    console.log({ user: auth.user$ });
     // regular user login; goto `index`
-    await navigateTo({ name: "index" });
+    if (!auth.isDefault$) await navigateTo({ name: "index" });
   }
 );
 

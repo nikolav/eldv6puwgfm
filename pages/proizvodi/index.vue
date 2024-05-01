@@ -1,9 +1,16 @@
 <script setup lang="ts">
 // http://localhost:3000/proizvodi?q=vestibulum-1-1
 import { useDisplay } from "vuetify";
-import type { IStorageFileInfo, ICompanyProfile } from "@/types";
+import type { IStorageFileInfo, ICompanyProfile, IProduct } from "@/types";
 import { TOKEN_DEFAULT } from "@/config";
-import { TopicRating, LikeDislike, TopicChat } from "@/components/app";
+import {
+  TopicRating,
+  LikeDislike,
+  TopicChat,
+  CartOpenBadgePrimary,
+  AddToCartButtonPrimary,
+  VChipProductPrice,
+} from "@/components/app";
 
 definePageMeta({
   layout: "blank",
@@ -20,14 +27,14 @@ const {
   },
   products: { categories: pCategories },
   urls: { QUERY },
-  APP_USER_DEFAULT,
 } = useAppConfig();
 
 const { height: wHeight, mdAndUp, smAndUp } = useDisplay();
 const route = useRoute();
 const auth = useStoreApiAuth();
+const cart = useStoreCart();
 
-// auth sanity check
+// auth default .readonly
 onceOn(
   () => auth.initialized$ && !auth.isAuth$,
   () => {
@@ -40,7 +47,7 @@ onceOn(
 // product
 const pid = Number(last(String(get(route.query, QUERY)).split("-")));
 const { products$ } = useQueryProductsOnly([pid]);
-const p$ = computed(() => first(products$.value));
+const p$ = computed(() => first(products$.value)!);
 const pid$ = computed(() => get(p$.value, "id"));
 
 // profile
@@ -69,13 +76,13 @@ const { publicUrl } = useApiStorage(true, true);
 
 // on images loaded: init carousel; run setup once
 const imageFileIdCurrent = ref("");
-const { runSetup: initCarousel } = useRunSetupOnce(() => {
-  imageFileIdCurrent.value =
-    get(sample(productImages.value), "data.file_id") || "";
-});
-watchEffect(() => {
-  if (!isEmpty(productImages.value)) initCarousel();
-});
+onceOn(
+  () => !isEmpty(productImages.value),
+  () => {
+    imageFileIdCurrent.value =
+      get(sample(productImages.value), "data.file_id") || "";
+  }
+);
 
 // layout stuff
 const carouselNav = ref();
@@ -84,6 +91,7 @@ const carouselHeight = computed(
   () =>
     wHeight.value - carouselNavHeight.value - CAROUSEL_NAV_OFFSET_product_page
 );
+
 // @@eos
 </script>
 <template>
@@ -172,7 +180,7 @@ const carouselHeight = computed(
           <!-- @btn:links prodavac, korpa -->
           <Teleport to="body">
             <div
-              class="!fixed position-fixed z-[9999] w-full d-flex bottom-20"
+              class="!fixed position-fixed z-[1] w-full d-flex bottom-20"
               :class="
                 mdAndUp ? '!w-1/2 !end-0' : '!top-2 h-fit *pointer-events-none'
               "
@@ -218,15 +226,13 @@ const carouselHeight = computed(
               <VSpacer />
               <VSpacer v-if="mdAndUp" />
               <!-- @btn:cart -->
-              <VBtn
-                icon
-                rounded="circle"
-                color="white"
+              <!-- :size="mdAndUp ? 122 : 75" -->
+              <CartOpenBadgePrimary
+                :badge-offset="mdAndUp ? 22 : 12"
                 :size="mdAndUp ? 122 : 75"
-                elevation="5"
-              >
-                <VIcon icon="$iconKorpaKantar" :size="mdAndUp ? 120 : 72" />
-              </VBtn>
+                color="white"
+                elevation="4"
+              />
               <VSpacer />
             </div>
           </Teleport>
@@ -236,6 +242,7 @@ const carouselHeight = computed(
               text
               :topic="`${PRODUCT_RATING_prefix}${pid$}`"
             />
+
             <TopicChat
               class="ms-auto"
               :title="p$?.name"
@@ -274,26 +281,9 @@ const carouselHeight = computed(
                 >
               </VChip>
               <VSpacer />
-              <VChip
-                size="x-large"
-                color="primary3-darken-1"
-                variant="elevated"
-              >
-                <template #prepend>
-                  <VIcon
-                    start
-                    icon="$iconRSD"
-                    class="!opacity-40 ps-[5px] translate-y-[2px]"
-                    size="large"
-                  />
-                </template>
-                <span class="align-bottom">
-                  <strong class="text-[112%]">{{ p$?.price }}</strong
-                  ><small class="ms-[4px] text-medium-emphasis"
-                    >/{{ p$?.stockType }}</small
-                  >
-                </span>
-              </VChip>
+              <!-- @@ -->
+              <AddToCartButtonPrimary :size="48" :product-id="p$?.id" />
+              <VChipProductPrice class="ms-3" :product="p$" />
             </div>
             <h1 class="text-truncate !font-sans text-h4 font-weight-bold mt-4">
               {{ p$?.name }}

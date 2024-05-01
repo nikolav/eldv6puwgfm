@@ -87,7 +87,6 @@ export const Q_productsByUser = gql`
   }
 `;
 
-
 export const Q_productsListAll = gql`
   query q_productsListAll {
     productsListAll {
@@ -110,6 +109,15 @@ export const Q_productsListAll = gql`
       docs
       created_at
       updated_at
+    }
+  }
+`;
+
+export const Q_productsListAllPrices = gql`
+  query q_productsListAllPrices {
+    productsListAll {
+      id
+      price
     }
   }
 `;
@@ -245,11 +253,10 @@ export const Q_postsList = gql`
       updated_at
     }
   }
-`; 
+`;
 
 export const Q_postsImages = gql`
   query q_postsImages($id: ID) {
     postsImages(id: $id)
   }
 `;
-

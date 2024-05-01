@@ -2,22 +2,28 @@ import { M_ordersPlace } from "@/graphql";
 
 export const useStoreCart = defineStore("cart", () => {
   const {
+    key: { FLAG_CART_OPEN },
     stores: {
       cart: { initial },
     },
-    key: { FLAG_CART_OPEN },
   } = useAppConfig();
-  const store$ = ref(initial);
+  const store$ = useCookie("olUoAianvOtPeqeX", {
+    default: () => initial,
+  });
 
   const flags$$ = useStoreFlags();
+  // @isOpen
   const cartIsOpen_ = computed(() => flags$$.isSet(FLAG_CART_OPEN));
+  // @open
   const cartOpen = () => {
     flags$$.on(FLAG_CART_OPEN);
   };
+  // @close
   const cartClose = () => {
     flags$$.off(FLAG_CART_OPEN);
   };
 
+  // @products
   const products_ = computed(() =>
     reduce(
       store$.value.items,
@@ -28,12 +34,16 @@ export const useStoreCart = defineStore("cart", () => {
       <number[]>[]
     )
   );
+  // @length
   const cartLength_ = computed(() => products_.value.length);
+  // @isEmpty
   const cartIsEmpty_ = computed(() => 0 === products_.value.length);
 
+  // @drop
   const cartDrop = (id: number) => {
     delete store$.value.items[id];
   };
+  // @put
   const cartPut = (id: number, amount = 1) => {
     const amount_ = clampPositive(amount);
     if (!amount_) {
@@ -42,6 +52,7 @@ export const useStoreCart = defineStore("cart", () => {
     }
     store$.value.items[id] = amount_;
   };
+  // @increase
   const cartIncrease = (id: number, amount = 1) => {
     if (!has(store$.value.items, id)) {
       cartPut(id, amount);
@@ -54,19 +65,27 @@ export const useStoreCart = defineStore("cart", () => {
     }
     store$.value.items[id] = amount_;
   };
+  // @destroy
   const cartDestroy = () => {
     store$.value = { ...initial, items: {} };
   };
+  // @has
   const cartHas = (...ids: any[]) =>
     every(ids, (id) => products_.value.includes(Number(id)));
 
   const { mutate: mutateOrdersPlace } = useMutation(M_ordersPlace);
+  // @sendOrder
   const sendOrder = async () => {
     if (cartIsEmpty_.value) return;
     return await mutateOrdersPlace(store$.value);
   };
 
-  const { products$ } = useQueryProductsAll();
+  // @count
+  const count = (pid: number | undefined) =>
+    (null != pid ? store$.value.items[pid] : 0) || 0;
+
+  const { products$ } = useQueryProductsPrices();
+  // @total$
   const total$ = computed(() =>
     reduce(
       products_.value,
@@ -99,6 +118,7 @@ export const useStoreCart = defineStore("cart", () => {
     destroy: cartDestroy,
     has: cartHas,
     sendOrder,
+    count,
 
     // # ui
     isOpen: cartIsOpen_,
