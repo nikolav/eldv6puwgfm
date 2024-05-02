@@ -7,8 +7,8 @@ import {
   TopicChat,
   GetCategoryTitleFromTag,
   VChipProductPrice,
-  CardProductDisplayToolbarSocial,
   TopicRating,
+  LightboxProductImages,
 } from "@/components/app";
 const props = defineProps<{ product: IProduct }>();
 const emit = defineEmits<{
@@ -19,7 +19,11 @@ const emit = defineEmits<{
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND, DEFAULT_NO_IMAGE },
   docs: { PRODUCT_IMAGES },
-  key: { PRODUCT_RATING_prefix },
+  key: {
+    PRODUCT_RATING_prefix,
+    PRODUCTS_LIKES_prefix,
+    TOPIC_CHAT_PRODUCTS_prefix,
+  },
 } = useAppConfig();
 
 // stores
@@ -43,7 +47,7 @@ const productPublicUrl_ = useProductPublicUrl(
 );
 // @@
 const avatarUrl = computed(
-   () => publicUrl(get(profile.value, "avatar.data.file_id")) || DEFAULT_NO_IMAGE
+  () => publicUrl(get(profile.value, "avatar.data.file_id")) || DEFAULT_NO_IMAGE
 );
 
 const cart = useStoreCart();
@@ -62,15 +66,40 @@ const cart = useStoreCart();
         >
           <VToolbar
             density="compact"
-            elevation="2"
+            elevation="1"
             :class="isHovering ? '!visible' : ''"
             class="top-0 inset-x-0 z-10 invisible"
-            color="#f5f5f480"
+            color="#f5f5f490"
             absolute
           >
-            <VToolbarTitle> @@ </VToolbarTitle>
-
-            <CardProductDisplayToolbarSocial :product="props.product" />
+            <TopicChat
+              :topic="`${TOPIC_CHAT_PRODUCTS_prefix}${props.product.id}`"
+              :title="props.product.name"
+              class="ms-1 scale-95"
+            />
+            <VSpacer />
+            <LikeDislike
+              :topic="`${PRODUCTS_LIKES_prefix}${props.product.id}`"
+              class="scale-90"
+            />
+            <LightboxProductImages :product="props.product">
+              <template #activator="props_">
+                <VBtn
+                  color="primary"
+                  size="small"
+                  class="mx-2"
+                  v-bind="props_"
+                  icon
+                  variant="text"
+                >
+                  <VIcon
+                    size="29"
+                    icon="$iconImages"
+                    color="primary-lighten-1"
+                  />
+                </VBtn>
+              </template>
+            </LightboxProductImages>
           </VToolbar>
           <VImg
             max-height="320"

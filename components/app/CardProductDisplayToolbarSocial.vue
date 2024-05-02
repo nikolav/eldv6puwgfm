@@ -13,7 +13,6 @@ const {
 </script>
 <template>
   <div
-    v-bind="$attrs"
     class="compoent--CardProductDisplayToolbarSocial d-flex items-center gap-4 justify-end"
   >
     <TopicChat

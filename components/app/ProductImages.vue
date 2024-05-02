@@ -7,8 +7,9 @@ const {
 } = useAppConfig();
 const { topic$, data: images, loading } = useDocs<IStorageFileInfo>();
 watchEffect(() => {
-  topic$.value =
-    null != props.product.id ? `${PRODUCT_IMAGES}${props.product.id}` : "";
+  topic$.value = props?.product.id
+    ? `${PRODUCT_IMAGES}${props.product.id}`
+    : "";
 });
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 watchEffect(() => {
@@ -20,5 +21,3 @@ watchEffect(() => {
 <template>
   <slot :images="images" />
 </template>
-<style lang="scss" scoped>
-</style>

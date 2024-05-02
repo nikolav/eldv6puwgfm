@@ -3,7 +3,7 @@ import { Q_docByDocId, M_docUpsert } from "@/graphql";
 import { get, batchSet } from "@/utils";
 
 export const useDoc = <TDoc = Record<string, any>>(
-  doc_id: any = undefined,
+  doc_id: any = "",
   initialEnabled = true,
   graphqlOptions?: Record<string, any>
 ) => {
@@ -35,10 +35,11 @@ export const useDoc = <TDoc = Record<string, any>>(
       <IDoc<TDoc>>{}
   );
   const reload = async () => await refetch();
-  const { runSetup: queryStart } = useRunSetupOnce(load);
-  watchEffect(() => {
-    if (enabled$.value) queryStart();
-  });
+  onceMountedOn(enabled$, load);
+  // const { runSetup: queryStart } = useRunSetupOnce(load);
+  // watchEffect(() => {
+  //   if (enabled$.value) queryStart();
+  // });
 
   const { mutate: mutateDocUpsert } = useMutation<IDoc<TDoc>>(M_docUpsert);
 
@@ -60,10 +61,12 @@ export const useDoc = <TDoc = Record<string, any>>(
 
   return {
     doc_id$,
+
     // #crud
     data: data$,
     put,
     reload,
+
     // aliases
     commit: put,
 
