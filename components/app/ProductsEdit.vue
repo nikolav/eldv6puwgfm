@@ -1,52 +1,33 @@
 <script setup lang="ts">
-// "name": "pogaca, domaca, ispod saca",
-// "description": null,
-// "price": null,
-// "stockType": null,
-// "stock": null,
-// "onSale": false,
+// "name",
+// "category",
+// "price",
+// "stockType",
+// "stock",
+// "onSale",
+// "description",
 
 import { useDisplay } from "vuetify";
-
 import type { OrNoValue } from "@/types";
 
+// defs
 const props_ = defineProps<{
   product_id: OrNoValue<number>;
   close: () => void;
 }>();
-
-const { smAndUp } = useDisplay();
-
 const {
   key: { PRODUCT_EDIT, APP_PROCESSING },
   docs: { PRODUCT_IMAGES },
   products: { fields: FIELDS, categories: CATEGORIES, PRODUCT_CATEGORY_prefix },
   io: { IOEVENT_PRODUCT_IMAGES_CHANGE_prefix },
 } = useAppConfig();
-const FIELDS_updatable = FIELDS.filter((field) => "category" !== field);
+const FIELDS_updatable = FIELDS;
 
-const { products: products$, upsert: productsUpsert } = useProducts();
+// utils
+const { smAndUp } = useDisplay();
 
-// load product
-const product$ = computed(() =>
-  find(products$.value, { id: props_.product_id })
-);
-const pid$ = computed(() => get(product$.value, "id"));
-
-// product category
-const category$ = computed(() => {
-  if (!pid$.value) return;
-  const category_ = find(get(product$.value, "tags"), (tag: string) =>
-    tag.startsWith(PRODUCT_CATEGORY_prefix)
-  );
-  return find(CATEGORIES, (node) => node.value === category_);
-});
-
-// emited @manage/product:images
-const ioEventPics$ = computed(() =>
-  pid$.value ? `${IOEVENT_PRODUCT_IMAGES_CHANGE_prefix}${pid$.value}` : ""
-);
-
+// stores
+const { products: products$, upsert: productsCommit } = useProducts();
 // manage product images
 const { remove: productImagesRemove, upload, publicUrl, IO } = useApiStorage();
 const {
@@ -55,18 +36,38 @@ const {
   reload: productImagesReload,
   tags,
 } = useDocs();
+
+// computes
+const product$ = computed(() =>
+  find(products$.value, { id: props_.product_id })
+);
+const pid$ = computed(() => get(product$.value, "id"));
+const category$ = ref();
+const categoryTag = () =>
+  find(get(product$.value, "tags"), (tag: string) =>
+    tag.startsWith(PRODUCT_CATEGORY_prefix)
+  );
+const categoryPull = () =>
+  find(CATEGORIES, (node) => node.value === categoryTag());
+watchEffect(() => {
+  if (!pid$.value) return;
+  category$.value = categoryPull();
+});
+
+// emited @manage/product:images
+const ioEventPics$ = computed(() =>
+  pid$.value ? `${IOEVENT_PRODUCT_IMAGES_CHANGE_prefix}${pid$.value}` : ""
+);
 watch(pid$, (pid) => {
   topic$.value = pid ? `${PRODUCT_IMAGES}${pid}` : "";
 });
-useIOEvent(IO.value, productImagesReload);
 watchEffect(() => {
   useIOEvent(ioEventPics$.value, productImagesReload);
 });
+useIOEvent(IO.value, productImagesReload);
 
-// cache updated product info
+// forms
 const $$main = useStoreMain();
-
-// build formdata cache
 const productData = reduce(
   FIELDS_updatable,
   (data, field) => {
@@ -78,13 +79,23 @@ const productData = reduce(
   },
   <Record<string, Ref>>{}
 );
-
 const productDataInitFromStore = () => {
   FIELDS_updatable.forEach((field) => {
-    productData[field].value = get(product$.value, field);
+    if (field !== "category") {
+      productData[field].value = get(product$.value, field);
+      return;
+    }
+    category$.value = categoryTag();
   });
 };
+// update formdata @combobox change
+watchEffect(() => {
+  if (!category$.value) return;
+  productData.category.value = category$.value;
+});
+
 // init product cache @mounted
+// onceMountedOn(pid$, productDataInitFromStore);
 const { runSetup: initProductCache } = useRunSetupOnce(
   productDataInitFromStore
 );
@@ -95,12 +106,12 @@ onMounted(() => {
   });
 });
 
-const $$flags = useStoreFlags();
-
+// refs/flags
 const fileImage1$ = ref();
-
+const $$flags = useStoreFlags();
 const toggleSnackbarProductEditStatus = useToggleFlag();
 
+// handlers
 const submitProductsEdit = async () => {
   let pid;
   let resUpload;
@@ -109,8 +120,6 @@ const submitProductsEdit = async () => {
   const err = new Error("--submitProductsEdit");
 
   try {
-    $$flags.on(APP_PROCESSING);
-
     pid = pid$.value;
     if (!pid) throw err;
 
@@ -124,16 +133,16 @@ const submitProductsEdit = async () => {
     );
     if (isEmpty(form)) throw err;
 
+    $$flags.on(APP_PROCESSING);
     // @debug
-    // await productsUpsert(form, pid);
-    console.log({ "@product:updated": await productsUpsert(form, pid) });
+    // await productsCommit(form, pid);
+    console.log({ "@product:updated": await productsCommit(form, pid) });
 
     const file1 = get(toValue(fileImage1$), "[0]");
     if (file1) {
       resUpload = await upload({
         image: {
           file: file1,
-          data: {},
         },
       });
     }
@@ -142,13 +151,11 @@ const submitProductsEdit = async () => {
       await tags(docIdImage1, { [`${PRODUCT_IMAGES}${pid}`]: true });
   } catch (error) {
     // pass
-    console.error(error);
     statusSuccess_ = false;
   }
   $$flags.off(APP_PROCESSING);
   if (statusSuccess_) toggleSnackbarProductEditStatus.on();
 };
-
 const onClickProductImagesRemove = async (file_id: string) => {
   try {
     $$flags.on(APP_PROCESSING);
@@ -158,7 +165,6 @@ const onClickProductImagesRemove = async (file_id: string) => {
   }
   $$flags.off(APP_PROCESSING);
 };
-
 // @@eos
 </script>
 <template>
@@ -277,13 +283,14 @@ const onClickProductImagesRemove = async (file_id: string) => {
           <!-- @rows:2 -->
           <div class="d-sm-flex justify-between items-center mt-4">
             <!-- @fields:category -->
+            <!-- :disabled="false" -->
             <VSelect
-              disabled
+              :items="CATEGORIES"
+              v-model="category$"
               center-affix
               label="Robna grupa *"
               class="sm:w-1/3"
               variant="solo"
-              :model-value="category$"
             >
               <template v-if="smAndUp" #prepend>
                 <VIcon

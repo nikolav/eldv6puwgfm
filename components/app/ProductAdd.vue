@@ -15,9 +15,8 @@ const {
   io: { IOEVENT_PRODUCT_IMAGES_CHANGE_prefix },
 } = useAppConfig();
 
+// formdata
 const $$main = useStoreMain();
-
-// @cache: product input
 const product = reduce(
   FIELDS,
   (res, field) => {
@@ -76,6 +75,7 @@ const fieldsReset = () => {
   product.onSale.value = undefined;
   product.description.value = undefined;
 };
+
 // @@submit
 const submitProductAdd = async () => {
   const form = reduce(
