@@ -42,16 +42,15 @@ const product$ = computed(() =>
   find(products$.value, { id: props_.product_id })
 );
 const pid$ = computed(() => get(product$.value, "id"));
+
 const category$ = ref();
 const categoryTag = () =>
   find(get(product$.value, "tags"), (tag: string) =>
     tag.startsWith(PRODUCT_CATEGORY_prefix)
   );
-const categoryPull = () =>
-  find(CATEGORIES, (node) => node.value === categoryTag());
 watchEffect(() => {
   if (!pid$.value) return;
-  category$.value = categoryPull();
+  category$.value = categoryTag();
 });
 
 // emited @manage/product:images
@@ -203,20 +202,28 @@ const onClickProductImagesRemove = async (file_id: string) => {
         />
       </VBtn>
       <VSpacer v-if="smAndUp" />
-      <VToolbarTitle class="ms-sm-8">
-        <h2
-          class="text-h5 !font-sans text-medium-emphasis items-center d-flex gap-4"
-        >
-          <VIcon
-            start
-            icon="$edit"
-            size="small"
-            color="primary-darken-2"
-            class="!opacity-60"
-          />
-          <span>Ažuriraj prozivod</span>
-        </h2>
-      </VToolbarTitle>
+      <VBtn
+        :size="smAndUp ? 'large' : undefined"
+        variant="text"
+        color="secondary-lighten-1"
+        @click="productDataInitFromStore"
+      >
+        <VIcon icon="$iconEraser" start size="large" />
+        <strong>Poništi</strong>
+      </VBtn>
+      <VSpacer v-if="smAndUp" />
+      <VBtn
+        @click="submitProductsEdit"
+        :size="smAndUp ? 'large' : undefined"
+        variant="elevated"
+        type="submit"
+        class="*ms-4 px-5"
+        color="primary"
+        elevation="2"
+      >
+        <VIcon icon="$edit" start size="large" />
+        <strong>Ažuriraj</strong>
+      </VBtn>
       <VSpacer v-if="smAndUp" />
       <VBtn @click="props_.close" icon variant="text" size="large">
         <VIcon icon="$close" size="large" />
@@ -234,11 +241,11 @@ const onClickProductImagesRemove = async (file_id: string) => {
       @submit.prevent="submitProductsEdit"
       class="grow d-flex flex-col mt-sm-4"
     >
-      <div class="grow *bg-red">
+      <div class="*grow *bg-red">
         <!-- @@ -->
         <!-- @form:fields -->
         <section
-          class="form--product-add mx-auto max-w-[796px] d-flex flex-col *sm:gap-y-2"
+          class="form--product-add mx-auto max-w-[796px] d-flex flex-col sm:gap-y-3"
         >
           <!-- @@ -->
           <!-- @rows:1 -->
@@ -470,29 +477,6 @@ const onClickProductImagesRemove = async (file_id: string) => {
           </div>
         </section>
       </div>
-      <VToolbar flat color="transparent" class="pa-sm-4">
-        <VBtn
-          :size="smAndUp ? 'large' : undefined"
-          variant="text"
-          color="secondary-lighten-1"
-          @click="productDataInitFromStore"
-        >
-          <VIcon icon="$iconEraser" start size="large" />
-          <strong>Poništi</strong>
-        </VBtn>
-        <VSpacer />
-        <VBtn
-          :size="smAndUp ? 'large' : undefined"
-          variant="elevated"
-          type="submit"
-          class="*ms-4"
-          color="primary"
-          elevation="1"
-        >
-          <VIcon icon="$iconSave" start size="large" />
-          <strong>Sačuvaj</strong>
-        </VBtn>
-      </VToolbar>
     </VForm>
   </VSheet>
 </template>
