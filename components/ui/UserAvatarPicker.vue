@@ -4,10 +4,8 @@ import type { ICompanyProfile } from "@/types";
 const {
   docs: { TAG_COMPANY_PROFILE_prefix },
   key: { APP_PROCESSING },
-  // app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
+  app: { DEFAULT_NO_IMAGE },
 } = useAppConfig();
-const DEFAULT_NO_IMAGE = "/select-photo.png";
-// const DEFAULT_NO_IMAGE = DEFAULT_NO_PRODUCT_IMAGE_FOUND;
 const auth = useStoreApiAuth();
 
 // flags

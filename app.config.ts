@@ -26,6 +26,7 @@ export default defineAppConfig({
     DEFAULT_TRANSITION: "slide-y-reverse-transition",
     CART_BADGE_OFFSET: 9,
     DEFAULT_NO_PRODUCT_IMAGE_FOUND: "/no-image-available.png",
+    DEFAULT_NO_IMAGE: "/no-image.jpg",
   },
   com: {
     FIELDS: [
