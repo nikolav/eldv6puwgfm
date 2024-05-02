@@ -18,7 +18,7 @@ definePageMeta({
 
 const {
   layout: { CAROUSEL_NAV_OFFSET_product_page },
-  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
+  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND, DEFAULT_NO_IMAGE },
   docs: { PRODUCT_IMAGES, TAG_COMPANY_PROFILE_prefix },
   key: {
     TOPIC_CHAT_PRODUCTS_prefix,
@@ -68,8 +68,11 @@ const comPublicUrl$ = useCompanyPublicUrl(comId$, comName$);
 const pCategory$ = computed(() =>
   get(find(pCategories, { value: get(p$.value, "tags[0]") }), "title")
 );
-const avatarUrl = computed(() =>
-  publicUrl(get(comProfile.value, "data.avatar.data.file_id"))
+// @@
+const avatarUrl = computed(
+  () =>
+    publicUrl(get(comProfile.value, "data.avatar.data.file_id")) ||
+    DEFAULT_NO_IMAGE
 );
 // images
 const { topic$: topicProductImages, data: productImages } =

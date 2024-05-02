@@ -17,7 +17,7 @@ const emit = defineEmits<{
 
 // defs
 const {
-  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
+  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND, DEFAULT_NO_IMAGE },
   docs: { PRODUCT_IMAGES },
   key: { PRODUCT_RATING_prefix },
 } = useAppConfig();
@@ -41,8 +41,9 @@ const productPublicUrl_ = useProductPublicUrl(
   () => props.product?.id,
   props.product?.name
 );
-const avatarUrl = computed(() =>
-  publicUrl(get(profile.value, "avatar.data.file_id"))
+// @@
+const avatarUrl = computed(
+   () => publicUrl(get(profile.value, "avatar.data.file_id")) || DEFAULT_NO_IMAGE
 );
 
 const cart = useStoreCart();
