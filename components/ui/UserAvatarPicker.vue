@@ -4,7 +4,7 @@ import type { ICompanyProfile } from "@/types";
 const {
   docs: { TAG_COMPANY_PROFILE_prefix },
   key: { APP_PROCESSING },
-  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
+  // app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
 } = useAppConfig();
 const DEFAULT_NO_IMAGE = "/select-photo.png";
 // const DEFAULT_NO_IMAGE = DEFAULT_NO_PRODUCT_IMAGE_FOUND;
@@ -129,11 +129,17 @@ watchEffect(() => {
     <VMenu
       activator="parent"
       v-model="togglePickAvatarMenu.isActive.value"
-      location="center"
+      location="start top"
+      :offset="[-68, 10]"
       location-strategy="connected"
       :close-on-content-click="false"
     >
-      <VSheet class="*pa-4" width="480" min-height="256">
+      <VSheet
+        rounded="lg"
+        class="*pa-4 d-flex flex-col items-center pt-4"
+        width="256"
+        min-height="256"
+      >
         <VBtn
           @click="togglePickAvatarMenu.off"
           position="absolute"
@@ -143,53 +149,47 @@ watchEffect(() => {
         >
           <VIcon icon="$close" />
         </VBtn>
-        <VContainer fluid>
-          <VRow>
-            <VCol sm="6">
-              <p>
-                1. Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Atque tenetur iusto natus!
-              </p>
-            </VCol>
-            <VCol sm="6" class="d-flex flex-col items-center">
-              <FileDataUrl :file="file" v-slot="{ url }">
-                <VBtn
-                  @click="fileDialogOpen"
-                  icon
-                  color="white"
-                  variant="elevated"
-                  size="155"
-                  rounded="circle"
-                  elevation="4"
-                  class="mt-2"
-                >
-                  <VAvatar
-                    :image="avatarCurrent || url || DEFAULT_NO_IMAGE"
-                    color="primary"
-                    size="151"
-                    >1</VAvatar
-                  >
-                </VBtn>
-              </FileDataUrl>
-              <VCardActions
-                class="pt-5 gap-3 w-full *bg-red *px-4 flex-col items-center justify-center"
-              >
-                <VBtn @click="avatarSave" variant="tonal">
-                  <VIcon start icon="$iconSave" /> postavi
-                </VBtn>
-                <VBtn
-                  @click="avatarRemove"
-                  variant="plain"
-                  density="comfortable"
-                  color="error"
-                >
-                  <VIcon start icon="$iconTrash" /> ukloni
-                </VBtn>
-                <VSpacer />
-              </VCardActions>
-            </VCol>
-          </VRow>
-        </VContainer>
+        <FileDataUrl :file="file" v-slot="{ url }">
+          <VBtn
+            @click="fileDialogOpen"
+            icon
+            color="white"
+            variant="elevated"
+            size="168"
+            rounded="circle"
+            elevation="4"
+            class="mt-2"
+          >
+            <VAvatar
+              :image="avatarCurrent || url || DEFAULT_NO_IMAGE"
+              color="primary"
+              size="166"
+              >1</VAvatar
+            >
+          </VBtn>
+        </FileDataUrl>
+        <VCardActions
+          class="pt-5 gap-3 w-full *bg-red *px-4 flex-col items-center justify-center"
+        >
+          <VBtn
+            :disabled="!file"
+            @click="avatarSave"
+            variant="tonal"
+            class="px-4"
+          >
+            <VIcon start icon="$iconSave" /> postavi
+          </VBtn>
+          <VBtn
+            :disabled="!avatarCurrent"
+            @click="avatarRemove"
+            variant="plain"
+            density="comfortable"
+            color="error"
+          >
+            <VIcon start icon="$iconTrash" /> obriši
+          </VBtn>
+          <VSpacer />
+        </VCardActions>
       </VSheet>
     </VMenu>
   </VBtn>
