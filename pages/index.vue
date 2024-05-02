@@ -3,8 +3,9 @@
 // import { VideoPlayer } from "@videojs-player/vue";
 
 import { useDisplay } from "vuetify";
-import { CardProductDisplay } from "@/components/app";
+import { CardProductDisplay, LikeDislike } from "@/components/app";
 import { Dump } from "@/components/dev";
+import { AvatarUser } from "@/components/ui";
 
 definePageMeta({
   scrollToTop: false,

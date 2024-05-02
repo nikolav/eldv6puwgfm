@@ -1,8 +1,8 @@
 type TKey = string | undefined;
-const LIKEDISLIKE_cooike = "dXAmpsTirUMd";
-const LIKEDISLIKE_CACHE_ID = "tzUEK8";
+const LIKEDISLIKE_key = "ymuFfUkzcVps8";
+const LIKEDISLIKE_CACHE_ID = "4OpsEOLNYG1wuF64OhBr";
 export const useStoreLikeDislike = defineStore("storeRRoTfaJQGScwzlu", () => {
-  const key = useCookie(LIKEDISLIKE_cooike, { default: idGen });
+  const key = useLocalStorage(LIKEDISLIKE_key, () => LIKEDISLIKE_key);
   const { data, put: commit } = useDoc<{
     [topic: string]: {
       likes: Record<string, boolean>;
@@ -29,9 +29,11 @@ export const useStoreLikeDislike = defineStore("storeRRoTfaJQGScwzlu", () => {
         );
   };
   const isLiked = (topic: TKey) =>
-    topic && true === !!get(store.value, `${topic}.likes.${key.value}`);
+    topic ? true === !!get(store.value, `${topic}.likes.${key.value}`) : false;
   const isDisliked = (topic: TKey) =>
-    topic && true === !!get(store.value, `${topic}.dislikes.${key.value}`);
+    topic
+      ? true === !!get(store.value, `${topic}.dislikes.${key.value}`)
+      : false;
   const like = async (topic: TKey, flag = true) => {
     if (!topic) return;
     let toggle = false;
@@ -40,7 +42,7 @@ export const useStoreLikeDislike = defineStore("storeRRoTfaJQGScwzlu", () => {
       toggle = true;
     }
     await commit({
-      ...(toggle ? { [`${topic}.dislikes.${key.value}`]: false } : undefined),
+      ...(toggle ? { [`${topic}.dislikes.${key.value}`]: false } : {}),
       [`${topic}.likes.${key.value}`]: flag,
     });
   };
@@ -52,7 +54,7 @@ export const useStoreLikeDislike = defineStore("storeRRoTfaJQGScwzlu", () => {
       toggle = true;
     }
     await commit({
-      ...(toggle ? { [`${topic}.likes.${key.value}`]: false } : undefined),
+      ...(toggle ? { [`${topic}.likes.${key.value}`]: false } : {}),
       [`${topic}.dislikes.${key.value}`]: flag,
     });
   };

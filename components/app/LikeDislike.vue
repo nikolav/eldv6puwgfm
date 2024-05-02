@@ -1,10 +1,19 @@
 <script setup lang="ts">
-const props = defineProps<{ topic: string; small?: boolean | undefined }>();
-const { count, like, dislike, isLiked, isDisliked } = useLikesDislikes(
-  props.topic
-);
-const countLikes = computed(() => count.likes.value);
-const countDisLikes = computed(() => count.dislikes.value);
+const props = defineProps<{
+  light?: boolean;
+  topic: string;
+  small?: boolean | undefined;
+}>();
+const ld = useStoreLikeDislike();
+const topic$ = computed(() => toValue(props.topic));
+const isLiked = computed(() => ld.isLiked(topic$.value));
+const isDisliked = computed(() => ld.isDisliked(topic$.value));
+const countLikes = computed(() => ld.likesCount(topic$.value));
+const countDisLikes = computed(() => ld.dislikesCount(topic$.value));
+const likeTopic = async (flag = true) => await ld.like(topic$.value, flag);
+const dislikeTopic = async (flag = true) =>
+  await ld.dislike(topic$.value, flag);
+
 // @@eos
 </script>
 <template>
@@ -13,20 +22,22 @@ const countDisLikes = computed(() => count.dislikes.value);
     color="primary"
     :rounded="props.small ? 'lg' : 'pill'"
     density="compact"
-    class="component--LikesDislikes *:!text-lg"
+    class="component--LikeDislike *:!text-lg"
     :class="props.small ? 'd-inline-block' : undefined"
     :divided="!props.small ? true : undefined"
     elevation="0"
     :border="!props.small ? true : undefined"
-    variant="flat"
+    :variant="props.light ? 'outlined' : 'flat'"
   >
     <VBtn
-      @click="() => like(!isLiked)"
+      @click="likeTopic(!isLiked)"
       slim
       :size="props.small ? 'x-small' : 'small'"
       class="px-0 mx-0"
       :class="[
-        !isLiked ? 'opacity-50' : undefined,
+        !isLiked
+          ? 'opacity-50'
+          : ['opacity-100', props.light ? 'bg-primary2' : ''],
         props.small ? '!py-[2px]' : undefined,
       ]"
     >
@@ -39,12 +50,14 @@ const countDisLikes = computed(() => count.dislikes.value);
       </small>
     </VBtn>
     <VBtn
-      @click="() => dislike(!isDisliked)"
+      @click="dislikeTopic(!isDisliked)"
       slim
       :size="props.small ? 'x-small' : 'small'"
       class="px-0 mx-0"
       :class="[
-        !isDisliked ? 'opacity-50' : undefined,
+        !isDisliked
+          ? 'opacity-50'
+          : ['opacity-100', props.light ? 'bg-primary2' : ''],
         props.small ? '!py-[2px]' : undefined,
       ]"
       ><strong

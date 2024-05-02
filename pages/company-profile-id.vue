@@ -2,6 +2,7 @@
 import { useDisplay } from "vuetify";
 import menuDistricts from "@/assets/districts-serbia.json";
 import type { ICompanyProfile, IStorageFileInfo } from "@/types";
+import { AvatarUser } from "@/components/ui"
 
 definePageMeta({
   layout: "company-profile",
@@ -213,7 +214,8 @@ watchEffect(() => {
             </VBtn>
           </NuxtLink>
           <VSpacer />
-          <VBtn color="on-primary" variant="text"> @@todo avatar </VBtn>
+          <!-- user avatar -->
+          <AvatarUser />
         </VCardTitle>
         <VCardItem class="*bg-red">
           <!-- @@tabs -->

@@ -1,5 +1,5 @@
 import { type Ref } from "vue";
-import { type ChartData } from "chart.js";
+import { Interaction, type ChartData } from "chart.js";
 
 export type OrNull<T = any> = T | null;
 export type OrNoValue<T = any> = OrNull<T> | undefined;
@@ -135,6 +135,7 @@ export interface ICompanyProfile {
   phone?: string | undefined;
   pin?: string | undefined;
   slug?: string | undefined;
+  avatar?: IStorageFileDataSaved;
 }
 
 export interface IUser {

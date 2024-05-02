@@ -64,6 +64,8 @@ export const useDoc = <TDoc = Record<string, any>>(
     data: data$,
     put,
     reload,
+    // aliases
+    commit: put,
 
     // #crud/read
     error,

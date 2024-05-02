@@ -11,9 +11,9 @@ export const useProcessMonitor = () => {
     error$.value = err;
   };
   const done = toggleProcessing.off;
-  const successful = (callback?: () => void) => {
+  const successful = (callback: any = noop) => {
     success$.value = true;
-    if (callback) callback();
+    callback();
   };
   //
   return {
