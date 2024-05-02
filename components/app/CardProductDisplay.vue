@@ -18,28 +18,28 @@ const emit = defineEmits<{
 // defs
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND, DEFAULT_NO_IMAGE },
-  docs: { PRODUCT_IMAGES },
   key: {
     PRODUCT_RATING_prefix,
     PRODUCTS_LIKES_prefix,
     TOPIC_CHAT_PRODUCTS_prefix,
   },
 } = useAppConfig();
+const { productImages } = useTopics();
 
 // stores
-const { data: docsImages$ } = useDocs<IStorageFileInfo>(
-  `${PRODUCT_IMAGES}${props.product.id}`
+const { data: dImages$ } = useDocs<IStorageFileInfo>(() =>
+  productImages(props.product.id)
 );
 const { publicUrl } = useApiStorage(true, true);
-watch(docsImages$, () => emit("productPhotosChange"));
+watch(dImages$, () => emit("productPhotosChange"));
 
 const uid = computed(() => props.product.user_id);
 const { profile, companyPublicUrl: companyUrl } = useUserData(uid);
 
 const productImageSrcSample$ = computed(() =>
-  isEmpty(docsImages$.value)
+  isEmpty(dImages$.value)
     ? DEFAULT_NO_PRODUCT_IMAGE_FOUND
-    : publicUrl(get(sample(docsImages$.value), "data.file_id"))
+    : publicUrl(get(sample(dImages$.value), "data.file_id"))
 );
 const productPublicUrl_ = useProductPublicUrl(
   () => props.product?.id,

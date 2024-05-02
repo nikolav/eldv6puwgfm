@@ -74,6 +74,8 @@ export const useQueryPosts = (UID?: any) => {
     upsert,
     remove,
     reload,
+    // alias
+    commit: upsert,
 
     // # flags
     error,

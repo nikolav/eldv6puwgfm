@@ -33,11 +33,7 @@ export const useProducts = (ID?: any) => {
       []
   );
   const reload = async () => await refetch();
-
-  const { runSetup: queryStart } = useRunSetupOnce(load);
-  watchEffect(() => {
-    if (enabled$.value) queryStart();
-  });
+  onceMountedOn(enabled$, load);
 
   const ioEvent$ = computed(() =>
     enabled$.value ? `${IOEVENT_PRODUCTS_CHANGE_prefix}${uid$.value}` : ""

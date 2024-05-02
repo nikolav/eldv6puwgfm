@@ -100,7 +100,7 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
         },
         data: fdata,
       });
-      if (len(data)) {
+      if (!isEmpty(data)) {
         uploadStatus.successful();
         return data;
       }
