@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// init
 import { mergeProps } from "vue";
 import type { IProduct, IStorageFileInfo } from "@/types";
 import {
@@ -10,31 +11,38 @@ import {
   TopicRating,
 } from "@/components/app";
 const props = defineProps<{ product: IProduct }>();
+const emit = defineEmits<{
+  (e: "productPhotosChange"): void;
+}>();
 
+// defs
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
   docs: { PRODUCT_IMAGES },
   key: { PRODUCT_RATING_prefix },
 } = useAppConfig();
 
+// stores
 const { data: docsImages$ } = useDocs<IStorageFileInfo>(
   `${PRODUCT_IMAGES}${props.product.id}`
 );
-const {
-  publicUrl,
-  // reload: reloadAll,
-} = useApiStorage(true, true);
-// watch(docsImages$, reloadAll);
+const { publicUrl } = useApiStorage(true, true);
+watch(docsImages$, () => emit("productPhotosChange"));
+
+const uid = computed(() => props.product.user_id);
+const { profile, companyPublicUrl: companyUrl } = useUserData(uid);
+
 const productImageSrcSample$ = computed(() =>
   isEmpty(docsImages$.value)
     ? DEFAULT_NO_PRODUCT_IMAGE_FOUND
     : publicUrl(get(sample(docsImages$.value), "data.file_id"))
 );
-const uid = computed(() => props.product.user_id);
-const { profile, companyPublicUrl: companyUrl } = useUserData(uid);
 const productPublicUrl_ = useProductPublicUrl(
   () => props.product?.id,
   props.product?.name
+);
+const avatarUrl = computed(() =>
+  publicUrl(get(profile.value, "avatar.data.file_id"))
 );
 
 const cart = useStoreCart();
@@ -85,11 +93,8 @@ const cart = useStoreCart();
                 elevation="5"
                 variant="tonal"
               >
-                <VAvatar
-                  color="white"
-                  size="97"
-                  image="https://nikolav.rs/nikolav.me.0.jpg"
-                />
+                <!-- @@avatar -->
+                <VAvatar color="white" size="97" :image="avatarUrl" />
                 <VTooltip activator="parent" open-delay="672" location="bottom">
                   <div class="d-flex items-center gap-2">
                     <em class="opacity-40" style="font-size: 95%"

@@ -13,6 +13,9 @@ definePageMeta({
 // const cart = useStoreCart();
 const { lgAndUp } = useDisplay();
 const { products$ } = useQueryProductsAll();
+
+const { reload: reloadAll } = useApiStorage(true, true);
+
 // #eos
 </script>
 
@@ -28,7 +31,7 @@ const { products$ } = useQueryProductsAll();
           v-for="p in products$"
           :key="p.id"
         >
-          <CardProductDisplay :product="p" />
+          <CardProductDisplay @product-photos-change="reloadAll" :product="p" />
         </VCol>
       </VRow>
     </VContainer>

@@ -50,6 +50,9 @@ const { products$ } = useQueryProductsOnly([pid]);
 const p$ = computed(() => first(products$.value)!);
 const pid$ = computed(() => get(p$.value, "id"));
 
+// stroes
+const { publicUrl } = useApiStorage(true, true);
+
 // profile
 const comId$ = computed(() => Number(get(p$.value, "user_id")));
 const tagComProfile$ = computed(() =>
@@ -65,6 +68,9 @@ const comPublicUrl$ = useCompanyPublicUrl(comId$, comName$);
 const pCategory$ = computed(() =>
   get(find(pCategories, { value: get(p$.value, "tags[0]") }), "title")
 );
+const avatarUrl = computed(() =>
+  publicUrl(get(comProfile.value, "data.avatar.data.file_id"))
+);
 // images
 const { topic$: topicProductImages, data: productImages } =
   useDocs<IStorageFileInfo>();
@@ -72,7 +78,6 @@ watchEffect(() => {
   if (!pid$.value) return;
   topicProductImages.value = `${PRODUCT_IMAGES}${pid$.value}`;
 });
-const { publicUrl } = useApiStorage(true, true);
 
 // on images loaded: init carousel; run setup once
 const imageFileIdCurrent = ref("");
@@ -216,10 +221,8 @@ const carouselHeight = computed(
                     :size="mdAndUp ? 122 : 75"
                     elevation="5"
                   >
-                    <VAvatar
-                      image="https://nikolav.rs/nikolav.me.0.jpg"
-                      :size="mdAndUp ? 120 : 72"
-                    />
+                    <!-- @@ -->
+                    <VAvatar :image="avatarUrl" :size="mdAndUp ? 120 : 72" />
                   </VBtn>
                 </VBadge>
               </NuxtLink>

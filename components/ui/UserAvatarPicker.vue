@@ -41,7 +41,7 @@ const {
   remove: fsRemove,
 } = useApiStorage();
 
-// computes
+// computed
 const avatarFileIdCurrent = computed(() =>
   get(profileData.value, "data.avatar.data.file_id")
 );
@@ -75,7 +75,6 @@ const avatarSave = async () => {
     });
   } catch (error) {
     // pass
-    console.log({ error });
   }
 };
 
@@ -99,13 +98,6 @@ watch(file, (fd) => {
   }
 });
 // debug
-watchEffect(() => {
-  console.log("profileData.value");
-  console.log(profileData.value);
-
-  console.log("avatarCurrent.value");
-  console.log(avatarCurrent.value);
-});
 // @@eos
 </script>
 <template>
