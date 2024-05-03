@@ -45,6 +45,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
   const chatName$ = useLocalStorage(CHAT_NAME, () => "", {
     initOnMounted: true,
   });
+
   const {
     data: user$,
     refresh: authDataReload,
@@ -65,13 +66,11 @@ export const useStoreApiAuth = defineStore("auth", () => {
     },
     immediate: false,
   });
-
-  // query.start@app.mount
-  // const initialized$ = useRunSetupOnceOnMounted(authDataStart);
   const initialized$ = onceMountedOn(true, authDataStart);
+
   const isAuth$ = computed(() => schemaAuthData.safeParse(user$.value).success);
   const isUser$ = computed(
-    () => schemaUsersNotReserved.safeParse(get(user$.value, "id")).success
+    () => schemaUsersNotReserved.safeParse(user$.value).success
   );
   const isAdmin$ = computed(
     () => schemaAuthDataAdmin.safeParse(user$.value).success
@@ -80,7 +79,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
     () => schemaUserIsCompany.safeParse(user$.value).success
   );
   const isDefault$ = computed(
-    () => schemaUsersIsDefault.safeParse(get(user$.value, "id")).success
+    () => schemaUsersIsDefault.safeParse(user$.value).success
   );
 
   // apply auth token to Apollo client
@@ -152,10 +151,12 @@ export const useStoreApiAuth = defineStore("auth", () => {
     try {
       await $fetch<IAuthLogoutResponse>(URL_AUTH_logout, {
         method: "POST",
-        headers: authHeaders(token$.value),
+        // headers: authHeaders(token$.value),
+        headers: headers$.value,
         onResponse: async ({ response }) => {
           if (response.ok) {
-            // logout success, cache cleared server side, set token invalid
+            // logout success, cache cleared server side,
+            //  set token invalid
             token$.value = "";
             status.successful();
           }

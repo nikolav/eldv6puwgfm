@@ -20,7 +20,7 @@ const {
 //   bounds: "#quill--bounds",
 //   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
 // });
-
+// 
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const title_ = ref();
 const fileSelected$ = ref();

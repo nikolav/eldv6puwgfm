@@ -14,6 +14,8 @@ const CHAT_EDIT_active = "rAkrT0XZJvlXbb";
 const TASK_EDIT_active = "TB2HXTaILV3eKlQAoSa8";
 const PAGE_CACHED = "WrTD0QD08cjfqC4pol";
 const PRODUCT_CATEGORY_prefix = "@product:category:";
+const TAG_COMPANY_PROFILE_prefix = "@company:profile:fwgM8::";
+const TAG_AUTH_PROFILE_prefix = TAG_COMPANY_PROFILE_prefix;
 
 export default defineAppConfig({
   ADMIN_EMAIL: "admin@nikolav.rs",
@@ -106,7 +108,8 @@ export default defineAppConfig({
     prefix_CHAT_ACTIVE: "KFrbiAW5Zm3:",
     prefix_TAG_USERS_DOCS: "pH82VKaHwf3RLfZlR:",
     PRODUCT_IMAGES: "@images:product:",
-    TAG_COMPANY_PROFILE_prefix: "@company:profile:fwgM8::",
+    TAG_COMPANY_PROFILE_prefix,
+    TAG_AUTH_PROFILE_prefix,
     TAG_USERS: "@users",
     TASKS_ALL: "@tasks:all",
     TASKS_USER_prefix: "Njvrw1gYEXd3yv:",

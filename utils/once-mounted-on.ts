@@ -1,11 +1,21 @@
 export const onceMountedOn = (maybeRefOrValueOn: any, callback: () => void) => {
-  const onceCallback = once(callback);
-  const mounted = useMounted();
-  const initialized = computed(
-    () => !!(mounted.value && toValue(maybeRefOrValueOn))
-  );
-  watchEffect(() => {
-    if (initialized) onceCallback();
+  const initialized = ref();
+  const onceInitCallback = once(() => {
+    try {
+      callback();
+    } catch (error) {
+      // rethrow
+      throw error;
+    } finally {
+      nextTick(() => {
+        initialized.value = true;
+      });
+    }
   });
-  return initialized;
+  onMounted(() => {
+    watchEffect(() => {
+      if (toValue(maybeRefOrValueOn)) onceInitCallback();
+    });
+  });
+  return readonly(initialized);
 };

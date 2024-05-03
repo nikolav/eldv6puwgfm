@@ -3,22 +3,16 @@
 // # by setting the colorMode property, nuxt3 only
 // definePageMeta({
 //   colorMode: "light",
-//
 // });
+
 import { SpinnerAppProcessing } from "@/components/ui";
 import { Cart } from "@/components/app";
 
-// theme
-// import { type IThemeToggle } from "@/types";
 const {
   $theme: { theme },
 } = useNuxtApp();
 
 const {
-  // re: {
-  //   viewRoutes:
-  //   reViewRoutes
-  // },
   theme: { DARK, LIGHT },
   io: { IOEVENT_PRODUCTS_CHANGE },
   key: { PRODUCTS_CHANGE, ORDER_SEND_STATUS },
@@ -33,14 +27,9 @@ useHead({
   htmlAttrs,
 });
 
-// const route = useRoute();
-// const isViewRoute = computed(() =>
-//   some(reViewRoutes, (re) => re.test(route.fullPath))
-// );
-
-const { destroy: appMenuCacheDestroy } = useAppMenu();
 const auth = useStoreApiAuth();
-
+const route = useRoute();
+const { destroy: appMenuCacheDestroy } = useAppMenu();
 // ensure defaultauth .readonly
 onceOn(
   () => auth.initialized$ && !auth.isAuth$,
@@ -50,23 +39,27 @@ onceOn(
     });
   }
 );
+// auth update
 watch(
-  () => auth.isAuth$,
-  async (isAuth) => {
-    if (!isAuth) {
-      // @logout:hard-reload
-      console.log(`/app.vue: !isAuth`);
-      appMenuCacheDestroy();
-      reloadNuxtApp({
-        path: "/",
-        persistState: false,
-      });
+  [() => auth.isAuth$, () => auth.isDefault$],
+  async ([isAuth, isDefault]) => {
+    if (!isDefault) {
+      if (!isAuth) {
+        appMenuCacheDestroy();
+        return reloadNuxtApp({
+          path: "/",
+          persistState: false,
+        });
+      }
+
+      if (["auth-register", "auth-login"].includes(String(route.name)))
+        return await navigateTo({ name: "index" });
+
+      // break
       return;
     }
-    // @auth:debug
-    console.log({ user: auth.user$ });
-    // regular user login; goto `index`
-    // if (!auth.isDefault$) await navigateTo({ name: "index" });
+    //
+    // here default user, auth status change
   }
 );
 

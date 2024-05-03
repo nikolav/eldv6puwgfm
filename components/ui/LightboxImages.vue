@@ -13,14 +13,16 @@ const gallery = computed(() =>
     caption: get(props, `captions[${i}]`) || get(node, "data.description"),
   }))
 );
+const disabled = computed(() => isEmpty(props.images));
 const bindProps = {
   onClick: () => $lightbox.open(gallery.value),
-  ...props,
+  images: props.images,
+  captions: props.captions,
 };
 // @@eos
 </script>
-<template>
-  <slot name="activator" v-bind="bindProps">
+ <template>
+  <slot name="activator" v-bind="bindProps" :disabled="disabled">
     <VBtn color="primary" size="small" v-bind="bindProps">slike</VBtn>
   </slot>
 </template>

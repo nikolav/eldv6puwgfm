@@ -36,6 +36,7 @@ const authSubmitLogout = async () => {
       id="appbar-main--title"
       class="opacity-95 hover:opacity-100 ms-6"
     >
+      <!-- logo -->
       <strong
         @click="appMenuCache(current$)"
         class="d-inline-block hover:scale-105 transition-transform"
@@ -45,10 +46,9 @@ const authSubmitLogout = async () => {
         </NuxtLink>
       </strong>
       <!-- @@demo.dev -->
-      
+
       <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
       <!-- <NuxtLink to="/proizvodi/122">-foo</NuxtLink> -->
-      
     </VAppBarTitle>
     <template v-if="auth.isCompany$ && isRouteCompanyProfile$">
       <VSpacer />

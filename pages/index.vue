@@ -10,7 +10,6 @@ definePageMeta({
   scrollToTop: false,
 });
 
-// const cart = useStoreCart();
 const { lgAndUp } = useDisplay();
 const { products$ } = useQueryProductsAll();
 

@@ -119,7 +119,7 @@ export interface IDocDataTask {
   href?: string | undefined;
   description?: string | undefined;
 }
-
+export interface IAuthProfile extends ICompanyProfile {}
 export interface ICompanyProfile {
   about?: string | undefined;
   address?: string | undefined;
