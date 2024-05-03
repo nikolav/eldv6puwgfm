@@ -9,7 +9,7 @@ export { default as CardInboxTabMessages } from "./CardInboxTabMessages.vue";
 export { default as CardInboxTabNotificationsSys } from "./CardInboxTabNotificationsSys.vue";
 export { default as CardInboxTabPosts } from "./CardInboxTabPosts.vue";
 export { default as CardProductDisplay } from "./CardProductDisplay.vue";
-export { default as Cart } from "./Cart.vue";
+// export { default as Cart } from "./korpa/Cart.vue";
 export { default as CartEmpty } from "./CartEmpty.vue";
 export { default as ChatControllsBasic } from "./ChatControllsBasic.vue";
 export { default as ChatOrder } from "./ChatOrder.vue";

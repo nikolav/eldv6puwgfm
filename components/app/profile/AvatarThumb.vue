@@ -23,12 +23,17 @@ const avatarUrl = inject(AVATAR);
 </script>
 <template>
   <strong
-    class="component--AvatarThumb me-3 align-middle shadow-md d-inline-flex justify-center items-center bg-white rounded-[100%]"
+    class="component--AvatarThumb align-middle shadow-md d-inline-flex justify-center items-center bg-white rounded-[100%]"
+    :class="$attrs.class"
     :style="`width: ${props.size * AVATAR_BORDER_SCALE}px; height: ${
       props.size * AVATAR_BORDER_SCALE
     }px`"
   >
-    <VAvatar v-bind="$attrs" :size="props.size" variant="elevated">
+    <VAvatar
+      v-bind="omit($attrs, 'class')"
+      :size="props.size"
+      variant="elevated"
+    >
       <VImg cover :src="force || avatarUrl || fallback" />
     </VAvatar>
   </strong>

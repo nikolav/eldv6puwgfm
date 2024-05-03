@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
 import { emojify } from "node-emoji";
-import { PROFILE, AVATAR } from "@/src";
+import { AVATAR } from "@/src";
 import { AvatarThumb } from "@/components/app";
 
 const props = defineProps<{ height: number }>();
@@ -38,9 +38,12 @@ const avatarUrl = inject(AVATAR);
       v-if="smAndUp"
       id="appbar-main--title"
       class="*bg-red opacity-95 hover:opacity-100"
-      :class="avatarUrl ? 'ms-1' : 'ms-7'"
     >
-      <AvatarThumb :size="42" />
+      <AvatarThumb
+        v-if="auth.isAuth$ && !auth.isDefault$"
+        class="me-2"
+        :size="42"
+      />
       <!-- logo -->
       <strong
         @click="appMenuCache(current$)"

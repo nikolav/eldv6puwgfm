@@ -10,17 +10,16 @@ import { Cart } from "@/components/app";
 import type { IAuthProfile } from "@/types";
 import { PROFILE, AVATAR } from "@/src";
 
+// defs
 const {
   $theme: { theme },
 } = useNuxtApp();
-
 const {
   theme: { DARK, LIGHT },
   io: { IOEVENT_PRODUCTS_CHANGE },
   key: { PRODUCTS_CHANGE, ORDER_SEND_STATUS },
   app: { DEFAULT_TRANSITION },
 } = useAppConfig();
-
 const htmlAttrs = computed(() => ({
   class: DARK === theme.value ? "dark" : LIGHT,
 }));
@@ -29,9 +28,15 @@ useHead({
   htmlAttrs,
 });
 
-const auth = useStoreApiAuth();
+// flags
+const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
+
+// utils
 const route = useRoute();
+const auth = useStoreApiAuth();
+const cart = useStoreCart();
 const { destroy: appMenuCacheDestroy } = useAppMenu();
+
 // ensure defaultauth .readonly
 onceOn(
   () => auth.initialized$ && !auth.isAuth$,
@@ -82,9 +87,6 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
   gProductsChange$.value = Date.now();
 });
 
-const cart = useStoreCart();
-
-const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
 
 // @@eos
 </script>

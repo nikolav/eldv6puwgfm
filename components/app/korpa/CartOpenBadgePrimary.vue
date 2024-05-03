@@ -1,7 +1,5 @@
 <script setup lang="ts">
-const {
-  layout: { appBarHeight },
-} = useAppConfig();
+const ICON_SCALE = 0.97;
 const props = withDefaults(
   defineProps<{
     size: number;
@@ -32,7 +30,7 @@ const cart = useStoreCart();
       color="error"
     >
       <!-- <VIcon icon="$iconKorpaKantar" :size="props.size" /> -->
-      <VIcon icon="$iconKorpaKantar" :size="props.size * 0.97" />
+      <VIcon icon="$iconKorpaKantar" :size="props.size * ICON_SCALE" />
       <template #badge>
         <pre>{{ cart.length }}</pre>
       </template>

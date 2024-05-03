@@ -1,27 +1,32 @@
 <script setup lang="ts">
 import { AppBarMain, CartOpenBadgePrimary } from "@/components/app";
 import { PRODUCTION$ } from "@/config";
+import { useDisplay } from "vuetify";
 
+// defs
 const {
   layout: { appBarHeight },
 } = useAppConfig();
-const { current$, menuCategories, cache: appMenuCache } = useAppMenu();
-const iconClasses = (isSelected: boolean) =>
-  `${
-    isSelected ? "opacity-100 scale-105" : "opacity-85"
-  } group-hover/btn:opacity-100 group-hover/btn:scale-105 transition`;
 
+// refs, computes
 const search_ = ref("");
 
+// helpers
 const submitSearch = () => {
   console.log({ search: search_.value });
 };
-
 const debounceSearchHandle = debounce((term) => {
   if (!term) return;
   console.log({ term });
 }, 789);
 
+// utils
+const { xs } = useDisplay();
+const iconClasses = (isSelected: boolean) =>
+  `${
+    isSelected ? "opacity-100 scale-105" : "opacity-85"
+  } group-hover/btn:opacity-100 group-hover/btn:scale-105 transition`;
+const { current$, menuCategories, cache: appMenuCache } = useAppMenu();
 const cart = useStoreCart();
 
 // @watchers
@@ -34,7 +39,7 @@ watch(search_, debounceSearchHandle);
   <section class="layout--default" :style="`padding-top: ${appBarHeight}px`">
     <!-- @cart:button -->
     <CartOpenBadgePrimary
-      :badge-offset="11"
+      :badge-offset="9"
       class="end-4 sm:end-8 z-10"
       position="fixed"
       :style="`top: calc(${appBarHeight}px + 1.22rem)`"
@@ -47,19 +52,21 @@ watch(search_, debounceSearchHandle);
     <!-- @header -->
     <VSheet min-height="452" class="d-flex flex-col *items-center">
       <!-- @header:top -->
-      <VCard
-        rounded="0"
-        variant="flat"
-        image="/header-main-06.png"
-        class="grow *bg-primary2"
-      >
+      <!-- image="/header-main-06-huge.png" -->
+      <!-- <VImg position="0 81%" /> -->
+      <VCard rounded="0" variant="flat" class="grow *bg-primary2">
         <template #image>
-          <VImg cover position="0 81%" />
+          <!--  -->
+          <VParallax
+            :position="`${xs ? 0 : 48}px 98%`"
+            :scale="0.91"
+            src="/header-main-06-scaled-150.png"
+          />
         </template>
         <!-- @main:search -->
         <VForm
           @submit.prevent
-          class="mx-auto mt-[92px] max-w-[512px] sm:max-w-[550px] sm:mt-[122px] sm:translate-x-[3.45rem]"
+          class="*bg-red mx-auto mt-[92px] max-w-[512px] sm:max-w-[550px] sm:mt- [95px] sm:translate-x-[7.45rem]"
         >
           <VTextField
             v-model.trim="search_"
@@ -74,7 +81,7 @@ watch(search_, debounceSearchHandle);
             placeholder="Voće, povrće, sir..."
           >
             <template #prepend-inner>
-              <span class="ps-4"></span>
+              <span class="ps-3"></span>
             </template>
             <template #append-inner>
               <VBtn
@@ -84,7 +91,7 @@ watch(search_, debounceSearchHandle);
                 size="x-large"
                 color="primary"
                 variant="elevated"
-                ><VIcon icon="$iconMagnifyingGlass" class="*-translate-x-[2px]"
+                ><VIcon icon="$iconMagnifyingGlass" class="-translate-x-[2px]"
               /></VBtn>
             </template>
           </VTextField>
