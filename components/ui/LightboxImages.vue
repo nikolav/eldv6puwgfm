@@ -15,6 +15,7 @@ const gallery = computed(() =>
 );
 const bindProps = {
   onClick: () => $lightbox.open(gallery.value),
+  ...props,
 };
 // @@eos
 </script>

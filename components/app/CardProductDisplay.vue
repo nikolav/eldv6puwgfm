@@ -85,6 +85,7 @@ const cart = useStoreCart();
             <LightboxProductImages :product="props.product">
               <template #activator="props_">
                 <VBtn
+                  :disabled="isEmpty(props_.images)"
                   color="primary"
                   size="small"
                   class="mx-2"

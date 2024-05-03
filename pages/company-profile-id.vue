@@ -151,11 +151,10 @@ const comPhotosRemove = async () => {
 };
 
 // watch
-onceMountedOn(comProfile, formDataInitFromStore);
-// const { runSetup: formInit } = useRunSetupOnce(formDataInitFromStore);
-// onMounted(() => {
-//   watch(comProfile, formInit);
-// });
+const { runSetup: formInit } = useRunSetupOnce(formDataInitFromStore);
+onMounted(() => {
+  watch(comProfile, formInit);
+});
 watchEffect(() => {
   form.slug.value = toLower(
     words(form.name.value).concat(String(uid)).join("-")
