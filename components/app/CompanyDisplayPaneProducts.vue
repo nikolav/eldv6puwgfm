@@ -12,7 +12,7 @@ const emit = defineEmits<{
   (e: "productsLength", length: OrNoValue<number>): void;
 }>();
 const props = defineProps<{ user: any; profile: any }>();
-const PRODUCT_ITEM_MAX_HEIGHT = 107;
+const PRODUCT_ITEM_MAX_HEIGHT = 102;
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
   key: { APP_PROCESSING, TOPIC_CHAT_PRODUCTS_prefix },
@@ -42,6 +42,7 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
             v-bind="props_"
             elevation="1"
             class="!grid grid-cols-[92px,1fr,auto] *!bg-red-200 *overflow-hidden"
+            :height="PRODUCT_ITEM_MAX_HEIGHT"
             :max-height="PRODUCT_ITEM_MAX_HEIGHT"
             rounded
           >
@@ -125,11 +126,11 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
                 <VChipProductPrice class="ms-4" :product="p" />
               </div>
               <span
-                class="invisible me-2 translate-y-[2px]"
+                class="invisible me-4 -translate-y-[2px]"
                 :class="isHovering ? '!visible' : undefined"
               >
                 <TopicChat
-                  class="scale-[92%]"
+                  class="*scale-[92%]"
                   :title="p.name"
                   :topic="`${TOPIC_CHAT_PRODUCTS_prefix}${p.id}`"
                 />

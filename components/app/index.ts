@@ -1,5 +1,6 @@
 export * from "./korpa";
 export * from "./products";
+export * from "./profile";
 export { default as AppBarMain } from "./AppBarMain.vue";
 export { default as CardCartItem } from "./CardCartItem.vue";
 export { default as CardInbox } from "./CardInbox.vue";

@@ -7,6 +7,8 @@
 
 import { SpinnerAppProcessing } from "@/components/ui";
 import { Cart } from "@/components/app";
+import type { IAuthProfile } from "@/types";
+import { PROFILE, AVATAR } from "@/src";
 
 const {
   $theme: { theme },
@@ -62,6 +64,18 @@ watch(
     // here default user, auth status change
   }
 );
+
+// # provides:profile
+const { authProfile } = useTopics();
+const { data } = useDoc<IAuthProfile>(() => authProfile(get(auth.user$, "id")));
+const profile = computed(() => get(data.value, "data"));
+// # provides:avatar
+const { publicUrl } = useApiStorage();
+const avatarUrl = computed(() =>
+  publicUrl(get(profile.value, "avatar.data.file_id"))
+);
+provide(PROFILE, profile);
+provide(AVATAR, avatarUrl);
 
 const gProductsChange$ = useGlobalVariable(PRODUCTS_CHANGE);
 useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {

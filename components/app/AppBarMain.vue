@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
 import { emojify } from "node-emoji";
+import { PROFILE, AVATAR } from "@/src";
+import { AvatarThumb } from "@/components/app";
 
 const props = defineProps<{ height: number }>();
 
@@ -27,6 +29,7 @@ const authSubmitLogout = async () => {
   flags.off(APP_PROCESSING);
 };
 
+const avatarUrl = inject(AVATAR);
 // #eos
 </script>
 <template>
@@ -34,8 +37,10 @@ const authSubmitLogout = async () => {
     <VAppBarTitle
       v-if="smAndUp"
       id="appbar-main--title"
-      class="opacity-95 hover:opacity-100 ms-6"
+      class="*bg-red opacity-95 hover:opacity-100"
+      :class="avatarUrl ? 'ms-1' : 'ms-7'"
     >
+      <AvatarThumb :size="42" />
       <!-- logo -->
       <strong
         @click="appMenuCache(current$)"
@@ -47,7 +52,7 @@ const authSubmitLogout = async () => {
       </strong>
       <!-- @@demo.dev -->
 
-      <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
+      <!-- <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink> -->
       <!-- <NuxtLink to="/proizvodi/122">-foo</NuxtLink> -->
     </VAppBarTitle>
     <template v-if="auth.isCompany$ && isRouteCompanyProfile$">
