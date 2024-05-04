@@ -10,10 +10,16 @@ export const useDoc = <TDoc = Record<string, any>>(
   const auth = useStoreApiAuth();
   const toggleEnabled = useToggleFlag(initialEnabled);
   const mounted$ = useMounted();
-  const enabled$ = computed(
-    () => !!(mounted$.value && toggleEnabled.isActive.value && auth.token$)
-  );
   const doc_id$ = ref();
+  const enabled$ = computed(
+    () =>
+      !!(
+        doc_id$.value &&
+        mounted$.value &&
+        toggleEnabled.isActive.value &&
+        auth.token$
+      )
+  );
   watchEffect(() => {
     doc_id$.value = toValue(doc_id);
   });
@@ -36,10 +42,6 @@ export const useDoc = <TDoc = Record<string, any>>(
   );
   const reload = async () => await refetch();
   onceMountedOn(enabled$, load);
-  // const { runSetup: queryStart } = useRunSetupOnce(load);
-  // watchEffect(() => {
-  //   if (enabled$.value) queryStart();
-  // });
 
   const { mutate: mutateDocUpsert } = useMutation<IDoc<TDoc>>(M_docUpsert);
 

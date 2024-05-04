@@ -259,7 +259,7 @@ const cartOrderSend = async () => {
             rounded="lg"
             elevation="1"
             max-width="1024"
-            class="mt-2 pa-4 mx-auto space-y-1 sm:space-y-3"
+            class="mt-2 pa-4 mx-auto space-y-1 sm:space-y-2"
           >
             <CardCartItem v-for="i in items" :key="i.raw" :pid="i.raw" />
           </VSheet>

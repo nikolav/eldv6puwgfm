@@ -123,12 +123,12 @@ const sampleImage = (images: any) =>
           </VCardSubtitle>
         </div>
 
-        <div class="*bg-primary3 grid grid-cols-[auto,1fr] grid-rows-2">
+        <div class="*bg-primary3 grid grid-cols-[auto,1fr] grid-rows-2 pe-3">
           <!-- @item:qty:cell-ts -->
           <div class="*bg-red d-flex items-center justify-center sm:me-5">
             <strong class="text-h5 !font-mono font-semibold"
               >{{ cart.store$.items[props.pid]
-              }}<small class="ms-px text-medium-emphasis">{{
+              }}<small class="ms-[2px] opacity-60">{{
                 get(product$, "stockType")
               }}</small></strong
             >
@@ -147,10 +147,10 @@ const sampleImage = (images: any) =>
           </div>
           <!-- @item:qty:cell-bs -->
           <div class="d-flex items-start justify-center sm:me-5">
-            <small class="text-medium-emphasis"
+            <em style="font-size: 91%;" class="text-medium-emphasis"
               >{{
                 cart.store$.items[props.pid] * Number(get(product$, "price"))
-              }}din</small
+              }} din</em
             >
           </div>
           <!-- @item:qty:cell-be -->
@@ -166,6 +166,7 @@ const sampleImage = (images: any) =>
           </div>
         </div>
       </VCard>
+
       <!-- @@ -->
       <!-- @item:drop-product -->
       <VBtn
@@ -174,7 +175,7 @@ const sampleImage = (images: any) =>
         color="error-darken-2"
         @click="cart.drop(props.pid)"
         size="small"
-        class="opacity-40 hover:opacity-100"
+        class="opacity-30 hover:opacity-80"
       >
         <VTooltip
           activator="parent"
@@ -182,7 +183,7 @@ const sampleImage = (images: any) =>
           location="bottom"
           text="Izbaci proizvod iz korpe"
         />
-        <VIcon size="large" icon="$close" />
+        <VIcon size="large" icon="$iconTrash" />
       </VBtn>
     </div>
   </section>
