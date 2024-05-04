@@ -48,7 +48,8 @@ const cartOrderSend = async () => {
 // @@eos
 </script>
 <template>
-  <VSheet rounded="0" elevation="0">
+  <section class="bg-white !w-full fill-height ma-0 pa-0 position-relative">
+
     <!-- @order:confirm:dialog -->
     <VBottomSheet v-model="toggleOrderConfirm.isActive.value">
        <VBtn 
@@ -82,7 +83,6 @@ const cartOrderSend = async () => {
         </VBtnGroup>
       </VSheet>
     </VBottomSheet>
-    
     
     <!-- @@ spacer:parent -->
     <!-- @@ cart:items -->
@@ -268,7 +268,7 @@ const cartOrderSend = async () => {
 
       </VDataIterator>
     </div>
-  </VSheet>
+  </section>
 </template>
 <style lang="scss" scoped>
 </style>

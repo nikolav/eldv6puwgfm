@@ -2,7 +2,7 @@
 import type { IProduct } from "@/types";
 import { ProductImages } from "@/components/app";
 import { LightboxImages } from "@/components/ui";
-const props = defineProps<{ product: IProduct }>();
+const props = defineProps<{ product?: IProduct }>();
 // @@eos
 </script>
 <template>

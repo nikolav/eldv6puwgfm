@@ -1,8 +1,8 @@
-import type { IProduct, OrNoValue } from "@/types";
+import type { IProduct } from "@/types";
 import { Q_productsListExact } from "@/graphql";
-export const useQueryProductsOnly = <TData = IProduct>(
-  pids?: OrNoValue<number[]>
-) => {
+export const useQueryProductsOnly = <TData = IProduct>(pids?: any) => {
+  // pids: number[]
+
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
     key: { PRODUCTS_CHANGE },
@@ -26,10 +26,9 @@ export const useQueryProductsOnly = <TData = IProduct>(
     () => get(result.value, "productsListExact") || []
   );
   const reload = async () => await refetch();
-  const { runSetup: queryStart } = useRunSetupOnce(async () => await load());
-  onMounted(async () => {
-    queryStart();
-    await nextTick(reload);
+  onceMountedOn(true, async () => {
+    await load();
+    // await nextTick(reload);
   });
   const productsChanged$ = useGlobalVariable(PRODUCTS_CHANGE);
   watchEffect(async () => {

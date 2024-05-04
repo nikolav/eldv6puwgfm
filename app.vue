@@ -113,12 +113,14 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
     </VSnackbar>
 
     <!-- @screen:cart -->
+    <!-- default dialog z-index [1004] -->
     <VDialog
       :model-value="cart.isOpen"
       persistent
       no-click-animation
       :transition="DEFAULT_TRANSITION"
       fullscreen
+      class="!z-[1234]"
     >
       <Cart />
     </VDialog>

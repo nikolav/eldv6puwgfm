@@ -1,31 +1,26 @@
+<script lang="ts">
+export default {
+  inheritAttrs: false,
+};
+</script>
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
+import { ProductImages, LightboxProductImages } from "@/components/app";
 const props = defineProps<{ pid: number }>();
 const {
-  docs: { PRODUCT_IMAGES },
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
 } = useAppConfig();
+// utils
 const { smAndUp, width } = useDisplay();
 const cart = useStoreCart();
-const { products$ } = useQueryProductsAll();
-const product$ = computed(() =>
-  find(products$.value, { id: String(props.pid) })
-);
-const { topic$, data: docsImages$ } = useDocs();
-watch(
-  () => get(product$.value, "id"),
-  (pid) => {
-    if (pid) {
-      topic$.value = `${PRODUCT_IMAGES}${pid}`;
-    }
-  }
-);
-const { publicUrl } = useApiStorage(true, true);
-const productImageSrcSample$ = computed(() =>
-  isEmpty(toValue(docsImages$))
-    ? DEFAULT_NO_PRODUCT_IMAGE_FOUND
-    : publicUrl(get(sample(docsImages$.value), "data.file_id"))
-);
+// stores
+const { products$ } = useQueryProductsOnly(() => [props.pid]);
+const product$ = computed(() => first(products$.value));
+
+const sampleImage = (images: any) =>
+  !isEmpty(images)
+    ? resourceUrl(get(sample(images), "data.file_id"))
+    : DEFAULT_NO_PRODUCT_IMAGE_FOUND;
 // @@eos
 </script>
 <template>
@@ -33,10 +28,29 @@ const productImageSrcSample$ = computed(() =>
     <!-- @item:container -->
     <div class="d-flex items-center justify-between sm:gap-4">
       <!-- @item:card-h -->
-      <VCard class="grow d-flex" :density="width < 288 ? 'compact' : undefined">
+      <VCard
+        rounded="lg"
+        v-bind="$attrs"
+        class="grow d-flex"
+        :density="width < 288 ? 'compact' : undefined"
+        height="133"
+        max-height="133"
+      >
         <!-- @item:card:image -->
         <div v-if="smAndUp" class="self-stretch">
-          <VImg :src="productImageSrcSample$" class="h-100" width="92" cover />
+          <!-- <ProductImages :product="product$" v-slot="{ images }"> -->
+          <LightboxProductImages :product="product$">
+            <template #activator="{ onClick, images }">
+              <VImg
+                @click="onClick"
+                :src="sampleImage(images)"
+                class="h-100"
+                width="177"
+                cover
+              />
+            </template>
+          </LightboxProductImages>
+          <!-- </ProductImages> -->
         </div>
         <!-- @item:card:description -->
         <div class="grow *bg-red" :class="width < 281 ? 'text-end' : undefined">
@@ -94,9 +108,11 @@ const productImageSrcSample$ = computed(() =>
       <!-- @item:drop-product -->
       <VBtn
         icon
-        variant="plain"
-        color="on-surface"
+        variant="tonal"
+        color="error-darken-2"
         @click="cart.drop(props.pid)"
+        size="small"
+        class="opacity-40 hover:opacity-100"
       >
         <VTooltip
           activator="parent"
@@ -104,7 +120,7 @@ const productImageSrcSample$ = computed(() =>
           location="bottom"
           text="Izbaci proizvod iz korpe"
         />
-        <VIcon icon="$close" />
+        <VIcon size="large" icon="$close" />
       </VBtn>
     </div>
   </section>
