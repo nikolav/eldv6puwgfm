@@ -11,6 +11,9 @@ import {
   ProductPublicUrl,
   TopicRating,
   LikeDislikeStatus,
+  TopicRatingStatus,
+  ProductCategory,
+  VChipProductCategory,
 } from "@/components/app";
 const props = defineProps<{ pid: number }>();
 const {
@@ -19,10 +22,11 @@ const {
 // utils
 const { smAndUp, width } = useDisplay();
 const cart = useStoreCart();
-const { ratingProduct, likesProduct } = useTopics();
+const { ratingProduct, likesProduct, ratingCompany } = useTopics();
 // stores
 const { products$ } = useQueryProductsOnly(() => [props.pid]);
 const product$ = computed(() => first(products$.value));
+const com = useUserData(() => get(product$.value, "user.id"));
 
 const sampleImage = (images: any) =>
   !isEmpty(images)
@@ -46,8 +50,8 @@ const sampleImage = (images: any) =>
         v-bind="$attrs"
         class="grow d-flex"
         :density="width < 288 ? 'compact' : undefined"
-        height="133"
-        max-height="133"
+        height="140"
+        max-height="140"
       >
         <!-- @item:card:image -->
         <div v-if="smAndUp" class="self-stretch">
@@ -107,7 +111,16 @@ const sampleImage = (images: any) =>
               </NuxtLink>
             </VCardTitle>
           </ProductPublicUrl>
-          <VCardSubtitle>Ref #{{ props.pid }}</VCardSubtitle>
+          <VChipProductCategory class="ms-5" size="small" :product="product$" />
+          <!-- <VCardSubtitle class="bg-red">Ref #{{ props.pid }}</VCardSubtitle> -->
+          <VCardSubtitle class="*bg-red ps-6 d-flex items-center mt-3">
+            <VIcon class="opacity-30" start size="small" icon="$iconDowntown" />
+            <TopicRatingStatus :topic="ratingCompany(com.uid$.value)" />
+
+            <em class="ms-3 align-middle">
+              {{ com.companyName.value || "" }}</em
+            >
+          </VCardSubtitle>
         </div>
 
         <div class="*bg-primary3 grid grid-cols-[auto,1fr] grid-rows-2">

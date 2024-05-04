@@ -8,6 +8,7 @@ export const useTopics = () => {
       TOPIC_CHAT_PRODUCTS_prefix,
       PRODUCT_RATING_prefix,
       PRODUCTS_LIKES_prefix,
+      COM_RATING_prefix,
     },
   } = useAppConfig();
   const comChat = (comid: number) => `${TOPIC_CHAT_COM_prefix}${comid}`;
@@ -20,6 +21,8 @@ export const useTopics = () => {
     pid ? `${PRODUCT_RATING_prefix}${pid}` : "";
   const likesProduct = (pid: number | undefined) =>
     pid ? `${PRODUCTS_LIKES_prefix}${pid}` : "";
+  const ratingCompany = (uid: number | undefined) =>
+    uid ? `${COM_RATING_prefix}${uid}` : "";
   return {
     comChat,
     productChat,
@@ -27,5 +30,6 @@ export const useTopics = () => {
     authProfile,
     ratingProduct,
     likesProduct,
+    ratingCompany,
   };
 };

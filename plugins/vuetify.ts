@@ -31,6 +31,7 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconStarCircle,
   IconThumbsUpOutline,
   IconThumbsDownOutline,
   IconChecklist,
@@ -247,6 +248,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconStarCircle: IconStarCircle,
         iconThumbsUpOutline: IconThumbsUpOutline,
         iconThumbsDownOutline: IconThumbsDownOutline,
         iconChecklist: IconChecklist,

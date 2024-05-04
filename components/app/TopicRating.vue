@@ -10,7 +10,7 @@ const {
   rate,
   val: ratingValue,
   store,
-} = useTopicRating(props.topic);
+} = useTopicRating(() => props.topic);
 
 // @@eos
 </script>
