@@ -125,43 +125,73 @@ const sampleImage = (images: any) =>
 
         <div class="*bg-primary3 grid grid-cols-[auto,1fr] grid-rows-2 pe-3">
           <!-- @item:qty:cell-ts -->
-          <div class="*bg-red d-flex items-center justify-center sm:me-5">
-            <strong class="text-h5 !font-mono font-semibold"
-              >{{ cart.store$.items[props.pid]
-              }}<small class="ms-[2px] opacity-60">{{
-                get(product$, "stockType")
-              }}</small></strong
+          <div
+            class="*bg-red d-flex items-center justify-center w-[112px] sm:me-3"
+          >
+            <VTextField
+              :model-value="cart.store$.items[props.pid]"
+              @update:model-value="(value) => cart.put(props.pid, value)"
+              hide-details
+              label="Količina"
+              variant="outlined"
+              density="compact"
+              type="number"
+              class="*bg-lime"
+              hide-spin-buttons
+              center-affix
             >
+              <template #append-inner>
+                <pre style="font-size: 81%" class="opacity-50">{{
+                  product$?.stockType || ""
+                }}</pre>
+              </template>
+            </VTextField>
           </div>
           <!-- @item:qty:cell-te -->
           <div class="d-flex items-center justify-end">
             <VBtn
               icon
               @click="cart.increase(props.pid)"
-              variant="plain"
-              :size="width < 412 ? 'small' : undefined"
+              variant="text"
               color="primary"
             >
-              <VIcon size="large" icon="$plus" />
+              <VIcon size="x-large" icon="$plus" />
             </VBtn>
           </div>
+
           <!-- @item:qty:cell-bs -->
-          <div class="d-flex items-start justify-center sm:me-5">
-            <em style="font-size: 91%;" class="text-medium-emphasis"
-              >{{
-                cart.store$.items[props.pid] * Number(get(product$, "price"))
-              }} din</em
+          <div
+            class="d-flex items-start justify-center w-[112px] sm:me-3 *px-3 pt-2"
+          >
+            <VTextField
+              class="scale-[85%]"
+              disabled
+              :model-value="
+                priceFormatLocale(
+                  cart.store$.items[props.pid] * Number(product$?.price)
+                )
+              "
+              hide-details
+              label="Iznos"
+              variant="underlined"
+              density="compact"
+              hide-spin-buttons
+              center-affix
+              readonly
             >
+              <template #append-inner>
+                <pre style="font-size: 81%" class="opacity-50">din</pre>
+              </template>
+            </VTextField>
           </div>
           <!-- @item:qty:cell-be -->
           <div class="d-flex items-center justify-end">
             <VBtn
               icon
               @click="cart.increase(props.pid, -1)"
-              variant="plain"
-              :size="width < 412 ? 'small' : undefined"
+              variant="text"
               color="error"
-              ><VIcon size="large" icon="$minus"
+              ><VIcon size="x-large" icon="$minus"
             /></VBtn>
           </div>
         </div>

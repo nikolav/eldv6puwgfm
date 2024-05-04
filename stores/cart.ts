@@ -44,8 +44,8 @@ export const useStoreCart = defineStore("cart", () => {
     delete store$.value.items[id];
   };
   // @put
-  const cartPut = (id: number, amount = 1) => {
-    const amount_ = clampPositive(amount);
+  const cartPut = (id: number, amount: any = 1) => {
+    const amount_ = clampPositive(Number(amount));
     if (!amount_) {
       cartDrop(id);
       return;
