@@ -21,10 +21,18 @@ const sampleImage = (images: any) =>
   !isEmpty(images)
     ? resourceUrl(get(sample(images), "data.file_id"))
     : DEFAULT_NO_PRODUCT_IMAGE_FOUND;
-// @@eos
+// @@
 </script>
 <template>
   <section class="component--CardCartItem">
+
+    <!-- 
+      keeps 'html' scrollbars on; 
+       layout jumpes when hiding it to open lightbox 
+    -->
+    <Html :style="`overflow: scroll;`" />
+
+    <!-- <Html :style="`overflow: hidden;`" /> -->
     <!-- @item:container -->
     <div class="d-flex items-center justify-between sm:gap-4">
       <!-- @item:card-h -->
@@ -41,13 +49,28 @@ const sampleImage = (images: any) =>
           <!-- <ProductImages :product="product$" v-slot="{ images }"> -->
           <LightboxProductImages :product="product$">
             <template #activator="{ onClick, images }">
-              <VImg
-                @click="onClick"
-                :src="sampleImage(images)"
-                class="h-100"
-                width="177"
-                cover
-              />
+              <VHover open-delay="345">
+                <template #default="{ isHovering, props: props_ }">
+                  <VImg
+                    v-bind="props_"
+                    @click.stop="onClick"
+                    :src="sampleImage(images)"
+                    class="h-100 cursor-pointer hover:scale-[102%] transition-transform position-relative"
+                    width="177"
+                    cover
+                  >
+                    <VFadeTransition>
+                      <VIcon
+                        size="large"
+                        color="white"
+                        v-if="isHovering"
+                        icon="$iconImages"
+                        class="position-absolute top-1 start-1 z-[1] opacity-60"
+                      />
+                    </VFadeTransition>
+                  </VImg>
+                </template>
+              </VHover>
             </template>
           </LightboxProductImages>
           <!-- </ProductImages> -->

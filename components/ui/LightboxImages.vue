@@ -13,7 +13,12 @@ const gallery = computed(() =>
   }))
 );
 const disabled = computed(() => isEmpty(props.images));
-const onClick = () => !disabled.value && $lightbox.open(gallery.value, {  mainClass: "!z-[1235]" });
+const onClick = () =>
+  !disabled.value &&
+  $lightbox.open(gallery.value, {
+    mainClass: "!z-[1235]",
+    hideScrollbar: false,
+  });
 const btnProps = {
   onClick,
   images: props.images,

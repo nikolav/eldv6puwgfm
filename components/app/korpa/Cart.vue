@@ -146,8 +146,7 @@ const cartOrderSend = async () => {
 
             <!-- pager -->
             <div
-              :class="812 < width ? 'pt-4' : 'pt-1'"
-              class="*bg-green-200 grow d-flex flex-col items-center space-y-1">
+              class="*bg-green-200 grow d-flex flex-col items-center space-y-1 pt-1">
               <!-- p products:length -->
               <p
               v-if="612 < width"
