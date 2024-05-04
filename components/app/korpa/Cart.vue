@@ -48,7 +48,7 @@ const cartOrderSend = async () => {
 // @@eos
 </script>
 <template>
-  <section class="bg-white !w-full fill-height ma-0 pa-0 position-relative px-1">
+  <section class="bg--cart-vector-01 *bg-white !w-full fill-height ma-0 pa-0 position-relative px-1">
 
     <!-- @order:confirm:dialog -->
     <VBottomSheet v-model="toggleOrderConfirm.isActive.value">
@@ -258,9 +258,9 @@ const cartOrderSend = async () => {
         <template #default="{ items }">
           <VSheet
             rounded="lg"
-            elevation="1"
+            elevation="2"
             max-width="1024"
-            class="mt-2 pa-4 mx-auto space-y-1 sm:space-y-3"
+            class="!bg-white/10 mt-3 pa-4 mx-auto space-y-1 sm:space-y-3"
           >
             <CardCartItem v-for="i in items" :key="i.raw" :pid="i.raw" />
           </VSheet>
@@ -271,4 +271,10 @@ const cartOrderSend = async () => {
   </section>
 </template>
 <style lang="scss" scoped>
+.bg--cart-vector-01 {
+
+  background: white url("~/assets/images/bg-cart-vector.png");
+  background-size: 246%;
+  background-position: 50% 5%;
+}
 </style>

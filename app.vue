@@ -108,6 +108,8 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
 
     <!-- @screen:cart -->
     <!-- default dialog z-index [1004] -->
+    <!--  hides h-scrollbar @cat:open -->
+    <Html :style="cart.isOpen ? 'overflow-x: hidden !important' : undefined" />
     <VDialog
       :model-value="cart.isOpen"
       persistent
@@ -172,5 +174,8 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
 .Panel1-leave-active {
   position: absolute !important;
   width: 100%;
+}
+.bg--dialog-image-cart {
+  background-image: url("~/assets/images/bg-cart-vector.png");
 }
 </style>

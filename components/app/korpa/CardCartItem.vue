@@ -55,7 +55,7 @@ const sampleImage = (images: any) =>
           <VCard
             rounded="lg"
             v-bind="mergeProps(props_, $attrs)"
-            class="grow d-flex"
+            class="!bg-white/75 grow d-flex"
             :density="width < 288 ? 'compact' : undefined"
             height="140"
             max-height="140"
