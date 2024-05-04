@@ -43,7 +43,10 @@
 
 
 @layer components {
+  .link--prominent-base {
+    @apply inline-block underline cursor-pointer;
+  }
   .link--prominent {
-    @apply inline-block underline cursor-pointer transition-transform hover:scale-[101%];
+    @apply link--prominent-base transition-transform hover:scale-[101%];
   }
 }

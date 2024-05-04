@@ -17,6 +17,7 @@ import {
   VChipProductCategory,
   VChipProductPrice,
   TopicChat,
+  WithComPublicUrl,
 } from "@/components/app";
 import { VSlideYReverseTransition } from "vuetify/lib/components/index.mjs";
 const props = defineProps<{ pid: number }>();
@@ -138,10 +139,20 @@ const sampleImage = (images: any) =>
                   icon="$iconDowntown"
                 />
                 <TopicRatingStatus :topic="ratingCompany(com.uid$.value)" />
-
-                <em class="ms-3 align-middle">
-                  {{ com.companyName.value || "" }}</em
+                <WithComPublicUrl
+                  :company-id="com.uid$.value"
+                  :company-name="com.companyName.value"
+                  v-slot="{ companyUrl }"
                 >
+                  <NuxtLink :to="companyUrl" external target="_blank">
+                    <a class="text-primary-darken-1 link--prominent-base">
+                      <em class="text-body-2 ms-3 align-middle !font-sans">
+                        {{ com.companyName.value || "" }}</em
+                      >
+                      <VIcon end icon="$iconExternalLink" size="x-small" class="opacity-50" />
+                    </a>
+                  </NuxtLink>
+                </WithComPublicUrl>
               </VCardSubtitle>
             </div>
 
