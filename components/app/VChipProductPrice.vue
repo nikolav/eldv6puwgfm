@@ -12,7 +12,7 @@ const props = defineProps<{
       <VIcon
         start
         icon="$iconRSD"
-        class="!opacity-40 translate-y-[2px] ps-1 translate-x-px"
+        class="!opacity-40 translate-y-px ps-1 translate-x-px"
         :size="25"
       />
     </template>

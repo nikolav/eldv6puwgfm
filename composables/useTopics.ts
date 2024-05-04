@@ -11,8 +11,10 @@ export const useTopics = () => {
       COM_RATING_prefix,
     },
   } = useAppConfig();
-  const comChat = (comid: number) => `${TOPIC_CHAT_COM_prefix}${comid}`;
-  const productChat = (pid: number) => `${TOPIC_CHAT_PRODUCTS_prefix}${pid}`;
+  const comChat = (comid: number | undefined) =>
+    comid ? `${TOPIC_CHAT_COM_prefix}${comid}` : "";
+  const productChat = (pid: number | undefined) =>
+    pid ? `${TOPIC_CHAT_PRODUCTS_prefix}${pid}` : "";
   const productImages = (pid: number | undefined) =>
     pid ? `${PRODUCT_IMAGES}${pid}` : "";
   const authProfile = (uid: number | undefined) =>

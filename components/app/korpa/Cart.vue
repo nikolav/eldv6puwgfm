@@ -197,6 +197,7 @@ const cartOrderSend = async () => {
             v-if="!cart.isEmpty"
               @click="toggleOrderConfirm.on"
               :size="912 < width ? 'x-large' : (812 < width ? undefined : 'small')"
+              :class="912 < width ? 'me-12' : undefined"
               color="primary"
               variant="elevated"
               rounded="pill"
@@ -259,7 +260,7 @@ const cartOrderSend = async () => {
             rounded="lg"
             elevation="1"
             max-width="1024"
-            class="mt-2 pa-4 mx-auto space-y-1 sm:space-y-2"
+            class="mt-2 pa-4 mx-auto space-y-1 sm:space-y-3"
           >
             <CardCartItem v-for="i in items" :key="i.raw" :pid="i.raw" />
           </VSheet>
