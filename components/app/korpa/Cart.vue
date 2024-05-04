@@ -48,7 +48,7 @@ const cartOrderSend = async () => {
 // @@eos
 </script>
 <template>
-  <section class="bg-white !w-full fill-height ma-0 pa-0 position-relative">
+  <section class="bg-white !w-full fill-height ma-0 pa-0 position-relative px-1">
 
     <!-- @order:confirm:dialog -->
     <VBottomSheet v-model="toggleOrderConfirm.isActive.value">
@@ -86,7 +86,7 @@ const cartOrderSend = async () => {
     
     <!-- @@ spacer:parent -->
     <!-- @@ cart:items -->
-    <div class="mt-1 mx-2">
+    <div class="mt-1 !max-w-[1352px] mx-auto">
       <VDataIterator
         :items="cart.products"
         :page="page$"

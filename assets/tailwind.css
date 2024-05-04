@@ -39,9 +39,11 @@
   }
  }
  ...
+*/
 
 
- @layer components {
-
- }
- */
+@layer components {
+  .link--prominent {
+    @apply inline-block underline cursor-pointer transition-transform hover:scale-[101%];
+  }
+}

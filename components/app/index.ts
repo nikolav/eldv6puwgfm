@@ -42,3 +42,4 @@ export { default as WithComProfile } from "./WithComProfile.vue";
 export { default as WithComPublicUrl } from "./WithComPublicUrl.vue";
 export { default as GetCategoryTitleFromTag } from "./GetCategoryTitleFromTag.vue";
 export { default as CardProductDisplayToolbarSocial } from "./CardProductDisplayToolbarSocial.vue";
+export { default as LikeDislikeStatus } from "./LikeDislikeStatus.vue";

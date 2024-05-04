@@ -84,3 +84,5 @@ export { default as IconUserShield } from "./IconUserShield.vue";
 export { default as IconPage } from "./IconPage.vue";
 export { default as IconDeliveryTruckFilledSpeed } from "./IconDeliveryTruckFilledSpeed.vue";
 export { default as IconChecklist } from "./IconChecklist.vue";
+export { default as IconThumbsUpOutline } from "./IconThumbsUpOutline.vue";
+export { default as IconThumbsDownOutline } from "./IconThumbsDownOutline.vue";

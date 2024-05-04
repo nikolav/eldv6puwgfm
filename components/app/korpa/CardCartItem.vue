@@ -5,7 +5,13 @@ export default {
 </script>
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import { ProductImages, LightboxProductImages } from "@/components/app";
+import {
+  ProductImages,
+  LightboxProductImages,
+  ProductPublicUrl,
+  TopicRating,
+  LikeDislikeStatus,
+} from "@/components/app";
 const props = defineProps<{ pid: number }>();
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
@@ -13,6 +19,7 @@ const {
 // utils
 const { smAndUp, width } = useDisplay();
 const cart = useStoreCart();
+const { ratingProduct, likesProduct } = useTopics();
 // stores
 const { products$ } = useQueryProductsOnly(() => [props.pid]);
 const product$ = computed(() => first(products$.value));
@@ -25,14 +32,12 @@ const sampleImage = (images: any) =>
 </script>
 <template>
   <section class="component--CardCartItem">
-
     <!-- 
       keeps 'html' scrollbars on; 
        layout jumpes when hiding it to open lightbox 
     -->
     <Html :style="`overflow: scroll;`" />
 
-    <!-- <Html :style="`overflow: hidden;`" /> -->
     <!-- @item:container -->
     <div class="d-flex items-center justify-between sm:gap-4">
       <!-- @item:card-h -->
@@ -55,7 +60,7 @@ const sampleImage = (images: any) =>
                     v-bind="props_"
                     @click.stop="onClick"
                     :src="sampleImage(images)"
-                    class="h-100 cursor-pointer hover:scale-[102%] transition-transform position-relative"
+                    class="h-100 cursor-pointer hover:scale-[101%] transition-transform position-relative"
                     width="177"
                     cover
                   >
@@ -75,15 +80,36 @@ const sampleImage = (images: any) =>
           </LightboxProductImages>
           <!-- </ProductImages> -->
         </div>
+
         <!-- @item:card:description -->
         <div class="grow *bg-red" :class="width < 281 ? 'text-end' : undefined">
-          <VCardTitle
-            class="text-truncate"
-            :class="width < 389 ? '!text-sm' : undefined"
-            >{{ get(product$, "name") }}</VCardTitle
-          >
+          <div class="d-flex items-center gap-6">
+            <TopicRating
+              v-if="product$?.id"
+              class="*bg-red ps-2"
+              small
+              :topic="ratingProduct(product$.id)"
+            />
+            <LikeDislikeStatus
+              v-if="product$?.id"
+              :topic="likesProduct(product$.id)"
+            />
+          </div>
+          <ProductPublicUrl :product="product$" v-slot="{ url: productUrl }">
+            <VCardTitle
+              class="text-truncate"
+              :class="width < 389 ? '!text-sm' : undefined"
+            >
+              <NuxtLink :to="productUrl" external target="_blank">
+                <a class="link--prominent text-primary">
+                  {{ get(product$, "name") }}
+                </a>
+              </NuxtLink>
+            </VCardTitle>
+          </ProductPublicUrl>
           <VCardSubtitle>Ref #{{ props.pid }}</VCardSubtitle>
         </div>
+
         <div class="*bg-primary3 grid grid-cols-[auto,1fr] grid-rows-2">
           <!-- @item:qty:cell-ts -->
           <div class="*bg-red d-flex items-center justify-center sm:me-5">

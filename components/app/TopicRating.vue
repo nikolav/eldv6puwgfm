@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  topic: string;
+  topic?: string;
   small?: boolean | undefined;
   text?: boolean | string | undefined;
 }>();
