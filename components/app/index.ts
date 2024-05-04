@@ -2,7 +2,7 @@ export * from "./korpa";
 export * from "./products";
 export * from "./profile";
 export { default as AppBarMain } from "./AppBarMain.vue";
-export { default as CardCartItem } from "./CardCartItem.vue";
+// export { default as CardCartItem } from "./korpa/CardCartItem.vue";
 export { default as CardInbox } from "./CardInbox.vue";
 export { default as CardInboxTabCalendar } from "./CardInboxTabCalendar.vue";
 export { default as CardInboxTabMessages } from "./CardInboxTabMessages.vue";

@@ -107,7 +107,7 @@ const cartOrderSend = async () => {
             color="white"
             :density="!smAndUp ? 'compact' : undefined"
             :class="858 < width ? 'ps-1' : 'ps-3'" 
-            :height="102"
+            :height="812 < width ? 102 : 91"
             image="~/assets/images/bg-cart-toolbar.png"
           >
           <template #image>
@@ -115,9 +115,10 @@ const cartOrderSend = async () => {
           </template>
             <!-- @cart:exit -->
             <VBtn
-                icon
-                variant="text"
-                @click="cart.close"
+              :size="812 < width ? undefined : (382 < width ? 'small' : 'x-small')"
+              icon
+              variant="text"
+              @click="cart.close"
                 >
               <VIcon icon="$prev" size="large" />
               <VTooltip text="Pijaca" activator="parent" open-delay="345" location="bottom" />
@@ -128,7 +129,7 @@ const cartOrderSend = async () => {
               class="ms-4 *bg-red-200 fill-height d-flex flex-col justify-center">
               <p>
                 <em 
-                  v-if="802 < width"
+                  v-if="1024 < width"
                   class="align-middle font-sans text-medium-emphasis"
                   >Vrednost:
                 </em>
@@ -136,17 +137,21 @@ const cartOrderSend = async () => {
                 <!-- @@price.total -->
                 <VChipProductPrice
                   elevation="2" 
-                  :class="858 < width ? 'ms-3' : 'ms-0'" 
-                  size="x-large" 
+                  :class="1024 < width ? 'ms-3' : 'ms-0'" 
+                  :size="1024 < width ? 'x-large' : (812 < width ? undefined : 'small')"
                   :price-only="priceFormatLocale(cart.total$)"
                 />
               </p>
             </div>
 
             <!-- pager -->
-            <div class="*bg-green-200 grow d-flex flex-col items-center pt-4 space-y-1">
+            <div
+              :class="812 < width ? 'pt-4' : 'pt-1'"
+              class="*bg-green-200 grow d-flex flex-col items-center space-y-1">
               <!-- p products:length -->
-              <p class="text-center *bg-red">
+              <p
+              v-if="612 < width"
+                class="text-center *bg-red">
                 <VBadge 
                     color="primary3-darken-1 !shadow" 
                     inline 
@@ -157,9 +162,9 @@ const cartOrderSend = async () => {
                   </template>
                 </VBadge>
                 <span 
-                  v-if="858 < width" style="font-size: 93%;" 
+                  style="font-size: 93%;" 
                   class="ms-1 text-medium-emphasis tracking-wider">
-                    {{ 1 < cart.length ? 'proizvoda' : 'proizvod' }} u korpi
+                    <span v-if="712< width">{{ 1 < cart.length ? 'proizvoda' : 'proizvod' }}</span> u korpi
                 </span>
               </p>
               <!-- pagination -->
@@ -170,9 +175,11 @@ const cartOrderSend = async () => {
                 active-color="primary3"
                 rounded="circle"
                 class="*bg-blue-200 grow !w-full"
+                :size="1024 < width ? undefined : 'small'"
               >
                 <template #item="{ props, page, isActive }">
                   <VBtn
+                    :size="1024 < width ? undefined : 'small'"
                     v-bind="props"
                     density="comfortable"
                     :variant="isActive ? 'elevated' : 'text'"
@@ -188,26 +195,33 @@ const cartOrderSend = async () => {
 
             <!-- view order -->
             <VBtn
-              v-if="!cart.isEmpty"
+            v-if="!cart.isEmpty"
               @click="toggleOrderConfirm.on"
-              :size="858 < width ? 'x-large' : undefined"
+              :size="912 < width ? 'x-large' : (812 < width ? undefined : 'small')"
               color="primary"
               variant="elevated"
               rounded="pill"
+
             >
               <VIcon
-                v-if="smAndUp" 
+                v-if="812 < width" 
                 class="rotate-2" 
                 start
                 size="large"
                 icon="$iconChecklist" 
               />
-                <strong>Porudžbina</strong>
-                <VTooltip activator="parent" open-delay="345" location="bottom" text="Pregled porudžbine za slanje..." />
+              <strong v-if="682 < width">Porudžbina</strong>
+              <strong v-else-if="582 < width">Poruči</strong>
+              <VIcon 
+                v-else
+                size="28" 
+                icon="$iconDeliveryTruck"
+              />
+              <VTooltip activator="parent" open-delay="345" location="bottom" text="Pregled porudžbine za slanje..." />
             </VBtn>
 
             <VBtn
-                v-if="!cart.isEmpty"
+                v-if="!cart.isEmpty && (812 < width)"
                 @click="cart.destroy"
                 color="primary"
                 variant="tonal"
@@ -227,10 +241,12 @@ const cartOrderSend = async () => {
 
           <!-- @cart:exit -->
           <VBtn
+            v-if="656 < width"
             icon
             variant="text"
             @click="cart.close"
             class="ms-2"
+            :size="812 < width ? undefined : 'small'"
           >
             <VIcon icon="$close" size="large" />
             <VTooltip text="Pijaca" activator="parent" open-delay="345" location="bottom" />
@@ -238,12 +254,13 @@ const cartOrderSend = async () => {
           </VToolbar>
         </template>
 
-        <!-- @@ -->
-        <!-- @cart:selected-products:render -->
+        <!-- @@ cart:selected-products:render -->
         <template #default="{ items }">
           <VSheet
+            rounded="lg"
+            elevation="1"
             max-width="1024"
-            class="pa-2 pt-4 mx-auto space-y-1 sm:space-y-3"
+            class="mt-2 pa-4 mx-auto space-y-1 sm:space-y-3"
           >
             <CardCartItem v-for="i in items" :key="i.raw" :pid="i.raw" />
           </VSheet>
