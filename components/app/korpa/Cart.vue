@@ -48,7 +48,7 @@ const cartOrderSend = async () => {
 // @@eos
 </script>
 <template>
-  <VSheet rounded="0" elevation="0" class="d-flex *items-center justify-center">
+  <VSheet rounded="0" elevation="0">
     <!-- @order:confirm:dialog -->
     <VBottomSheet v-model="toggleOrderConfirm.isActive.value">
        <VBtn 
@@ -84,31 +84,35 @@ const cartOrderSend = async () => {
     </VBottomSheet>
     
     
-    <!-- @@ -->
-    <!-- @cart:items -->
-    <div class="w-full mt-3 mx-5">
+    <!-- @@ spacer:parent -->
+    <!-- @@ cart:items -->
+    <div class="mt-1 mx-2">
       <VDataIterator
         :items="cart.products"
         :page="page$"
         :items-per-page="perPage"
-        class="space-y-1 sm:space-y-4"
       >
         <template #no-data>
           <CartEmpty />
         </template>
+
         <!-- @@ -->
         <!-- @cart:toolbar -->
         <template #header>
           <!-- @@ -->
           <!-- @cart:toolbar:controlls -->
           <VToolbar
-            elevation="2"
+            elevation="1"
             rounded="pill"
             color="white"
             :density="!smAndUp ? 'compact' : undefined"
             :class="858 < width ? 'ps-1' : 'ps-3'" 
             :height="102"
+            image="~/assets/images/bg-cart-toolbar.png"
           >
+          <template #image>
+            <VImg position="0 0" />
+          </template>
             <!-- @cart:exit -->
             <VBtn
                 icon
@@ -139,7 +143,7 @@ const cartOrderSend = async () => {
               </p>
             </div>
 
-          
+            <!-- pager -->
             <div class="*bg-green-200 grow d-flex flex-col items-center pt-4 space-y-1">
               <!-- p products:length -->
               <p class="text-center *bg-red">
@@ -182,6 +186,7 @@ const cartOrderSend = async () => {
               </VPagination>
             </div>
 
+            <!-- view order -->
             <VBtn
               v-if="!cart.isEmpty"
               @click="toggleOrderConfirm.on"
@@ -194,7 +199,7 @@ const cartOrderSend = async () => {
                 v-if="smAndUp" 
                 class="rotate-2" 
                 start
-                size="x-large"
+                size="large"
                 icon="$iconChecklist" 
               />
                 <strong>Porudžbina</strong>
@@ -236,8 +241,14 @@ const cartOrderSend = async () => {
         <!-- @@ -->
         <!-- @cart:selected-products:render -->
         <template #default="{ items }">
-          <CardCartItem v-for="i in items" :key="i.raw" :pid="i.raw" />
+          <VSheet
+            max-width="1024"
+            class="pa-2 pt-4 mx-auto space-y-1 sm:space-y-3"
+          >
+            <CardCartItem v-for="i in items" :key="i.raw" :pid="i.raw" />
+          </VSheet>
         </template>
+
       </VDataIterator>
     </div>
   </VSheet>
