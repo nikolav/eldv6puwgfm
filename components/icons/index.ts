@@ -82,3 +82,5 @@ export { default as IconTrashFill } from "./IconTrashFill.vue";
 export { default as IconUserCircle } from "./IconUserCircle.vue";
 export { default as IconUserShield } from "./IconUserShield.vue";
 export { default as IconPage } from "./IconPage.vue";
+export { default as IconDeliveryTruckFilledSpeed } from "./IconDeliveryTruckFilledSpeed.vue";
+export { default as IconChecklist } from "./IconChecklist.vue";

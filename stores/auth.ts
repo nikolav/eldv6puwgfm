@@ -50,20 +50,23 @@ export const useStoreApiAuth = defineStore("auth", () => {
     data: user$,
     refresh: authDataReload,
     execute: authDataStart,
+    pending,
   } = useFetch<OrNoValue<IAuthWhoResponse>>(URL_API_who, {
     key: KEY_USEFETCH_AUTHDATA,
     method: "GET",
     headers: headers$,
-    lazy: true,
     default: () => null,
     transform: (responseAuth) => {
       try {
         return schemaAuthData.parse(responseAuth);
       } catch (error) {
+        console.log({ error });
         // pass
       }
       return null;
     },
+    // start manually
+    lazy: true,
     immediate: false,
   });
   const initialized$ = onceMountedOn(true, authDataStart);
@@ -94,22 +97,22 @@ export const useStoreApiAuth = defineStore("auth", () => {
   // sync apollo:auth
   watch(isAuth$, async (isAuth) => {
     if (isAuth) {
+      // cache apollo token
+      await onLoginApollo(token$.value);
+
       // cache auto `chatName`
       if (chatName$.value) return;
       const chatName = matchEmailStart(get(user$.value, "email"));
       const chatNameDefault = matchEmailStart(APP_USER_DEFAULT_email);
       if (chatNameDefault === chatName) return;
       chatName$.value = startCase(chatName);
-
-      // cache apollo token
-      await onLoginApollo(token$.value);
     } else {
-      // clear auto `chatName`
-      chatName$.value = "";
-
       // signal logout to apollo
       // await onLogoutApollo(undefined, true);
       await onLogoutApollo();
+
+      // clear auto `chatName`
+      chatName$.value = "";
     }
   });
 
@@ -118,8 +121,11 @@ export const useStoreApiAuth = defineStore("auth", () => {
 
   const authentication$ =
     (authEndpoint: string = URL_AUTH_login) =>
-    async (credentials: IAuthCreds) => {
-      if (isAuth$.value) return;
+    async (credentials: IAuthCreds, force = false) => {
+      // if (isAuth$.value) return;
+      // force new login even if already logged in
+      //  for overriding .default login
+      if (isAuth$.value && !force) return;
       let token: OrNoValue<string> = "";
       status.begin();
       try {
@@ -170,7 +176,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
 
   // #api
   return {
-    // @auth/data
+    // #crud
     token$,
     user$,
     isAuth$,
@@ -179,30 +185,24 @@ export const useStoreApiAuth = defineStore("auth", () => {
     isCompany$,
     isDefault$,
     initialized$,
-
-    // @auth/crud
     register,
     login,
     logout,
     authDataReload,
+    // alias
+    reload: authDataReload,
 
     // @api/flags
     processing: status.processing,
     error: status.error,
     success: status.success,
+    loading: pending,
+    status,
 
     // hard login
     tokenPut: (t: string) => {
       // put token:validated
-      let tok;
-      try {
-        tok = schemaJwt.parse(t);
-      } catch (error) {
-        // pass
-      }
-      if (tok) {
-        token$.value = tok;
-      }
+      token$.value = schemaJwt.parse(t);
     },
     tokenPutDefault: () => {
       token$.value = TOKEN_DEFAULT;

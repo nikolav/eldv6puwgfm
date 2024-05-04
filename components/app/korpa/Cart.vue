@@ -1,20 +1,27 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import { CardCartItem, CartEmpty } from "@/components/app";
-
-const { smAndUp, width, height } = useDisplay();
-
-const cart = useStoreCart();
+import { CardCartItem, CartEmpty, VChipProductPrice } from "@/components/app";
+// defs
 const {
   key: { APP_PROCESSING, ORDER_SEND_STATUS },
 } = useAppConfig();
+// flag, ref
+const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
+const flagsAppProcessing$ = useGlobalFlag(APP_PROCESSING);
+const toggleOrderConfirm = useToggleFlag();
+// utill
+const { smAndUp, width, height } = useDisplay();
+const cart = useStoreCart();
+const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+watchEffect(() => {
+  appProcessing$.value = cart.loading;
+});
 const {
   perPage,
   length: paginationLength,
   page$,
 } = usePaginateData({ data: computed(() => cart.products), perPage: 4 });
-const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
-const flagsAppProcessing$ = useGlobalFlag(APP_PROCESSING);
+// helper
 const cartOrderSend = async () => {
   let err_;
   if (!cart.isEmpty) {
@@ -25,7 +32,6 @@ const cartOrderSend = async () => {
       err_ = error;
       console.error(error);
     }
-
     if (!err_) {
       flagOrderSendStatus$.value = true;
       await nextTick(() => {
@@ -38,8 +44,6 @@ const cartOrderSend = async () => {
 
   return err_;
 };
-
-const toggleOrderConfirm = useToggleFlag();
 
 // @@eos
 </script>
@@ -78,44 +82,11 @@ const toggleOrderConfirm = useToggleFlag();
         </VBtnGroup>
       </VSheet>
     </VBottomSheet>
-    <!-- @cart:start -->
-    <p
-      v-if="!cart.isEmpty"
-      class="position-absolute top-1 text-medium-emphasis"
-    >
-      Ukupno
-      <VBadge color="error" inline class="align-baseline d-inline-block">
-        <template #badge>
-          <pre>{{ cart.length }}</pre>
-        </template>
-      </VBadge>
-      {{ 1 < cart.length ? "proizvoda" : "proizvod" }} u korpi
-    </p>
-    <!-- @cart:exit -->
-    <VBtn
-      icon
-      variant="text"
-      position="absolute"
-      class="z-10 top-1 start-1"
-      @click="cart.close"
-      size="large"
-    >
-      <VIcon icon="$prev" size="large" />
-    </VBtn>
-    <!-- @cart:exit -->
-    <VBtn
-      icon
-      variant="text"
-      position="absolute"
-      class="z-10 top-1 end-1"
-      @click="cart.close"
-      size="large"
-    >
-      <VIcon icon="$close" size="large" />
-    </VBtn>
+    
+    
     <!-- @@ -->
     <!-- @cart:items -->
-    <div class="w-[812px] mt-16">
+    <div class="w-full mt-3 mx-5">
       <VDataIterator
         :items="cart.products"
         :page="page$"
@@ -128,80 +99,140 @@ const toggleOrderConfirm = useToggleFlag();
         <!-- @@ -->
         <!-- @cart:toolbar -->
         <template #header>
-          <VPagination
-            v-if="1 < paginationLength"
-            v-model="page$"
-            :length="paginationLength"
-            density="comfortable"
-            active-color="primary3"
-            rounded="circle"
-          >
-            <template #item="{ props, page, isActive }">
-              <VBtn
-                v-bind="props"
-                density="comfortable"
-                :variant="isActive ? 'elevated' : 'text'"
-                icon
-                rounded="circle"
-              >
-                <pre>{{ page }}</pre>
-              </VBtn>
-            </template>
-          </VPagination>
           <!-- @@ -->
           <!-- @cart:toolbar:controlls -->
           <VToolbar
-            elevation="1"
-            rounded
-            color="primary3"
+            elevation="2"
+            rounded="pill"
+            color="white"
             :density="!smAndUp ? 'compact' : undefined"
-            :class="width < 281 ? 'px-12' : undefined"
+            :class="858 < width ? 'ps-1' : 'ps-3'" 
+            :height="102"
           >
-            <h4 class="ms-4">
-              <span class="text-medium-emphasis" v-if="smAndUp"
-                >Vrednost:
-              </span>
-              <span
-                class="d-inline-block space-x-[2px] bg-error rounded-pill p-1 px-3 !shadow"
-              >
-                <strong class="me-px">{{ cart.total$ }}</strong>
-                <span class="opacity-70">din.</span>
-              </span>
-            </h4>
-            <VSpacer />
-            <!-- @@ -->
+            <!-- @cart:exit -->
             <VBtn
-              v-if="!cart.isEmpty"
-              @click="cart.destroy"
-              size="small"
-              color="primary"
-              variant="tonal"
-              icon
-            >
-              <VTooltip
-                location="bottom"
-                open-delay="345"
-                activator="parent"
-                text="Isprazni korpu"
-              />
-              <VIcon size="x-large" icon="$iconCartOff" />
-              <span class="sr-only">Isprazni korpu, Odustani</span>
+                icon
+                variant="text"
+                @click="cart.close"
+                >
+              <VIcon icon="$prev" size="large" />
+              <VTooltip text="Pijaca" activator="parent" open-delay="345" location="bottom" />
             </VBtn>
+          
+            <!-- @cart:cena -->
+            <div
+              class="ms-4 *bg-red-200 fill-height d-flex flex-col justify-center">
+              <p>
+                <em 
+                  v-if="802 < width"
+                  class="align-middle font-sans text-medium-emphasis"
+                  >Vrednost:
+                </em>
+                
+                <!-- @@price.total -->
+                <VChipProductPrice
+                  elevation="2" 
+                  :class="858 < width ? 'ms-3' : 'ms-0'" 
+                  size="x-large" 
+                  :price-only="priceFormatLocale(cart.total$)"
+                />
+              </p>
+            </div>
+
+          
+            <div class="*bg-green-200 grow d-flex flex-col items-center pt-4 space-y-1">
+              <!-- p products:length -->
+              <p class="text-center *bg-red">
+                <VBadge 
+                    color="primary3-darken-1 !shadow" 
+                    inline 
+                    class="scale-[112%]"
+                  >
+                  <template #badge>
+                    {{ cart.length }}
+                  </template>
+                </VBadge>
+                <span 
+                  v-if="858 < width" style="font-size: 93%;" 
+                  class="ms-1 text-medium-emphasis tracking-wider">
+                    {{ 1 < cart.length ? 'proizvoda' : 'proizvod' }} u korpi
+                </span>
+              </p>
+              <!-- pagination -->
+              <VPagination
+                v-if="1 < paginationLength"
+                v-model="page$"
+                :length="paginationLength"
+                active-color="primary3"
+                rounded="circle"
+                class="*bg-blue-200 grow !w-full"
+              >
+                <template #item="{ props, page, isActive }">
+                  <VBtn
+                    v-bind="props"
+                    density="comfortable"
+                    :variant="isActive ? 'elevated' : 'text'"
+                    icon
+                    rounded="circle"
+                    class="mt-[.35rem]"
+                  >
+                    <pre>{{ page }}</pre>
+                  </VBtn>
+                </template>
+              </VPagination>
+            </div>
+
             <VBtn
               v-if="!cart.isEmpty"
               @click="toggleOrderConfirm.on"
-              :size="smAndUp ? 'large' : undefined"
+              :size="858 < width ? 'x-large' : undefined"
               color="primary"
               variant="elevated"
-              class="ms-1 ms-sm-2"
               rounded="pill"
             >
-              <VIcon v-if="smAndUp" start size="large" icon="$iconSave" /><span
-                >Naruči</span
-              >
+              <VIcon
+                v-if="smAndUp" 
+                class="rotate-2" 
+                start
+                size="x-large"
+                icon="$iconChecklist" 
+              />
+                <strong>Porudžbina</strong>
+                <VTooltip activator="parent" open-delay="345" location="bottom" text="Pregled porudžbine za slanje..." />
             </VBtn>
+
+            <VBtn
+                v-if="!cart.isEmpty"
+                @click="cart.destroy"
+                color="primary"
+                variant="tonal"
+                icon
+                size="small"
+                class="ms-2"
+              >
+                <VTooltip
+                  location="bottom"
+                  open-delay="345"
+                  activator="parent"
+                  text="Isprazni korpu"
+                />
+                <VIcon size="26" icon="$iconCartOff" />
+                <span class="sr-only">Isprazni korpu</span>
+            </VBtn>
+
+          <!-- @cart:exit -->
+          <VBtn
+            icon
+            variant="text"
+            @click="cart.close"
+            class="ms-2"
+          >
+            <VIcon icon="$close" size="large" />
+            <VTooltip text="Pijaca" activator="parent" open-delay="345" location="bottom" />
+          </VBtn>
           </VToolbar>
         </template>
+
         <!-- @@ -->
         <!-- @cart:selected-products:render -->
         <template #default="{ items }">

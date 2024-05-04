@@ -73,7 +73,7 @@ export const useStoreCart = defineStore("cart", () => {
   const cartHas = (...ids: any[]) =>
     every(ids, (id) => products_.value.includes(Number(id)));
 
-  const { mutate: mutateOrdersPlace } = useMutation(M_ordersPlace);
+  const { mutate: mutateOrdersPlace, loading } = useMutation(M_ordersPlace);
   // @sendOrder
   const sendOrder = async () => {
     if (cartIsEmpty_.value) return;
@@ -107,6 +107,7 @@ export const useStoreCart = defineStore("cart", () => {
     store$,
 
     // # computed
+    total$,
     length: cartLength_,
     isEmpty: cartIsEmpty_,
     products: products_,
@@ -117,15 +118,13 @@ export const useStoreCart = defineStore("cart", () => {
     increase: cartIncrease,
     destroy: cartDestroy,
     has: cartHas,
-    sendOrder,
     count,
+    sendOrder,
 
     // # ui
     isOpen: cartIsOpen_,
     open: cartOpen,
     close: cartClose,
-
-    // # price total
-    total$,
+    loading,
   };
 });

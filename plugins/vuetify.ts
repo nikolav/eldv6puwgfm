@@ -31,6 +31,8 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconChecklist,
+  IconDeliveryTruckFilledSpeed,
   IconAdjustSettings,
   IconAntenaLight,
   IconAttach,
@@ -243,6 +245,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconChecklist: IconChecklist,
+        iconDeliveryTruckSpeed: IconDeliveryTruckFilledSpeed,
         iconAdjustSettings: IconAdjustSettings,
         iconAntena: IconAntenaLight,
         iconAttach: IconAttach,

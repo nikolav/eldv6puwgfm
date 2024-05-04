@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { IProduct } from "@/types";
-const props = defineProps<{ product: IProduct }>();
+const props = defineProps<{
+  product?: IProduct;
+  priceOnly?: number | string | undefined;
+}>();
 // @@eos
 </script>
 <template>
@@ -14,8 +17,12 @@ const props = defineProps<{ product: IProduct }>();
       />
     </template>
     <span class="align-bottom">
-      <strong class="text-[122%] font--bold">{{ product?.price }}</strong
-      ><small class="ms-[3px] opacity-50">{{ product?.stockType }}</small>
+      <strong class="text-[122%] font--bold">{{
+        priceOnly || product?.price
+      }}</strong
+      ><small v-if="!priceOnly" class="ms-[3px] opacity-50">{{
+        product?.stockType
+      }}</small>
     </span>
   </VChip>
 </template>
