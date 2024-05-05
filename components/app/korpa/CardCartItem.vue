@@ -7,19 +7,18 @@ export default {
 import { mergeProps } from "vue";
 import { useDisplay } from "vuetify";
 import {
-  ProductImages,
   LightboxProductImages,
-  ProductPublicUrl,
-  TopicRating,
   LikeDislikeStatus,
-  TopicRatingStatus,
   ProductCategory,
+  ProductImages,
+  ProductPublicUrl,
+  TopicChat,
+  TopicRating,
+  TopicRatingStatus,
   VChipProductCategory,
   VChipProductPrice,
-  TopicChat,
   WithComPublicUrl,
 } from "@/components/app";
-import { VSlideYReverseTransition } from "vuetify/lib/components/index.mjs";
 const props = defineProps<{ pid: number }>();
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
@@ -27,13 +26,17 @@ const {
 // refs, computes
 // utils
 const { smAndUp, width } = useDisplay();
-const cart = useStoreCart();
-const { ratingProduct, likesProduct, ratingCompany, productChat } = useTopics();
 // stores
+const { ratingProduct, likesProduct, ratingCompany, productChat } = useTopics();
+const cart = useStoreCart();
 const { products$ } = useQueryProductsOnly(() => [props.pid]);
 const product$ = computed(() => first(products$.value));
 const com = useUserData(() => get(product$.value, "user.id"));
 // helpers
+// const sampleImage = (images: any) =>
+//   !isEmpty(images)
+//     ? resourceUrl(get(sample(images), "data.file_id"))
+//     : DEFAULT_NO_PRODUCT_IMAGE_FOUND;
 const sampleImage = (images: any) =>
   !isEmpty(images)
     ? resourceUrl(get(sample(images), "data.file_id"))
@@ -46,7 +49,7 @@ const sampleImage = (images: any) =>
       keeps 'html' scrollbars on; 
        layout jumpes when hiding it to open lightbox 
     -->
-    <Html :style="`overflow: scroll;`" />
+    <!-- <Html :style="`overflow: scroll;`" /> -->
 
     <!-- @item:container -->
     <div class="d-flex items-center justify-between sm:gap-4">
@@ -57,13 +60,13 @@ const sampleImage = (images: any) =>
             rounded="lg"
             v-bind="mergeProps(props_, $attrs)"
             class="!bg-white/75 grow d-flex"
+            :class="492 < width ? undefined : 'flex-col'"
             :density="width < 288 ? 'compact' : undefined"
-            height="140"
-            max-height="140"
+            :height="555 < width ? 140 : undefined"
+            :max-height="555 < width ? 140 : undefined"
           >
             <!-- @item:card:image -->
-            <div v-if="smAndUp" class="self-stretch">
-              <!-- <ProductImages :product="product$" v-slot="{ images }"> -->
+            <div v-if="833 < width" class="self-stretch">
               <LightboxProductImages :product="product$">
                 <template #activator="{ onClick, images }">
                   <VHover open-delay="345">
@@ -98,7 +101,10 @@ const sampleImage = (images: any) =>
               class="grow *bg-red"
               :class="width < 281 ? 'text-end' : undefined"
             >
-              <div class="d-flex items-center gap-6">
+              <div
+                class="d-flex items-center gap-6"
+                :class="522 < width ? undefined : '!items-start flex-col'"
+              >
                 <TopicRating
                   v-if="product$?.id"
                   class="*bg-red ps-2"
@@ -107,6 +113,7 @@ const sampleImage = (images: any) =>
                 />
                 <LikeDislikeStatus
                   v-if="product$?.id"
+                  :class="533 < width ? undefined : 'ps-4'"
                   :topic="likesProduct(product$.id)"
                 />
               </div>
@@ -115,7 +122,7 @@ const sampleImage = (images: any) =>
                 v-slot="{ url: productUrl }"
               >
                 <VCardTitle
-                  class="text-truncate"
+                  class="text-truncate *bg-red text-start"
                   :class="width < 389 ? '!text-sm' : undefined"
                 >
                   <NuxtLink :to="productUrl" external target="_blank">
@@ -125,12 +132,13 @@ const sampleImage = (images: any) =>
                   </NuxtLink>
                 </VCardTitle>
               </ProductPublicUrl>
-              <VChipProductCategory
-                class="ms-5"
-                size="small"
-                :product="product$"
-              />
-              <!-- <VCardSubtitle class="bg-red">Ref #{{ props.pid }}</VCardSubtitle> -->
+              <div class="d-flex">
+                <VChipProductCategory
+                  class="ms-5"
+                  size="small"
+                  :product="product$"
+                />
+              </div>
               <VCardSubtitle class="*bg-red ps-6 d-flex items-center mt-3">
                 <VIcon
                   class="opacity-30"
@@ -149,7 +157,12 @@ const sampleImage = (images: any) =>
                       <em class="text-body-2 ms-3 align-middle !font-sans">
                         {{ com.companyName.value || "" }}</em
                       >
-                      <VIcon end icon="$iconExternalLink" size="x-small" class="opacity-50" />
+                      <VIcon
+                        end
+                        icon="$iconExternalLink"
+                        size="x-small"
+                        class="opacity-50"
+                      />
                     </a>
                   </NuxtLink>
                 </WithComPublicUrl>
@@ -158,10 +171,24 @@ const sampleImage = (images: any) =>
 
             <div
               class="*bg-primary3 grid grid-cols-[auto,1fr] grid-rows-2 pe-3"
+              :class="
+                922 < width
+                  ? undefined
+                  : `justify-items-end ${
+                      492 < width ? undefined : 'mt-4 !max-w-[301px]'
+                    }`
+              "
             >
               <!-- @item:qty:cell-ts -->
               <div
-                class="*bg-red d-flex items-center justify-center w-[256px] sm:me-3"
+                class="*bg-red d-flex items-center justify-center"
+                :class="
+                  922 < width
+                    ? 'w-[256px] sm:me-3'
+                    : 652 < width
+                    ? 'w-[148px]'
+                    : 'w-[112px]'
+                "
               >
                 <VTextField
                   :model-value="cart.store$.items[props.pid]"
@@ -177,7 +204,8 @@ const sampleImage = (images: any) =>
                 >
                   <template #prepend>
                     <VChipProductPrice
-                      class="me-2"
+                      v-if="922 < width"
+                      class="me-2 !min-w-[91px]"
                       size="small"
                       :product="product$"
                     />
@@ -203,7 +231,14 @@ const sampleImage = (images: any) =>
 
               <!-- @item:qty:cell-bs -->
               <div
-                class="*bg-red d-flex items-center justify-end w-[256px] sm:me-3 *px-3 *pt-2"
+                class="*bg-red d-flex items-center justify-end sm:me-3 *px-3 *pt-2"
+                :class="
+                  922 < width
+                    ? 'w-[256px]'
+                    : 652 < width
+                    ? 'w-[148px]'
+                    : 'w-[132px]'
+                "
               >
                 <TopicChat
                   :title="product$?.name"
@@ -213,8 +248,8 @@ const sampleImage = (images: any) =>
                 />
 
                 <VTextField
-                  class="scale-[88%] -translate-y-1 *bg-red"
-                  style="max-width: 144px"
+                  class="scale-[85%] -translate-y-1 *bg-red"
+                  style="max-width: 138px"
                   disabled
                   :model-value="
                     priceFormatLocale(
@@ -252,6 +287,7 @@ const sampleImage = (images: any) =>
       <!-- @@ -->
       <!-- @item:drop-product -->
       <VBtn
+        v-if="492 < width"
         icon
         variant="tonal"
         color="error-darken-2"
@@ -271,4 +307,4 @@ const sampleImage = (images: any) =>
   </section>
 </template>
 <style lang="scss" scoped>
-</style>
+</style> 

@@ -109,14 +109,15 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
     <!-- @screen:cart -->
     <!-- default dialog z-index [1004] -->
     <!--  hides h-scrollbar @cat:open -->
-    <Html :style="cart.isOpen ? 'overflow-x: hidden !important' : undefined" />
+    <Html :style="cart.isOpen ? 'overflow: hidden !important' : undefined" />
     <VDialog
       :model-value="cart.isOpen"
       persistent
       no-click-animation
       :transition="DEFAULT_TRANSITION"
       fullscreen
-      class="!z-[1234]"
+      class="bg--cart-vector-01 cart--vdialog !z-[1234]"
+      scrollable
     >
       <Cart />
     </VDialog>
@@ -174,8 +175,5 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
 .Panel1-leave-active {
   position: absolute !important;
   width: 100%;
-}
-.bg--dialog-image-cart {
-  background-image: url("~/assets/images/bg-cart-vector.png");
 }
 </style>

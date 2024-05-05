@@ -48,7 +48,11 @@ const cartOrderSend = async () => {
 // @@eos
 </script>
 <template>
-  <section class="bg--cart-vector-01 *bg-white !w-full fill-height ma-0 pa-0 position-relative px-1">
+  <VCard 
+    rounded="0" 
+    elevation="0" 
+    class="bg--cart-vector-01 pt-1 fill-height ma-0 pa-0 pb-4 px-1 scrollbar-thin-light"
+  >
 
     <!-- @order:confirm:dialog -->
     <VBottomSheet v-model="toggleOrderConfirm.isActive.value">
@@ -86,7 +90,7 @@ const cartOrderSend = async () => {
     
     <!-- @@ spacer:parent -->
     <!-- @@ cart:items -->
-    <div class="mt-1 !max-w-[1352px] mx-auto">
+    <div class="!max-w-[1352px] w-full mx-auto">
       <VDataIterator
         :items="cart.products"
         :page="page$"
@@ -127,7 +131,7 @@ const cartOrderSend = async () => {
             <!-- @cart:cena -->
             <div
               class="ms-4 *bg-red-200 fill-height d-flex flex-col justify-center">
-              <p>
+              <p class="ms-n2">
                 <em 
                   v-if="1024 < width"
                   class="align-middle font-sans text-medium-emphasis"
@@ -137,7 +141,7 @@ const cartOrderSend = async () => {
                 <!-- @@price.total -->
                 <VChipProductPrice
                   elevation="2" 
-                  :class="1024 < width ? 'ms-3' : 'ms-0'" 
+                  :class="1024 < width ? 'ms-3' : (492  < width ? 'ms-0' : '')" 
                   :size="1024 < width ? 'x-large' : (812 < width ? undefined : 'small')"
                   :price-only="priceFormatLocale(cart.total$)"
                 />
@@ -174,6 +178,7 @@ const cartOrderSend = async () => {
                 active-color="primary3"
                 rounded="circle"
                 class="*bg-blue-200 grow !w-full"
+                :class="333 < width ? undefined : 'ms-n2'"
                 :size="1024 < width ? undefined : 'small'"
               >
                 <template #item="{ props, page, isActive }">
@@ -196,8 +201,8 @@ const cartOrderSend = async () => {
             <VBtn
             v-if="!cart.isEmpty"
               @click="toggleOrderConfirm.on"
-              :size="912 < width ? 'x-large' : (812 < width ? undefined : 'small')"
-              :class="912 < width ? 'me-12' : undefined"
+              :size="1172 < width ? 'x-large' : (812 < width ? undefined : 'small')"
+              :class="1172 < width ? 'me-12' : `me-2 ${333 < width ? '' : 'ms-n3'}`"
               color="primary"
               variant="elevated"
               rounded="pill"
@@ -268,13 +273,13 @@ const cartOrderSend = async () => {
 
       </VDataIterator>
     </div>
-  </section>
+  </VCard>
 </template>
 <style lang="scss" scoped>
 .bg--cart-vector-01 {
-
   background: white url("~/assets/images/bg-cart-vector.png");
   background-size: 246%;
   background-position: 50% 5%;
+  background-attachment: scroll;
 }
 </style>
