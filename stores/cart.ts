@@ -80,21 +80,26 @@ export const useStoreCart = defineStore("cart", () => {
     return await mutateOrdersPlace(store$.value);
   };
 
+  // store
+  const { products$ } = useQueryProductsPrices();
+
   // @count
   const count = (pid: number | undefined) =>
-    (null != pid ? store$.value.items[pid] : 0) || 0;
-
-  const { products$ } = useQueryProductsPrices();
+    (pid ? store$.value.items[pid] : 0) || 0;
+  // @subtotal
+  const subtotal = (pid: number | undefined) =>
+    (pid
+      ? count(pid) *
+        Number(get(find(products$.value, { id: String(pid) }), "price"))
+      : 0) || 0;
   // @total$
   const total$ = computed(() =>
     reduce(
       products_.value,
       (res, pid) => {
-        const price = Number(
-          get(find(products$.value, { id: String(pid) }), "price")
-        );
-        if (0 < price) {
-          res += store$.value.items[pid] * price;
+        const subtot = subtotal(pid) || 0;
+        if (0 < subtot) {
+          res += subtot;
         }
         return res;
       },
@@ -120,6 +125,7 @@ export const useStoreCart = defineStore("cart", () => {
     has: cartHas,
     count,
     sendOrder,
+    subtotal,
 
     // # ui
     isOpen: cartIsOpen_,

@@ -16,10 +16,10 @@ const {
   loading: postsLoading,
 } = useQueryPosts(uid_);
 // @@
-const editor = useQuillEditor("#editorMyyL2ThnLsV", {
-  bounds: "#quill--bounds",
-  placeholder: "Moja priča...\n   (što bogatije to bolje...)",
-});
+// const editor = useQuillEditor("#editorMyyL2ThnLsV", {
+//   bounds: "#quill--bounds",
+//   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
+// });
 
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const title_ = ref();
@@ -58,53 +58,53 @@ const { submit } = useFormDataFields(
     // title: (value: string) => 1 < value?.length,
   },
   // @@
-  {
-    onSubmit: async () => {
-      // @@todo reuse component
-      editor.getContent(
-        async ({ text, content }: { text: string; content: any }) => {
-          if (!text) return;
-          if (!title_.value) return;
-          upl.begin();
+  // {
+  //   onSubmit: async () => {
+  //     // @@todo reuse component
+  //     editor.getContent(
+  //       async ({ text, content }: { text: string; content: any }) => {
+  //         if (!text) return;
+  //         if (!title_.value) return;
+  //         upl.begin();
 
-          let postId;
-          try {
-            if (storyImageRemoved$.value) {
-              await storyImagesDrop();
-            }
+  //         let postId;
+  //         try {
+  //           if (storyImageRemoved$.value) {
+  //             await storyImagesDrop();
+  //           }
 
-            postId = Number(
-              get(
-                await postsUpsert(
-                  {
-                    title: title_.value,
-                    content: JSON.stringify(content),
-                  },
-                  postIdSelected$.value
-                ),
-                "data.postsUpsert.id"
-              )
-            );
-            if (!postId) throw "--error-post-failed";
-            storyTitleSaved$.value = title_.value;
-            postIdSelected$.value = postId;
+  //           postId = Number(
+  //             get(
+  //               await postsUpsert(
+  //                 {
+  //                   title: title_.value,
+  //                   content: JSON.stringify(content),
+  //                 },
+  //                 postIdSelected$.value
+  //               ),
+  //               "data.postsUpsert.id"
+  //             )
+  //           );
+  //           if (!postId) throw "--error-post-failed";
+  //           storyTitleSaved$.value = title_.value;
+  //           postIdSelected$.value = postId;
 
-            if (!fileSelected$.value) {
-              upl.successful();
-              return;
-            }
-            await nextTick();
-            await storyImageUpdate(fileSelected$.value);
-            upl.successful();
-          } catch (error) {
-            upl.setError(error);
-          } finally {
-            upl.done();
-          }
-        }
-      );
-    },
-  }
+  //           if (!fileSelected$.value) {
+  //             upl.successful();
+  //             return;
+  //           }
+  //           await nextTick();
+  //           await storyImageUpdate(fileSelected$.value);
+  //           upl.successful();
+  //         } catch (error) {
+  //           upl.setError(error);
+  //         } finally {
+  //           upl.done();
+  //         }
+  //       }
+  //     );
+  //   },
+  // }
 );
 const toggleMenuPostsList = useToggleFlag();
 const postSelected$ = computed(() =>
@@ -114,7 +114,7 @@ watchEffect(() => {
   if (!postIdSelected$.value) return;
   title_.value = postSelected$.value?.title || title_.value;
   const jsondata = postSelected$.value?.content;
-  if (jsondata) editor.setContent(JSON.parse(jsondata));
+  // if (jsondata) editor.setContent(JSON.parse(jsondata));
 });
 watch(postIdSelected$, (ppid) => {
   // new story loaded; release flag
@@ -130,7 +130,7 @@ const clearStory = () => {
   postIdSelected$.value = undefined;
   storyImageRemoved$.value = false;
   fileSelected$.value = undefined;
-  editor.clear();
+  // editor.clear();
   title_.value = undefined;
 };
 

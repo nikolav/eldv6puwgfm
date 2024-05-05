@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import { CardCartItem, CartEmpty, VChipProductPrice } from "@/components/app";
+import {
+  VCardOrderConfirm,
+  CardCartItem,
+  CartEmpty,
+  VChipProductPrice,
+} from "@/components/app";
 // defs
 const {
   key: { APP_PROCESSING, ORDER_SEND_STATUS },
@@ -48,46 +53,21 @@ const cartOrderSend = async () => {
 // @@eos
 </script>
 <template>
-  <VCard 
-    rounded="0" 
-    elevation="0" 
+  <VCard
+    rounded="0"
+    elevation="0"
     class="bg--cart-vector-01 pt-1 fill-height ma-0 pa-0 pb-4 px-1 scrollbar-thin-light"
   >
-
     <!-- @order:confirm:dialog -->
     <VBottomSheet v-model="toggleOrderConfirm.isActive.value">
-       <VBtn 
-         @click="toggleOrderConfirm.off" 
-         position="absolute" class="top-6 end-6" 
-         size="large" variant="tonal"
-         icon
-        >
-        <VIcon icon="$close" size="large" />
-      </VBtn>
-      <VSheet
-        :min-height="height * 0.92"
-        rounded="t-xl"
-        class="pa-6 d-flex flex-col justify-center items-center gap-12"
-      >
-        <p class="text-h6 text-medium-emphasis">Vrednost izabranih proizvoda je <pre class="d-inline-block !text-black">{{ cart.total$ }}</pre> din.</p>
-        <VBtnGroup rounded="pill">
-          <VBtn 
-            v-if="smAndUp" @click="toggleOrderConfirm.off" 
-            variant="text" size="x-large" 
-            color="error"
-          >Nazad</VBtn>
-          <VBtn 
-            @click="cartOrderSend" :disabled="flagsAppProcessing$" 
-            variant="elevated" 
-            class="text-none" :size="smAndUp ? 'x-large' : 'large'" color="primary"
-          >
-             <VIcon v-if="smAndUp" class="opacity-50" size="large" icon="$iconCheck" start />
-             <strong>U redu, Naručujem.</strong>
-          </VBtn>
-        </VBtnGroup>
-      </VSheet>
+      <VCardOrderConfirm
+        :close="toggleOrderConfirm.off"
+        :processing="flagsAppProcessing$"
+        :total="cart.total$"
+        :send-order="cart.sendOrder"
+      />
     </VBottomSheet>
-    
+
     <!-- @@ spacer:parent -->
     <!-- @@ cart:items -->
     <div class="!max-w-[1352px] w-full mx-auto">
@@ -110,39 +90,49 @@ const cartOrderSend = async () => {
             rounded="pill"
             color="white"
             :density="!smAndUp ? 'compact' : undefined"
-            :class="858 < width ? 'ps-1' : 'ps-3'" 
+            :class="858 < width ? 'ps-1' : 'ps-3'"
             :height="812 < width ? 102 : 91"
             image="~/assets/images/bg-cart-toolbar.png"
           >
-          <template #image>
-            <VImg position="0 0" />
-          </template>
+            <template #image>
+              <VImg position="0 0" />
+            </template>
             <!-- @cart:exit -->
             <VBtn
-              :size="812 < width ? undefined : (382 < width ? 'small' : 'x-small')"
+              :size="
+                812 < width ? undefined : 382 < width ? 'small' : 'x-small'
+              "
               icon
               variant="text"
               @click="cart.close"
-                >
+            >
               <VIcon icon="$prev" size="large" />
-              <VTooltip text="Pijaca" activator="parent" open-delay="345" location="bottom" />
+              <VTooltip
+                text="Pijaca"
+                activator="parent"
+                open-delay="345"
+                location="bottom"
+              />
             </VBtn>
-          
+
             <!-- @cart:cena -->
             <div
-              class="ms-4 *bg-red-200 fill-height d-flex flex-col justify-center">
+              class="ms-4 *bg-red-200 fill-height d-flex flex-col justify-center"
+            >
               <p class="ms-n2">
-                <em 
+                <em
                   v-if="1024 < width"
                   class="align-middle font-sans text-medium-emphasis"
                   >Vrednost:
                 </em>
-                
+
                 <!-- @@price.total -->
                 <VChipProductPrice
-                  elevation="2" 
-                  :class="1024 < width ? 'ms-3' : (492  < width ? 'ms-0' : '')" 
-                  :size="1024 < width ? 'x-large' : (812 < width ? undefined : 'small')"
+                  elevation="2"
+                  :class="1024 < width ? 'ms-3' : 492 < width ? 'ms-0' : ''"
+                  :size="
+                    1024 < width ? 'x-large' : 812 < width ? undefined : 'small'
+                  "
                   :price-only="priceFormatLocale(cart.total$)"
                 />
               </p>
@@ -150,24 +140,27 @@ const cartOrderSend = async () => {
 
             <!-- pager -->
             <div
-              class="*bg-green-200 grow d-flex flex-col items-center space-y-1 pt-1">
+              class="*bg-green-200 grow d-flex flex-col items-center space-y-1 pt-1"
+            >
               <!-- p products:length -->
-              <p
-              v-if="612 < width"
-                class="text-center *bg-red">
-                <VBadge 
-                    color="primary3-darken-1 !shadow" 
-                    inline 
-                    class="scale-[112%]"
-                  >
+              <p v-if="612 < width" class="text-center *bg-red">
+                <VBadge
+                  color="primary3-darken-1 !shadow"
+                  inline
+                  class="scale-[112%]"
+                >
                   <template #badge>
                     {{ cart.length }}
                   </template>
                 </VBadge>
-                <span 
-                  style="font-size: 93%;" 
-                  class="ms-1 text-medium-emphasis tracking-wider">
-                    <span v-if="712< width">{{ 1 < cart.length ? 'proizvoda' : 'proizvod' }}</span> u korpi
+                <span
+                  style="font-size: 93%"
+                  class="ms-1 text-medium-emphasis tracking-wider"
+                >
+                  <span v-if="712 < width">{{
+                    1 < cart.length ? "proizvoda" : "proizvod"
+                  }}</span>
+                  u korpi
                 </span>
               </p>
               <!-- pagination -->
@@ -199,63 +192,72 @@ const cartOrderSend = async () => {
 
             <!-- view order -->
             <VBtn
-            v-if="!cart.isEmpty"
+              v-if="!cart.isEmpty"
               @click="toggleOrderConfirm.on"
-              :size="1172 < width ? 'x-large' : (812 < width ? undefined : 'small')"
-              :class="1172 < width ? 'me-12' : `me-2 ${333 < width ? '' : 'ms-n3'}`"
+              :size="
+                1172 < width ? 'x-large' : 812 < width ? 'large' : undefined
+              "
+              :class="
+                1172 < width ? 'me-12' : `me-2 ${333 < width ? '' : 'ms-n3'}`
+              "
               color="primary"
               variant="elevated"
               rounded="pill"
-
             >
               <VIcon
-                v-if="812 < width" 
-                class="rotate-2" 
+                v-if="812 < width"
+                class="rotate-2"
                 start
                 size="large"
-                icon="$iconChecklist" 
+                icon="$iconChecklist"
               />
               <strong v-if="682 < width">Porudžbina</strong>
               <strong v-else-if="582 < width">Poruči</strong>
-              <VIcon 
-                v-else
-                size="28" 
-                icon="$iconDeliveryTruck"
+              <VIcon v-else size="28" icon="$iconDeliveryTruck" />
+              <VTooltip
+                activator="parent"
+                open-delay="345"
+                location="bottom"
+                text="Pregled porudžbine za slanje..."
               />
-              <VTooltip activator="parent" open-delay="345" location="bottom" text="Pregled porudžbine za slanje..." />
             </VBtn>
 
             <VBtn
-                v-if="!cart.isEmpty && (812 < width)"
-                @click="cart.destroy"
-                color="primary"
-                variant="tonal"
-                icon
-                size="small"
-                class="ms-2"
-              >
-                <VTooltip
-                  location="bottom"
-                  open-delay="345"
-                  activator="parent"
-                  text="Isprazni korpu"
-                />
-                <VIcon size="26" icon="$iconCartOff" />
-                <span class="sr-only">Isprazni korpu</span>
+              v-if="!cart.isEmpty && 812 < width"
+              @click="cart.destroy"
+              color="primary"
+              variant="tonal"
+              icon
+              size="small"
+              class="ms-2"
+            >
+              <VTooltip
+                location="bottom"
+                open-delay="345"
+                activator="parent"
+                text="Isprazni korpu"
+              />
+              <VIcon size="26" icon="$iconCartOff" />
+              <span class="sr-only">Isprazni korpu</span>
             </VBtn>
 
-          <!-- @cart:exit -->
-          <VBtn
-            v-if="656 < width"
-            icon
-            variant="text"
-            @click="cart.close"
-            class="ms-2"
-            :size="812 < width ? undefined : 'small'"
-          >
-            <VIcon icon="$close" size="large" />
-            <VTooltip text="Pijaca" activator="parent" open-delay="345" location="bottom" />
-          </VBtn>
+            <!-- @cart:exit -->
+            <VBtn
+              v-if="656 < width"
+              icon
+              variant="text"
+              @click="cart.close"
+              class="ms-2"
+              :size="812 < width ? undefined : 'small'"
+            >
+              <VIcon icon="$close" size="large" />
+              <VTooltip
+                text="Pijaca"
+                activator="parent"
+                open-delay="345"
+                location="bottom"
+              />
+            </VBtn>
           </VToolbar>
         </template>
 
@@ -270,7 +272,6 @@ const cartOrderSend = async () => {
             <CardCartItem v-for="i in items" :key="i.raw" :pid="i.raw" />
           </VSheet>
         </template>
-
       </VDataIterator>
     </div>
   </VCard>

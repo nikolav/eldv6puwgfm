@@ -60,7 +60,7 @@ const sampleImage = (images: any) =>
             rounded="lg"
             v-bind="mergeProps(props_, $attrs)"
             class="!bg-white/75 grow d-flex"
-            :class="492 < width ? undefined : 'flex-col'"
+            :class="525 < width ? undefined : 'flex-col'"
             :density="width < 288 ? 'compact' : undefined"
             :height="555 < width ? 140 : undefined"
             :max-height="555 < width ? 140 : undefined"
@@ -287,7 +287,7 @@ const sampleImage = (images: any) =>
       <!-- @@ -->
       <!-- @item:drop-product -->
       <VBtn
-        v-if="492 < width"
+        v-if="333 < width"
         icon
         variant="tonal"
         color="error-darken-2"
