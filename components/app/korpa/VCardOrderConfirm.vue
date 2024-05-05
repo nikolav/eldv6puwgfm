@@ -14,6 +14,7 @@ const props = defineProps<{
   close: () => void;
   sendOrder: () => void;
 }>();
+const auth = useStoreApiAuth();
 
 // refs
 const boxProductsList = ref();
@@ -28,6 +29,7 @@ const { form } = useFormDataFields("pUnpA4sQ", {
 });
 // computes
 const lHeight = computed(() => height.value - CALC_HEIGHT_PRODUCTS_LIST_OFFSET);
+const email_ = computed(() => get(auth.user$, "email"));
 
 // stores
 const cart = useStoreCart();
@@ -39,7 +41,7 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
   <VCard
     :min-height="height * 0.91"
     rounded="t-xl"
-    class="*cart-order-confirm--bg-image-01 pt-10 px-6 !bg-stone-100"
+    class="cart-order-confirm--bg-image-svg pt-10 px-6 !bg-stone-100"
   >
     <VBtn
       @click="close"
@@ -60,10 +62,20 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
 
     <!-- @@order:details -->
     <VSheet color="transparent">
-      <div class="d-flex items-center pe-32">
-        <VCardTitle class="!grow ps-7">
+      <div class="d-flex items-center ps-16 pe-32">
+        <VIcon
+          class="d-inline-block pa-0 ma-0 scale-[256%] opacity-50"
+          color="primary-darken-1"
+          :size="55"
+          icon="$iconLogoKantarH"
+        />
+        <VSpacer />
+        <VSpacer />
+        <VCardTitle>
           <h4 class="text-h4 !font-sans opacity-75">Potvrdi porudžbinu:</h4>
         </VCardTitle>
+        <VSpacer />
+        <VSpacer />
         <div class="d-flex items-center ga-8">
           <p class="opacity-70">Ukupna vrednost:</p>
           <VChipProductPrice
@@ -162,7 +174,7 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
           </VCol>
           <VCol sm="6" class="*bg-green-200">
             <VForm @submit.prevent autocomplete="off">
-              <div class="fields--placer pa-4 space-y-3">
+              <div class="fields--placer pa-10 space-y-3">
                 <VTextarea
                   v-model="form.description.value"
                   autofocus
@@ -190,8 +202,9 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
                       >Pošalji kopiju narudžbe na moj
                       <em class="d-inline-block">
                         <span class="text-primary">email.</span>
+                        <!-- @@ -->
                         <VTooltip
-                          text="user@email.com"
+                          :text="email_"
                           activator="parent"
                           location="bottom"
                           open-delay="345"
@@ -206,10 +219,15 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
                     variant="elevated"
                     color="primary"
                     size="x-large"
-                    :width="243"
-                    :height="87"
+                    :width="256"
+                    :height="92"
+                    class="ms-[5%]"
+                    rounded
                   >
-                    <span class="d-inline-flex flex-col gap-[2px]">
+                    <span
+                      style="font-size: 104%"
+                      class="d-inline-flex flex-col gap-[2px]"
+                    >
                       <span>U redu,</span>
                       <strong class="mt-1">Poručujem.</strong>
                     </span>
@@ -233,8 +251,11 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
   </VCard>
 </template>
 <style lang="scss" scoped>
-// .cart-order-confirm--bg-image-01 {
-//   background: white url("~/assets/images/bg-cart-order-confirm-01.png");
-//   background-size: cover;
-// }
+.cart-order-confirm--bg-image-svg {
+  background: transparent url("~/assets/svg/store-front-outline.svg");
+  background-repeat: no-repeat;
+  background-size: 106%;
+  background-position: -604% 48%;
+  background-attachment: scroll;
+}
 </style>
