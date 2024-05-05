@@ -60,12 +60,7 @@ const cartOrderSend = async () => {
   >
     <!-- @order:confirm:dialog -->
     <VBottomSheet v-model="toggleOrderConfirm.isActive.value">
-      <VCardOrderConfirm
-        :close="toggleOrderConfirm.off"
-        :processing="flagsAppProcessing$"
-        :total="cart.total$"
-        :send-order="cart.sendOrder"
-      />
+      <VCardOrderConfirm :close="toggleOrderConfirm.off" />
     </VBottomSheet>
 
     <!-- @@ spacer:parent -->

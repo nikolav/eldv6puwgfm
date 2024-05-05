@@ -9,31 +9,33 @@ import {
 // defs
 const CALC_HEIGHT_PRODUCTS_LIST_OFFSET = 282;
 const props = defineProps<{
-  processing: boolean | undefined;
-  total: number | undefined;
   close: () => void;
-  sendOrder: () => void;
 }>();
-const auth = useStoreApiAuth();
 
-// refs
-const boxProductsList = ref();
+// stores
+const auth = useStoreApiAuth();
+const cart = useStoreCart();
+const { products$ } = useQueryProductsOnly(() => cart.products);
 
 // utils
-const { smAndUp, height } = useDisplay();
-const { top: plTop } = useElementBounding(boxProductsList, { immediate: true });
-const { form } = useFormDataFields("pUnpA4sQ", {
-  description: (value: string) => 0 < value.length,
-  title: True,
-  email: True,
-});
+const { width, height, mdAndUp } = useDisplay();
+const { form, submit: orderSubmit } = useFormDataFields(
+  "pUnpA4sQ",
+  {
+    description: True,
+    title: True,
+    email: True,
+  },
+  {
+    onSubmit: (data) => {
+      console.log({ data });
+    },
+  }
+);
+
 // computes
 const lHeight = computed(() => height.value - CALC_HEIGHT_PRODUCTS_LIST_OFFSET);
 const email_ = computed(() => get(auth.user$, "email"));
-
-// stores
-const cart = useStoreCart();
-const { products$ } = useQueryProductsOnly(() => cart.products);
 
 // @@eos
 </script>
@@ -60,38 +62,53 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
       <p>success order sent</p>
     </VSheet>
 
-    <!-- @@order:details -->
+    <!-- @@order:title -->
     <VSheet color="transparent">
-      <div class="d-flex items-center ps-16 pe-32">
+      <div
+        :class="[
+          'd-flex items-center',
+          452 < width ? 'ps-16' : 'ps-8',
+          582 < width ? 'pe-32' : 'pe-16',
+        ]"
+      >
         <VIcon
-          class="d-inline-block pa-0 ma-0 scale-[256%] opacity-50"
+          v-if="392 < width"
+          class="d-inline-block pa-0 ma-0 opacity-50"
+          :class="452 < width ? 'scale-[256%]' : 'scale-[188%]'"
           color="primary-darken-1"
           :size="55"
           icon="$iconLogoKantarH"
         />
-        <VSpacer />
-        <VSpacer />
-        <VCardTitle>
+        <VSpacer v-if="1024 < width" />
+        <VSpacer v-if="1024 < width" />
+        <VCardTitle v-if="1024 < width">
           <h4 class="text-h4 !font-sans opacity-75">Potvrdi porudžbinu:</h4>
         </VCardTitle>
-        <VSpacer />
-        <VSpacer />
+        <VSpacer v-if="1024 < width" />
+        <VSpacer v-if="392 < width" />
         <div class="d-flex items-center ga-8">
-          <p class="opacity-70">Ukupna vrednost:</p>
+          <p v-if="712 < width" class="opacity-70">Ukupna vrednost:</p>
           <VChipProductPrice
+            :size="492 < width ? 'large' : 'small'"
             class="scale-125"
             :price-only="priceFormatLocale(cart.total$)"
           />
         </div>
       </div>
     </VSheet>
+
     <VDivider thickness="2" class="border-opacity-50 w-[91%]" />
+
+    <!-- @@order:details -->
     <div class="VContainer--placer pa-4 *bg-blue-100">
       <VContainer fluid class="*bg-blue-200 pa-0">
         <VRow class="*bg-blue-300" no-gutters>
-          <VCol sm="6" class="*bg-blue-400">
+          <VCol md="6" class="*bg-blue-400">
             <VCardTitle class="d-flex items-center">
-              <h4 class="text-h4 !font-sans">Izabrani artikli:</h4>
+              <h4 class="text-h4 !font-sans">
+                <span v-if="392 < width">Izabrani artikli:</span>
+                <span v-else>Artikli:</span>
+              </h4>
               <VBadge inline color="primary" class="ms-3">
                 <template #badge>
                   <pre>{{ cart.length }}</pre>
@@ -99,9 +116,8 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
               </VBadge>
             </VCardTitle>
             <VCardText
-              :style="`height: ${lHeight}px !important`"
-              ref="boxProductsList"
-              class="pt-2 *bg-stone-200 overflow-auto *bg-blue scrollbar-thin-light"
+              :style="mdAndUp ? `height: ${lHeight}px` : undefined"
+              class="max-h-[812px] pt-2 *bg-stone-200 overflow-auto *bg-blue scrollbar-thin-light"
             >
               <VDataIterator :items="products$" :items-per-page="-1">
                 <template #default="{ items }">
@@ -172,11 +188,16 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
               </VDataIterator>
             </VCardText>
           </VCol>
-          <VCol sm="6" class="*bg-green-200">
-            <VForm @submit.prevent autocomplete="off">
-              <div class="fields--placer pa-10 space-y-3">
+          <VCol md="6" class="*bg-green-200">
+            <VForm @submit.prevent="orderSubmit" autocomplete="off">
+              <div
+                :class="[
+                  'fields--placer space-y-3',
+                  612 < width ? 'pa-10' : 392 < width ? 'pa-4' : 'pa-1',
+                ]"
+              >
                 <VTextarea
-                  v-model="form.description.value"
+                  v-model.trim="form.description.value"
                   autofocus
                   hint="Dodatno uputstvo proizvođačima vezano za naručenu robu"
                   clearable
@@ -188,7 +209,7 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
                   hint="Za proizvođače koji ga podržavaju"
                   variant="underlined"
                   clearable
-                  v-model="form.title.value"
+                  v-model.trim="form.title.value"
                   name="order_title"
                   label="Promo kod: "
                 />
@@ -219,17 +240,17 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
                     variant="elevated"
                     color="primary"
                     size="x-large"
-                    :width="256"
+                    :width="248"
                     :height="92"
                     class="ms-[5%]"
                     rounded
                   >
                     <span
                       style="font-size: 104%"
-                      class="d-inline-flex flex-col gap-[2px]"
+                      class="d-inline-flex flex-col gap-[3px]"
                     >
                       <span>U redu,</span>
-                      <strong class="mt-1">Poručujem.</strong>
+                      <strong class="mt-1">Naručujem</strong>
                     </span>
                     <template #prepend>
                       <VIcon start :size="51" icon="$iconDeliveryTruckSpeed" />
