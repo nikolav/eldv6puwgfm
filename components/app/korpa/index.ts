@@ -3,3 +3,4 @@ export { default as CardCartItem } from "./CardCartItem.vue";
 export { default as Cart } from "./Cart.vue";
 export { default as CartOpenBadgePrimary } from "./CartOpenBadgePrimary.vue";
 export { default as VCardOrderConfirm } from "./VCardOrderConfirm.vue";
+export { default as CardOrderConfirmSuccess } from "./CardOrderConfirmSuccess.vue";

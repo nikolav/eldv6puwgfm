@@ -5,6 +5,7 @@ import {
   CardCartItem,
   CartEmpty,
   VChipProductPrice,
+  CardOrderConfirmSuccess,
 } from "@/components/app";
 // defs
 const {
@@ -27,12 +28,13 @@ const {
   page$,
 } = usePaginateData({ data: computed(() => cart.products), perPage: 4 });
 
-const ID$ = useGlobalVariable(ORDER_ID);
+const OID$ = useGlobalVariable(ORDER_ID);
 const onOrderConfirmSuccess = async () => {
-  ID$.value = null;
-  // await navigateTo({ name: "index" });
+  console.log("onOrderConfirmSuccess");
+  OID$.value = null;
   cart.close();
 };
+
 // @@eos
 </script>
 <template>
@@ -47,11 +49,11 @@ const onOrderConfirmSuccess = async () => {
     </VBottomSheet>
 
     <!-- @@order:success -->
-    <!-- render success, redirec .pijaca -->
-    <VSheet v-if="ID$" class="--if-order-success *d-none">
-      <p>success order sent</p>
-      <VBtn @click="onOrderConfirmSuccess">ok:close</VBtn>
-    </VSheet>
+    <!-- render success screen -->
+    <CardOrderConfirmSuccess
+      v-if="OID$"
+      @order-confirmed="onOrderConfirmSuccess"
+    />
 
     <!-- @@ spacer:parent -->
     <!-- @@ cart:items -->
@@ -196,8 +198,8 @@ const onOrderConfirmSuccess = async () => {
                 size="large"
                 icon="$iconChecklist"
               />
-              <strong v-if="682 < width">Poručivanje</strong>
-              <strong v-else-if="582 < width">Poruči</strong>
+              <strong v-if="682 < width">Naručivanje</strong>
+              <strong v-else-if="582 < width">Naruči</strong>
               <VIcon v-else size="28" icon="$iconDeliveryTruck" />
               <VTooltip
                 activator="parent"
