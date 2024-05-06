@@ -84,6 +84,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
   const isDefault$ = computed(
     () => schemaUsersIsDefault.safeParse(user$.value).success
   );
+  const isAuthenticated$ = computed(() => isAuth$.value && !isDefault$.value);
 
   // apply auth token to Apollo client
   // ..if GraphQL API expects authentication to be passed via a HTTP header
@@ -125,7 +126,11 @@ export const useStoreApiAuth = defineStore("auth", () => {
       // if (isAuth$.value) return;
       // force new login even if already logged in
       //  for overriding .default login
-      if (isAuth$.value && !force) return;
+      // if (isAuth$.value && !force) return;
+
+      // # auth only unauthenticated user
+      if (isAuth$.value && !isDefault$.value) return;
+
       let token: OrNoValue<string> = "";
       status.begin();
       try {
@@ -184,6 +189,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
     isAdmin$,
     isCompany$,
     isDefault$,
+    isAuthenticated$,
     initialized$,
     register,
     login,

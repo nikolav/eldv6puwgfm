@@ -34,6 +34,7 @@ const avatarUrl = inject(AVATAR);
 </script>
 <template>
   <VAppBar flat :height="props.height" elevation="1" id="appbar--main">
+    <!-- @@ -->
     <VAppBarTitle
       v-if="smAndUp"
       id="appbar-main--title"
@@ -54,11 +55,18 @@ const avatarUrl = inject(AVATAR);
         </NuxtLink>
       </strong>
       <!-- @@demo.dev -->
+      <span class="d-inline-flex" style="font-size: 55%;">
+        <pre>-isAuth [{{ auth.isAuth$ ? "yes" : "no" }}]</pre>
+        <pre>-isDefault [{{ auth.isDefault$ ? "yes" : "no" }}]</pre>
+        <pre>-isAuthenticated [{{ auth.isAuthenticated$ ? "yes" : "no" }}]</pre>
+      </span>
 
-      <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
+      <!-- <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink> -->
       <!-- <NuxtLink to="/proizvodi/122">-foo</NuxtLink> -->
     </VAppBarTitle>
-    <template v-if="auth.isCompany$ && isRouteCompanyProfile$">
+
+    <!-- @@debug emoji at orders page -->
+    <!-- <template v-if="auth.isCompany$ && isRouteCompanyProfile$">
       <VSpacer />
       <strong class="text-medium-emphasis text-body-1 !font-sans">
         {{ emojify(":wave:") }} Zdravo,
@@ -66,10 +74,10 @@ const avatarUrl = inject(AVATAR);
       </strong>
       <VSpacer />
       <VSpacer />
-    </template>
+    </template> -->
     <template #append>
       <VBtn
-        v-if="!auth.isAuth$"
+        v-if="!auth.isAuth$ || auth.isDefault$"
         :to="{ name: 'auth-login' }"
         class="text-none group/auth fill-height"
         color="primary-darken-1"

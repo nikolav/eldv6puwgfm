@@ -58,6 +58,7 @@ watch(
         });
       }
 
+      // # redirect to index if auth updated at login pages
       if (["auth-register", "auth-login"].includes(String(route.name)))
         return await navigateTo({ name: "index" });
 
