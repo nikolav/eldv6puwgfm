@@ -4,27 +4,15 @@ definePageMeta({
   layout: "blank",
 });
 
-const { count, inc, dec, reset } = useCounter(10);
-const i$ = ref();
-watch(count, (c) => {
-  if (!c) {
-    clearInterval(i$.value);
-    console.log(`done`);
-  }
-});
-const ok = () => {
-  reset();
-  i$.value = setInterval(dec, 122);
-};
+const { products, category$, reload } =
+  useQueryProductsByCategory("@product:category:mleko");
+
 // #eos
 </script>
 <template>
   <section class="page--demo.index">
-    <pre>[{{ count }}]</pre>
-    <VBtn @click="inc()">inc</VBtn>
-    <VBtn @click="dec()">dec</VBtn>
-    <VBtn @click="reset()">reset</VBtn>
-    <VBtn @click="ok">ok</VBtn>
+    <VBtn @click="reload">reload</VBtn>
+    <Dump :data="{ category$, products }" />
   </section>
 </template>
 <style lang="scss" scoped>

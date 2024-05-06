@@ -38,9 +38,4 @@ const { reload: reloadAll } = useApiStorage(true, true);
 </template>
 
 <style scoped lang="scss">
-.products--list .cols5 {
-  width: 20% !important;
-  max-width: 20% !important;
-  flex-basis: 20% !important;
-}
 </style>

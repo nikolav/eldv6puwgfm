@@ -1,5 +1,4 @@
 import menuCategories from "@/assets/menu-with-product-categories.json";
-import { find, get, assign } from "@/utils";
 
 export const useAppMenu = () => {
   const {
@@ -7,6 +6,7 @@ export const useAppMenu = () => {
     stores: {
       main: { PAGE_CACHED },
     },
+    products: { PRODUCT_CATEGORY_prefix },
   } = useAppConfig();
   const route_ = useRoute();
 
@@ -42,6 +42,11 @@ export const useAppMenu = () => {
     return "/" !== r ? r : "index";
   };
 
+  const productCategoryByPageTitle = (title: string | undefined) => {
+    const c = find(menuCategories, { title })?.productCategory || "";
+    return c ? `${PRODUCT_CATEGORY_prefix}${c}` : "";
+  };
+
   const destroy = () => {
     cache.clear();
     current$.value = null;
@@ -51,8 +56,7 @@ export const useAppMenu = () => {
     watch(
       () => route_.name,
       (routeName) => {
-        if (null != routeName)
-          current$.value = titleByRouteName(String(routeName));
+        if (routeName) current$.value = titleByRouteName(String(routeName));
       }
     );
   });
@@ -62,6 +66,7 @@ export const useAppMenu = () => {
     menuCategories,
     titleByRouteName,
     routeNameByTitle,
+    productCategoryByPageTitle,
     cache,
     destroy,
   };

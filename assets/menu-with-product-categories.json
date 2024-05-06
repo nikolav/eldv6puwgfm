@@ -9,54 +9,63 @@
     "title": "Bašta",
     "icon": "$iconVocePovrce",
     "color": "info",
+    "productCategory": "basta",
     "to": "basta"
   },
   {
     "title": "Meso",
     "icon": "$iconMeso",
     "color": "accent1",
+    "productCategory": "meso",
     "to": "meso"
   },
   {
     "title": "Mleko",
     "icon": "$iconMlecno",
     "color": "warning-darken-1",
+    "productCategory": "mleko",
     "to": "mleko"
   },
   {
     "title": "Začin, Ulje",
     "icon": "$iconUlje",
     "color": "accent2-lighten-1",
+    "productCategory": "zacin-ulje",
     "to": "zacin-ulje"
   },
   {
     "title": "Brašno",
     "icon": "$iconBrasno",
     "color": "primary3-darken-2",
+    "productCategory": "brasno",
     "to": "brasno"
   },
   {
     "title": "Med",
     "icon": "$iconMed",
     "color": "error-lighten-2",
+    "productCategory": "med",
     "to": "med"
   },
   {
     "title": "Zimnica",
     "icon": "$iconZimnica",
     "color": "success-darken-2",
+    "productCategory": "zimnica",
     "to": "zimnica"
   },
   {
     "title": "Sokovi",
     "icon": "$iconSokovi",
     "color": "primary-darken-1",
+    "productCategory": "sokovi",
     "to": "sokovi"
   },
   {
     "title": "Piće",
     "icon": "$iconPice",
     "color": "info-darken-2",
+    "productCategory": "pice",
     "to": "pice"
   },
   {
@@ -64,6 +73,7 @@
     "icon": "",
     "image": "/zanat.png",
     "color": "primary2-darken-2",
+    "productCategory": "zanat",
     "to": "zanat"
   },
   {

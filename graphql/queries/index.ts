@@ -260,3 +260,29 @@ export const Q_postsImages = gql`
     postsImages(id: $id)
   }
 `;
+
+export const Q_productsListByTags = gql`
+  query q_productsListByTags($tags: [String!]!) {
+    productsListByTags(tags: $tags) {
+      id
+      name
+      price
+      price_history
+      description
+      stockType
+      stock
+      onSale
+      user_id
+      user {
+        id
+        email
+        created_at
+        updated_at
+      }
+      tags
+      docs
+      created_at
+      updated_at
+    }
+  }
+`;

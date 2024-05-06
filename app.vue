@@ -176,4 +176,10 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
   position: absolute !important;
   width: 100%;
 }
+
+.products--list .cols5 {
+  width: 20% !important;
+  max-width: 20% !important;
+  flex-basis: 20% !important;
+}
 </style>

@@ -9,7 +9,9 @@ const OID$ = useGlobalVariable(ORDER_ID);
 const showPijaca = () => {
   OID$.value = null;
   cart.close();
-  nextTick(() => navigateTo({ name: "index" }));
+  
+  // # no redirect
+  // nextTick(() => navigateTo({ name: "index" }));
 };
 // @@eos
 </script>

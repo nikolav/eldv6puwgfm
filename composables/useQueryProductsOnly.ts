@@ -5,7 +5,7 @@ export const useQueryProductsOnly = <TData = IProduct>(pids?: any) => {
 
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
-    key: { PRODUCTS_CHANGE },
+    // key: { PRODUCTS_CHANGE },
   } = useAppConfig();
   const pids$ = ref<number[]>([]);
   watchEffect(() => {
@@ -30,10 +30,10 @@ export const useQueryProductsOnly = <TData = IProduct>(pids?: any) => {
     await load();
     // await nextTick(reload);
   });
-  const productsChanged$ = useGlobalVariable(PRODUCTS_CHANGE);
-  watchEffect(async () => {
-    if (productsChanged$.value) await reload();
-  });
+  // const productsChanged$ = useGlobalVariable(PRODUCTS_CHANGE);
+  // watchEffect(async () => {
+  //   if (productsChanged$.value) await reload();
+  // });
 
   return {
     // update `pids$` to reload
