@@ -108,7 +108,9 @@ watch(ID$, async (oid) => {
           <VSpacer v-if="1024 < width" />
           <VSpacer v-if="1024 < width" />
           <VCardTitle v-if="1024 < width">
-            <h4 class="text-h4 !font-sans opacity-75 ms-2">Potvrdi narudžbenicu:</h4>
+            <h4 class="text-h4 !font-sans opacity-75 ms-2">
+              Potvrdi narudžbenicu:
+            </h4>
           </VCardTitle>
           <VSpacer v-if="1024 < width" />
           <VSpacer v-if="392 < width" />
@@ -236,7 +238,7 @@ watch(ID$, async (oid) => {
                   <VTextarea
                     v-model.trim="form.description.value"
                     autofocus
-                    hint="Dodatno uputstvo proizvođačima u vezi naručene robu"
+                    hint="Dodatno uputstvo proizvođačima u vezi naručene robe"
                     clearable
                     name="order_description"
                     label="Napomena: "

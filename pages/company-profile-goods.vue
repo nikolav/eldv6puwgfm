@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OrNoValue, TDocData, ITopicChatMessage } from "@/types";
+import type { OrNoValue, ITopicChatMessage } from "@/types";
 import {
   ProductAdd,
   ProductsEdit,
@@ -14,7 +14,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "lager",
+  title: "Lager",
 });
 
 const {

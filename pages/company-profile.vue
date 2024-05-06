@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
 import { useDisplay } from "vuetify";
-import { OrdersProduct, ChatOrder } from "@/components/app";
-import type { IOrdersProducts } from "~/types";
+import { OrdersProduct, ChatOrder, VCardOrderDetails } from "@/components/app";
 
+// defs
 definePageMeta({
   layout: "company-profile",
   middleware: "authorized-company",
@@ -11,34 +11,48 @@ definePageMeta({
 useHead({
   title: "Primljene narudžbe",
 });
-
 const {
   docs: { CHAT_ORDER_COM_USER_prefix },
-  key: { APP_PROCESSING, CHAT_CLIENTID_ACTIVE, ORDER_ACTIVE },
+  key: { APP_PROCESSING, ORDER_ACTIVE },
 } = useAppConfig();
-const { $calcOrderTotalOriginal, $formated_DMMMYYYY } = useNuxtApp();
 
-const { xs, smAndUp, width } = useDisplay();
-const auth = useStoreApiAuth();
-
-const { users } = useQueryUsers();
-
+// refs
 const orderActive$ = useGlobalVariable(ORDER_ACTIVE);
+const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+const toggleOrderChatActive = useToggleFlag();
+const toggleOrderDetails = useToggleFlag();
+
+// stores
+const auth = useStoreApiAuth();
+const { users } = useQueryUsers();
 const {
   orders: orders_,
   reload: ordersReload,
   loading: ordersLoading,
 } = useQueryOrdersReceived();
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
-watchEffect(() => {
-  appProcessing$.value = ordersLoading.value;
-});
 const { order_id$, products: products_ } = useQueryOrdersProducts();
+const { topic$: chatId$, data: chatOrder$ } = useDocs();
+
+// utils
+const { $calcOrderTotalOriginal, $formated_DMMMYYYY } = useNuxtApp();
+const { xs, smAndUp, width } = useDisplay();
+const emailStartByUserId = (id: any) =>
+  matchEmailStart(
+    get(
+      find(users.value, {
+        id,
+      }),
+      "email"
+    )
+  );
+const {
+  perPage,
+  length: paginationLength$,
+  page$,
+} = usePaginateData({ data: orders_, perPage: 5 });
+
+// computes
 const orderIdActive = (id: number) => id == orderActive$.value;
-watchEffect(() => {
-  order_id$.value = orderActive$.value;
-});
-// order @id
 const order_ = computed(() =>
   orderActive$.value
     ? find(orders_.value, { id: orderActive$.value })
@@ -51,18 +65,6 @@ const user_ = computed(() =>
       })
     : undefined
 );
-const emailStartByUserId = (id: any) =>
-  matchEmailStart(
-    get(
-      find(users.value, {
-        id,
-      }),
-      "email"
-    )
-  );
-
-const toggleOrderChatActive = useToggleFlag();
-const { topic$: chatId$, data: chatOrder$ } = useDocs();
 const topicChatOrderUser$ = computed(() =>
   0 < orderActive$.value && user_.value?.id
     ? `${CHAT_ORDER_COM_USER_prefix}${orderActive$.value}:${get(
@@ -71,16 +73,16 @@ const topicChatOrderUser$ = computed(() =>
       )}:${user_.value.id}`
     : undefined
 );
+// watchers
+watchEffect(() => {
+  appProcessing$.value = ordersLoading.value;
+});
+watchEffect(() => {
+  order_id$.value = orderActive$.value;
+});
 watchEffect(() => {
   chatId$.value = topicChatOrderUser$.value || "";
 });
-
-const {
-  perPage,
-  length: paginationLength$,
-  page$,
-} = usePaginateData({ data: orders_, perPage: 5 });
-
 watchEffect(() => {
   if (null != orderActive$.value) return;
   if (isEmpty(orders_.value)) return;
@@ -91,7 +93,21 @@ watchEffect(() => {
 </script>
 <template>
   <section class="page--company-profile">
-    <!-- <Dump :data="{ orders_, products_ }" /> -->
+    <!-- <Dump :data="{ order_ }" /> -->
+
+    <VDialog
+      v-model="toggleOrderDetails.isActive.value"
+      location="center"
+      max-width="512"
+    >
+      <VCardOrderDetails
+        :close="toggleOrderDetails.off"
+        :order="order_"
+        min-height="320"
+      />
+    </VDialog>
+
+    <!-- @@chat:display -->
     <VNavigationDrawer
       v-model="toggleOrderChatActive.isActive.value"
       location="end"
@@ -102,13 +118,19 @@ watchEffect(() => {
     >
       <ChatOrder :close="toggleOrderChatActive.off" :topic="chatId$" />
     </VNavigationDrawer>
-    <div class="*max-w-[912px] *mx-auto px-1 mt-2 mt-sm-8">
+
+    <!-- @@content -->
+    <div class="vcard--placer px-1 mt-2 mt-sm-8">
       <VCard max-width="812" class="mx-auto">
         <!-- @orders-crud:toolbar -->
         <VCardItem class="bg-primary">
-          <VCardTitle
+          <VCardTitle class="ps-2"
             ><span v-if="smAndUp">Primljene narudžbe</span>
-            <VBadge inline color="primary-lighten-1" class="-translate-y-[2px]">
+            <VBadge
+              inline
+              color="primary-lighten-1"
+              class="ms-1 -translate-y-[2px]"
+            >
               <template #badge>
                 <pre>{{ orders_.length }}</pre>
               </template>
@@ -117,6 +139,21 @@ watchEffect(() => {
           <!-- @orders-crud:actions -->
           <template #append>
             <div class="space-x-2">
+              <VBtn
+                @click="toggleOrderDetails"
+                :disabled="!(order_?.code || order_?.description)"
+                icon
+                variant="text"
+                color="on-primary"
+              >
+                <VIcon icon="$iconInfo" size="large" />
+                <VTooltip
+                  text="Napomena..."
+                  location="bottom"
+                  activator="parent"
+                  open-delay="345"
+                />
+              </VBtn>
               <VBtn
                 icon
                 variant="text"
