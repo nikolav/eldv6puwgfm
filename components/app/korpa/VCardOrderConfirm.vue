@@ -93,7 +93,7 @@ watch(ID$, async (oid) => {
         <div
           :class="[
             'd-flex items-center',
-            452 < width ? 'ps-16' : 'ps-8',
+            452 < width ? 'ps-[77px]' : 'ps-8',
             582 < width ? 'pe-32' : 'pe-16',
           ]"
         >
@@ -108,7 +108,7 @@ watch(ID$, async (oid) => {
           <VSpacer v-if="1024 < width" />
           <VSpacer v-if="1024 < width" />
           <VCardTitle v-if="1024 < width">
-            <h4 class="text-h4 !font-sans opacity-75">Potvrdi narudžbenicu:</h4>
+            <h4 class="text-h4 !font-sans opacity-75 ms-2">Potvrdi narudžbenicu:</h4>
           </VCardTitle>
           <VSpacer v-if="1024 < width" />
           <VSpacer v-if="392 < width" />
@@ -172,7 +172,10 @@ watch(ID$, async (oid) => {
                                 </a>
                               </NuxtLink>
                             </ProductPublicUrl>
-                            <VChipProductPriceBase :product="node.raw" />
+                            <VChipProductPriceBase
+                              class="opacity-40"
+                              :product="node.raw"
+                            />
                           </VCardTitle>
                           <VCardText class="pb-3">
                             <div
@@ -254,7 +257,7 @@ watch(ID$, async (oid) => {
                   >
                     <template #label>
                       <span class="text-body-1 !font-sans *font-italic"
-                        >Pošalji kopiju narudžbe na moj
+                        >Pošalji primerak i na moj
                         <em class="d-inline-block">
                           <span class="text-primary">email.</span>
                           <!-- @@ -->
@@ -297,7 +300,7 @@ watch(ID$, async (oid) => {
                         open-delay="345"
                         location="bottom"
                         activator="parent"
-                        text="Pošalji porudžbinu proizvođačima"
+                        text="Pošalji narudžbenicu proizvođačima"
                       />
                     </VBtn>
                   </VCardActions>

@@ -251,10 +251,11 @@ const onOrderConfirmSuccess = async () => {
         <!-- @@ cart:selected-products:render -->
         <template #default="{ items }">
           <VSheet
+            color="transparent"
             rounded="lg"
             elevation="2"
             max-width="1024"
-            class="!bg-white/10 mt-3 pa-4 mx-auto space-y-1 sm:space-y-3"
+            class="!bg-white/20 backdrop-blur-md mt-3 pa-4 mx-auto space-y-1 sm:space-y-3"
           >
             <CardCartItem v-for="i in items" :key="i.raw" :pid="i.raw" />
           </VSheet>

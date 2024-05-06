@@ -62,7 +62,7 @@ const cart = useStoreCart();
           rounded="lg"
           variant="elevated"
           :elevation="isHovering ? 4 : 2"
-          class="pa-0"
+          class="pa-0 !bg-stone-50"
         >
           <VToolbar
             density="compact"
