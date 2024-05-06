@@ -83,12 +83,8 @@ export const M_productsRemove = gql`
 `;
 
 export const M_ordersPlace = gql`
-  mutation m_ordersPlace(
-    $code: String
-    $description: String
-    $items: JsonData!
-  ) {
-    ordersPlace(code: $code, description: $description, items: $items)
+  mutation m_ordersPlace($data: JsonData!, $items: JsonData!) {
+    ordersPlace(data: $data, items: $items)
   }
 `;
 

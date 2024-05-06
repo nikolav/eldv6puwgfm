@@ -116,6 +116,7 @@ export default defineAppConfig({
   },
   //
   key: {
+    ORDER_ID: "cxIH1hlzHzGUe6",
     APP_MOUNTED: "Zkcmk4BnXHU",
     APP_PROCESSING: "FlaelfhZddK",
     AUTH_CREDS: "pafer98hf",
@@ -187,9 +188,10 @@ export default defineAppConfig({
     },
     cart: {
       initial: {
-        code: "",
-        descrption: "",
+        // `pid:amount` map to store
         items: <Record<number, number>>{},
+        // additional order information
+        data: <Record<string, any>>{},
       },
     },
     main: {

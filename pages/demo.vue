@@ -1,29 +1,30 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
-import { LikeDislike } from "@/components/app";
 definePageMeta({
   layout: "blank",
 });
-// const { store, isLiked, isDisliked, likesCount, dislikesCount, like, dislike } =
-//   useLikeDislikeTopic("foo:12");
-const { store } = useStoreLikeDislike();
-const ID$ = ref("foo3");
 
+const { count, inc, dec, reset } = useCounter(10);
+const i$ = ref();
+watch(count, (c) => {
+  if (!c) {
+    clearInterval(i$.value);
+    console.log(`done`);
+  }
+});
+const ok = () => {
+  reset();
+  i$.value = setInterval(dec, 122);
+};
 // #eos
 </script>
 <template>
   <section class="page--demo.index">
-    <LikeDislike :topic="ID$" />
-    <!-- <VBtn @click="like(true)">like</VBtn>
-    <VBtn @click="like(false)">unlike</VBtn>
-    <VBtn @click="dislike(true)">dislike</VBtn>
-    <VBtn @click="dislike(false)">undislike</VBtn>
-     -->
-    <Dump
-      :data="{
-        store,
-      }"
-    />
+    <pre>[{{ count }}]</pre>
+    <VBtn @click="inc()">inc</VBtn>
+    <VBtn @click="dec()">dec</VBtn>
+    <VBtn @click="reset()">reset</VBtn>
+    <VBtn @click="ok">ok</VBtn>
   </section>
 </template>
 <style lang="scss" scoped>

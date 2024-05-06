@@ -22,7 +22,6 @@ export const useStoreCart = defineStore("cart", () => {
   const cartClose = () => {
     flags$$.off(FLAG_CART_OPEN);
   };
-
   // @products
   const products_ = computed(() =>
     reduce(
@@ -38,7 +37,6 @@ export const useStoreCart = defineStore("cart", () => {
   const cartLength_ = computed(() => products_.value.length);
   // @isEmpty
   const cartIsEmpty_ = computed(() => 0 === products_.value.length);
-
   // @drop
   const cartDrop = (id: number) => {
     delete store$.value.items[id];
@@ -77,12 +75,16 @@ export const useStoreCart = defineStore("cart", () => {
   // @sendOrder
   const sendOrder = async () => {
     if (cartIsEmpty_.value) return;
-    return await mutateOrdersPlace(store$.value);
+    return Number(
+      get(await mutateOrdersPlace(store$.value), "data.ordersPlace")
+    );
   };
-
+  // putData
+  const putData = (data: Record<string, any>) => {
+    assign(store$.value, { data });
+  };
   // store
   const { products$ } = useQueryProductsPrices();
-
   // @count
   const count = (pid: number | undefined) =>
     (pid ? store$.value.items[pid] : 0) || 0;
@@ -126,6 +128,7 @@ export const useStoreCart = defineStore("cart", () => {
     count,
     sendOrder,
     subtotal,
+    putData,
 
     // # ui
     isOpen: cartIsOpen_,

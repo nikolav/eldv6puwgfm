@@ -8,7 +8,7 @@ import {
 } from "@/components/app";
 // defs
 const {
-  key: { APP_PROCESSING, ORDER_SEND_STATUS },
+  key: { APP_PROCESSING, ORDER_SEND_STATUS, ORDER_ID },
 } = useAppConfig();
 // flag, ref
 const flagOrderSendStatus$ = useGlobalFlag(ORDER_SEND_STATUS);
@@ -26,30 +26,13 @@ const {
   length: paginationLength,
   page$,
 } = usePaginateData({ data: computed(() => cart.products), perPage: 4 });
-// helper
-const cartOrderSend = async () => {
-  let err_;
-  if (!cart.isEmpty) {
-    try {
-      flagsAppProcessing$.value = true;
-      await cart.sendOrder();
-    } catch (error) {
-      err_ = error;
-      console.error(error);
-    }
-    if (!err_) {
-      flagOrderSendStatus$.value = true;
-      await nextTick(() => {
-        flagsAppProcessing$.value = false;
-      });
-      cart.destroy();
-      cart.close();
-    }
-  }
 
-  return err_;
+const ID$ = useGlobalVariable(ORDER_ID);
+const onOrderConfirmSuccess = async () => {
+  ID$.value = null;
+  // await navigateTo({ name: "index" });
+  cart.close();
 };
-
 // @@eos
 </script>
 <template>
@@ -63,9 +46,16 @@ const cartOrderSend = async () => {
       <VCardOrderConfirm :close="toggleOrderConfirm.off" />
     </VBottomSheet>
 
+    <!-- @@order:success -->
+    <!-- render success, redirec .pijaca -->
+    <VSheet v-if="ID$" class="--if-order-success *d-none">
+      <p>success order sent</p>
+      <VBtn @click="onOrderConfirmSuccess">ok:close</VBtn>
+    </VSheet>
+
     <!-- @@ spacer:parent -->
     <!-- @@ cart:items -->
-    <div class="!max-w-[1352px] w-full mx-auto">
+    <div v-else class="!max-w-[1352px] w-full mx-auto">
       <VDataIterator
         :items="cart.products"
         :page="page$"
@@ -206,7 +196,7 @@ const cartOrderSend = async () => {
                 size="large"
                 icon="$iconChecklist"
               />
-              <strong v-if="682 < width">Porudžbina</strong>
+              <strong v-if="682 < width">Poručivanje</strong>
               <strong v-else-if="582 < width">Poruči</strong>
               <VIcon v-else size="28" icon="$iconDeliveryTruck" />
               <VTooltip

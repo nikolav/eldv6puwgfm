@@ -11,6 +11,13 @@ const CALC_HEIGHT_PRODUCTS_LIST_OFFSET = 282;
 const props = defineProps<{
   close: () => void;
 }>();
+const {
+  key: { APP_PROCESSING, ORDER_ID },
+} = useAppConfig();
+
+// refs
+const ID$ = useGlobalVariable(ORDER_ID);
+const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 
 // stores
 const auth = useStoreApiAuth();
@@ -19,16 +26,25 @@ const { products$ } = useQueryProductsOnly(() => cart.products);
 
 // utils
 const { width, height, mdAndUp } = useDisplay();
-const { form, submit: orderSubmit } = useFormDataFields(
+const {
+  form,
+  submit: orderSubmit,
+  clear: formClear,
+} = useFormDataFields(
   "pUnpA4sQ",
   {
+    code: True,
     description: True,
-    title: True,
     email: True,
   },
   {
-    onSubmit: (data) => {
-      console.log({ data });
+    onSubmit: async (data) => {
+      cart.putData(data);
+      try {
+        ID$.value = await cart.sendOrder();
+      } catch (error) {
+        throw error;
+      }
     },
   }
 );
@@ -36,6 +52,21 @@ const { form, submit: orderSubmit } = useFormDataFields(
 // computes
 const lHeight = computed(() => height.value - CALC_HEIGHT_PRODUCTS_LIST_OFFSET);
 const email_ = computed(() => get(auth.user$, "email"));
+
+// watches
+watchEffect(() => {
+  appProcessing$.value ||= cart.loading;
+});
+watch(ID$, async (oid) => {
+  console.log({ "order-placed-id": oid });
+
+  if (!(0 < oid)) return;
+
+  // @order:placed
+  formClear();
+  cart.destroy();
+  props.close();
+});
 
 // @@eos
 </script>
@@ -56,11 +87,6 @@ const email_ = computed(() => get(auth.user$, "email"));
     >
       <VIcon icon="$close" size="large" />
     </VBtn>
-
-    <!-- @@todo order success -->
-    <VSheet class="--if-order-success d-none">
-      <p>success order sent</p>
-    </VSheet>
 
     <!-- @@order:title -->
     <VSheet color="transparent">
@@ -199,7 +225,7 @@ const email_ = computed(() => get(auth.user$, "email"));
                 <VTextarea
                   v-model.trim="form.description.value"
                   autofocus
-                  hint="Dodatno uputstvo proizvođačima vezano za naručenu robu"
+                  hint="Dodatno uputstvo proizvođačima u vezi naručene robu"
                   clearable
                   name="order_description"
                   label="Napomena: "
@@ -209,7 +235,7 @@ const email_ = computed(() => get(auth.user$, "email"));
                   hint="Za proizvođače koji ga podržavaju"
                   variant="underlined"
                   clearable
-                  v-model.trim="form.title.value"
+                  v-model.trim="form.code.value"
                   name="order_title"
                   label="Promo kod: "
                 />
