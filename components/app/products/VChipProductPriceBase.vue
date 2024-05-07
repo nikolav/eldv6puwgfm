@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { IProduct } from "@/types";
-const props = defineProps<{ product?: IProduct }>();
+const props = defineProps<{ product?: IProduct; priceOnly?: number }>();
 // @@eos
 </script>
 <template>
@@ -9,9 +9,14 @@ const props = defineProps<{ product?: IProduct }>();
       <VIcon class="me-1 opacity-50" icon="$iconRSD" />
     </template>
     <strong class="font-mono" style="font-size: 122%">{{
-      priceFormatLocale(product?.price || 0)
+      priceFormatLocale(props?.priceOnly || product?.price || 0)
     }}</strong>
-    <small class="ms-1 opacity-75">/{{ product?.stockType }}</small>
+    <small v-if="!props?.priceOnly" class="ms-1 opacity-75"
+      >/{{ product?.stockType }}</small
+    >
+    <template #append>
+      <slot name="append" />
+    </template>
   </VChip>
 </template>
 <style lang="scss" scoped>

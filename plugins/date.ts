@@ -4,7 +4,12 @@ import pluginCustomParseFormat from "dayjs/plugin/customParseFormat";
 import pluginUtc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import type { IOrdersProducts, IOrderReceived, OrNoValue } from "@/types";
+import type {
+  IOrdersProducts,
+  IOrderReceived,
+  OrNoValue,
+  IProduct,
+} from "@/types";
 
 dayjs.extend(pluginCustomParseFormat);
 dayjs.extend(pluginUtc);
@@ -16,6 +21,24 @@ dayjs.locale("sr");
 
 export default defineNuxtPlugin(() => {
   const formated_DMMMYYYY = (d: string) => dayjs(d).format("D. MMMM YYYY.");
+  const productPriceForOrder = (
+    order: OrNoValue<IOrderReceived>,
+    p: OrNoValue<IProduct>
+  ) => {
+    if (!p) return;
+    // assumes product belongs to provided order
+    const dOrder = dayjs.utc(order?.created_at);
+    const hlen = len(p.price_history);
+    return !(1 < hlen)
+      ? p.price
+      : find(p.price_history, (_hist, i) =>
+          i < hlen - 1
+            ? dayjs.utc(p.price_history[i + 1].day).isAfter(dOrder)
+              ? true
+              : false
+            : true
+        )?.price;
+  };
   const calcOrderTotalOriginal = (
     order: OrNoValue<IOrderReceived>,
     products: IOrdersProducts[]
@@ -72,6 +95,7 @@ export default defineNuxtPlugin(() => {
       formated_DMMMYYYY,
       calcOrderTotalLatest,
       calcOrderTotalOriginal,
+      productPriceForOrder,
     },
   };
 });

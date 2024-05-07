@@ -9,6 +9,8 @@ import {
   TopicRatingStatus,
   WithComProfile,
   WithComPublicUrl,
+  VChipProductPrice,
+  VChipProductPriceBase,
 } from "@/components/app";
 
 const PRODUCTS_LIST_OFFSET_BOTTOM = 18;
@@ -32,7 +34,8 @@ const boxProductsList = ref();
 
 // utils
 const { height: wheight } = useDisplay();
-const { $formated_DMMMYYYY } = useNuxtApp();
+const { $formated_DMMMYYYY, $productPriceForOrder, $calcOrderTotalOriginal } =
+  useNuxtApp();
 const { ratingCompany } = useTopics();
 const { top: boxProductsListTop } = useElementBounding(boxProductsList);
 
@@ -51,10 +54,13 @@ const {
   perPage: 5,
 });
 
+const order_ = computed(() => find(orders.value, { id: oid$.value }));
+
 // #eos
 </script>
  <template>
   <section class="page--user-orders">
+    <!-- hides scrollbars -->
     <Html class="overflow-hidden" />
     <!-- <Dump :data="{ orderCompanies }" /> -->
     <div class="__placer__ *bg-red max-w-[912px] mx-auto mt-2 mt-sm-8">
@@ -67,7 +73,24 @@ const {
       >
         <!-- @@toolbar -->
         <template #header>
-          <VCard class="pa-2" rounded="pill" color="on-primary" elevation="1">
+          <VCard
+            class="pa-2 d-flex items-center"
+            rounded="pill"
+            color="on-primary"
+            elevation="1"
+          >
+            <VChipProductPrice
+              v-if="orderTotal"
+              :price-only="priceFormatLocale(orderTotal)"
+            >
+              <VTooltip
+                text="Ukupna vrednost naručene robe"
+                location="bottom"
+                activator="parent"
+                open-delay="222"
+              />
+            </VChipProductPrice>
+            <VSpacer />
             <div
               v-if="1 < paginationLength"
               class="__placer__ space-x-2 d-flex"
@@ -209,6 +232,47 @@ const {
                               </WithComPublicUrl>
                             </WithComProfile>
                           </small>
+                        </div>
+                      </div>
+                      <div
+                        class="pa-1 fill-height *min-w-[92px] *bg-primary3 d-flex flex-col items-end"
+                      >
+                        <!-- @@ -->
+                        <VChipProductPriceBase
+                          class="opacity-75"
+                          size="x-small"
+                          :price-only="$productPriceForOrder(order_, p) || 0"
+                        >
+                          <template #append>
+                            <small>/{{ p?.stockType }}</small>
+                          </template>
+                        </VChipProductPriceBase>
+                        <VSpacer />
+                        <div
+                          style="font-size: 88%"
+                          class="text-end pa-1 font-sans"
+                        >
+                          <p>
+                            <em class="opacity-75">Naručeno: </em>
+                            <strong
+                              >{{ p?.amount
+                              }}<span class="opacity-40 translate-x-[2px]">{{
+                                p?.stockType
+                              }}</span></strong
+                            >
+                          </p>
+                          <p>
+                            <em class="opacity-75">Iznos: </em>
+                            <strong>
+                              {{
+                                priceFormatLocale(
+                                  $calcOrderTotalOriginal(order_, [p])
+                                )
+                              }}<span class="opacity-40 translate-x-[2px]"
+                                >RSD</span
+                              >
+                            </strong>
+                          </p>
                         </div>
                       </div>
                     </VSheet>

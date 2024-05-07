@@ -23,6 +23,8 @@ const props = defineProps<{
       ><small v-if="!priceOnly" class="ms-[3px] opacity-50">{{
         product?.stockType
       }}</small>
+      <!-- additional:append -->
+      <slot />
     </span>
   </VChip>
 </template>
