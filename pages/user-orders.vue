@@ -250,7 +250,7 @@ const order_ = computed(() => find(orders.value, { id: oid$.value }));
                         <VSpacer />
                         <div
                           style="font-size: 88%"
-                          class="text-end pa-1 font-sans"
+                          class="opacity-95 scale-[87%] text-end pa-1 font-sans"
                         >
                           <p>
                             <em class="opacity-75">Naručeno: </em>
