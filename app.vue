@@ -178,6 +178,24 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
   width: 100%;
 }
 
+/* name:Panel2 */
+.Panel2-enter-active,
+.Panel2-leave-active {
+  transition: all 0.18s ease-out;
+}
+
+.Panel2-enter-from,
+.Panel2-leave-to {
+  opacity: 0;
+  /* scale: 1.022; */
+  filter: blur(0.33rem);
+}
+.Panel2-leave-active {
+  position: absolute !important;
+  width: 100%;
+}
+
+
 .products--list .cols5 {
   width: 20% !important;
   max-width: 20% !important;

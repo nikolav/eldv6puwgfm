@@ -172,7 +172,7 @@ export interface IProductData {
   description?: string | undefined;
 }
 
-export interface IOrderReceived {
+export interface IOrder {
   id: number;
   user_id: number;
   code?: OrNoValue<string>;
@@ -182,11 +182,16 @@ export interface IOrderReceived {
   created_at: string;
   updated_at: string;
 }
+export interface IOrderReceived extends IOrder {}
+export interface IOrderPlaced extends IOrder {
+  products?: IOrdersProducts[];
+}
 
 export interface IOrdersProducts {
   amount: number;
   id: number;
   user_id?: OrNoValue<number>;
+  user?: IUser;
   name: string;
   price?: OrNoValue<number>;
   price_history: { day: string; price: number }[];

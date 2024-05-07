@@ -1,6 +1,7 @@
 // @lodash
 import lodash from "lodash";
 const {
+  memoize,
   invoke,
   assign,
   at,
@@ -50,6 +51,7 @@ const {
   zipObject,
 } = lodash;
 export {
+  memoize,
   assign,
   at,
   capitalize,

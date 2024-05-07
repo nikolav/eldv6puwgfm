@@ -4,7 +4,6 @@ import { Q_ordersReceivedProducts } from "@/graphql";
 export const useQueryOrdersProducts = (OID?: any) => {
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
-    key: { APP_PROCESSING },
   } = useAppConfig();
   const order_id$ = ref();
   const enabled$ = computed(() => 0 < order_id$.value);
@@ -33,11 +32,10 @@ export const useQueryOrdersProducts = (OID?: any) => {
     () => get(result.value, "ordersReceivedProducts") || []
   );
   const reload = async () => await refetch();
-  onceMountedOn(true, load);
-  const appProcessing$ = useGlobalFlag(APP_PROCESSING);
-  watchEffect(() => {
-    appProcessing$.value = productsLoading.value;
-  });
+  onceMountedOn(enabled$, load);
+  const { watchProcessing } = useStoreAppProcessing();
+  watchProcessing(productsLoading);
+
   return {
     order_id$,
     products: products_,

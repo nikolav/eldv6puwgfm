@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import { emojify } from "node-emoji";
 import { AVATAR } from "@/src";
 import { AvatarThumb } from "@/components/app";
 
@@ -54,14 +53,15 @@ const avatarUrl = inject(AVATAR);
           <VIcon color="primary-darken-1" size="122" icon="$iconLogoKantarH" />
         </NuxtLink>
       </strong>
+
       <!-- @@demo.dev -->
-      <span class="d-inline-flex" style="font-size: 55%;">
+      <!-- <span class="d-inline-flex" style="font-size: 55%">
         <pre>-isAuth [{{ auth.isAuth$ ? "yes" : "no" }}]</pre>
         <pre>-isDefault [{{ auth.isDefault$ ? "yes" : "no" }}]</pre>
         <pre>-isAuthenticated [{{ auth.isAuthenticated$ ? "yes" : "no" }}]</pre>
-      </span>
+      </span> -->
 
-      <!-- <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink> -->
+      <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
       <!-- <NuxtLink to="/proizvodi/122">-foo</NuxtLink> -->
     </VAppBarTitle>
 
@@ -113,7 +113,9 @@ const avatarUrl = inject(AVATAR);
           />
         </VBtn>
         <VBtn
-          :to="{ name: auth.isCompany$ ? 'company-profile' : 'user-profile' }"
+          :to="{
+            name: auth.isCompany$ ? 'company-profile' : 'user-orders',
+          }"
           variant="text"
           icon
           color="primary"

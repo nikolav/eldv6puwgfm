@@ -16,5 +16,7 @@ export const useStoreAppProcessing = defineStore("appProcessing", () => {
   return {
     processing,
     addWatch,
+    // alias
+    watchProcessing: addWatch,
   };
 });

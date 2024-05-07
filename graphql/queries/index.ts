@@ -286,3 +286,44 @@ export const Q_productsListByTags = gql`
     }
   }
 `;
+
+export const Q_ordersListByUser = gql`
+  query q_ordersListByUser($uid: ID!) {
+    ordersListByUser(uid: $uid) {
+      id
+      user_id
+      code
+      description
+      completed
+      canceled
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const Q_ordersProducts = gql`
+  query q_ordersProducts($oid: ID!) {
+    ordersProducts(oid: $oid) {
+      amount
+      id
+      user_id
+      user {
+        id
+        email
+        created_at
+        updated_at
+      }
+      name
+      price
+      price_history
+      stock
+      stockType
+      onSale
+      description
+      tags
+      created_at
+      updated_at
+    }
+  }
+`;

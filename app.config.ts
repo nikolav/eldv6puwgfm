@@ -255,6 +255,7 @@ export default defineAppConfig({
   },
   layout: {
     appBarHeight: 52,
+    userProfileDrawerWidth: 52,
     // additional @VMain/padding-top
     offsetTop: "1.22rem",
     //

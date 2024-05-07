@@ -1,7 +1,30 @@
 <script setup lang="ts">
 import { AppBarMain } from "@/components/app";
-const { appBarHeight } = useAppConfig().layout;
-const userProfileDrawerWidth = 52;
+
+// defs
+const {
+  layout: { appBarHeight, userProfileDrawerWidth },
+} = useAppConfig();
+const menu = [
+  {
+    page: "Poslate narudžbe",
+    icon: "$iconChecklist",
+    iconSize: "large",
+    to: "user-orders",
+  },
+  {
+    page: "Omiljeno",
+    icon: "$iconCheck",
+    iconSize: "large",
+    to: "user-favourites",
+  },
+  {
+    page: "Profil",
+    icon: "$iconUserCircle",
+    iconSize: "large",
+    to: "user-profile",
+  },
+];
 
 // #eos
 </script>
@@ -13,12 +36,22 @@ const userProfileDrawerWidth = 52;
       permanent
       location="start"
       :width="userProfileDrawerWidth"
+      class="*bg-red"
     >
-      <VList class="mt-n2 text-center">
-        <template v-for="n in 5" :key="n">
-          <VListItem link>{{ n }}</VListItem>
+      <div class="d-flex flex-col items-center gap-5 pt-5">
+        <template v-for="node in menu" :key="node.page">
+          <VBtn :to="{ name: node.to }" icon variant="text" color="on-primary">
+            <VIcon :icon="node.icon" :size="node?.iconSize" />
+            <VTooltip
+              :offset="[3, 0]"
+              location="end"
+              :text="node.page"
+              activator="parent"
+              open-delay="345"
+            />
+          </VBtn>
         </template>
-      </VList>
+      </div>
     </VNavigationDrawer>
     <VMain>
       <slot />
