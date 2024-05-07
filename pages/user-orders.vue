@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import { Dump } from "@/components/dev";
 import {
   ProductsForOrderWithDetails,
@@ -10,6 +11,7 @@ import {
   WithComPublicUrl,
 } from "@/components/app";
 
+const PRODUCTS_LIST_OFFSET_BOTTOM = 18;
 definePageMeta({
   layout: "user-profile",
   middleware: "authorized",
@@ -18,11 +20,7 @@ definePageMeta({
 const {
   app: { DEFAULT_NO_IMAGE },
 } = useAppConfig();
-
-// utils
 const auth = useStoreApiAuth();
-const { $formated_DMMMYYYY } = useNuxtApp();
-const { ratingCompany } = useTopics();
 
 // computes, refs
 const uid$ = computed(() => get(auth.user$, "id"));
@@ -30,6 +28,17 @@ const oid$ = ref();
 const orderCompanies = ref();
 const orderProducts = ref();
 const orderTotal = ref();
+const boxProductsList = ref();
+
+// utils
+const { height: wheight } = useDisplay();
+const { $formated_DMMMYYYY } = useNuxtApp();
+const { ratingCompany } = useTopics();
+const { top: boxProductsListTop } = useElementBounding(boxProductsList);
+
+const boxProductsListHeight = computed(
+  () => wheight.value - boxProductsListTop.value - PRODUCTS_LIST_OFFSET_BOTTOM
+);
 
 // stores
 const { orders, reload: ordersReload } = useQueryOrdersByUser(uid$);
@@ -46,6 +55,7 @@ const {
 </script>
  <template>
   <section class="page--user-orders">
+    <Html class="overflow-hidden" />
     <!-- <Dump :data="{ orderCompanies }" /> -->
     <div class="__placer__ *bg-red max-w-[912px] mx-auto mt-2 mt-sm-8">
       <!-- @@orders -->
@@ -85,8 +95,16 @@ const {
             <VRow dense>
               <!-- @@col:left -->
               <VCol cols="7">
+                <VCardTitle class="opacity-80">
+                  <h4>Naručena roba:</h4>
+                </VCardTitle>
                 <template v-if="0 < orderProducts?.length">
-                  <div class="__placer__ space-y-2">
+                  <VSheet
+                    ref="boxProductsList"
+                    border="t"
+                    class="__placer__ py-2 ps-0 pe-1 scrollbar-thin-light overflow-auto space-y-2"
+                    :height="boxProductsListHeight"
+                  >
                     <!-- @@order:product:details -->
                     <VSheet
                       elevation="1"
@@ -194,7 +212,7 @@ const {
                         </div>
                       </div>
                     </VSheet>
-                  </div>
+                  </VSheet>
                 </template>
               </VCol>
 
