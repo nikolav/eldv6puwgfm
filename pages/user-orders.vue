@@ -91,7 +91,32 @@ const order_ = computed(() => find(orders.value, { id: oid$.value }));
               />
             </VChipProductPrice>
             <VSpacer />
-            <div
+            <VPagination
+              v-if="1 < paginationLength"
+              size="small"
+              density="comfortable"
+              v-model="page$"
+              :length="paginationLength"
+              :total-visible="6"
+              variant="plain"
+              active-color="primary"
+              color="on-primary"
+              rounded="circle"
+            >
+              <template #item="{ isActive, props, page }">
+                <VBtn
+                  v-bind="props"
+                  rounded="circle"
+                  variant="elevated"
+                  :elevation="isActive ? 2 : 1"
+                  density="comfortable"
+                  icon
+                  size="small"
+                  ><span class="font-sans opacity-80">{{ page }}</span></VBtn
+                >
+              </template>
+            </VPagination>
+            <!-- <div
               v-if="1 < paginationLength"
               class="__placer__ space-x-2 d-flex"
             >
@@ -109,7 +134,7 @@ const order_ = computed(() => find(orders.value, { id: oid$.value }));
               >
                 <em style="font-size: 133%">{{ n }}</em>
               </VBtn>
-            </div>
+            </div> -->
           </VCard>
         </template>
 
