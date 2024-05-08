@@ -29,7 +29,11 @@ export const useTopics = () => {
     pid ? `${PRODUCTS_LIKES_prefix}${pid}` : "";
   const ratingCompany = (uid: number | undefined) =>
     uid ? `${COM_RATING_prefix}${uid}` : "";
-  const chatOrder = (oid: number, cid: number, uid: number) =>
+  const chatOrder = (
+    oid: number | undefined,
+    cid: number | undefined,
+    uid: number | undefined
+  ) =>
     oid && cid && uid
       ? `${CHAT_ORDER_COM_USER_prefix}${oid}:${cid}:${uid}`
       : "";

@@ -34,12 +34,13 @@ const orderCompanies = ref();
 const orderProducts = ref();
 const orderTotal = ref();
 const boxProductsList = ref();
+const chatCompanyActive = ref();
 
 // utils
 const { height: wheight } = useDisplay();
 const { $formated_DMMMYYYY, $productPriceForOrder, $calcOrderTotalOriginal } =
   useNuxtApp();
-const { ratingCompany } = useTopics();
+const { ratingCompany, chatOrder: topicChatOnOrder } = useTopics();
 const { top: boxProductsListTop } = useElementBounding(boxProductsList);
 
 const boxProductsListHeight = computed(
@@ -58,33 +59,43 @@ const {
 });
 
 const order_ = computed(() => find(orders.value, { id: oid$.value }));
-const toggleOrdersChat = useToggleFlag();
+const toggleOrderChat = useToggleFlag();
+
+const chatTopic_ = computed(() =>
+  topicChatOnOrder(
+    order_.value?.id,
+    chatCompanyActive.value?.id,
+    get(auth.user$, "id")
+  )
+);
+
+const { data, remove: chatMessageRemove } = useDocs(chatTopic_);
+const chat$ = computed(() => dataSortedByDateDesc(data.value));
+
 // #eos
 </script>
  <template>
   <section class="page--user-orders">
-    <VBtn @click="toggleOrdersChat"> ok </VBtn>
-    <!-- <Dump :data="{ chat$ }" /> -->
+    <!-- hides scrollbars -->
+    <Html class="overflow-hidden" />
+
     <VNavigationDrawer
       order="-1"
       location="right"
       width="420"
-      v-model="toggleOrdersChat.isActive.value"
+      v-model="toggleOrderChat.isActive.value"
       elevation="3"
       temporary
     >
       <VSheet class="__placer__ pa-2 bg-red">
         <TopicChatButtonBase
-          topic="demo233"
-          :is-active="toggleOrdersChat.isActive.value"
+          :topic="chatTopic_"
+          :is-active="toggleOrderChat.isActive.value"
         />
-        <!-- <ChatRenderSimpleList :chat="chat$" :remove="noop" /> -->
+        <ChatRenderSimpleList :chat="chat$" :remove="chatMessageRemove" />
       </VSheet>
     </VNavigationDrawer>
 
-    <!-- hides scrollbars -->
-    <Html class="overflow-hidden" />
-    <!-- <Dump :data="{ orderCompanies }" /> -->
     <div class="__placer__ *bg-red max-w-[912px] mx-auto mt-2 mt-sm-8">
       <!-- @@orders -->
       <VDataIterator
@@ -157,155 +168,196 @@ const toggleOrdersChat = useToggleFlag();
                     :height="boxProductsListHeight"
                   >
                     <!-- @@order:product:details -->
-                    <VSheet
-                      elevation="1"
-                      rounded="lg2"
-                      max-height="92"
-                      height="92"
-                      v-for="p in orderProducts"
-                      :key="p.id"
-                      class="d-flex overflow-hidden !bg-slate-50"
-                    >
-                      <!-- @@image -->
-                      <div class="fill-height">
-                        <LightboxProductImages :product="p">
-                          <template #activator="{ onClick, images, disabled }">
-                            <VHover open-delay="222">
-                              <template
-                                #default="{ props: props_, isHovering }"
-                              >
-                                <VImg
-                                  v-bind="props_"
-                                  cover
-                                  width="116"
-                                  class="fill-height cursor-pointer hover:scale-[102%] transition-transform"
-                                  position="relative"
-                                  @click="onClick"
-                                  :src="
-                                    !disabled
-                                      ? resourceUrl(
-                                          get(sample(images), 'data.file_id')
-                                        )
-                                      : DEFAULT_NO_IMAGE
+                    <template v-for="p in orderProducts" :key="p.id">
+                      <VHover open-delay="222">
+                        <template
+                          #default="{ props: props_, isHovering: isHovering_ }"
+                        >
+                          <VSheet
+                            v-bind="props_"
+                            elevation="1"
+                            rounded="lg2"
+                            max-height="92"
+                            height="92"
+                            class="d-flex overflow-hidden !bg-slate-50"
+                          >
+                            <!-- @@image -->
+                            <div class="fill-height">
+                              <LightboxProductImages :product="p">
+                                <template
+                                  #activator="{ onClick, images, disabled }"
+                                >
+                                  <VHover open-delay="222">
+                                    <template
+                                      #default="{ props: props_, isHovering }"
+                                    >
+                                      <VImg
+                                        v-bind="props_"
+                                        cover
+                                        width="116"
+                                        class="fill-height cursor-pointer hover:scale-[102%] transition-transform"
+                                        position="relative"
+                                        @click="onClick"
+                                        :src="
+                                          !disabled
+                                            ? resourceUrl(
+                                                get(
+                                                  sample(images),
+                                                  'data.file_id'
+                                                )
+                                              )
+                                            : DEFAULT_NO_IMAGE
+                                        "
+                                      >
+                                        <VFadeTransition>
+                                          <VIcon
+                                            v-if="isHovering"
+                                            class="opacity-50 z-[1] position-absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%]"
+                                            size="55"
+                                            color="white"
+                                            icon="$iconImages"
+                                          />
+                                        </VFadeTransition>
+                                      </VImg>
+                                    </template>
+                                  </VHover>
+                                </template>
+                              </LightboxProductImages>
+                            </div>
+                            <!-- @@details:body -->
+                            <div class="*bg-red grow ps-3 pt-1">
+                              <h2 class="w-full text-truncate">
+                                <ProductPublicUrl :product="p" v-slot="{ url }">
+                                  <NuxtLink :to="url" external target="_blank">
+                                    <a
+                                      class="text-primary link--prominent-base"
+                                    >
+                                      {{ p?.name || "" }}
+                                    </a>
+                                  </NuxtLink>
+                                </ProductPublicUrl>
+                              </h2>
+                              <div class="__placer__ ms-n2 d-flex items-center">
+                                <VChipProductCategory
+                                  class="scale-[92%]"
+                                  :product="p"
+                                />
+                                <VChipProductPriceBase
+                                  class="opacity-90 scale-[92%] ms-n1"
+                                  size="x-small"
+                                  :price-only="
+                                    $productPriceForOrder(order_, p) || 0
                                   "
                                 >
-                                  <VFadeTransition>
-                                    <VIcon
-                                      v-if="isHovering"
-                                      class="opacity-50 z-[1] position-absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%]"
-                                      size="55"
-                                      color="white"
-                                      icon="$iconImages"
-                                    />
-                                  </VFadeTransition>
-                                </VImg>
-                              </template>
-                            </VHover>
-                          </template>
-                        </LightboxProductImages>
-                      </div>
-                      <!-- @@details:body -->
-                      <div class="*bg-red grow ps-3 pt-1">
-                        <h2 class="w-full text-truncate">
-                          <ProductPublicUrl :product="p" v-slot="{ url }">
-                            <NuxtLink :to="url" external target="_blank">
-                              <a class="text-primary link--prominent-base">
-                                {{ p?.name || "" }}
-                              </a>
-                            </NuxtLink>
-                          </ProductPublicUrl>
-                        </h2>
-                        <div class="__placer__ ms-n2 d-flex items-center">
-                          <VChipProductCategory
-                            class="scale-[92%]"
-                            :product="p"
-                          />
-                          <VChipProductPriceBase
-                            class="opacity-90 scale-[92%] ms-n1"
-                            size="x-small"
-                            :price-only="$productPriceForOrder(order_, p) || 0"
-                          >
-                            <template #append>
-                              <small>/{{ p?.stockType }}</small>
-                            </template>
-                          </VChipProductPriceBase>
-                        </div>
-                        <div class="pt-3">
-                          <small
-                            class="scale-[95%] d-inline-flex items-center gap-2"
-                          >
-                            <VIcon
-                              class="opacity-30"
-                              size="small"
-                              icon="$iconDowntown"
-                            />
-                            <!-- @@ -->
-                            <TopicRatingStatus
-                              size="x-small"
-                              :topic="ratingCompany(p.user.id)"
-                            />
-                            <WithComProfile
-                              :user-id="p.user.id"
-                              v-slot="{ profile }"
-                            >
-                              <WithComPublicUrl
-                                :company-id="p.user.id"
-                                :company-name="profile?.name"
-                                v-slot="{ companyUrl }"
-                              >
-                                <NuxtLink
-                                  :to="companyUrl"
-                                  external
-                                  target="_blank"
+                                  <template #append>
+                                    <small>/{{ p?.stockType }}</small>
+                                  </template>
+                                </VChipProductPriceBase>
+                              </div>
+                              <div class="pt-3">
+                                <small
+                                  class="scale-[95%] d-inline-flex items-center gap-2"
                                 >
-                                  <a class="text-primary link--prominent-base">
-                                    {{ profile?.name || "" }}
-                                  </a>
                                   <VIcon
-                                    size="x-small"
-                                    class="-translate-y-px ms-1 opacity-40"
-                                    icon="$iconExternalLink"
+                                    class="opacity-30"
+                                    size="small"
+                                    icon="$iconDowntown"
                                   />
-                                </NuxtLink>
-                              </WithComPublicUrl>
-                            </WithComProfile>
-                          </small>
-                        </div>
-                      </div>
-                      <div
-                        class="pa-0 fill-height *min-w-[92px] *bg-primary3 d-flex flex-col items-end"
-                      >
-                        <span>FOO</span>
-
-                        <VSpacer />
-                        <div
-                          style="font-size: 88%"
-                          class="opacity-95 scale-[87%] text-end pa-0 font-sans"
-                        >
-                          <p>
-                            <strong
-                              >{{ p?.amount
-                              }}<span
-                                class="opacity-40 translate-x-[2px] d-inline-block"
-                                >{{ p?.stockType }}</span
-                              ></strong
+                                  <!-- @@ -->
+                                  <TopicRatingStatus
+                                    size="x-small"
+                                    :topic="ratingCompany(p.user.id)"
+                                  />
+                                  <WithComProfile
+                                    :user-id="p.user.id"
+                                    v-slot="{ profile }"
+                                  >
+                                    <WithComPublicUrl
+                                      :company-id="p.user.id"
+                                      :company-name="profile?.name"
+                                      v-slot="{ companyUrl }"
+                                    >
+                                      <NuxtLink
+                                        :to="companyUrl"
+                                        external
+                                        target="_blank"
+                                      >
+                                        <a
+                                          class="text-primary link--prominent-base"
+                                        >
+                                          {{ profile?.name || "" }}
+                                        </a>
+                                        <VIcon
+                                          size="x-small"
+                                          class="-translate-y-px ms-1 opacity-40"
+                                          icon="$iconExternalLink"
+                                        />
+                                      </NuxtLink>
+                                    </WithComPublicUrl>
+                                  </WithComProfile>
+                                </small>
+                              </div>
+                            </div>
+                            <div
+                              class="pa-0 fill-height *min-w-[92px] *bg-primary3 d-flex flex-col items-end"
                             >
-                          </p>
-                          <p>
-                            <strong>
-                              {{
-                                priceFormatLocale(
-                                  $calcOrderTotalOriginal(order_, [p])
-                                )
-                              }}<span
-                                class="opacity-40 translate-x-[2px] d-inline-block"
-                                >RSD</span
+                              <!-- @@btn:chat -->
+                              <VBtn
+                                @click="
+                                  () => {
+                                    chatCompanyActive = p.user;
+                                    toggleOrderChat.on();
+                                  }
+                                "
+                                class="ma-1 z-[1] transition-opacity"
+                                :class="
+                                  isHovering_ ? 'opacity-100' : 'opacity-20'
+                                "
+                                density="comfortable"
+                                icon
+                                variant="text"
                               >
-                            </strong>
-                          </p>
-                        </div>
-                      </div>
-                    </VSheet>
+                                <VIcon :size="28" icon="$iconChatDots" />
+                                <VTooltip
+                                  text="Poruka prodavcu..."
+                                  activator="parent"
+                                  open-delay="345"
+                                  location="bottom"
+                                />
+                              </VBtn>
+
+                              <VSpacer />
+                              <div
+                                style="font-size: 88%"
+                                class="opacity-95 scale-[87%] text-end pa-0 font-sans"
+                              >
+                                <p>
+                                  <strong
+                                    >{{ p?.amount
+                                    }}<span
+                                      class="opacity-40 translate-x-[2px] d-inline-block"
+                                      >{{ p?.stockType }}</span
+                                    ></strong
+                                  >
+                                </p>
+                                <p>
+                                  <strong>
+                                    {{
+                                      priceFormatLocale(
+                                        $calcOrderTotalOriginal(order_, [p])
+                                      )
+                                    }}<span
+                                      class="opacity-40 translate-x-[2px] d-inline-block"
+                                      >RSD</span
+                                    >
+                                  </strong>
+                                </p>
+                              </div>
+                            </div>
+                          </VSheet>
+                        </template>
+                      </VHover>
+                    </template>
                   </VSheet>
                 </template>
               </VCol>
