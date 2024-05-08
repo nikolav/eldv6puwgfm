@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import { Dump } from "@/components/dev";
+import type { IUser } from "@/types";
+// import { Dump } from "@/components/dev";
 import {
   ProductsForOrderWithDetails,
   LightboxProductImages,
@@ -11,9 +12,7 @@ import {
   WithComPublicUrl,
   VChipProductPrice,
   VChipProductPriceBase,
-  ChatControllsBasic,
-  TopicChatButtonBase,
-  ChatRenderSimpleList,
+  ProvideChatData,
 } from "@/components/app";
 
 const PRODUCTS_LIST_OFFSET_BOTTOM = 18;
@@ -27,29 +26,26 @@ const {
 } = useAppConfig();
 const auth = useStoreApiAuth();
 
-// computes, refs
+// refs, computes
 const uid$ = computed(() => get(auth.user$, "id"));
 const oid$ = ref();
-const orderCompanies = ref();
+const orderCompanies = ref(<IUser[]>[]);
 const orderProducts = ref();
 const orderTotal = ref();
 const boxProductsList = ref();
-const chatCompanyActive = ref();
-const chatCompanyActiveProfile = ref();
 
 // utils
 const { height: wheight } = useDisplay();
 const { $formated_DMMMYYYY, $productPriceForOrder, $calcOrderTotalOriginal } =
   useNuxtApp();
-const { ratingCompany, chatOrder: topicChatOnOrder } = useTopics();
+const { ratingCompany, chatOrder: topicChatOnOrder, CHAT_MAIN } = useTopics();
 const { top: boxProductsListTop } = useElementBounding(boxProductsList);
-
-const boxProductsListHeight = computed(
-  () => wheight.value - boxProductsListTop.value - PRODUCTS_LIST_OFFSET_BOTTOM
-);
+const topicChatMain = useGlobalVariable(CHAT_MAIN);
 
 // stores
 const { orders, reload: ordersReload } = useQueryOrdersByUser(uid$);
+
+// computes
 const {
   length: paginationLength,
   page$,
@@ -58,61 +54,21 @@ const {
   data: orders,
   perPage: 5,
 });
-
-const order_ = computed(() => find(orders.value, { id: oid$.value }));
-const toggleOrderChat = useToggleFlag();
-
-const chatTopic_ = computed(() =>
-  topicChatOnOrder(
-    order_.value?.id,
-    chatCompanyActive.value?.id,
-    get(auth.user$, "id")
-  )
+const boxProductsListHeight = computed(
+  () => wheight.value - boxProductsListTop.value - PRODUCTS_LIST_OFFSET_BOTTOM
 );
-const { data, remove: chatMessageRemove } = useDocs(chatTopic_);
-const chat$ = computed(() => dataSortedByDateDesc(data.value));
+const order_ = computed(() => find(orders.value, { id: oid$.value }));
 
-// auto inits; selects first
-// onceMountedOn(
-//   () => !isEmpty(orders.value),
-//   () =>
-//     nextTick(() => {
-//       if (!oid$.value) {
-//         oid$.value = first(orders.value)?.id;
-//       }
-//     })
-// );
+// watches
+onceMountedOn(true, () => nextTick(ordersReload));
 // #eos
 </script>
  <template>
   <section class="page--user-orders">
+    <!-- <Dump :data="{ 'chatdata.data': cdata }" /> -->
+
     <!-- hides scrollbars -->
     <Html class="overflow-hidden" />
-
-    <VNavigationDrawer
-      order="-1"
-      location="right"
-      width="412"
-      v-model="toggleOrderChat.isActive.value"
-      elevation="3"
-      temporary
-    >
-      <div class="bg-stone-100 pa-1 position-relative">
-        <VCardTitle class="font-italic text-h5 !font-sans opacity-85">
-          {{ chatCompanyActiveProfile?.name }}
-        </VCardTitle>
-        <VCardSubtitle class="text-end position-absolute top-0 end-0 pa-1 ma-0">
-          <em class="text-italic">Naurdžba#{{ order_?.id }}</em>
-        </VCardSubtitle>
-      </div>
-      <TopicChatButtonBase
-        :topic="chatTopic_"
-        :is-active="toggleOrderChat.isActive.value"
-      />
-      <VSheet class="__placer__ pa-2 *bg-red">
-        <ChatRenderSimpleList :chat="chat$" :remove="chatMessageRemove" />
-      </VSheet>
-    </VNavigationDrawer>
 
     <div class="__placer__ *bg-red max-w-[912px] mx-auto mt-2 mt-sm-8">
       <!-- @@orders -->
@@ -328,30 +284,49 @@ const chat$ = computed(() => dataSortedByDateDesc(data.value));
                                 class="pa-0 fill-height *min-w-[92px] *bg-primary3 d-flex flex-col items-end"
                               >
                                 <!-- @@btn:chat -->
-                                <VBtn
-                                  @click="
-                                    () => {
-                                      chatCompanyActive = p.user;
-                                      chatCompanyActiveProfile = profile;
-                                      toggleOrderChat.on();
-                                    }
+                                <ProvideChatData
+                                  :topic="
+                                    topicChatOnOrder(
+                                      order_?.id,
+                                      p.user.id,
+                                      uid$
+                                    )
                                   "
-                                  class="ma-1 z-[1] transition-opacity"
-                                  :class="
-                                    isHovering_ ? 'opacity-100' : 'opacity-20'
-                                  "
-                                  density="comfortable"
-                                  icon
-                                  variant="text"
+                                  v-slot="{ length: currentChatLength }"
                                 >
-                                  <VIcon :size="28" icon="$iconChatDots" />
-                                  <VTooltip
-                                    text="Poruka prodavcu..."
-                                    activator="parent"
-                                    open-delay="345"
-                                    location="bottom"
-                                  />
-                                </VBtn>
+                                  <VBtn
+                                    @click="
+                                      topicChatMain = topicChatOnOrder(
+                                        order_?.id,
+                                        p.user.id,
+                                        uid$
+                                      )
+                                    "
+                                    class="ma-1 z-[1] transition-opacity"
+                                    :class="
+                                      isHovering_ ? 'opacity-100' : 'opacity-40'
+                                    "
+                                    density="comfortable"
+                                    icon
+                                    variant="text"
+                                  >
+                                    <VBadge
+                                      :model-value="0 < currentChatLength"
+                                      :content="currentChatLength"
+                                      color="primary3"
+                                      location="top start"
+                                      :offset-y="5"
+                                    >
+                                      <VIcon :size="28" icon="$iconChatDots" />
+                                    </VBadge>
+                                    <VTooltip
+                                      text="Poruka prodavcu..."
+                                      activator="parent"
+                                      open-delay="345"
+                                      location="bottom"
+                                    />
+                                  </VBtn>
+                                </ProvideChatData>
 
                                 <VSpacer />
                                 <div

@@ -7,22 +7,22 @@ const {
 } = useAppConfig();
 const menu = [
   {
-    page: "Poslate narudžbe",
+    page: "Narudžbenice",
     icon: "$iconChecklist",
     iconSize: "large",
     to: "user-orders",
+  },
+  {
+    page: "Moj profil",
+    icon: "$iconUserCircle",
+    iconSize: "x-large",
+    to: "user-profile",
   },
   {
     page: "Omiljeno",
     icon: "$iconCheck",
     iconSize: "large",
     to: "user-favourites",
-  },
-  {
-    page: "Profil",
-    icon: "$iconUserCircle",
-    iconSize: "large",
-    to: "user-profile",
   },
 ];
 

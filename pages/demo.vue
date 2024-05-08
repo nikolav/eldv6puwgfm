@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
+import { ProvideChatData } from "@/components/app";
 // import {
 //   GoogleAuthProvider,
 //   FacebookAuthProvider,
@@ -21,18 +22,10 @@ definePageMeta({
 // const googleAuth = () => signInWithPopup(fbAuth, new GoogleAuthProvider());
 // const facebookAuth = () => signInWithPopup(fbAuth, new FacebookAuthProvider());
 
-const Q_ordersProducts = gql`
-  query q_ordersProducts($oid: ID!) {
-    ordersProducts(oid: $oid) {
-      id
-      amount
-      name
-    }
-  }
-`;
+// const toggle = useToggleFlag();
 
-const { result, load } = useLazyQuery(Q_ordersProducts, { oid: 169 });
-onceMountedOn(true, load);
+const { CHAT_MAIN } = useTopics();
+const topicChatMain = useGlobalVariable(CHAT_MAIN);
 
 // #eos
 </script>
@@ -44,7 +37,16 @@ onceMountedOn(true, load);
     <VBtn @click="facebookAuth">auth:facebook</VBtn>
     <VBtn @click="signOut(fbAuth)">logout</VBtn> -->
     <hr />
-    <Dump :data="{ result }" />
+    <ProvideChatData topic="@demo1" v-slot="{ length }">
+      <VBtn @click="topicChatMain = '@demo1'">@demo1 [{{ length }}]</VBtn>
+    </ProvideChatData>
+    <ProvideChatData topic="@demo2" v-slot="{ length }">
+      <VBtn @click="topicChatMain = '@demo2'">@demo2 [{{ length }}]</VBtn>
+    </ProvideChatData>
+    <ProvideChatData topic="@demo1" v-slot="{ length }">
+      <VBtn @click="topicChatMain = '@demo1'">@demo1 [{{ length }}]</VBtn>
+    </ProvideChatData>
+    <VBtn @click="topicChatMain = undefined">clear</VBtn>
   </section>
 </template>
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ITopicChatMessage, IDoc, TDocData } from "@/types";
+import type { ITopicChatMessage, IDoc } from "@/types";
 import { mergeProps } from "vue";
 
 const props = defineProps<{
@@ -10,6 +10,7 @@ const props = defineProps<{
 const auth = useStoreApiAuth();
 const uid = computed(() => get(auth.user$, "id"));
 const ownsMessage = (mid: any) => uid.value == mid;
+const ownsThisMessage = computed(() => ownsMessage(get(props.doc, "data.uid")));
 
 // @@eos
 </script>
@@ -17,17 +18,15 @@ const ownsMessage = (mid: any) => uid.value == mid;
   <VHover open-delay="345">
     <template #default="{ isHovering, props: props_ }">
       <VSheet
-        :color="
-          ownsMessage(props.doc.data?.uid) ? 'primary2-darken-1' : undefined
-        "
+        :color="ownsThisMessage ? 'primary2-darken-1' : undefined"
         class="component--ChatSimpleMessage"
-        :border="ownsMessage(props.doc.data?.uid) ? 's-lg' : undefined"
+        :border="ownsThisMessage ? 's-lg' : undefined"
         v-bind="mergeProps($attrs, props_)"
         position="relative"
         rounded
       >
         <VForm
-          v-if="isHovering"
+          v-if="isHovering && ownsThisMessage"
           class="position-absolute top-1 end-1"
           @submit.prevent="() => props.remove(Number(props.doc.id))"
           autocomplete="off"
@@ -56,5 +55,5 @@ const ownsMessage = (mid: any) => uid.value == mid;
     </template>
   </VHover>
 </template>
-<style lang="scss" scoped>
+ <style lang="scss" scoped>
 </style>

@@ -113,7 +113,7 @@ export const useStoreApiAuth = defineStore("auth", () => {
       await onLogoutApollo();
 
       // clear auto `chatName`
-      chatName$.value = "";
+      // chatName$.value = "";
     }
   });
 

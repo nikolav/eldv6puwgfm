@@ -29,6 +29,7 @@ const authSubmitLogout = async () => {
 };
 
 const avatarUrl = inject(AVATAR);
+
 // #eos
 </script>
 <template>

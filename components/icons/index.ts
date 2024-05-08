@@ -87,3 +87,4 @@ export { default as IconChecklist } from "./IconChecklist.vue";
 export { default as IconThumbsUpOutline } from "./IconThumbsUpOutline.vue";
 export { default as IconThumbsDownOutline } from "./IconThumbsDownOutline.vue";
 export { default as IconStarCircle } from "./IconStarCircle.vue";
+export { default as IconMegaphone } from "./IconMegaphone.vue";

@@ -116,6 +116,7 @@ export default defineAppConfig({
   },
   //
   key: {
+    CHAT_MAIN: "cLgtZdZLXHNdstzt",
     ORDER_ID: "cxIH1hlzHzGUe6",
     APP_MOUNTED: "Zkcmk4BnXHU",
     APP_PROCESSING: "FlaelfhZddK",

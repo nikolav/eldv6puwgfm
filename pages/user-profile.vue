@@ -7,7 +7,9 @@ definePageMeta({
 // @@eos
 </script>
 <template>
-  <section class="page--user-profile">profile</section>
+  <section class="page--user-profile">
+    
+  </section>
 </template>
 <style lang="scss" scoped>
 </style>

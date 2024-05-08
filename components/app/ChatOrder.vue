@@ -8,8 +8,9 @@ const props = defineProps<{
 }>();
 
 const {
-  key: { APP_PROCESSING, CHAT_ORDER_MESSAGE, CHAT_CLIENTID_ACTIVE },
+  key: { APP_PROCESSING, CHAT_ORDER_MESSAGE, CHAT_CLIENTID_ACTIVE, CHAT_NAME },
 } = useAppConfig();
+const chatName$ = useLocalStorage(CHAT_NAME, () => "", { initOnMounted: true });
 const clientIdActive$ = useGlobalVariable(CHAT_CLIENTID_ACTIVE);
 const { users } = useQueryUsers();
 const user_ = computed(() => find(users.value, { id: clientIdActive$.value }));
@@ -33,14 +34,17 @@ const chatMessage$ = useGlobalVariable(CHAT_ORDER_MESSAGE);
 const toggleChatOrderPopup = useToggleFlag();
 const auth = useStoreApiAuth();
 const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+const uid = computed(() => get(auth.user$, "id"));
 const submitChatOrder = async () => {
   let error_;
   if (!(0 < chatMessage$.value?.length)) return;
   try {
     appProcessing$.value = true;
     await chatOrderSend({
+      name: chatName$.value || "",
       message: chatMessage$.value,
-      user_id: get(auth.user$, "id"),
+      // user_id: uid.value,
+      uid: uid.value,
     });
   } catch (error) {
     error_ = error;
@@ -57,7 +61,7 @@ const submitChatOrder = async () => {
   return error_;
 };
 
-const isClientMessage = (id: any) => id != get(auth.user$, "id");
+const isClientMessage = (id: any) => id != uid.value;
 const chatOrderMessageRemove = async (messageId: number) => {
   let err_;
   try {
@@ -105,13 +109,15 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
                 <VCard
                   v-bind="props"
                   :color="
-                    isClientMessage(get(node.raw, 'data.user_id'))
+                    // isClientMessage(get(node.raw, 'data.user_id'))
+                    isClientMessage(get(node.raw, 'data.uid'))
                       ? 'primary2'
                       : undefined
                   "
                   elevation="2"
                   :class="
-                    isClientMessage(get(node.raw, 'data.user_id'))
+                    // isClientMessage(get(node.raw, 'data.user_id'))
+                    isClientMessage(get(node.raw, 'data.uid'))
                       ? 'ms-10'
                       : undefined
                   "
@@ -120,8 +126,7 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
                   <VBtn
                     @click="chatOrderMessageRemove(node.raw.id)"
                     v-if="
-                      isHovering &&
-                      !isClientMessage(get(node.raw, 'data.user_id'))
+                      isHovering && !isClientMessage(get(node.raw, 'data.uid'))
                     "
                     class="position-absolute end-1 top-1/2 -translate-y-[50%]"
                     icon
@@ -141,9 +146,13 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
                     <!-- @@ -->
                     <h4
                       class="indent-1 text-medium-emphasis"
-                      v-if="isClientMessage(get(node.raw, 'data.user_id'))"
+                      v-if="isClientMessage(get(node.raw, 'data.uid'))"
                     >
-                      {{ matchEmailStart(user_?.email) }}
+                      {{
+                        get(node.raw, "data.name") ||
+                        matchEmailStart(user_?.email) ||
+                        "korisnik"
+                      }}
                     </h4>
                     <p class="text-body-1">
                       {{ get(node.raw, "data.message") }}
@@ -193,7 +202,7 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
           :close-on-content-click="false"
           v-model="toggleChatOrderPopup.isActive.value"
         >
-          <VCard color="primary" elevation="4" rounded="lg">
+          <VCard elevation="4" rounded="lg">
             <VForm autocomplete="off" @submit.prevent="submitChatOrder">
               <VCardItem class="bg-primary-lighten-1">
                 <VCardTitle class="d-flex items-center">

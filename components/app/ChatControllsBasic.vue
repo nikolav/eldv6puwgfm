@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import type { ITopicChatMessage, IDoc } from "@/types";
+import type { ITopicChatMessage } from "@/types";
 const props = defineProps<{
   topic: string;
 }>();
@@ -27,7 +27,7 @@ const messageSubmit = async () => {
     await commit({
       message: chatMessage$.value,
       uid: uid.value || "",
-      ...(chatName$.value ? { name: chatName$.value } : undefined),
+      ...(chatName$.value ? { name: chatName$.value } : ""),
     });
   } catch (error) {
     err_ = error;

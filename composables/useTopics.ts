@@ -8,6 +8,7 @@ export const useTopics = () => {
       CHAT_ORDER_COM_USER_prefix,
     },
     key: {
+      CHAT_MAIN,
       TOPIC_CHAT_COM_prefix,
       TOPIC_CHAT_PRODUCTS_prefix,
       PRODUCT_RATING_prefix,
@@ -38,6 +39,7 @@ export const useTopics = () => {
       ? `${CHAT_ORDER_COM_USER_prefix}${oid}:${cid}:${uid}`
       : "";
   return {
+    CHAT_MAIN,
     comChat,
     productChat,
     productImages,

@@ -4,6 +4,7 @@ import { Q_ordersListByUser } from "@/graphql";
 export const useQueryOrdersByUser = (UID?: any) => {
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
+    io: { IOEVENT_ORDERS_CHANGE },
   } = useAppConfig();
   const uid$ = ref();
   watchEffect(() => {
@@ -28,6 +29,11 @@ export const useQueryOrdersByUser = (UID?: any) => {
 
   const { watchProcessing } = useStoreAppProcessing();
   watchProcessing(loading);
+
+  const ioevent_ = computed(() =>
+    enabled_.value ? `${IOEVENT_ORDERS_CHANGE}${uid$.value}` : ""
+  );
+  watchEffect(() => useIOEvent(ioevent_.value, reload));
 
   return {
     uid$,

@@ -6,7 +6,7 @@
 // });
 
 import { SpinnerAppProcessing } from "@/components/ui";
-import { Cart } from "@/components/app";
+import { Cart, TopicChatSidebarMain } from "@/components/app";
 import { PROFILE, AVATAR } from "@/src";
 
 // defs
@@ -88,6 +88,9 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
 
 <template>
   <VApp :theme="theme" id="app-main">
+    <!-- @@chat:main -->
+    <TopicChatSidebarMain />
+
     <!-- @signal:order-sent -->
     <VSnackbar
       v-model="flagOrderSendStatus$"
@@ -194,7 +197,6 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
   position: absolute !important;
   width: 100%;
 }
-
 
 .products--list .cols5 {
   width: 20% !important;
