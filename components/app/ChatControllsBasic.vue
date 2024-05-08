@@ -1,26 +1,30 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import type { ITopicChatMessage } from "@/types";
-const emit = defineEmits<{ (e: "messageSaved"): void }>();
-const props = defineProps<{ topic: string }>();
+import type { ITopicChatMessage, IDoc } from "@/types";
+const props = defineProps<{
+  topic: string;
+}>();
+const emit = defineEmits<{
+  (e: "messageSaved"): void;
+}>();
 const { smAndUp } = useDisplay();
 const {
-  key: { CHAT_NAME, APP_PROCESSING },
+  key: { CHAT_NAME },
 } = useAppConfig();
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+const { watchProcessing } = useStoreAppProcessing();
 const chatName$ = useLocalStorage(CHAT_NAME, () => "", { initOnMounted: true });
 const chatMessage$ = ref("");
 const auth = useStoreApiAuth();
 const uid = computed(() => get(auth.user$, "id"));
-const { upsert: save, loading } = useDocs<ITopicChatMessage>(props.topic);
-watchEffect(() => {
-  appProcessing$.value = loading.value;
-});
+const { upsert: commit, loading } = useDocs<ITopicChatMessage>(
+  () => props.topic
+);
+watchProcessing(loading);
 const messageSubmit = async () => {
   let err_: any;
   if (!chatMessage$.value) return;
   try {
-    await save({
+    await commit({
       message: chatMessage$.value,
       uid: uid.value || "",
       ...(chatName$.value ? { name: chatName$.value } : undefined),
@@ -34,11 +38,10 @@ const messageSubmit = async () => {
     emit("messageSaved");
   }
 };
-
 // @@eos
 </script>
 <template>
-  <VSheet v-bind="$attrs" class="component--ChatControllsBasic">
+  <VSheet class="component--ChatControllsBasic">
     <VForm
       class="w-full pa-2 ps-4"
       @submit.prevent="messageSubmit"

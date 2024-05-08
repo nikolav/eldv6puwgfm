@@ -11,6 +11,9 @@ import {
   WithComPublicUrl,
   VChipProductPrice,
   VChipProductPriceBase,
+  ChatControllsBasic,
+  TopicChatButtonBase,
+  ChatRenderSimpleList,
 } from "@/components/app";
 
 const PRODUCTS_LIST_OFFSET_BOTTOM = 18;
@@ -55,11 +58,30 @@ const {
 });
 
 const order_ = computed(() => find(orders.value, { id: oid$.value }));
-
+const toggleOrdersChat = useToggleFlag();
 // #eos
 </script>
  <template>
   <section class="page--user-orders">
+    <VBtn @click="toggleOrdersChat"> ok </VBtn>
+    <!-- <Dump :data="{ chat$ }" /> -->
+    <VNavigationDrawer
+      order="-1"
+      location="right"
+      width="420"
+      v-model="toggleOrdersChat.isActive.value"
+      elevation="3"
+      temporary
+    >
+      <VSheet class="__placer__ pa-2 bg-red">
+        <TopicChatButtonBase
+          topic="demo233"
+          :is-active="toggleOrdersChat.isActive.value"
+        />
+        <!-- <ChatRenderSimpleList :chat="chat$" :remove="noop" /> -->
+      </VSheet>
+    </VNavigationDrawer>
+
     <!-- hides scrollbars -->
     <Html class="overflow-hidden" />
     <!-- <Dump :data="{ orderCompanies }" /> -->
@@ -116,25 +138,6 @@ const order_ = computed(() => find(orders.value, { id: oid$.value }));
                 >
               </template>
             </VPagination>
-            <!-- <div
-              v-if="1 < paginationLength"
-              class="__placer__ space-x-2 d-flex"
-            >
-              <VSpacer />
-              <VBtn
-                v-for="n in paginationLength"
-                :key="n"
-                variant="elevated"
-                elevation="1"
-                :color="page$ == n ? 'primary-lighten-1' : 'on-primary'"
-                rounded="circle"
-                icon
-                size="x-small"
-                @click="page$ = n"
-              >
-                <em style="font-size: 133%">{{ n }}</em>
-              </VBtn>
-            </div> -->
           </VCard>
         </template>
 
@@ -201,6 +204,7 @@ const order_ = computed(() => find(orders.value, { id: oid$.value }));
                           </template>
                         </LightboxProductImages>
                       </div>
+                      <!-- @@details:body -->
                       <div class="*bg-red grow ps-3 pt-1">
                         <h2 class="w-full text-truncate">
                           <ProductPublicUrl :product="p" v-slot="{ url }">
@@ -211,11 +215,20 @@ const order_ = computed(() => find(orders.value, { id: oid$.value }));
                             </NuxtLink>
                           </ProductPublicUrl>
                         </h2>
-                        <div class="__placer__ ms-n2">
+                        <div class="__placer__ ms-n2 d-flex items-center">
                           <VChipProductCategory
                             class="scale-[92%]"
                             :product="p"
                           />
+                          <VChipProductPriceBase
+                            class="opacity-90 scale-[92%] ms-n1"
+                            size="x-small"
+                            :price-only="$productPriceForOrder(order_, p) || 0"
+                          >
+                            <template #append>
+                              <small>/{{ p?.stockType }}</small>
+                            </template>
+                          </VChipProductPriceBase>
                         </div>
                         <div class="pt-3">
                           <small
@@ -260,40 +273,32 @@ const order_ = computed(() => find(orders.value, { id: oid$.value }));
                         </div>
                       </div>
                       <div
-                        class="pa-1 fill-height *min-w-[92px] *bg-primary3 d-flex flex-col items-end"
+                        class="pa-0 fill-height *min-w-[92px] *bg-primary3 d-flex flex-col items-end"
                       >
-                        <!-- @@ -->
-                        <VChipProductPriceBase
-                          class="opacity-75"
-                          size="x-small"
-                          :price-only="$productPriceForOrder(order_, p) || 0"
-                        >
-                          <template #append>
-                            <small>/{{ p?.stockType }}</small>
-                          </template>
-                        </VChipProductPriceBase>
+                        <span>FOO</span>
+
                         <VSpacer />
                         <div
                           style="font-size: 88%"
-                          class="opacity-95 scale-[87%] text-end pa-1 font-sans"
+                          class="opacity-95 scale-[87%] text-end pa-0 font-sans"
                         >
                           <p>
-                            <em class="opacity-75">Naručeno: </em>
                             <strong
                               >{{ p?.amount
-                              }}<span class="opacity-40 translate-x-[2px]">{{
-                                p?.stockType
-                              }}</span></strong
+                              }}<span
+                                class="opacity-40 translate-x-[2px] d-inline-block"
+                                >{{ p?.stockType }}</span
+                              ></strong
                             >
                           </p>
                           <p>
-                            <em class="opacity-75">Iznos: </em>
                             <strong>
                               {{
                                 priceFormatLocale(
                                   $calcOrderTotalOriginal(order_, [p])
                                 )
-                              }}<span class="opacity-40 translate-x-[2px]"
+                              }}<span
+                                class="opacity-40 translate-x-[2px] d-inline-block"
                                 >RSD</span
                               >
                             </strong>
