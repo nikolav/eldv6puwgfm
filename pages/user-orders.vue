@@ -72,6 +72,16 @@ const chatTopic_ = computed(() =>
 const { data, remove: chatMessageRemove } = useDocs(chatTopic_);
 const chat$ = computed(() => dataSortedByDateDesc(data.value));
 
+// auto inits; selects first
+// onceMountedOn(
+//   () => !isEmpty(orders.value),
+//   () =>
+//     nextTick(() => {
+//       if (!oid$.value) {
+//         oid$.value = first(orders.value)?.id;
+//       }
+//     })
+// );
 // #eos
 </script>
  <template>

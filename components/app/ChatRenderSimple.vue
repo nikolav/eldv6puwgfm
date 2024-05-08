@@ -15,7 +15,11 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
 <template>
   <VSheet v-bind="$attrs" class="overflow-auto scrollbar-thin-light">
     <VDataIterator :items="props.chat" :items-per-page="-1">
-      <template #no-data> --no-data </template>
+      <template #no-data>
+        <VCardSubtitle class="text-center pa-4">
+          Nema poruka.
+        </VCardSubtitle>
+      </template>
       <template #default="{ items }">
         <div class="space-y-1 pa-1" :class="!smAndUp ? 'mt-2' : undefined">
           <template v-for="node in items" :key="node.raw.id">
