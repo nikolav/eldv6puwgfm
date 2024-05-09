@@ -49,13 +49,13 @@ const messageSubmit = async () => {
     >
       <VTextField
         name="topic_chat_name"
-        v-model.trim="chatName$"
+        v-model="chatName$"
         label="Ime *"
         variant="underlined"
       />
       <VTextarea
         name="topic_chat_message"
-        v-model.trim="chatMessage$"
+        v-model="chatMessage$"
         clearable
         label="Poruka *"
         variant="underlined"

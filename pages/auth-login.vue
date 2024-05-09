@@ -72,7 +72,7 @@ const authSubmitLogin = async () => {
             clearable
             variant="underlined"
             type="email"
-            v-model.trim="authEmail$"
+            v-model="authEmail$"
             label="Email: *"
           >
             <template #prepend>
@@ -89,7 +89,7 @@ const authSubmitLogin = async () => {
             variant="underlined"
             autocomplete="off"
             type="password"
-            v-model.trim="authPassword$"
+            v-model="authPassword$"
             label="Lozinka: *"
           >
             <template #prepend>

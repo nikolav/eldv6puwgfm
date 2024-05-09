@@ -195,7 +195,7 @@ const submitProductAdd = async () => {
           <div class="d-sm-flex justify-between items-center mt-sm-4">
             <!-- @fields:name -->
             <VTextField
-              v-model.trim="product.name.value"
+              v-model="product.name.value"
               variant="underlined"
               label="Naziv *"
               clearable
@@ -354,7 +354,7 @@ const submitProductAdd = async () => {
               variant="underlined"
               clearable
               label="Opis, Detalji"
-              v-model.trim="product.description.value"
+              v-model="product.description.value"
             />
           </div>
         </section>

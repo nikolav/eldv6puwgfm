@@ -252,7 +252,7 @@ const onClickProductImagesRemove = async (file_id: string) => {
           <div class="d-sm-flex justify-between items-center mt-sm-4">
             <!-- @fields:name -->
             <VTextField
-              v-model.trim="productData.name.value"
+              v-model="productData.name.value"
               variant="underlined"
               label="Naziv *"
               clearable
@@ -472,7 +472,7 @@ const onClickProductImagesRemove = async (file_id: string) => {
               variant="underlined"
               clearable
               label="Opis, Detalji"
-              v-model.trim="productData.description.value"
+              v-model="productData.description.value"
             />
           </div>
         </section>

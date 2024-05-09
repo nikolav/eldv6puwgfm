@@ -228,7 +228,7 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
               </VCardItem>
               <VCardText class="pa-4">
                 <VTextarea
-                  v-model.trim="chatMessage$"
+                  v-model="chatMessage$"
                   name="chat_order_message"
                   clearable
                   label="Tekst"

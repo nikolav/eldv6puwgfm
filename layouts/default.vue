@@ -69,7 +69,7 @@ watch(search_, debounceSearchHandle);
           class="*bg-red mx-auto mt-[92px] max-w-[512px] sm:max-w-[550px] sm:mt- [95px] sm:translate-x-[7.45rem]"
         >
           <VTextField
-            v-model.trim="search_"
+            v-model="search_"
             name="pretraga"
             autofocus
             variant="solo"

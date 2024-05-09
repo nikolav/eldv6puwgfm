@@ -147,7 +147,7 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
         <div class="grow d-flex flex-col">
           <VTextField
             name="topic_chat_name"
-            v-model.trim="chatName$"
+            v-model="chatName$"
             single-line
             label="Ime *"
             variant="underlined"
@@ -155,7 +155,7 @@ const dateFormatedFromNow = (d: string) => $date(d).utc(true).fromNow(true);
           />
           <VTextarea
             name="topic_chat_message"
-            v-model.trim="topicChatMessage$"
+            v-model="topicChatMessage$"
             single-line
             clearable
             label="Poruka *"

@@ -66,7 +66,7 @@ watchEffect(() => {
         <VCardText class="space-y-4">
           <VTextField
             name="google_calendar_embed_link"
-            v-model.trim="linkEmbed$"
+            v-model="linkEmbed$"
             clearable
             hint="Link deljenog javnog kalendara za integracije sa google.calendar"
             label="google.calendar link za integraciju"
@@ -75,7 +75,7 @@ watchEffect(() => {
           />
           <VTextField
             name="google_calendar_edit_page"
-            v-model.trim="linkEditPage$"
+            v-model="linkEditPage$"
             clearable
             hint="Strana za ažuriranje deljenog google kalendara"
             label="google.calendar strana za ažuriranje kalendara"

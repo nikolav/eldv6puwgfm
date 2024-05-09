@@ -236,7 +236,7 @@ watch(ID$, async (oid) => {
                   ]"
                 >
                   <VTextarea
-                    v-model.trim="form.description.value"
+                    v-model="form.description.value"
                     autofocus
                     hint="Dodatno uputstvo proizvođačima u vezi naručene robe"
                     clearable
@@ -248,7 +248,7 @@ watch(ID$, async (oid) => {
                     hint="Za proizvođače koji ga podržavaju"
                     variant="underlined"
                     clearable
-                    v-model.trim="form.code.value"
+                    v-model="form.code.value"
                     name="order_title"
                     label="Promo kod: "
                   />

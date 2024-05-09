@@ -224,7 +224,7 @@ const postEditOnClick = (ppid: number) => {
             </VMenu>
           </VBtn>
           <VTextField
-            v-model.trim="title_"
+            v-model="title_"
             clearable
             label="Naslov *"
             variant="underlined"
