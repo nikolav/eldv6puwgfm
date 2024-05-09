@@ -4,14 +4,27 @@ export default {
 };
 </script>
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import type { ITopicChatMessage } from "@/types";
 import { TopicChatButtonBase, ChatRenderSimpleList } from "@/components/app";
 
+const CHAT_MAIN_OFFSET_HEIGHT_BOTTOM = 4;
+
+const { height: wheight } = useDisplay();
 const { CHAT_MAIN } = useTopics();
 const topicChatMain = useGlobalVariable(CHAT_MAIN);
+
+const wheight_offs = computed(() =>
+  Math.max(
+    0,
+    wheight.value ? wheight.value - CHAT_MAIN_OFFSET_HEIGHT_BOTTOM : 0
+  )
+);
+
 const topicChatMainClose = () => {
   topicChatMain.value = undefined;
 };
+const isOpen = computed(() => !!topicChatMain.value);
 
 const { data, remove: chatMessageRemove } =
   useDocs<ITopicChatMessage>(topicChatMain);
@@ -26,6 +39,7 @@ useEventListener("keyup", ({ key }) => {
 </script>
 <template>
   <div>
+    <Html :class="isOpen ? 'overflow-hidden' : undefined" />
     <!-- @@provides -->
     <!-- @@sidebar -->
     <VNavigationDrawer
@@ -37,14 +51,17 @@ useEventListener("keyup", ({ key }) => {
       width="412"
       elevation="3"
       temporary
-      absolute
+      class="z-[1]"
     >
       <slot name="title" />
       <TopicChatButtonBase
         :topic="topicChatMain"
         :is-active="!!topicChatMain"
       />
-      <VSheet class="__placer__ pa-2 *bg-red pt-10">
+      <VSheet
+        :height="wheight_offs"
+        class="__placer__ pa-2 pt-10 overflow-auto scrollbar-thin-light"
+      >
         <ChatRenderSimpleList :chat="chat$" :remove="chatMessageRemove" />
       </VSheet>
       <VBtn

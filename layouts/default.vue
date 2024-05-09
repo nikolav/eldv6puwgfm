@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { AppBarMain, CartOpenBadgePrimary } from "@/components/app";
+import {
+  AppBarMain,
+  CartOpenBadgePrimary,
+} from "@/components/app";
+import { MainSearchBox } from "@/components/ui";
 import { PRODUCTION$ } from "@/config";
 import { useDisplay } from "vuetify";
 
@@ -37,6 +41,7 @@ watch(search_, debounceSearchHandle);
 
 <template>
   <section class="layout--default" :style="`padding-top: ${appBarHeight}px`">
+
     <!-- @cart:button -->
     <CartOpenBadgePrimary
       :badge-offset="9"
@@ -63,39 +68,9 @@ watch(search_, debounceSearchHandle);
             src="/header-main-06-scaled-150.png"
           />
         </template>
-        <!-- @main:search -->
-        <VForm
-          @submit.prevent
-          class="*bg-red mx-auto mt-[92px] max-w-[512px] sm:max-w-[550px] sm:mt- [95px] sm:translate-x-[7.45rem]"
-        >
-          <VTextField
-            v-model="search_"
-            name="pretraga"
-            autofocus
-            variant="solo"
-            label="Traži:"
-            rounded="pill"
-            center-affix
-            clearable
-            single-line
-            placeholder="Voće, povrće, sir..."
-          >
-            <template #prepend-inner>
-              <span class="ps-3"></span>
-            </template>
-            <template #append-inner>
-              <VBtn
-                @click.stop="submitSearch"
-                class="rounded-e-pill fill-height translate-x-[14px]"
-                icon
-                size="x-large"
-                color="primary"
-                variant="elevated"
-                ><VIcon icon="$iconMagnifyingGlass" class="-translate-x-[2px]"
-              /></VBtn>
-            </template>
-          </VTextField>
-        </VForm>
+
+        <!-- @@search:main -->
+        <MainSearchBox v-model="search_" />
       </VCard>
       <!-- @header:menu-categories -->
       <VSlideGroup mandatory show-arrows v-model="current$">

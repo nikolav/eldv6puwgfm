@@ -81,7 +81,7 @@ onceMountedOn(profile, resetFieldsFromStore);
       autocomplete="off"
       class="__placer__ mt-1 mt-sm-8"
     >
-      <VCard max-width="812" class="mx-auto">
+      <VCard max-width="812" class="mx-auto" rounded="t-lg">
         <VCardItem class="bg-primary min-h-[64px]">
           <template #append><UserAvatarPicker /></template>
           <VCardTitle class="ms-5 opacity-50">Moji kontakt podaci</VCardTitle>

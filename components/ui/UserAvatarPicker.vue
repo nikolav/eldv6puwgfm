@@ -33,8 +33,6 @@ const {
   upload,
   uploadStatus: upl,
   remove: fsRemove,
-  publicUrl,
-  IO,
 } = useApiStorage();
 
 // computed
@@ -44,24 +42,25 @@ const avatarFileIdCurrent = computed(() =>
 // calc url
 const avatarCurrent = ref();
 watchEffect(() => {
-  avatarCurrent.value = publicUrl(avatarFileIdCurrent.value);
+  avatarCurrent.value = resourceUrl(avatarFileIdCurrent.value);
 });
 
 // helpers
 const avatarRemove_ = async () => {
   await fsRemove(avatarFileIdCurrent.value);
   await profileCommit({
+    
     avatar: {},
   });
 };
 const avatarRemove = async () => {
-  if (!avatarFileIdCurrent.value) return;
+  if (!avatarCurrent.value) return;
   await avatarRemove_();
 };
 const avatarSave = async () => {
   if (!file.value) return;
   try {
-    if (avatarFileIdCurrent.value) {
+    if (avatarCurrent.value) {
       await avatarRemove_();
     }
     const res = await upload({

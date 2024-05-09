@@ -78,10 +78,6 @@ const avatarUrl = computed(() =>
 provide(PROFILE, profile);
 provide(AVATAR, avatarUrl);
 
-watchEffect(() => {
-  console.log({ profile: profile.value })
-})
-
 const gProductsChange$ = useGlobalVariable(PRODUCTS_CHANGE);
 useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
   gProductsChange$.value = Date.now();
@@ -92,6 +88,8 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
 
 <template>
   <VApp :theme="theme" id="app-main">
+    
+
     <!-- @@chat:main -->
     <TopicChatSidebarMain />
 

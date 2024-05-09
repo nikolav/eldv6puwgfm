@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import { AVATAR } from "@/src";
-import { AvatarThumb } from "@/components/app";
+import { emojify } from "node-emoji";
+import { AvatarThumb, VCardMainSearchConfig } from "@/components/app";
 
 const props = defineProps<{ height: number }>();
 
 const { smAndUp } = useDisplay();
+const {
+  app: { DEFAULT_TRANSITION },
+  key: { APP_PROCESSING },
+} = useAppConfig();
+const { CHAT_MAIN } = useTopics();
 
 const auth = useStoreApiAuth();
-const route_ = useRoute();
-const isRouteCompanyProfile$ = computed(
-  () => "company-profile" === route_.name
-);
 
 const { current$, routeNameByTitle, cache: appMenuCache } = useAppMenu();
 
-const { APP_PROCESSING } = useAppConfig().key;
 const flags = useStoreFlags();
 
 const authSubmitLogout = async () => {
@@ -28,8 +28,8 @@ const authSubmitLogout = async () => {
   flags.off(APP_PROCESSING);
 };
 
-const avatarUrl = inject(AVATAR);
-
+const topicChatMain = useGlobalVariable(CHAT_MAIN);
+const search$$ = useStoreSearchConfig();
 // #eos
 </script>
 <template>
@@ -56,27 +56,40 @@ const avatarUrl = inject(AVATAR);
       </strong>
 
       <!-- @@demo.dev -->
-      <!-- <span class="d-inline-flex" style="font-size: 55%">
-        <pre>-isAuth [{{ auth.isAuth$ ? "yes" : "no" }}]</pre>
-        <pre>-isDefault [{{ auth.isDefault$ ? "yes" : "no" }}]</pre>
-        <pre>-isAuthenticated [{{ auth.isAuthenticated$ ? "yes" : "no" }}]</pre>
-      </span> -->
-
       <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
-      <!-- <NuxtLink to="/proizvodi/122">-foo</NuxtLink> -->
     </VAppBarTitle>
 
-    <!-- @@debug emoji at orders page -->
-    <!-- <template v-if="auth.isCompany$ && isRouteCompanyProfile$">
-      <VSpacer />
-      <strong class="text-medium-emphasis text-body-1 !font-sans">
-        {{ emojify(":wave:") }} Zdravo,
-        {{ capitalize(matchEmailStart(get(auth.user$, "email"))) }}.
-      </strong>
-      <VSpacer />
-      <VSpacer />
-    </template> -->
     <template #append>
+      <VBtn :id="search$$.BUTTON_ID" icon variant="text" color="primary">
+        <VIcon icon="$iconSearchSettings" :size="34" />
+        <VTooltip
+          location="bottom"
+          open-delay="345"
+          activator="parent"
+          text="Napredna pretraga..."
+        />
+        <VMenu
+          activator="parent"
+          class="*w-full backdrop-blur-[2px] position-fixed z-[1]"
+          :transition="DEFAULT_TRANSITION"
+          location="bottom"
+          :offset="[-22, 0]"
+          scrim="white"
+          :close-on-content-click="false"
+        >
+          <template #default="{ isActive }">
+            <VCardMainSearchConfig
+              :close="
+                () => {
+                  isActive.value = false;
+                }
+              "
+              class="*!bg-stone-50 pa-4"
+            />
+          </template>
+        </VMenu>
+      </VBtn>
+
       <VBtn
         v-if="!auth.isAuth$ || auth.isDefault$"
         :to="{ name: 'auth-login' }"
@@ -104,14 +117,15 @@ const avatarUrl = inject(AVATAR);
           variant="text"
           icon
           color="primary"
+          class="ms-8"
         >
           <VIcon icon="$iconStoreFront" size="35" />
-          <VTooltip
-            activator="parent"
-            location="bottom"
-            text="Pijaca"
-            open-delay="345"
-          />
+          <VTooltip activator="parent" location="bottom" open-delay="345">
+            <pre class="me-2 d-inline-block" style="font-size: 133%">{{
+              emojify(":man_farmer:")
+            }}</pre>
+            <span style="font-size: 111%">Pijaca</span>
+          </VTooltip>
         </VBtn>
         <VBtn
           :to="{
@@ -151,6 +165,16 @@ const avatarUrl = inject(AVATAR);
             />
           </VBtn>
         </VForm>
+        <VBtn
+          @click="topicChatMain = 'chat:main'"
+          variant="text"
+          icon
+          color="primary"
+          size="small"
+          class="ms-2"
+        >
+          <VIcon icon="$iconMegaphone" :size="24" class="opacity-90" />
+        </VBtn>
       </template>
     </template>
   </VAppBar>

@@ -116,14 +116,13 @@ export default defineAppConfig({
   },
   //
   key: {
-    CHAT_MAIN: "cLgtZdZLXHNdstzt",
-    ORDER_ID: "cxIH1hlzHzGUe6",
     APP_MOUNTED: "Zkcmk4BnXHU",
     APP_PROCESSING: "FlaelfhZddK",
     AUTH_CREDS: "pafer98hf",
     AUTH_LOCKED,
     CARD_PRODUCT_DISPLAYED_HOVERED_ID: "wPV360PastGjrwS9hr",
     CHAT_CLIENTID_ACTIVE: "O5zl57Fui",
+    CHAT_MAIN: "cLgtZdZLXHNdstzt",
     CHAT_NAME: "QOPnfTw9",
     CHAT_ORDER_MESSAGE: "SInuQBaRiY",
     COM_LIKES_prefix: "Y9tqzJgln0B::",
@@ -137,6 +136,7 @@ export default defineAppConfig({
     INJECT_THEME: "Aasnvy2eaxE",
     LIKES_STORE: "hqYqZ31rN4xwfb2qc",
     ORDER_ACTIVE: "order:active:S52BW2",
+    ORDER_ID: "cxIH1hlzHzGUe6",
     ORDER_SEND_STATUS: "Ty6qF",
     POST_IMAGES_prefix: "CkJmp2R984QY@", // `${POST_IMAGES_prefix}${postId}:${imgId}`
     PRODUCT_ADD: "HAvQCqapN1NuJFIoS",
