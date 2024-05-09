@@ -9,25 +9,22 @@ const {
 } = useAppConfig();
 
 const { data: docsImages$ } = useDocs(`${PRODUCT_IMAGES}${props.product.id}`);
-const { publicUrl } = useApiStorage();
 
 // #eos
 </script>
 <template>
-  <VCard class="component--orders-product">
-    <VContainer fluid class="pa-0">
-      <VRow dense>
-        <VCol sm="2" class="shrink-0">
+  <VCard rounded="lg" class="component--orders-product" height="95">
+    <VContainer fluid class="pa-0 fill-height">
+      <VRow no-gutters class="fill-height">
+        <VCol sm="2" class="shrink-0 pa-0">
           <VImg
             cover
             :src="
               !isEmpty(docsImages$)
-                ? publicUrl(get(sample(docsImages$), 'data.file_id'))
+                ? resourceUrl(get(sample(docsImages$), 'data.file_id'))
                 : DEFAULT_NO_PRODUCT_IMAGE_FOUND
             "
-            max-height="192"
-            min-height="89"
-            :aspect-ratio="1"
+            class="fill-height"
           />
         </VCol>
         <VCol sm="7">
@@ -37,15 +34,23 @@ const { publicUrl } = useApiStorage();
 #{{ props.product.id }}</pre
             >
           </VCardTitle>
-          <VCardSubtitle
-            >Zaliha: {{ props.product.stock }}{{ props.product.stockType }},
-            Cena: {{ props.product.price }}din</VCardSubtitle
-          >
+          <VCardSubtitle>
+            Zaliha: {{ props.product.stock }} {{ props.product.stockType }}
+          </VCardSubtitle>
+          <VCardSubtitle>Cena: {{ props.product.price }} din</VCardSubtitle>
         </VCol>
-        <VCol sm="3" class="bg-primary3 d-flex justify-center items-center"
-          ><strong class="text-h4 !font-mono"
+        <VCol
+          sm="3"
+          class="bg-primary3-darken-1 d-flex justify-center items-center pa-0"
+          ><strong
+            style="font-size: 1.88rem !important"
+            class="text-body-1 !font-mono"
             >{{ props.product.amount
-            }}<span class="text-h6">{{ props.product.stockType }}</span></strong
+            }}<span
+              style="font-size: 1.11rem !important"
+              class="text-body-1 opacity-60 d-inline-flex translate-x-[2px]"
+              >{{ props.product.stockType }}</span
+            ></strong
           ></VCol
         >
       </VRow>

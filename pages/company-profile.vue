@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
 import { useDisplay } from "vuetify";
-import { OrdersProduct, ChatOrder, VCardOrderDetails } from "@/components/app";
+import {
+  OrdersProduct,
+  ChatOrder,
+  VCardOrderDetails,
+  AvatarThumb,
+} from "@/components/app";
 
 // defs
 definePageMeta({
@@ -12,13 +17,11 @@ useHead({
   title: "Primljene narudžbe",
 });
 const {
-  docs: { CHAT_ORDER_COM_USER_prefix },
-  key: { APP_PROCESSING, ORDER_ACTIVE },
+  key: { ORDER_ACTIVE },
 } = useAppConfig();
 
 // refs
 const orderActive$ = useGlobalVariable(ORDER_ACTIVE);
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const toggleOrderChatActive = useToggleFlag();
 const toggleOrderDetails = useToggleFlag();
 
@@ -34,6 +37,7 @@ const { order_id$, products: products_ } = useQueryOrdersProducts();
 const { topic$: chatId$, data: chatOrder$ } = useDocs();
 
 // utils
+const { chatOrder } = useTopics();
 const { $calcOrderTotalOriginal, $formated_DMMMYYYY } = useNuxtApp();
 const { xs, smAndUp, width } = useDisplay();
 const emailStartByUserId = (id: any) =>
@@ -50,6 +54,7 @@ const {
   length: paginationLength$,
   page$,
 } = usePaginateData({ data: orders_, perPage: 5 });
+const { watchProcessing } = useStoreAppProcessing();
 
 // computes
 const orderIdActive = (id: number) => id == orderActive$.value;
@@ -65,18 +70,13 @@ const user_ = computed(() =>
       })
     : undefined
 );
+const { avatar: avatarUrl, fullName } = useProfileData(() => user_.value?.id);
 const topicChatOrderUser$ = computed(() =>
-  0 < orderActive$.value && user_.value?.id
-    ? `${CHAT_ORDER_COM_USER_prefix}${orderActive$.value}:${get(
-        auth.user$,
-        "id"
-      )}:${user_.value.id}`
-    : undefined
+  chatOrder(orderActive$.value, get(auth.user$, "id"), user_.value?.id)
 );
+
 // watchers
-watchEffect(() => {
-  appProcessing$.value = ordersLoading.value;
-});
+watchProcessing(ordersLoading);
 watchEffect(() => {
   order_id$.value = orderActive$.value;
 });
@@ -121,11 +121,11 @@ watchEffect(() => {
 
     <!-- @@content -->
     <div class="vcard--placer px-1 mt-2 mt-sm-8">
-      <VCard max-width="812" class="mx-auto">
+      <VCard rounded="t-lg" max-width="856" class="mx-auto">
         <!-- @orders-crud:toolbar -->
         <VCardItem class="bg-primary">
           <VCardTitle class="ps-2"
-            ><span v-if="smAndUp">Primljene narudžbe</span>
+            ><span v-if="smAndUp" class="opacity-60">Primljene narudžbe</span>
             <VBadge
               inline
               color="primary-lighten-1"
@@ -192,39 +192,62 @@ watchEffect(() => {
           </template>
         </VCardItem>
         <!-- @orders-crud:list -->
-        <VContainer fluid class="ma-0 pa-1">
+        <VContainer fluid class="ma-0 pa-1 bg-stone-50">
           <VRow dense>
-            <VCol :order="1" :order-sm="0" sm="8">
+            <VCol :order="1" :order-sm="0" sm="7">
               <VDataIterator :items="products_">
                 <template #default="{ items }">
                   <div class="space-y-1 px-2 my-2">
                     <div class="d-flex justify-between items-center">
-                      <p>
-                        <span class="text-medium-emphasis">Poručio: </span
-                        >{{ emailStartByUserId(user_?.id) }}
+                      <p class="ps-5">
+                        <!-- @@ -->
+                        <AvatarThumb
+                          :size="32"
+                          :force="avatarUrl"
+                          v-if="avatarUrl"
+                        />
+                        <span
+                          v-else
+                          class="!font-sans text-body-1 font-italic text-medium-emphasis"
+                          >Poručio:
+                        </span>
+                        <span
+                          class="align-bottom ms-1 text-body-1 opacity-90 font-italic !font-sans"
+                          >{{ fullName || emailStartByUserId(user_?.id) }}</span
+                        >
                       </p>
                       <p class="text-end pe-4 my-4">
-                        <span class="text-medium-emphasis">Vrednost: </span>
-                        <em
-                          >{{
+                        <span
+                          class="!font-sans text-body-1 font-italic text-medium-emphasis"
+                          >Vrednost:
+                        </span>
+                        <strong class="text-body-1 !font-bold !font-sans">{{
+                          priceFormatLocale(
                             $calcOrderTotalOriginal(
                               order_,
                               map(items, ({ raw }) => raw)
                             )
-                          }}din.</em
+                          )
+                        }}</strong>
+                        <span
+                          class="d-inline-block translate-x-[2px] text-medium-emphasis"
+                          >din</span
                         >
                       </p>
                     </div>
-                    <OrdersProduct
-                      v-for="p in items"
-                      :key="p.raw.id"
-                      :product="p.raw"
-                    />
+                    <div class="__placer__ space-y-2">
+                      <OrdersProduct
+                        v-for="p in items"
+                        :key="p.raw.id"
+                        :product="p.raw"
+                      />
+                    </div>
                   </div>
                 </template>
               </VDataIterator>
             </VCol>
-            <VCol sm="4" class="*bg-primary2-lighten-2 border-s">
+            <VCol sm="5" class="*bg-primary2-lighten-2 border-s">
+              <!-- @@ -->
               <VPagination
                 v-if="1 < paginationLength$"
                 density="comfortable"

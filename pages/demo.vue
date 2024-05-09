@@ -22,7 +22,7 @@ definePageMeta({
 // const facebookAuth = () => signInWithPopup(fbAuth, new FacebookAuthProvider());
 
 // const toggle = useToggleFlag();
-
+const { profile, avatar } = useProfileData(3)
 // #eos
 </script>
 <template>
@@ -33,6 +33,7 @@ definePageMeta({
     <VBtn @click="facebookAuth">auth:facebook</VBtn>
     <VBtn @click="signOut(fbAuth)">logout</VBtn> -->
     <hr />
+    <Dump :data="{ avatar }" />
   </section>
 </template>
 <style lang="scss" scoped>
