@@ -29,6 +29,7 @@ const auth = useStoreApiAuth();
 // refs, computes
 const uid$ = computed(() => get(auth.user$, "id"));
 const oid$ = ref();
+const order_ = ref();
 const orderCompanies = ref(<IUser[]>[]);
 const orderProducts = ref();
 const orderTotal = ref();
@@ -44,6 +45,9 @@ const topicChatMain = useGlobalVariable(CHAT_MAIN);
 
 // stores
 const { orders, reload: ordersReload } = useQueryOrdersByUser(uid$);
+watchEffect(() => {
+  order_.value = find(orders.value, { id: oid$.value });
+});
 
 // computes
 const {
@@ -57,15 +61,42 @@ const {
 const boxProductsListHeight = computed(
   () => wheight.value - boxProductsListTop.value - PRODUCTS_LIST_OFFSET_BOTTOM
 );
-const order_ = computed(() => find(orders.value, { id: oid$.value }));
 
 // watches
 onceMountedOn(true, () => nextTick(ordersReload));
+
+// inits products @mount
+// ugly hack; refactor smh.
+const op$ = <Record<string, any>>{};
+const oid$_init = ref();
+const order$_init = ref();
+const {
+  products: p_,
+  totalOriginal: t_,
+  companies: c_,
+} = useQueryProductsOnOrderWithDetails(order$_init);
+watchEffect(() => {
+  order_.value = order$_init.value = find(orders.value, {
+    id: `${oid$_init.value}`,
+  });
+  orderProducts.value = p_.value;
+  orderTotal.value = t_.value;
+  orderCompanies.value = c_.value;
+});
+onceMountedOn(
+  () => !isEmpty(orders.value),
+  async () => {
+    await nextTick();
+    if (oid$.value) return;
+    oid$_init.value = oid$.value = Math.max(...keys(op$).map(Number));
+  }
+);
+
 // #eos
 </script>
  <template>
   <section class="page--user-orders">
-    <!-- <Dump :data="{ 'chatdata.data': cdata }" /> -->
+    <!-- <Dump :data="{ op$ }" /> -->
 
     <!-- hides scrollbars -->
     <Html class="overflow-hidden" />
@@ -398,6 +429,7 @@ onceMountedOn(true, () => nextTick(ordersReload));
                   <VList mandatory class="py-0" density="compact">
                     <template v-for="node in items" :key="node.raw.id">
                       <ProductsForOrderWithDetails
+                        v-model="op$[node.raw.id]"
                         :order="find(orders, { id: node.raw.id })"
                         v-slot="{ total, companies, products }"
                       >

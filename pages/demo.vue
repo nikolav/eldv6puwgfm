@@ -23,10 +23,6 @@ definePageMeta({
 
 // const toggle = useToggleFlag();
 
-const text$ = ref();
-const ok = () => {
-  console.log(text$.value);
-};
 // #eos
 </script>
 <template>
@@ -37,12 +33,6 @@ const ok = () => {
     <VBtn @click="facebookAuth">auth:facebook</VBtn>
     <VBtn @click="signOut(fbAuth)">logout</VBtn> -->
     <hr />
-     <div class="d-flex">
-      <VForm @submit.prevent="ok" class="w-[550px] mx-auto">
-        <VTextarea clearable v-model="text$" variant="outlined" />
-        <VBtn type="submit">ok</VBtn>
-      </VForm>
-    </div>
   </section>
 </template>
 <style lang="scss" scoped>

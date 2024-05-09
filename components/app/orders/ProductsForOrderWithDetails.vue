@@ -1,23 +1,13 @@
 <script setup lang="ts">
-import type { IOrder, IUser } from "@/types";
-const props = defineProps<{ order?: IOrder }>();
-
-const { $calcOrderTotalOriginal } = useNuxtApp();
-const oid$ = computed(() => get(props.order, "id"));
-const { products } = useQueryProductsOnOrder(oid$);
-const totalOriginal = computed(() =>
-  $calcOrderTotalOriginal(props.order, products.value)
-);
-const companies = computed(() =>
-  transform(
-    products.value,
-    (acc, p) => {
-      if (!some(acc, (u) => u.id === p.user?.id)) acc.push(p.user!);
-    },
-    <IUser[]>[]
-  )
-);
-
+import type { IOrder } from "@/types";
+const props = defineProps<{ order?: IOrder; modelValue?: any }>();
+const emit = defineEmits<{
+  (e: "update:modelValue", m: any): void;
+}>();
+const { products, companies, totalOriginal } =
+  useQueryProductsOnOrderWithDetails(props.order);
+// bind sth. so init code can pick up order keys
+watchEffect(() => emit("update:modelValue", props.order?.id));
 // @@eos
 </script>
 <template>
