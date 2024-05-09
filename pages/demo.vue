@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
-import { ProvideChatData } from "@/components/app";
 // import {
 //   GoogleAuthProvider,
 //   FacebookAuthProvider,
@@ -24,9 +23,10 @@ definePageMeta({
 
 // const toggle = useToggleFlag();
 
-const { CHAT_MAIN } = useTopics();
-const topicChatMain = useGlobalVariable(CHAT_MAIN);
-
+const text$ = ref();
+const ok = () => {
+  console.log(text$.value);
+};
 // #eos
 </script>
 <template>
@@ -37,16 +37,12 @@ const topicChatMain = useGlobalVariable(CHAT_MAIN);
     <VBtn @click="facebookAuth">auth:facebook</VBtn>
     <VBtn @click="signOut(fbAuth)">logout</VBtn> -->
     <hr />
-    <ProvideChatData topic="@demo1" v-slot="{ length }">
-      <VBtn @click="topicChatMain = '@demo1'">@demo1 [{{ length }}]</VBtn>
-    </ProvideChatData>
-    <ProvideChatData topic="@demo2" v-slot="{ length }">
-      <VBtn @click="topicChatMain = '@demo2'">@demo2 [{{ length }}]</VBtn>
-    </ProvideChatData>
-    <ProvideChatData topic="@demo1" v-slot="{ length }">
-      <VBtn @click="topicChatMain = '@demo1'">@demo1 [{{ length }}]</VBtn>
-    </ProvideChatData>
-    <VBtn @click="topicChatMain = undefined">clear</VBtn>
+     <div class="d-flex">
+      <VForm @submit.prevent="ok" class="w-[550px] mx-auto">
+        <VTextarea clearable v-model="text$" variant="outlined" />
+        <VBtn type="submit">ok</VBtn>
+      </VForm>
+    </div>
   </section>
 </template>
 <style lang="scss" scoped>

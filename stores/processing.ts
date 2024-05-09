@@ -3,11 +3,11 @@ export const useStoreAppProcessing = defineStore("appProcessing", () => {
     key: { APP_PROCESSING },
   } = useAppConfig();
   const appProcessing$ = useGlobalFlag(APP_PROCESSING);
-  const watchAll$ = ref<Ref[]>([]);
+  const watchAll$ = ref<any[]>([]);
   const processing = computed(() =>
     some(watchAll$.value, (w$) => !!toValue(w$))
   );
-  const addWatch = (...args: Ref[]) => {
+  const addWatch = (...args: any[]) => {
     watchAll$.value.push(...args);
   };
   watchEffect(() => {

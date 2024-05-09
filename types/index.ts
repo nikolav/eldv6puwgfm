@@ -136,6 +136,9 @@ export interface ICompanyProfile {
   pin?: string | undefined;
   slug?: string | undefined;
   avatar?: IStorageFileDataSaved;
+  firstName?: string | undefined;
+  lastName?: string | undefined;
+  userNote?: string | undefined;
 }
 
 export interface IUser {

@@ -49,6 +49,7 @@ export const useDoc = <TDoc = Record<string, any>>(
     if (!enabled$.value) return;
     // update clone
     const newData_ = batchSet(get(data$.value, "data"), putData);
+    // console.log({ newData_ })
     await mutateDocUpsert({ data: newData_, doc_id });
   };
 
@@ -57,6 +58,10 @@ export const useDoc = <TDoc = Record<string, any>>(
       ? `${useAppConfig().io.IOEVENT_DOC_CHANGE_prefix}${doc_id}`
       : ""
   );
+
+  const { watchProcessing } = useStoreAppProcessing();
+  watchProcessing(loading);
+
   watchEffect(() => {
     useIOEvent(ioEvent$.value, reload);
   });

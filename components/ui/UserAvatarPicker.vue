@@ -1,26 +1,25 @@
 <script setup lang="ts">
-import type { ICompanyProfile } from "@/types";
+import type { IAuthProfile } from "@/types";
 // defs
 const {
-  docs: { TAG_COMPANY_PROFILE_prefix },
-  key: { APP_PROCESSING },
   app: { DEFAULT_NO_IMAGE },
 } = useAppConfig();
 const auth = useStoreApiAuth();
 
 // flags
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const togglePickAvatarMenu = useToggleFlag();
 
 // refs
 const file = ref();
 
 // utils
+const { watchProcessing } = useStoreAppProcessing();
 const {
   files,
   open: fileDialogOpen,
   reset: fileDialogReset,
 } = useFileDialog({ accept: "image/*" });
+const { authProfile } = useTopics();
 
 // stores
 const {
@@ -28,15 +27,13 @@ const {
   commit: profileCommit,
   // debug
   data: profileData,
-} = useDoc<ICompanyProfile>(
-  `${TAG_COMPANY_PROFILE_prefix}${get(auth.user$, "id")}`
-);
+} = useDoc<IAuthProfile>(authProfile(get(auth.user$, "id")));
 const {
   loading: fsLoading,
   upload,
-  publicUrl,
   uploadStatus: upl,
   remove: fsRemove,
+  publicUrl,
 } = useApiStorage();
 
 // computed
@@ -80,10 +77,9 @@ const avatarSave = async () => {
 watchEffect(() => {
   file.value = first(files.value);
 });
-watchEffect(() => {
-  appProcessing$.value =
-    upl.processing.value || profileUpdating.value || fsLoading.value;
-});
+watchProcessing(
+  () => upl.processing.value || profileUpdating.value || fsLoading.value
+);
 watch(avatarCurrent, (url) => {
   if (url) {
     fileDialogReset();
