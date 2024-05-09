@@ -25,8 +25,8 @@ const { authProfile } = useTopics();
 const {
   loading: profileUpdating,
   commit: profileCommit,
-  // debug
   data: profileData,
+  reload: profileReolad,
 } = useDoc<IAuthProfile>(authProfile(get(auth.user$, "id")));
 const {
   loading: fsLoading,
@@ -34,30 +34,35 @@ const {
   uploadStatus: upl,
   remove: fsRemove,
   publicUrl,
+  IO,
 } = useApiStorage();
 
 // computed
 const avatarFileIdCurrent = computed(() =>
   get(profileData.value, "data.avatar.data.file_id")
 );
+// calc url
 const avatarCurrent = ref();
 watchEffect(() => {
   avatarCurrent.value = publicUrl(avatarFileIdCurrent.value);
 });
 
 // helpers
-const avatarRemove = async () => {
-  if (!avatarCurrent.value) return;
+const avatarRemove_ = async () => {
   await fsRemove(avatarFileIdCurrent.value);
+  await profileCommit({
+    avatar: {},
+  });
+};
+const avatarRemove = async () => {
+  if (!avatarFileIdCurrent.value) return;
+  await avatarRemove_();
 };
 const avatarSave = async () => {
   if (!file.value) return;
   try {
-    if (avatarCurrent.value) {
-      await fsRemove(avatarCurrent.value);
-      await profileCommit({
-        avatar: {},
-      });
+    if (avatarFileIdCurrent.value) {
+      await avatarRemove_();
     }
     const res = await upload({
       avatar: { file: file.value },
