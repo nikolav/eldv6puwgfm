@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import {
-  AppBarMain,
-  CartOpenBadgePrimary,
-} from "@/components/app";
+import { AppBarMain, CartOpenBadgePrimary } from "@/components/app";
 import { MainSearchBox } from "@/components/ui";
 import { PRODUCTION$ } from "@/config";
 import { useDisplay } from "vuetify";
@@ -16,9 +13,6 @@ const {
 const search_ = ref("");
 
 // helpers
-const submitSearch = () => {
-  console.log({ search: search_.value });
-};
 const debounceSearchHandle = debounce((term) => {
   if (!term) return;
   console.log({ term });
@@ -40,8 +34,10 @@ watch(search_, debounceSearchHandle);
 </script>
 
 <template>
-  <section class="layout--default" :style="`padding-top: ${appBarHeight}px`">
-
+  <section
+    class="layout--default *bg-blue"
+    :style="`padding-top: ${appBarHeight}px`"
+  >
     <!-- @cart:button -->
     <CartOpenBadgePrimary
       :badge-offset="9"
@@ -123,12 +119,9 @@ watch(search_, debounceSearchHandle);
     </VSheet>
 
     <!-- @page:main -->
-    <VMain>
+    <VMain class="*bg-blue *pt-0">
       <slot>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sit
-          aspernatur ab dolores!
-        </p>
+        <p>Lorem!</p>
       </slot>
     </VMain>
   </section>

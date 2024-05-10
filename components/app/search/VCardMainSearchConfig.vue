@@ -4,23 +4,22 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { emojify } from "node-emoji";
+import type { IProduct } from "@/types";
 import districtsSerbia from "~/assets/districts-serbia.json";
-import { API_URL } from "@/config";
+
 // defs
 const props = defineProps<{
   close: () => void;
 }>();
 const {
-  app: { DEFAULT_TRANSITION },
+  key: { PRODUCTS_SEARCH },
   products: { categories, searchSortBy },
 } = useAppConfig();
 
-const auth = useStoreApiAuth();
-
 // utils
-// const search$$ = useStoreSearchConfig();
+
 // form
+const { query$, products: productsSearchResult } = useQueryProductsSearch();
 const {
   form,
   submit: searchFormSubmit,
@@ -36,22 +35,28 @@ const {
     sortBy: True,
   },
   {
-    onSubmit: async (data) => {
-      const url = `${trim(API_URL, "/")}/test`;
-      console.log({ data });
-      console.log({ url });
-      const res = await $fetch(url, {
-        method: "post",
-        body: data,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${auth.token$}`,
-        },
-      });
-      console.log({ res });
+    onSubmit: (data) => {
+      console.log({ "searching:products": data });
+      query$.value = data;
     },
   }
 );
+
+// global cache
+const productsSearchResutlt$ = useState(PRODUCTS_SEARCH, () => ({
+  key: 0,
+  products: <IProduct[]>[],
+}));
+onceMountedOn(true, () => {
+  watch(productsSearchResult, async (products) => {
+    productsSearchResutlt$.value = {
+      key: Date.now(),
+      products,
+    };
+    await navigateTo({ name: "pretraga-proizvoda" });
+    await nextTick(() => setTimeout(props.close, 122));
+  });
+});
 
 // @@eos
 </script>

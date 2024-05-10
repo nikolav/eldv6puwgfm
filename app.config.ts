@@ -148,6 +148,7 @@ export default defineAppConfig({
   },
   //
   key: {
+    PRODUCTS_SEARCH: "U4HCatxcgs",
     APP_MOUNTED: "Zkcmk4BnXHU",
     APP_PROCESSING: "FlaelfhZddK",
     AUTH_CREDS: "pafer98hf",
@@ -204,8 +205,8 @@ export default defineAppConfig({
   },
   //
   graphql: {
-    // ~5min autoreload
-    STORAGE_QUERY_POLL_INTERVAL: 345678,
+    // ~10min autoreload*
+    STORAGE_QUERY_POLL_INTERVAL: 712345,
   },
   //
   stores: {

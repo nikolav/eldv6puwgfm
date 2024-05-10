@@ -57,6 +57,7 @@ const search$$ = useStoreSearchConfig();
 
       <!-- @@demo.dev -->
       <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
+      <NuxtLink :to="{ name: 'pretraga-proizvoda' }">-rez</NuxtLink>
     </VAppBarTitle>
 
     <template #append>

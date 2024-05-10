@@ -327,3 +327,30 @@ export const Q_ordersProducts = gql`
     }
   }
 `;
+
+export const Q_productsSearch = gql`
+  query q_productsSearch($query: JsonData) {
+    productsSearch(query: $query) {
+      id
+      name
+      price
+      price_history
+      description
+      stockType
+      stock
+      onSale
+      user_id
+      user {
+        id
+        email
+        created_at
+        updated_at
+      }
+      tags
+      docs
+      created_at
+      updated_at
+    }
+  }
+`;
+
