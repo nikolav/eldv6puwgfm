@@ -31,6 +31,7 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconProductSearch,
   IconSearchSettings,
   IconMegaphone,
   IconStarCircle,
@@ -250,6 +251,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iIconProductSearch: IconProductSearch,
         iconSearchSettings: IconSearchSettings,
         iconMegaphone: IconMegaphone,
         iconStarCircle: IconStarCircle,

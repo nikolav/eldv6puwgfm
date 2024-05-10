@@ -61,7 +61,7 @@ const search$$ = useStoreSearchConfig();
 
     <template #append>
       <VBtn :id="search$$.BUTTON_ID" icon variant="text" color="primary">
-        <VIcon icon="$iconSearchSettings" :size="34" />
+        <VIcon icon="$iconSearchSettings" :size="32" />
         <VTooltip
           location="bottom"
           open-delay="345"
@@ -70,21 +70,22 @@ const search$$ = useStoreSearchConfig();
         />
         <VMenu
           activator="parent"
-          class="*w-full backdrop-blur-[2px] position-fixed z-[1]"
+          class="*backdrop-blur-[2px] *position-fixed z-[1]"
           :transition="DEFAULT_TRANSITION"
           location="bottom"
-          :offset="[-22, 0]"
-          scrim="white"
+          :offset="[-36, 12]"
           :close-on-content-click="false"
+          width="640"
+          min-height="480"
         >
           <template #default="{ isActive }">
             <VCardMainSearchConfig
+              class="!bg-stone-50"
               :close="
                 () => {
                   isActive.value = false;
                 }
               "
-              class="*!bg-stone-50 pa-4"
             />
           </template>
         </VMenu>

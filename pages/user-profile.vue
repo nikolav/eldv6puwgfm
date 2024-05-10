@@ -73,8 +73,7 @@ onceMountedOn(profile, resetFieldsFromStore);
 <template>
   <section class="page--user-profile">
     <VSnackbarStatusMessage v-model="toggleFormUploadStatus.isActive.value">
-      <strong style="font-size: 133%">👌🏻</strong> Profil je uspešno
-      sačuvan.
+      <strong style="font-size: 133%">👌🏻</strong> Profil je uspešno sačuvan.
     </VSnackbarStatusMessage>
     <VForm
       @submit.prevent="submit"
