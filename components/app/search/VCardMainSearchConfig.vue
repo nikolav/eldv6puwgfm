@@ -28,6 +28,7 @@ const {
     district: True,
     category: True,
     priceMax: True,
+    sortBy: True,
   },
   {
     onSubmit: (data) => {
@@ -50,9 +51,9 @@ const {
       variant="elevated"
       elevation="10"
       v-bind="$attrs"
-      class="*pa-3 border-primary border-opacity-100"
+      class="bg-image--search-config-01 *pa-3 border-primary border-opacity-100"
     >
-      <VCardItem class="ps-5">
+      <VCardItem class="ps-5 pt-4">
         <VCardTitle>
           <h4
             class="d-inline-block scale-[91%] ms-1 text-h4 !font-sans opacity-50 font-italic"
@@ -91,7 +92,7 @@ const {
               center-affix
               clearable
               label="Kategorija"
-              variant="solo-filled"
+              variant="plain"
               :items="categories"
             />
             <VSelect
@@ -100,9 +101,17 @@ const {
               center-affix
               clearable
               label="Okrug"
-              variant="solo-filled"
+              variant="plain"
               :items="districtsSerbia"
-            />
+            >
+              <template #item="{ item, props }">
+                <VListSubheader
+                  v-if="item.raw.subheader"
+                  :title="item.raw.title"
+                />
+                <VListItem v-bind="props" v-else :title="item.raw.title" />
+              </template>
+            </VSelect>
           </div>
           <div class="grid grid-cols-[1fr,1fr] gap-5 items-end mt-5">
             <VTextField
@@ -118,7 +127,7 @@ const {
               type="number"
             />
             <VSelect
-              v-model.number="form.priceMax.value"
+              v-model.number="form.sortBy.value"
               center-affix
               clearable
               name="sort"
@@ -163,7 +172,14 @@ const {
           <span>Poništi</span>
         </VBtn>
         <VSpacer />
-        <VBtn class="px-6" size="x-large" color="primary" variant="elevated">
+        <VBtn
+          type="submit"
+          class="px-6"
+          size="x-large"
+          color="primary"
+          variant="elevated"
+          rounded
+        >
           <VIcon
             class="opacity-60"
             size="large"
@@ -179,4 +195,9 @@ const {
   </VForm>
 </template>
 <style lang="scss" scoped>
+.bg-image--search-config-01 {
+  background: white url("~/assets/images/bg-serbia-03.png");
+  background-size: cover;
+  background-position-x: 8%;
+}
 </style>

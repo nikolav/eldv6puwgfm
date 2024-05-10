@@ -94,7 +94,7 @@ const search$$ = useStoreSearchConfig();
       <VBtn
         v-if="!auth.isAuth$ || auth.isDefault$"
         :to="{ name: 'auth-login' }"
-        class="text-none group/auth fill-height"
+        class="text-none group/auth fill-height ms-5"
         color="primary-darken-1"
         rounded="0"
       >
