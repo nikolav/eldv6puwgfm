@@ -109,10 +109,13 @@ export default defineAppConfig({
         title: "💰 Najskuplje",
         value: 2,
       },
-
       {
         title: "🌟 Najbolja ocena",
         value: 3,
+      },
+      {
+        title: "🏆 Popularno",
+        value: 8,
       },
       {
         title: "👍🏻 Pozitivno",

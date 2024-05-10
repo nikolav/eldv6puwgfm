@@ -7,16 +7,31 @@ import { useDisplay } from "vuetify";
 // defs
 const {
   layout: { appBarHeight },
+  key: { PRODUCTS_SEARCH },
 } = useAppConfig();
 
 // refs, computes
 const search_ = ref("");
 
 // helpers
-const debounceSearchHandle = debounce((term) => {
-  if (!term) return;
-  console.log({ term });
+//  handle product text searches
+const productsSearchResutlt$ = useState(PRODUCTS_SEARCH);
+const { query$, products: productsSearchResult } = useQueryProductsSearch();
+const debounceSearchHandle = debounce((value) => {
+  const q = value ? { text: String(value).trim() } : undefined;
+  if (!q) return;
+  console.log({ "searching:products:text-search": q });
+  query$.value = q;
 }, 789);
+onceMountedOn(true, () => {
+  watch(productsSearchResult, async (products) => {
+    productsSearchResutlt$.value = {
+      key: Date.now(),
+      products,
+    };
+    await navigateTo({ name: "pretraga-proizvoda" });
+  });
+});
 
 // utils
 const { xs } = useDisplay();

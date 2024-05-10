@@ -21,12 +21,12 @@ const products = computed<IProduct[]>(() => get(res.value, "products") || []);
     <div class="ps-5 *bg-red">
       <VCardTitle class="d-flex items-center gap-8 ms-2">
         <VBadge
-          color="primary-lighten-1"
+          color="primary"
           v-if="products?.length"
           :content="products.length"
           class="scale-[122%]"
         />
-        <h2 class="text-h5 !font-sans">
+        <h2 class="text-h5 !font-sans font-italic opacity-75">
           <span v-if="1 < products?.length">
             Proizvoda odgovaraju pretrazi:
           </span>
