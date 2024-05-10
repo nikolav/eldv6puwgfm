@@ -4,15 +4,19 @@ export default {
 };
 </script>
 <script setup lang="ts">
+import { emojify } from "node-emoji";
 import districtsSerbia from "~/assets/districts-serbia.json";
+import { API_URL } from "@/config";
 // defs
 const props = defineProps<{
   close: () => void;
 }>();
 const {
   app: { DEFAULT_TRANSITION },
-  products: { categories },
+  products: { categories, searchSortBy },
 } = useAppConfig();
+
+const auth = useStoreApiAuth();
 
 // utils
 // const search$$ = useStoreSearchConfig();
@@ -25,14 +29,26 @@ const {
   "CCPC6684VsHx0IQ0e",
   {
     text: True,
+    limit: True,
     district: True,
     category: True,
     priceMax: True,
     sortBy: True,
   },
   {
-    onSubmit: (data) => {
+    onSubmit: async (data) => {
+      const url = `${trim(API_URL, "/")}/test`;
       console.log({ data });
+      console.log({ url });
+      const res = await $fetch(url, {
+        method: "post",
+        body: data,
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${auth.token$}`,
+        },
+      });
+      console.log({ res });
     },
   }
 );
@@ -77,15 +93,30 @@ const {
       <!-- @@search:fields -->
       <VCardText>
         <VCol class="pa-4 *bg-green-100 space-y-4">
-          <VTextField
-            v-model="form.text.value"
-            center-affix
-            hide-spin-buttons
-            clearable
-            name="text"
-            variant="underlined"
-            label="Sadrži text"
-          />
+          <div class="grid grid-cols-[2fr,1fr] gap-5">
+            <VTextField
+              v-model="form.text.value"
+              placeholder="meso, kajmak, dobra, mile, izuva"
+              center-affix
+              hide-spin-buttons
+              clearable
+              name="text"
+              variant="underlined"
+              label="Sadrži text"
+            />
+            <VTextField
+              v-model.number="form.limit.value"
+              placeholder="10"
+              center-affix
+              hide-spin-buttons
+              name="limit_max"
+              variant="plain"
+              label="Najviše"
+              prefix="#  "
+              suffix="Proizvoda"
+              type="number"
+            />
+          </div>
           <div class="grid grid-cols-[1fr,1fr] gap-5">
             <VSelect
               v-model="form.category.value"
@@ -116,6 +147,7 @@ const {
           <div class="grid grid-cols-[1fr,1fr] gap-5 items-end mt-5">
             <VTextField
               v-model.number="form.priceMax.value"
+              placeholder="4999"
               center-affix
               hide-spin-buttons
               clearable
@@ -131,30 +163,9 @@ const {
               center-affix
               clearable
               name="sort"
-              variant="underlined"
+              variant="plain"
               label="Poređaj po"
-              :items="[
-                {
-                  title: '🙂 Najjeftinije',
-                  value: 0,
-                },
-                {
-                  title: '💰 Najskuplje',
-                  value: 1,
-                },
-                {
-                  title: '🌟 Najbolja ocena',
-                  value: 2,
-                },
-                {
-                  title: '👍🏻 Pozitivno',
-                  value: 3,
-                },
-                {
-                  title: '🔊 Najvise komentara',
-                  value: 4,
-                },
-              ]"
+              :items="searchSortBy"
             />
           </div>
         </VCol>

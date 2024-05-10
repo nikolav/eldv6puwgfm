@@ -100,8 +100,40 @@ export default defineAppConfig({
         value: `${PRODUCT_CATEGORY_prefix}zanat`,
       },
     ],
+    searchSortBy: [
+      {
+        title: "👌🏻 Najjeftinije",
+        value: 1,
+      },
+      {
+        title: "💰 Najskuplje",
+        value: 2,
+      },
+
+      {
+        title: "🌟 Najbolja ocena",
+        value: 3,
+      },
+      {
+        title: "👍🏻 Pozitivno",
+        value: 4,
+      },
+      {
+        title: "✨ Novo",
+        value: 5,
+      },
+      {
+        title: "⌛ Staro",
+        value: 6,
+      },
+      {
+        title: "🔊 Najvise komentara",
+        value: 7,
+      },
+    ],
   },
   docs: {
+    LIKEDISLIKE_CACHE_ID: "4OpsEOLNYG1wuF64OhBr",
     CHAT_ORDER_COM_USER_prefix: "e5iT1p1Mmx5HD@",
     COM_PHOTOS_prefix: "@com:photos:",
     LIKES_preix: "@likes:",
