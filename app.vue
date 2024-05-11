@@ -60,7 +60,7 @@ watch(
 
       // # redirect to index if auth updated at login pages
       if (["auth-register", "auth-login"].includes(String(route.name)))
-        return await navigateTo({ name: "index" });
+        await navigateTo({ name: "index" });
 
       // break
       return;
@@ -88,8 +88,6 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
 
 <template>
   <VApp :theme="theme" id="app-main">
-    
-
     <!-- @@chat:main -->
     <TopicChatSidebarMain />
 

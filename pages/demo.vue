@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
+import { SerbiaMapSVG } from "@/components/app";
 // import {
 //   GoogleAuthProvider,
 //   FacebookAuthProvider,
@@ -22,7 +23,10 @@ definePageMeta({
 // const facebookAuth = () => signInWithPopup(fbAuth, new FacebookAuthProvider());
 
 // const toggle = useToggleFlag();
-const { profile, avatar } = useProfileData(3)
+// const { profile, avatar } = useProfileData(3);
+
+const district$ = ref();
+
 // #eos
 </script>
 <template>
@@ -33,7 +37,14 @@ const { profile, avatar } = useProfileData(3)
     <VBtn @click="facebookAuth">auth:facebook</VBtn>
     <VBtn @click="signOut(fbAuth)">logout</VBtn> -->
     <hr />
-    <Dump :data="{ avatar }" />
+    <VSheet
+      elevation="1"
+      rounded="lg"
+      class="mx-auto pa-4 d-flex items-center justify-center w-fit"
+    >
+      <SerbiaMapSVG v-model="district$" class="h-[512px]" />
+    </VSheet>
+    <Dump :data="{ district: district$ }" />
   </section>
 </template>
 <style lang="scss" scoped>

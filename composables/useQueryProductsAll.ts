@@ -17,6 +17,7 @@ export const useQueryProductsAll = () => {
     queryStart();
     await nextTick(reload);
   });
+
   const productsChanged$ = useGlobalVariable(PRODUCTS_CHANGE);
   watchEffect(async () => {
     if (productsChanged$.value) await reload();
