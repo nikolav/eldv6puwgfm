@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import type { IOrdersProducts } from "@/types";
+import type { IOrdersProducts, IOrder } from "@/types";
+import { ProductPriceInline } from "@/components/app";
 
-const props = defineProps<{ product: IOrdersProducts }>();
+const props = defineProps<{
+  order: IOrder | undefined;
+  product: IOrdersProducts;
+}>();
 
 const {
   docs: { PRODUCT_IMAGES },
@@ -10,6 +14,7 @@ const {
 
 const { data: docsImages$ } = useDocs(`${PRODUCT_IMAGES}${props.product.id}`);
 
+const { $productPriceForOrder } = useNuxtApp();
 // #eos
 </script>
 <template>
@@ -30,14 +35,13 @@ const { data: docsImages$ } = useDocs(`${PRODUCT_IMAGES}${props.product.id}`);
         <VCol sm="7">
           <VCardTitle class="text-truncate">
             {{ props.product.name }}
-            <pre class="opacity-50 d-inline text-disabled font-italic">
-#{{ props.product.id }}</pre
-            >
           </VCardTitle>
-          <VCardSubtitle>
-            Zaliha: {{ props.product.stock }} {{ props.product.stockType }}
+          <VCardSubtitle class="mt-1"
+            >Cena:
+            <ProductPriceInline
+              :price="$productPriceForOrder(props.order, props.product)"
+            />
           </VCardSubtitle>
-          <VCardSubtitle>Cena: {{ props.product.price }} din</VCardSubtitle>
         </VCol>
         <VCol
           sm="3"

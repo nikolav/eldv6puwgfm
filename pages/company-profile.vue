@@ -70,7 +70,11 @@ const user_ = computed(() =>
       })
     : undefined
 );
-const { avatar: avatarUrl, fullName } = useProfileData(() => user_.value?.id);
+const {
+  avatar: avatarUrl,
+  fullName,
+  profile: profileUser,
+} = useProfileData(() => user_.value?.id);
 const topicChatOrderUser$ = computed(() =>
   chatOrder(orderActive$.value, get(auth.user$, "id"), user_.value?.id)
 );
@@ -89,6 +93,7 @@ watchEffect(() => {
   orderActive$.value = get(orders_.value, "[0].id");
 });
 
+const toggleUserInfoActive = useToggleFlag();
 // #eos
 </script>
 <template>
@@ -199,23 +204,65 @@ watchEffect(() => {
                 <template #default="{ items }">
                   <div class="space-y-1 px-2 my-2">
                     <div class="d-flex justify-between items-center">
-                      <p class="ps-5">
-                        <!-- @@ -->
-                        <AvatarThumb
-                          :size="32"
-                          :force="avatarUrl"
-                          v-if="avatarUrl"
-                        />
-                        <span
-                          v-else
-                          class="!font-sans text-body-1 font-italic text-medium-emphasis"
-                          >Poručio:
-                        </span>
-                        <span
-                          class="align-bottom ms-1 text-body-1 opacity-90 font-italic !font-sans"
-                          >{{ fullName || emailStartByUserId(user_?.id) }}</span
-                        >
-                      </p>
+                      <VMenu
+                        open-on-hover
+                        open-delay="345"
+                        max-width="480"
+                        min-height="256"
+                        :close-on-content-click="false"
+                      >
+                        <VSheet>
+                          <VCardText class="d-flex items-start gap-5">
+                            <div class="space-y-4">
+                              <p>
+                                <a
+                                  class="text-info link--prominent-base"
+                                  :href="`mailto:${user_?.email}`"
+                                  >{{ user_?.email }}</a
+                                >
+                              </p>
+                              <p v-if="profileUser?.phone">
+                                <a
+                                  class="text-info link--prominent-base"
+                                  :href="`tel:${profileUser.phone}`"
+                                  >{{ profileUser.phone }}</a
+                                >
+                              </p>
+                            </div>
+                            <p
+                              v-if="profileUser?.userNote"
+                              class="line-clamp-6 text-body-2 !font-sans text-medium-emphasis"
+                            >
+                              {{ profileUser.userNote }}
+                            </p>
+                          </VCardText>
+                        </VSheet>
+                        <template #activator="{ props: props_ }">
+                          <p
+                            v-bind="props_"
+                            class="ps-5 pa-1 position-relative"
+                          >
+                            <!-- @@ -->
+                            <AvatarThumb
+                              :size="42"
+                              :force="avatarUrl"
+                              v-if="avatarUrl"
+                              class="cursor-pointer"
+                            />
+                            <span
+                              v-else
+                              class="!font-sans text-body-1 font-italic text-medium-emphasis"
+                              >Poručio:
+                            </span>
+                            <span
+                              class="align-bottom ms-1 text-body-1 opacity-90 font-italic !font-sans"
+                              >{{
+                                fullName || emailStartByUserId(user_?.id)
+                              }}</span
+                            >
+                          </p>
+                        </template>
+                      </VMenu>
                       <p class="text-end pe-4 my-4">
                         <span
                           class="!font-sans text-body-1 font-italic text-medium-emphasis"
@@ -237,6 +284,7 @@ watchEffect(() => {
                     </div>
                     <div class="__placer__ space-y-2">
                       <OrdersProduct
+                        :order="order_"
                         v-for="p in items"
                         :key="p.raw.id"
                         :product="p.raw"

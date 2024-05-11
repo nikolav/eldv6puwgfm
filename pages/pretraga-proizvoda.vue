@@ -33,7 +33,7 @@ const products = computed<IProduct[]>(() => get(res.value, "products") || []);
           <span v-else-if="1 == products?.length">
             Proizvod odgovara pretrazi:
           </span>
-          <span v-else>Nisu pronađeni takvi proivodi.</span>
+          <span v-else>Nisu pronađeni takvi proizvodi.</span>
         </h2>
       </VCardTitle>
       <VDivider class="border-opacity-75" length="88%" />

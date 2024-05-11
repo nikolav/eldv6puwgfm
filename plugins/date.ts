@@ -22,8 +22,8 @@ dayjs.locale("sr");
 export default defineNuxtPlugin(() => {
   const formated_DMMMYYYY = (d: string) => dayjs(d).format("D. MMMM YYYY.");
   const productPriceForOrder = (
-    order: OrNoValue<IOrderReceived>,
-    p: OrNoValue<IProduct>
+    order: IOrderReceived | undefined,
+    p: IProduct
   ) => {
     if (!p) return;
     // assumes product belongs to provided order

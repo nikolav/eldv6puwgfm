@@ -12,12 +12,12 @@ const props = defineProps<{
   close: () => void;
 }>();
 const {
-  key: { APP_PROCESSING, ORDER_ID },
+  key: { ORDER_ID },
 } = useAppConfig();
 
 // refs
 const ID$ = useGlobalVariable(ORDER_ID);
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+const { watchProcessing } = useStoreAppProcessing();
 
 // stores
 const auth = useStoreApiAuth();
@@ -54,9 +54,7 @@ const lHeight = computed(() => height.value - CALC_HEIGHT_PRODUCTS_LIST_OFFSET);
 const email_ = computed(() => get(auth.user$, "email"));
 
 // watches
-watchEffect(() => {
-  appProcessing$.value ||= cart.loading;
-});
+watchProcessing(() => cart.loading);
 watch(ID$, async (oid) => {
   console.log({ "order-placed-id": oid });
 

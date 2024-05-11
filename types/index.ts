@@ -193,7 +193,7 @@ export interface IOrderPlaced extends IOrder {
 export interface IOrdersProducts {
   amount: number;
   id: number;
-  user_id?: OrNoValue<number>;
+  user_id: number;
   user?: IUser;
   name: string;
   price?: OrNoValue<number>;
