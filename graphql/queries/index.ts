@@ -160,6 +160,12 @@ export const Q_productsListPopular = gql`
       stock
       onSale
       tags
+      user {
+        id
+        email
+        created_at
+        updated_at
+      }
       created_at
       updated_at
     }

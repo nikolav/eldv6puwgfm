@@ -56,8 +56,8 @@ const search$$ = useStoreSearchConfig();
       </strong>
 
       <!-- @@demo.dev -->
-      <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
-      <NuxtLink :to="{ name: 'pretraga-proizvoda' }">-rez</NuxtLink>
+      <!-- <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
+      <NuxtLink :to="{ name: 'pretraga-proizvoda' }">-rez</NuxtLink> -->
     </VAppBarTitle>
 
     <template #append>
@@ -119,7 +119,7 @@ const search$$ = useStoreSearchConfig();
           variant="text"
           icon
           color="primary"
-          class="ms-8"
+          class="ms-6"
         >
           <VIcon icon="$iconStoreFront" size="35" />
           <VTooltip activator="parent" location="bottom" open-delay="345">
@@ -175,7 +175,7 @@ const search$$ = useStoreSearchConfig();
           size="small"
           class="ms-2"
         >
-          <VIcon icon="$iconMegaphone" :size="24" class="opacity-90" />
+          <VIcon icon="$iconMegaphone" :size="32" />
         </VBtn>
       </template>
     </template>
