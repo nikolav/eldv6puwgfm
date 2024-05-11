@@ -1,17 +1,22 @@
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
+    baseColor: any;
+    baseOpacity: number;
     colorActive: any;
+    //
     delay: number;
-    modelValue?: string | undefined;
+    hoverDistrict?: string;
   }>(),
   {
+    baseColor: "currentColor",
     colorActive: "red",
+    baseOpacity: 0.75,
     delay: 122,
   }
 );
 const emit = defineEmits<{
-  (e: "update:modelValue", district: string): void;
+  (e: "update:hoverDistrict", district: string): void;
   (e: "click:district", districtName: string): void;
 }>();
 
@@ -142,7 +147,7 @@ const values = {
 </script>
 <template>
   <svg viewBox="0 0 668.9 977.6" xmlns="http://www.w3.org/2000/svg">
-    <g fill="currentColor" fill-opacity=".75">
+    <g :fill="props.baseColor" :fill-opacity="props.baseOpacity">
       <VHover
         v-for="(data, field) in values"
         :open-delay="props.delay"
@@ -154,7 +159,7 @@ const values = {
             v-bind="props"
             :d="data.d"
             :fill-opacity="isHovering ? 1 : undefined"
-            @mouseover="$emit('update:modelValue', data.value)"
+            @mouseover="$emit('update:hoverDistrict', data.value)"
             @click="$emit('click:district', data.value)"
             class="cursor-pointer"
           />
