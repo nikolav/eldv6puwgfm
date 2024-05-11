@@ -354,3 +354,10 @@ export const Q_productsSearch = gql`
   }
 `;
 
+export const Q_productsTotalAmountOrdered = gql`
+  query q_productsTotalAmountOrdered($pid: ID!) {
+    productsTotalAmountOrdered(pid: $pid) {
+      amount
+    }
+  }
+`;

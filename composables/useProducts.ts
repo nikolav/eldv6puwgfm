@@ -54,6 +54,9 @@ export const useProducts = (ID?: any) => {
     if (enabled$.value) return await mutateProductsRemove({ id });
   };
 
+  const { watchProcessing } = useStoreAppProcessing();
+  watchProcessing(loading);
+
   // @io/listen
   watchEffect(() => useIOEvent(ioEvent$.value, reload));
 

@@ -5,6 +5,13 @@ import {
   ProductsEdit,
   ChatRenderSimpleList,
   ChatControllsBasic,
+  LightboxProductImages,
+  ProvideProductLikeDislikeTopic,
+  LikeDislikeStatus,
+  ProvideProductMessagesCount,
+  ProvideProductRatingTopic,
+  TopicRatingStatus,
+  ProvideProductsTotalAmountOrdered,
 } from "@/components/app";
 import { useDisplay } from "vuetify";
 
@@ -18,25 +25,18 @@ useHead({
 });
 
 const {
-  key: { PRODUCT_SELECTED, APP_PROCESSING, TOPIC_CHAT_PRODUCTS_prefix },
+  key: { PRODUCT_SELECTED },
   app: { DEFAULT_TRANSITION },
-  docs: { PRODUCT_IMAGES },
   products: { perPage },
-  urls: { productPages, appPublic, QUERY },
 } = useAppConfig();
 
 const { smAndUp, width, xs } = useDisplay();
 
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
 const {
   products: products$,
   remove: productsRemove,
   reload: productsReload,
-  loading: productsProcessing,
 } = useProducts();
-watchEffect(() => {
-  appProcessing$.value = productsProcessing.value;
-});
 
 const toggleProductAdd = useToggleFlag();
 const toggleProductsEdit = useToggleFlag();
@@ -58,49 +58,21 @@ const selectedProduct$ = computed({
 const product_ = computed(() =>
   find(products$.value, { id: selectedProduct$.value })
 );
+const { productChat } = useTopics();
 const channelProductChat = computed(() =>
-  product_.value
-    ? `${TOPIC_CHAT_PRODUCTS_prefix}${get(product_.value, "id")}`
-    : ""
+  productChat(get(product_.value, "id"))
 );
 const {
-  topic$: topicChat$,
   data: dataProductChat,
   remove: productChatRemoveMessage,
-  loading: productChatLoading,
   length: productChatLength,
-} = useDocs<ITopicChatMessage>();
-watchEffect(() => {
-  appProcessing$.value = productChatLoading.value;
-});
-watchEffect(() => {
-  topicChat$.value = channelProductChat.value;
-});
+} = useDocs<ITopicChatMessage>(channelProductChat);
 const chat = computed(() => docsSortedDesc(dataProductChat.value));
 
 onMounted(() => {
   selectedProduct$.value = null;
 });
 const productIsSelected = (id: number) => id === selectedProduct$.value;
-
-const { topic$, data: productImages$ } = useDocs();
-watch(selectedProduct$, (pid) => {
-  if (!pid) return;
-  topic$.value = `${PRODUCT_IMAGES}${pid}`;
-});
-
-const { publicUrl } = useApiStorage();
-const { $lightbox } = useNuxtApp();
-const showSelectedProductImages = () =>
-  $lightbox.open(
-    map(productImages$.value, (node) => {
-      return {
-        type: "image",
-        src: publicUrl(get(node, "data.file_id")),
-        caption: get(product_.value, "name"),
-      };
-    })
-  );
 
 const toggleScreenProductRemove = useToggleFlag();
 const submitProductsRemove = async () => {
@@ -109,9 +81,7 @@ const submitProductsRemove = async () => {
   const ID = selectedProduct$.value;
 
   try {
-    if (!isNumeric(ID)) throw "--error";
-    appProcessing$.value = true;
-    res = await productsRemove(Number(ID));
+    res = ID && (await productsRemove(ID));
   } catch (error) {
     // pass
   }
@@ -119,28 +89,18 @@ const submitProductsRemove = async () => {
   if (get(res, "data.productsRm.id")) {
     selectedProduct$.value = null;
   }
-  appProcessing$.value = false;
   toggleScreenProductRemove.off();
 };
 
 const statusToggleProductAdded = useToggleFlag();
 
-const productToSlug = () =>
-  words(get(product_.value, "name"))
-    .concat(get(product_.value, "id") || "")
-    .join("-")
-    .toLocaleLowerCase();
-const linkExternalProductPage = () => {
-  if (!product_.value) return;
-  return `${trimEnd(appPublic, "/")}/${trim(
-    productPages,
-    "/"
-  )}?${QUERY}=${encodeURIComponent(productToSlug())}`;
-};
+const ln = useProductPublicUrl(
+  () => get(product_.value, "id"),
+  () => get(product_.value, "name")
+);
 const goToPublicProductPage = async () => {
-  const ln = linkExternalProductPage();
-  if (!ln) return;
-  return await navigateTo(ln, {
+  if (!ln.value) return;
+  return await navigateTo(ln.value, {
     external: true,
     open: { target: "_blank" },
   });
@@ -306,6 +266,7 @@ const toggleChatControlls = useToggleFlag();
         :close="toggleProductsEdit.off"
       />
     </VDialog>
+
     <div class="px-2 px-sm-6 mt-2 mt-sm-4">
       <VPagination
         v-if="1 < paginationLength$"
@@ -318,12 +279,12 @@ const toggleChatControlls = useToggleFlag();
       />
 
       <!-- @@products:crud -->
-      <VCard max-width="812" class="mx-auto">
+      <VCard max-width="856" class="mx-auto" rounded="t-lg">
         <VToolbar height="48" color="primary" flat>
           <VToolbarTitle v-if="smAndUp">
             <VIcon start size="small" class="opacity-50" icon="$iconBoxes" />
             <strong class="ps-2 space-x-2">
-              <em>Lager</em>
+              <em class="opacity-75">Lager</em>
               <VBadge
                 v-if="0 < products$.length"
                 inline
@@ -357,21 +318,23 @@ const toggleChatControlls = useToggleFlag();
               />
             </VBtn>
             <!-- product.images -->
-            <VBtn
-              @click="showSelectedProductImages"
-              :disabled="
-                null == selectedProduct$ || !(0 < productImages$.length)
-              "
-              rounded="circle"
-              icon
-              ><VIcon icon="$iconImages" />
-              <VTooltip
-                open-delay="345"
-                activator="parent"
-                location="bottom"
-                text="Pogledaj slike..."
-              />
-            </VBtn>
+            <LightboxProductImages :product="product_">
+              <template #activator="{ onClick, disabled: disabled_ }">
+                <VBtn
+                  @click="onClick"
+                  :disabled="!selectedProduct$ || disabled_"
+                  rounded="circle"
+                  icon
+                  ><VIcon icon="$iconImages" />
+                  <VTooltip
+                    open-delay="345"
+                    activator="parent"
+                    location="bottom"
+                    text="Pogledaj slike..."
+                  />
+                </VBtn>
+              </template>
+            </LightboxProductImages>
             <!-- @@product public link -->
             <VBtn
               @click="goToPublicProductPage"
@@ -453,14 +416,39 @@ const toggleChatControlls = useToggleFlag();
           </template>
 
           <template #default="{ items: products }">
-            <VList density="comfortable" lines="one" color="primary-lighten-1">
+            <VListItem class="ps-1 !bg-stone-100 pa-0 ma-0">
+              <small class="font-mono opacity-30">Ref#</small>
+              <template #append>
+                <small
+                  class="min-w-[64px] text-center d-inline-flex flex-col items-center opacity-50 leading-tight pe-4"
+                  style="font-size: 72%"
+                >
+                  <span>ukupno</span>
+                  <span>poručeno</span>
+                </small>
+              </template>
+            </VListItem>
+            <VList
+              border="t"
+              class="!bg-stone-50 mt-0 pt-0 border-primary border-opacity-100"
+              density="comfortable"
+              lines="one"
+              color="primary-lighten-1"
+            >
               <VListItem
                 v-for="node in products"
                 :key="node.raw.id"
                 @click="selectedProduct$ = node.raw.id"
                 :active="node.raw.id == selectedProduct$"
+                class="ps-0"
               >
                 <template #prepend>
+                  <small
+                    style="font-size: 72%"
+                    class="opacity-40 font-mono min-w-[36px] ps-1 align-baseline"
+                  >
+                    #{{ node.raw.id }}
+                  </small>
                   <VIcon
                     size="large"
                     :color="
@@ -475,7 +463,52 @@ const toggleChatControlls = useToggleFlag();
                     "
                   />
                 </template>
-                <VListItemTitle> {{ node.raw.name }}</VListItemTitle>
+                <VListItemTitle class="*bg-red">
+                  {{ node.raw.name }}</VListItemTitle
+                >
+                <template #append>
+                  <div class="d-flex items-center gap-8 opacity-75">
+                    <ProvideProductRatingTopic
+                      :product="node.raw"
+                      v-slot="{ topic }"
+                    >
+                      <TopicRatingStatus class="scale-[91%]" :topic="topic" />
+                    </ProvideProductRatingTopic>
+                    <ProvideProductLikeDislikeTopic
+                      :product="node.raw"
+                      v-slot="{ topic: topic_ }"
+                    >
+                      <LikeDislikeStatus class="scale-[91%]" :topic="topic_" />
+                    </ProvideProductLikeDislikeTopic>
+                    <ProvideProductMessagesCount
+                      :product="node.raw"
+                      v-slot="{ count }"
+                    >
+                      <VBadge
+                        color="primary3"
+                        :content="count"
+                        class="opacity-30 scale-[88%]"
+                      >
+                        <strong>💬</strong>
+                      </VBadge>
+                    </ProvideProductMessagesCount>
+                    <ProvideProductsTotalAmountOrdered
+                      :product="node.raw"
+                      v-slot="{ amount }"
+                    >
+                      <small class="d-inline-block min-w-[64px] text-center">
+                        <strong
+                          style="font-size: 92% !important"
+                          class="text-body-2 !font-sans !font-bold"
+                          >{{ amount }}</strong
+                        >
+                        <span class="ms-[2px] opacity-50">{{
+                          node.raw.stockType
+                        }}</span>
+                      </small>
+                    </ProvideProductsTotalAmountOrdered>
+                  </div>
+                </template>
               </VListItem>
             </VList>
           </template>

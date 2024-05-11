@@ -72,6 +72,9 @@ export const useDocs = <TData = TDocData>(
       ? undefined
       : await mutateDocTags({ id, tags: argsTags }));
 
+  const { watchProcessing } = useStoreAppProcessing();
+  watchProcessing(loading);
+  
   // @io/listen
   watchEffect(() => useIOEvent(ioEvent$.value, reload));
 
