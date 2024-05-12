@@ -9,9 +9,16 @@ import {
   ProductImages,
   AddToCartButtonPrimary,
   ProductPublicUrl,
+  VChipDistrict,
 } from "@/components/app";
 import { LightboxImages } from "@/components/ui";
 import { Dump } from "@/components/dev";
+
+const MAP_HEIGHT = 512;
+const PRODUCT_SLIDE_RATIO = 177 / 211;
+const PRODUCT_SLIDE_SIZE = 211;
+
+const PRODUCT_SLIDE_SIZE_h = PRODUCT_SLIDE_RATIO * 211;
 
 definePageMeta({
   scrollToTop: false,
@@ -64,13 +71,26 @@ watch(
 </script>
 <template>
   <section class="page--karta">
-    <VSheet max-width="912" class="mx-auto pa-2" elevation="1">
+    <VSheet
+      position="relative"
+      max-width="912"
+      class="mx-auto pa-2"
+      elevation="1"
+      color="transparent"
+      id="bg-image--Vdet0JPdArzEvadh"
+      rounded="lg"
+    >
+      <VChipDistrict
+        v-if="districtHovered$?.search || district_"
+        class="position-absolute top-1 end-1 z-[1]"
+        :district="`Okrug: ${districtHovered$?.search || district_}`"
+      />
       <div class="grid grid-cols-[1fr,auto]">
         <!-- @@ -->
         <!-- proizvodjaci -->
         <div
           :style="`height: ${heightMap}px`"
-          class="*bg-blue overflow-auto scrollbar-thin-light *border-t"
+          class="overflow-auto scrollbar-thin-light *border-t"
         >
           <VDataIterator
             v-model="companyActiveID$"
@@ -80,10 +100,12 @@ watch(
           >
             <!-- @@todo -->
             <template #no-data>
-              <p>--no-data</p>
+              <VCardText class="text-center pa-12 opacity-75"
+                >Trenutno nemamo podatke za ovaj okrug.</VCardText
+              >
             </template>
             <template #default="{ items }">
-              <VList class="space-y-2">
+              <VList class="space-y-2 bg-transparent">
                 <template v-for="node in items" :key="node.raw.id">
                   <ProvideProfileDataFull
                     :user="node.raw"
@@ -209,8 +231,10 @@ watch(
           class="ma-0 pa-0 d-flex items-center justify-center ps-5"
         >
           <SerbiaMapSVG
+            :height="MAP_HEIGHT"
+            base-color="#0F5359"
+            :base-opacity=".72"
             color-active="#e0b700"
-            height="512"
             @click:district="(d) => (mapDistrictActive$ = d)"
             v-model:hover-district="districtHovered$"
           />
@@ -225,7 +249,11 @@ watch(
             :items-per-page="-1"
           >
             <template #no-data>
-              <VSheet height="177" width="211" class="px-[2px]">
+              <VSheet
+                :height="PRODUCT_SLIDE_SIZE_h"
+                :width="PRODUCT_SLIDE_SIZE"
+                color="transparent"
+              >
                 <VImg rounded class="fill-height" :src="DEFAULT_NO_IMAGE" />
               </VSheet>
             </template>
@@ -245,10 +273,11 @@ watch(
                         <VHover open-delay="122" close-delay="122">
                           <template #default="{ props: props2, isHovering }">
                             <VSheet
-                              height="177"
-                              width="211"
+                              :height="PRODUCT_SLIDE_SIZE_h"
+                              :width="PRODUCT_SLIDE_SIZE"
                               class="px-[2px]"
                               v-bind="props2"
+                              color="transparent"
                             >
                               <VImg
                                 @click="productActiveID$ = node.raw.id"
@@ -272,8 +301,8 @@ watch(
                                   <VSheet
                                     class="d-flex flex-col items-end pa-1"
                                     color="transparent"
-                                    height="175"
-                                    width="209"
+                                    :height="PRODUCT_SLIDE_SIZE_h - 2"
+                                    :width="PRODUCT_SLIDE_SIZE - 2"
                                   >
                                     <NuxtLink
                                       :to="productPublicUrl"
@@ -319,4 +348,8 @@ watch(
   </section>
 </template>
 <style lang="scss" scoped>
+#bg-image--Vdet0JPdArzEvadh {
+  background: white url("~/assets/images/bg-serbia-03.png");
+  background-size: cover;
+}
 </style>

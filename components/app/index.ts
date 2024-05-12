@@ -50,3 +50,4 @@ export { default as GetCategoryTitleFromTag } from "./GetCategoryTitleFromTag.vu
 export { default as CardProductDisplayToolbarSocial } from "./CardProductDisplayToolbarSocial.vue";
 export { default as LikeDislikeStatus } from "./LikeDislikeStatus.vue";
 export { default as TopicRatingStatus } from "./TopicRatingStatus.vue";
+export { default as VChipDistrict } from "./VChipDistrict.vue";

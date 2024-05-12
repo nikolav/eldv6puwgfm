@@ -185,10 +185,15 @@ const districtSelected = (d: IDistrictSearch) => {
   selected$.value = d.value;
   emit("click:district", d);
 };
+const dsBlank = { search: "", value: "" };
 // @@eos
 </script>
 <template>
-  <svg viewBox="0 0 668.9 977.6" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    @mouseout="$emit('update:hoverDistrict', dsBlank)"
+    viewBox="0 0 668.9 977.6"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <g :fill="props.baseColor" :fill-opacity="props.baseOpacity">
       <VHover
         v-for="(data, field) in values"
