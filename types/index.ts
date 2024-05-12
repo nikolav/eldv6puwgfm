@@ -145,6 +145,7 @@ export interface IUser {
   id: number;
   email: string;
   products?: OrNoValue<IProduct[]>;
+  posts?: OrNoValue<IPost[]>;
   created_at: string;
   updated_at: string;
 }

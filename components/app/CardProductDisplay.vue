@@ -158,6 +158,12 @@ const cart = useStoreCart();
                 <small class="*text-medium-emphasis translate-y-px px-[2px]">{{
                   profile?.district
                 }}</small>
+                <VTooltip
+                  location="bottom"
+                  activator="parent"
+                  open-delay="345"
+                  text="Okrug"
+                />
               </VChip>
             </div>
             <VCardTitle

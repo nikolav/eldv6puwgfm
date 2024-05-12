@@ -11,7 +11,15 @@ export const useProfileData = (UID?: any) => {
     resourceUrl(get(data.value, "data.avatar.data.file_id"))
   );
   const fullName = computed(() =>
-    niceName(profile.value?.firstName, profile.value?.lastName)
+    niceName(
+      profile.value?.firstName || profile.value?.ownerFirstName || "",
+      profile.value?.lastName || profile.value?.ownerLastName || ""
+    )
   );
+
+  watchEffect(() => {
+    console.log({ profile });
+  });
+
   return { profile, avatar, fullName };
 };

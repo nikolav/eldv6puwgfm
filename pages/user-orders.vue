@@ -80,7 +80,9 @@ watchEffect(() => {
     id: `${oid$_init.value}`,
   });
   orderProducts.value = p_.value;
-  orderTotal.value = t_.value;
+  // calc orig. price
+  // orderTotal.value = t_.value;
+  orderTotal.value = $calcOrderTotalOriginal(order_.value, p_.value);
   orderCompanies.value = c_.value;
 });
 onceMountedOn(

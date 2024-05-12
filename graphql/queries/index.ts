@@ -367,3 +367,33 @@ export const Q_productsTotalAmountOrdered = gql`
     }
   }
 `;
+
+export const Q_companiesList = gql`
+  query q_companiesList($approved: Boolean, $district: String) {
+    companiesList(approved: $approved, district: $district) {
+      id
+      email
+      products {
+        id
+        name
+        price
+        price_history
+        stock
+        stockType
+        onSale
+        description
+        tags
+        docs
+        created_at
+        updated_at
+      }
+      posts {
+        id
+        title
+      }
+      created_at
+      updated_at
+    }
+  }
+`;
+

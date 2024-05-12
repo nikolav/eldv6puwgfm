@@ -151,6 +151,7 @@ export default defineAppConfig({
   },
   //
   key: {
+    MAP_DISTRICT_ACTIVE: "wYx1m0LMtLib1t7JgJ",
     PRODUCTS_SEARCH: "U4HCatxcgs",
     APP_MOUNTED: "Zkcmk4BnXHU",
     APP_PROCESSING: "FlaelfhZddK",

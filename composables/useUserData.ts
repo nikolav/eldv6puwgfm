@@ -1,28 +1,21 @@
-import type { ICompanyProfile, IStorageFileInfo } from "@/types";
-export const useUserData = (UID: any = null) => {
-  const {
-    docs: { TAG_COMPANY_PROFILE_prefix, COM_PHOTOS_prefix },
-  } = useAppConfig();
+import type { IStorageFileInfo } from "@/types";
+export const useUserData = (UID?: any) => {
+  const { userPhotos, ratingCompany, comChat } = useTopics();
 
   const uid$ = ref();
   watchEffect(() => {
     uid$.value = toValue(UID);
   });
-  const { doc_id$, data } = useDoc<ICompanyProfile>();
-  watchEffect(() => {
-    doc_id$.value = uid$.value
-      ? `${TAG_COMPANY_PROFILE_prefix}${uid$.value}`
-      : undefined;
-  });
+  const { profile, avatar, fullName } = useProfileData(uid$);
+  const { data: comImages } = useDocs<IStorageFileInfo>(() =>
+    userPhotos(uid$.value)
+  );
 
-  const profile = computed(() => get(data.value, "data"));
+  // const profile = computed(() => get(data.value, "data"));
   const name_ = computed(() => profile.value?.name);
   const companyPublicUrl = useCompanyPublicUrl(uid$, name_);
-
-  const topicComImages_ = computed(() =>
-    uid$.value ? `${COM_PHOTOS_prefix}${uid$.value}` : undefined
-  );
-  const { data: comImages } = useDocs<IStorageFileInfo>(topicComImages_);
+  const topicCompanyRating = computed(() => ratingCompany(uid$.value));
+  const topicCompanyChat = computed(() => comChat(uid$.value));
 
   return {
     uid$,
@@ -30,5 +23,17 @@ export const useUserData = (UID: any = null) => {
     companyName: name_,
     companyPublicUrl,
     photos: comImages,
+
+    // social data topics
+    topicCompanyRating,
+    topicCompanyChat,
+
+    // profile:user
+    fullName,
+    avatar,
+    // alias
+    ownerFullName: fullName,
+    publicUrl: companyPublicUrl,
+    images: comImages,
   };
 };

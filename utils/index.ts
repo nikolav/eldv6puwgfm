@@ -1,6 +1,7 @@
 // @lodash
 import lodash from "lodash";
 const {
+  findIndex,
   memoize,
   invoke,
   assign,
@@ -99,6 +100,7 @@ export {
   values,
   words,
   zipObject,
+  findIndex,
 };
 
 export * from "./re";

@@ -20,6 +20,7 @@ const onClick = () =>
     hideScrollbar: false,
   });
 const btnProps = {
+  // disabled,
   onClick,
   images: props.images,
   captions: props.captions,
@@ -34,7 +35,9 @@ const btnProps = {
     :captions="props.captions"
     :disabled="disabled"
   >
-    <VBtn color="primary" size="small" v-bind="btnProps">slike</VBtn>
+    <VBtn color="primary" size="small" :disabled="disabled" v-bind="btnProps"
+      >slike</VBtn
+    >
   </slot>
 </template>
 <style lang="scss" scoped>

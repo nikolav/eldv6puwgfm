@@ -1,3 +1,8 @@
+<script lang="ts">
+export default {
+  inheritAttrs: false,
+};
+</script>
 <script setup lang="ts">
 import type { ITopicChatMessage } from "@/types";
 import { TopicChatDisplayCard } from "@/components/app";
@@ -27,11 +32,11 @@ watchEffect(() => {
       </template>
       <VBtn
         class="opacity-85 !relative"
-        v-bind="$attrs"
-        variant="elevated"
         color="primary"
+        variant="elevated"
         icon
         size="small"
+        v-bind="$attrs"
       >
         <VAvatar><strong class="!text-[1.122rem]">💬</strong></VAvatar>
         <VMenu

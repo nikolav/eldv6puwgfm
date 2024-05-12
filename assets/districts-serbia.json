@@ -4,50 +4,65 @@
     "title": "Vojvodina, okrug: "
   },
   {
-    "title": "Banat"
+    "title": "Južno Banatski"
   },
   {
-    "title": "Bačka"
+    "title": "Srednje Banatski"
   },
   {
-    "title": "Srem"
+    "title": "Severno Banatski"
+  },
+  {
+    "title": "Severno Bački"
+  },
+  {
+    "title": "Zapadno Bački"
+  },
+  {
+    "title": "Južno Bački"
+  },
+  {
+    "title": "Sremski"
   },
   {
     "subheader": true,
     "title": "Uža Srbija, okrug: "
   },
   {
-    "title": "Mačva"
+    "title": "Mačvanski"
   },
   {
-    "title": "Kolubara"
+    "title": "Kolubarski"
   },
   {
-    "title": "Podunavlje"
+    "title": "Beograd"
   },
   {
-    "title": "Braničevo"
+    "title": "Podunavski"
   },
   {
-    "title": "Šumadija"
+    "title": "Braničevski"
   },
   {
-    "title": "Pomoravlje"
+    "title": "Šumadijski"
   },
   {
-    "title": "Bor"
+    "title": "Pomoravski"
   },
   {
-    "title": "Zaječar"
+    "title": "Borski"
   },
   {
-    "title": "Zlatibor"
+    "title": "Zaječarski"
+  },
+  {
+    "title": "Zlatiborski"
   },
   {
     "title": "Moravički"
   },
   {
-    "title": "Raška"
+    "title": "Raški"
   },
   {
     "title": "Rasinski"
@@ -59,7 +74,7 @@
     "title": "Toplički"
   },
   {
-    "title": "Pirot"
+    "title": "Pirotski"
   },
   {
     "title": "Jablanički"
@@ -72,18 +87,18 @@
     "title": "Kosovo i Metohija, okrug: "
   },
   {
-    "title": "Kosovo"
+    "title": "Kosovski"
   },
   {
-    "title": "Peć"
+    "title": "Pećki"
   },
   {
-    "title": "Prizren"
+    "title": "Prizrenski"
   },
   {
-    "title": "Kosovskomitrovački"
+    "title": "Kosovsko Mitrovački"
   },
   {
-    "title": "Kosovskopomoravski"
+    "title": "Kosovsko Pomoravski"
   }
 ]

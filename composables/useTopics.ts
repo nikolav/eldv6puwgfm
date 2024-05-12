@@ -6,6 +6,7 @@ export const useTopics = () => {
       PRODUCT_IMAGES,
       TAG_AUTH_PROFILE_prefix,
       CHAT_ORDER_COM_USER_prefix,
+      COM_PHOTOS_prefix,
     },
     key: {
       CHAT_MAIN,
@@ -38,15 +39,18 @@ export const useTopics = () => {
     oid && cid && uid
       ? `${CHAT_ORDER_COM_USER_prefix}${oid}:${cid}:${uid}`
       : "";
+  const userPhotos = (uid: number | undefined) =>
+    uid ? `${COM_PHOTOS_prefix}${uid}` : "";
   return {
     CHAT_MAIN,
+    authProfile,
+    chatOrder,
     comChat,
+    likesProduct,
     productChat,
     productImages,
-    authProfile,
-    ratingProduct,
-    likesProduct,
     ratingCompany,
-    chatOrder,
+    ratingProduct,
+    userPhotos,
   };
 };
