@@ -1,6 +1,6 @@
 import type { IStorageFileInfo } from "@/types";
 export const useUserData = (UID?: any) => {
-  const { userPhotos, ratingCompany, comChat } = useTopics();
+  const { userPhotos, ratingCompany, comChat, comLikes } = useTopics();
 
   const uid$ = ref();
   watchEffect(() => {
@@ -16,6 +16,7 @@ export const useUserData = (UID?: any) => {
   const companyPublicUrl = useCompanyPublicUrl(uid$, name_);
   const topicCompanyRating = computed(() => ratingCompany(uid$.value));
   const topicCompanyChat = computed(() => comChat(uid$.value));
+  const topicCompanyLikes = computed(() => comLikes(uid$.value));
 
   return {
     uid$,
@@ -27,6 +28,7 @@ export const useUserData = (UID?: any) => {
     // social data topics
     topicCompanyRating,
     topicCompanyChat,
+    topicCompanyLikes,
 
     // profile:user
     fullName,

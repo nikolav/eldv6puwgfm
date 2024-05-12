@@ -15,6 +15,7 @@ export const useTopics = () => {
       PRODUCT_RATING_prefix,
       PRODUCTS_LIKES_prefix,
       COM_RATING_prefix,
+      COM_LIKES_prefix,
     },
   } = useAppConfig();
   const comChat = (comid: number | undefined) =>
@@ -41,6 +42,8 @@ export const useTopics = () => {
       : "";
   const userPhotos = (uid: number | undefined) =>
     uid ? `${COM_PHOTOS_prefix}${uid}` : "";
+  const comLikes = (uid: number | undefined) =>
+    uid ? `${COM_LIKES_prefix}${uid}` : "";
   return {
     CHAT_MAIN,
     authProfile,
@@ -52,5 +55,6 @@ export const useTopics = () => {
     ratingCompany,
     ratingProduct,
     userPhotos,
+    comLikes,
   };
 };

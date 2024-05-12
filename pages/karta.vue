@@ -131,6 +131,7 @@ watch(
                               photos,
                               topicCompanyRating,
                               topicCompanyChat,
+                              topicCompanyLikes,
                             }"
                           >
                             <VListItem
@@ -233,7 +234,7 @@ watch(
                                   />
                                   <LikeDislikeStatus
                                     class="-translate-y-[2px]"
-                                    :topic="topicCompanyRating.value"
+                                    :topic="topicCompanyLikes.value"
                                   />
                                 </small>
                               </div>
