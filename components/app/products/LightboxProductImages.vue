@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IProduct } from "@/types";
+// import type { IProduct } from "@/types";
 import { ProductImages } from "@/components/app";
 import { LightboxImages } from "@/components/ui";
 // const props = defineProps<{ product?: IProduct }>();
