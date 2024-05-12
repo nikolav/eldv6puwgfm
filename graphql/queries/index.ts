@@ -397,3 +397,8 @@ export const Q_companiesList = gql`
   }
 `;
 
+export const Q_companiesCountedByDistrict = gql`
+  query q_companiesCountedByDistrict {
+    companiesCountedByDistrict
+  }
+`;
