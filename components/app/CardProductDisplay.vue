@@ -30,7 +30,6 @@ const { productImages } = useTopics();
 const { data: dImages$ } = useDocs<IStorageFileInfo>(() =>
   productImages(props.product.id)
 );
-const { publicUrl } = useApiStorage(true, true);
 watch(dImages$, () => emit("productPhotosChange"));
 
 const uid = computed(() => props.product.user_id);
@@ -39,15 +38,16 @@ const { profile, companyPublicUrl: companyUrl } = useUserData(uid);
 const productImageSrcSample$ = computed(() =>
   isEmpty(dImages$.value)
     ? DEFAULT_NO_PRODUCT_IMAGE_FOUND
-    : publicUrl(get(sample(dImages$.value), "data.file_id"))
+    : resourceUrl(get(sample(dImages$.value), "data.file_id"))
 );
 const productPublicUrl_ = useProductPublicUrl(
   () => props.product?.id,
-  props.product?.name
+  () => props.product?.name
 );
 // @@
 const avatarUrl = computed(
-  () => publicUrl(get(profile.value, "avatar.data.file_id")) || DEFAULT_NO_IMAGE
+  () =>
+    resourceUrl(get(profile.value, "avatar.data.file_id")) || DEFAULT_NO_IMAGE
 );
 
 const cart = useStoreCart();

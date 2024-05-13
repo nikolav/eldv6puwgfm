@@ -90,3 +90,5 @@ export { default as IconTrashFill } from "./IconTrashFill.vue";
 export { default as IconUserCircle } from "./IconUserCircle.vue";
 export { default as IconUserShield } from "./IconUserShield.vue";
 export { default as IconProductSearch } from "./IconProductSearch.vue";
+export { default as IconPlant } from "./IconPlant.vue";
+export { default as IconRoadSign } from "./IconRoadSign.vue";

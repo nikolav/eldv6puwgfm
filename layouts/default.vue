@@ -66,7 +66,7 @@ watch(search_, debounceSearchHandle);
     <AppBarMain :height="appBarHeight" />
 
     <!-- @header -->
-    <VSheet min-height="452" class="d-flex flex-col *items-center">
+    <VSheet min-height="512" class="d-flex flex-col *items-center">
       <!-- @header:top -->
       <!-- image="/header-main-06-huge.png" -->
       <!-- <VImg position="0 81%" /> -->
@@ -74,7 +74,7 @@ watch(search_, debounceSearchHandle);
         <template #image>
           <!--  -->
           <VParallax
-            :position="`${xs ? 0 : 48}px 98%`"
+            :position="`${xs ? 0 : 35}px 98%`"
             :scale="0.91"
             src="/header-main-06-scaled-150.png"
           />
@@ -84,7 +84,12 @@ watch(search_, debounceSearchHandle);
         <MainSearchBox v-model="search_" />
       </VCard>
       <!-- @header:menu-categories -->
-      <VSlideGroup mandatory show-arrows v-model="current$">
+      <VSlideGroup
+        class="border--bottom-thin bg-cover bg-[url('~/assets/images/carpet.png')] border-t-md border-primary-darken-1 border-opacity-75 shadow"
+        mandatory
+        show-arrows
+        v-model="current$"
+      >
         <VSlideGroupItem
           v-for="node in menuCategories"
           :key="node.title"
@@ -143,4 +148,7 @@ watch(search_, debounceSearchHandle);
 </template>
 
 <style lang="scss" scoped>
+.border--bottom-thin {
+  border-bottom: 1px solid theme("colors.slate.300");
+}
 </style>

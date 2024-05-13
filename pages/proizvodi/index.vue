@@ -46,8 +46,8 @@ onceOn(
 
 // product
 const pid = Number(last(String(get(route.query, QUERY)).split("-")));
-const { products$ } = useQueryProductsOnly([pid]);
-const p$ = computed(() => first(products$.value)!);
+const { products } = useQueryProductsOnly([pid]);
+const p$ = computed(() => first(products.value)!);
 const pid$ = computed(() => get(p$.value, "id"));
 
 // stroes

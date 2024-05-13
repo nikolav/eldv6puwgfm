@@ -1,45 +1,36 @@
 import type { IProduct } from "@/types";
 import { Q_productsListExact } from "@/graphql";
-export const useQueryProductsOnly = <TData = IProduct>(pids?: any) => {
-  // pids: number[]
-
+export const useQueryProductsOnly = (pids?: any) => {
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
-    // key: { PRODUCTS_CHANGE },
   } = useAppConfig();
   const pids$ = ref<number[]>([]);
   watchEffect(() => {
     pids$.value = toValue(pids) || [];
   });
+  const enabled = computed(() => !isEmpty(pids$.value));
   const { result, load, refetch } = useLazyQuery<{
-    productsListExact: TData[];
+    productsListExact: IProduct[];
   }>(
     Q_productsListExact,
     {
       products: pids$,
     },
     {
+      enabled,
       pollInterval: STORAGE_QUERY_POLL_INTERVAL,
     }
   );
-  const products$ = computed(
-    () => get(result.value, "productsListExact") || []
-  );
+  const products = computed(() => get(result.value, "productsListExact") || []);
   const reload = async () => await refetch();
-  onceMountedOn(true, async () => {
-    await load();
-    // await nextTick(reload);
-  });
-  // const productsChanged$ = useGlobalVariable(PRODUCTS_CHANGE);
-  // watchEffect(async () => {
-  //   if (productsChanged$.value) await reload();
-  // });
+  onceMountedOn(true, load);
 
   return {
     // update `pids$` to reload
-    products: pids$,
+    pids$,
     // # crud
-    products$,
+    products,
     reload,
+    enabled,
   };
 };

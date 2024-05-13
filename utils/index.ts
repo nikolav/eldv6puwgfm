@@ -1,6 +1,7 @@
 // @lodash
 import lodash from "lodash";
 const {
+  shuffle,
   assign,
   at,
   capitalize,
@@ -103,6 +104,7 @@ export {
   words,
   zipObject,
   findIndex,
+  shuffle,
 };
 
 export * from "./re";

@@ -29,8 +29,8 @@ const { smAndUp, width } = useDisplay();
 // stores
 const { ratingProduct, likesProduct, ratingCompany, productChat } = useTopics();
 const cart = useStoreCart();
-const { products$ } = useQueryProductsOnly(() => [props.pid]);
-const product$ = computed(() => first(products$.value));
+const { products } = useQueryProductsOnly(() => [props.pid]);
+const product$ = computed(() => first(products.value));
 const com = useUserData(() => get(product$.value, "user.id"));
 // helpers
 // const sampleImage = (images: any) =>

@@ -7,6 +7,7 @@ export * from "./chat";
 export * from "./search";
 export * from "./social";
 export * from "./map";
+export * from "./content";
 export { default as AppBarMain } from "./AppBarMain.vue";
 // export { default as CardCartItem } from "./korpa/CardCartItem.vue";
 export { default as CardInbox } from "./CardInbox.vue";
@@ -51,3 +52,4 @@ export { default as CardProductDisplayToolbarSocial } from "./CardProductDisplay
 export { default as LikeDislikeStatus } from "./LikeDislikeStatus.vue";
 export { default as TopicRatingStatus } from "./TopicRatingStatus.vue";
 export { default as VChipDistrict } from "./VChipDistrict.vue";
+export { default as FooterKakoOvoFunkcionise } from "./FooterKakoOvoFunkcionise.vue";

@@ -22,7 +22,7 @@ const { watchProcessing } = useStoreAppProcessing();
 // stores
 const auth = useStoreApiAuth();
 const cart = useStoreCart();
-const { products$ } = useQueryProductsOnly(() => cart.products);
+const { products } = useQueryProductsOnly(() => cart.products);
 
 // utils
 const { width, height, mdAndUp } = useDisplay();
@@ -145,7 +145,7 @@ watch(ID$, async (oid) => {
                 :style="mdAndUp ? `height: ${lHeight}px` : undefined"
                 class="max-h-[812px] pt-2 *bg-stone-200 overflow-auto *bg-blue scrollbar-thin-light"
               >
-                <VDataIterator :items="products$" :items-per-page="-1">
+                <VDataIterator :items="products" :items-per-page="-1">
                   <template #default="{ items }">
                     <div class="VDataIterator--placer space-y-3">
                       <template v-for="node in items" :key="node.raw.id">
