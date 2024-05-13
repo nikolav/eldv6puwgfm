@@ -4,15 +4,19 @@ const props = defineProps<{
   topic: string;
   small?: boolean | undefined;
 }>();
-const ld = useStoreLikeDislike();
-const topic$ = computed(() => toValue(props.topic));
-const isLiked = computed(() => ld.isLiked(topic$.value));
-const isDisliked = computed(() => ld.isDisliked(topic$.value));
-const countLikes = computed(() => ld.likesCount(topic$.value));
-const countDisLikes = computed(() => ld.dislikesCount(topic$.value));
-const likeTopic = async (flag = true) => await ld.like(topic$.value, flag);
-const dislikeTopic = async (flag = true) =>
-  await ld.dislike(topic$.value, flag);
+
+const { like, dislike, likesCount, dislikesCount, isLiked, isDisliked } =
+  useTopicLikeDislike(() => props.topic);
+
+// const ld = useStoreLikeDislike();
+// const topic$ = computed(() => toValue(props.topic));
+// const isLiked = computed(() => ld.isLiked(topic$.value));
+// const isDisliked = computed(() => ld.isDisliked(topic$.value));
+// const countLikes = computed(() => ld.likesCount(topic$.value));
+// const countDisLikes = computed(() => ld.dislikesCount(topic$.value));
+// const likeTopic = async (flag = true) => await ld.like(topic$.value, flag);
+// const dislikeTopic = async (flag = true) =>
+//   await ld.dislike(topic$.value, flag);
 
 // @@eos
 </script>
@@ -30,7 +34,7 @@ const dislikeTopic = async (flag = true) =>
     :variant="props.light ? 'outlined' : 'flat'"
   >
     <VBtn
-      @click="likeTopic(!isLiked)"
+      @click="like(!isLiked)"
       slim
       :size="props.small ? 'x-small' : 'small'"
       class="px-0 mx-0"
@@ -46,11 +50,11 @@ const dislikeTopic = async (flag = true) =>
         class="translate-x-px -translate-y-[2px]"
         >👍🏼</strong
       ><small :class="!props.small ? 'ps-px' : undefined">
-        <pre class="text-xs opacity-80">{{ countLikes }}</pre>
+        <pre class="text-xs opacity-80">{{ likesCount }}</pre>
       </small>
     </VBtn>
     <VBtn
-      @click="dislikeTopic(!isDisliked)"
+      @click="dislike(!isDisliked)"
       slim
       :size="props.small ? 'x-small' : 'small'"
       class="px-0 mx-0"
@@ -65,7 +69,7 @@ const dislikeTopic = async (flag = true) =>
         class="-translate-y-px -translate-x-px"
         >👎🏼</strong
       ><small :class="!props.small ? 'ps-px' : undefined">
-        <pre class="text-xs -translate-x-[2px]">{{ countDisLikes }}</pre>
+        <pre class="text-xs -translate-x-[2px]">{{ dislikesCount }}</pre>
       </small></VBtn
     >
   </VBtnGroup>

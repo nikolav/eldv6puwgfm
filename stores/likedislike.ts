@@ -1,10 +1,10 @@
 type TKey = string | undefined;
-const LIKEDISLIKE_key = "ymuFfUkzcVps8";
+const LIKEDISLIKE_key = "JXCCGKTWNEINMF";
 export const useStoreLikeDislike = defineStore("storeRRoTfaJQGScwzlu", () => {
   const {
     docs: { LIKEDISLIKE_CACHE_ID },
   } = useAppConfig();
-  const key = useLocalStorage(LIKEDISLIKE_key, () => LIKEDISLIKE_key);
+  const key = useLocalStorage(LIKEDISLIKE_key, () => idGen());
   const { data, put: commit } = useDoc<{
     [topic: string]: {
       likes: Record<string, boolean>;

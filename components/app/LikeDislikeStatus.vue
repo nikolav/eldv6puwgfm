@@ -1,11 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{ topic?: string }>();
-
-const topic_ = computed(() => toValue(props.topic));
-const ld = useStoreLikeDislike();
-const countLikes = computed(() => ld.likesCount(topic_.value));
-const countDisLikes = computed(() => ld.dislikesCount(topic_.value));
-
+const { likesCount, dislikesCount } = useTopicLikeDislike(() => props.topic);
 // @@eos
 </script>
 <template>
@@ -20,7 +15,7 @@ const countDisLikes = computed(() => ld.dislikesCount(topic_.value));
         start
         icon="$iconThumbsUpOutline"
       />
-      <pre style="font-size: 81%" class="d-inline-block">{{ countLikes }}</pre>
+      <pre style="font-size: 81%" class="d-inline-block">{{ likesCount }}</pre>
     </span>
 
     <!-- @@dislikes -->
@@ -32,7 +27,7 @@ const countDisLikes = computed(() => ld.dislikesCount(topic_.value));
         icon="$iconThumbsDownOutline"
       />
       <pre style="font-size: 81%" class="d-inline-block">{{
-        countDisLikes
+        dislikesCount
       }}</pre>
     </span>
   </em>
