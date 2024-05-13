@@ -21,10 +21,15 @@ definePageMeta({
   middleware: "authorized",
 });
 
+const route = useRoute();
+const auth = useStoreApiAuth();
+if (auth.isCompany$) {
+  route.meta.layout = "company-profile";
+}
+
 const {
   app: { DEFAULT_NO_IMAGE },
 } = useAppConfig();
-const auth = useStoreApiAuth();
 
 // refs, computes
 const uid$ = computed(() => get(auth.user$, "id"));

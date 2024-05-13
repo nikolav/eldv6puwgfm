@@ -137,7 +137,8 @@ export default defineNuxtConfig({
     // transition pages
     pageTransition: { name: "BLUR", mode: "in-out" },
     // transition layouts
-    layoutTransition: { name: "BLUR", mode: "in-out" },
+    // layoutTransition: { name: "BLUR", mode: "in-out" },
+    layoutTransition: false,
   },
   css: [
     // default

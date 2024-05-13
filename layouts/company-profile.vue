@@ -12,10 +12,17 @@ const sidebarLinksCompanyProfile = [
     // icon: "$iconHome",
     // tooltip: "Pregled",
     icon: "$iconFactory",
-    tooltip: "Narudžbe",
+    tooltip: "Primljene narudžbe",
     to: "company-profile",
     title: "profil",
     size: "large",
+  },
+  {
+    icon: "$iconChecklist",
+    tooltip: "Moje narudžbenice",
+    to: "user-orders",
+    title: "narudzbenice",
+    size: 26,
   },
   {
     icon: "$iconChatBubbles",

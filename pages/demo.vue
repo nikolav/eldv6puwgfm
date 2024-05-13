@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
-import { LikeDislikeStatus, LikeDislike } from "@/components/app"
 // import {
 //   GoogleAuthProvider,
 //   FacebookAuthProvider,
@@ -26,7 +25,6 @@ definePageMeta({
 // const toggle = useToggleFlag();
 // const { profile, avatar } = useProfileData(3);
 
-const topic = "foo122333:2";
 // #eos
 </script>
 <template>
@@ -37,8 +35,6 @@ const topic = "foo122333:2";
     <VBtn @click="facebookAuth">auth:facebook</VBtn>
     <VBtn @click="signOut(fbAuth)">logout</VBtn> -->
     <hr />
-    <LikeDislikeStatus :topic="topic" />
-    <LikeDislike :topic="topic" />
   </section>
 </template>
 <style lang="scss" scoped>
