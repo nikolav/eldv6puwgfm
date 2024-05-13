@@ -34,7 +34,7 @@ const avatarUrl = inject(AVATAR);
       :size="props.size"
       variant="elevated"
     >
-      <VImg cover :src="force || avatarUrl || fallback" />
+      <VImg cover :src="(force ? force : avatarUrl) || fallback" />
     </VAvatar>
   </strong>
 </template>

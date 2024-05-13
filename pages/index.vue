@@ -9,6 +9,7 @@ import {
   FooterKakoOvoFunkcionise,
   HeaderProminent,
   BlogReceptiLinkProminent,
+  VCardCompanyDisplay,
 } from "@/components/app";
 import { Dump } from "@/components/dev";
 
@@ -25,13 +26,17 @@ const { products: productsSelection } = useQueryProductsOnly(
 // const { products$ } = useQueryProductsAll();
 // const { reload: reloadAll } = useApiStorage(true, true);
 
+const auth = useStoreApiAuth();
+const user_ = computed(() => auth.user$);
+const logUser = () => {
+  console.clear();
+  console.log(user_);
+};
 // #eos
 </script>
 
 <template>
   <section id="page-demo" class="*pa-2 *pa-md-4">
-
-
     <!-- izdvajamo -->
     <div class="__spacer__ mt-8" />
     <HeaderProminent
@@ -67,11 +72,9 @@ const { products: productsSelection } = useQueryProductsOnly(
     </VContainer>
   -->
 
-
     <!-- footer, info -->
     <div class="__scacer__ mt-20" />
     <FooterKakoOvoFunkcionise class="mt-16" />
-
 
     <!-- blog, receipt, links -->
     <div class="__scacer__ mt-20" />
@@ -81,7 +84,6 @@ const { products: productsSelection } = useQueryProductsOnly(
       </template>
     </HeaderProminent>
     <BlogReceptiLinkProminent />
-
 
     <!-- welcome -->
     <div class="__scacer__ mt-20" />
@@ -109,8 +111,7 @@ const { products: productsSelection } = useQueryProductsOnly(
       </template>
     </HeaderProminent>
 
-
-
+    <VCardCompanyDisplay :user="user_" />
 
     <div class="text-disabled">
       <h3>4. red: novo: proizvodi, proizvodkaci /2 reda</h3>

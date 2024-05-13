@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { IAuthData } from "@/types";
-const props = defineProps<{ user: IAuthData | undefined }>();
-const profileDataFull = useUserData(() => get(props.user, "id"));
+const props = defineProps<{ user: any }>();
+const profileDataFull = useUserData(() => get(props, "user.id"));
 
 // @@eos
 </script>

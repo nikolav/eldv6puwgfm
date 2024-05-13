@@ -25,6 +25,8 @@ definePageMeta({
 // const toggle = useToggleFlag();
 // const { profile, avatar } = useProfileData(3);
 
+const auth = useStoreApiAuth();
+const user = computed(() => auth.user$);
 // #eos
 </script>
 <template>

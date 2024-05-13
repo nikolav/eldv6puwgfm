@@ -53,3 +53,5 @@ export { default as LikeDislikeStatus } from "./LikeDislikeStatus.vue";
 export { default as TopicRatingStatus } from "./TopicRatingStatus.vue";
 export { default as VChipDistrict } from "./VChipDistrict.vue";
 export { default as FooterKakoOvoFunkcionise } from "./FooterKakoOvoFunkcionise.vue";
+export { default as VCardCompanyDisplay } from "./VCardCompanyDisplay.vue";
+

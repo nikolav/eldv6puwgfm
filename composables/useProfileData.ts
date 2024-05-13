@@ -17,9 +17,5 @@ export const useProfileData = (UID?: any) => {
     )
   );
 
-  watchEffect(() => {
-    console.log({ profile });
-  });
-
   return { profile, avatar, fullName };
 };

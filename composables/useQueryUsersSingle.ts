@@ -8,6 +8,8 @@ export const useQueryUsersSingle = <TData = IUser>(mayberefUID?: any) => {
   watchEffect(() => {
     uid$.value = toValue(mayberefUID);
   });
+  const enabled = computed(() => 0 < Number(uid$.value));
+  const user = computed(() => get(result.value, "usersById"));
   const { result, load, refetch, loading } = useLazyQuery<{
     usersById: TData;
   }>(
@@ -16,17 +18,17 @@ export const useQueryUsersSingle = <TData = IUser>(mayberefUID?: any) => {
       uid: uid$,
     },
     {
+      enabled,
       pollInterval: STORAGE_QUERY_POLL_INTERVAL,
     }
   );
-  const u$ = computed(() => get(result.value, "usersById"));
   const reload = async () => await refetch();
-  const { runSetup } = useRunSetupOnce(async () => await load());
-  onMounted(runSetup);
+  onceMountedOn(true, load);
 
   return {
-    user: u$,
+    user,
     reload,
     loading,
+    enabled,
   };
 };
