@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import type { IUser } from "@/types";
+import type { IUser, IOrder } from "@/types";
 // import { Dump } from "@/components/dev";
 import {
-  ProductsForOrderWithDetails,
   LightboxProductImages,
   ProductPublicUrl,
-  VChipProductCategory,
+  ProductsForOrderWithDetails,
+  ProvideChatData,
   TopicRatingStatus,
-  WithComProfile,
-  WithComPublicUrl,
+  VChipProductCategory,
   VChipProductPrice,
   VChipProductPriceBase,
-  ProvideChatData,
+  WithComProfile,
+  WithComPublicUrl,
 } from "@/components/app";
 
 const PRODUCTS_LIST_OFFSET_BOTTOM = 18;
@@ -30,9 +30,21 @@ const auth = useStoreApiAuth();
 const uid$ = computed(() => get(auth.user$, "id"));
 const oid$ = ref();
 const order_ = ref();
+// order related items
 const orderCompanies = ref(<IUser[]>[]);
 const orderProducts = ref();
 const orderTotal = ref();
+const {
+  companies: companiesForOrder,
+  products: productsOnOrder,
+  totalOriginal,
+} = useQueryProductsOnOrderWithDetails(order_);
+watchEffect(() => {
+  orderCompanies.value = companiesForOrder.value;
+  orderProducts.value = productsOnOrder.value;
+  orderTotal.value = totalOriginal.value;
+});
+// ui
 const boxProductsList = ref();
 
 // utils
@@ -65,33 +77,20 @@ const boxProductsListHeight = computed(
 // watches
 onceMountedOn(true, () => nextTick(ordersReload));
 
-// inits products @mount
-// ugly hack; refactor smh.
-const op$ = <Record<string, any>>{};
-const oid$_init = ref();
-const order$_init = ref();
-const {
-  products: p_,
-  totalOriginal: t_,
-  companies: c_,
-} = useQueryProductsOnOrderWithDetails(order$_init);
-watchEffect(() => {
-  order_.value = order$_init.value = find(orders.value, {
-    id: `${oid$_init.value}`,
-  });
-  orderProducts.value = p_.value;
-  // calc orig. price
-  // orderTotal.value = t_.value;
-  orderTotal.value = $calcOrderTotalOriginal(order_.value, p_.value);
-  orderCompanies.value = c_.value;
-});
 onceMountedOn(
-  () => !isEmpty(orders.value),
-  async () => {
-    await nextTick();
-    if (oid$.value) return;
-    oid$_init.value = oid$.value = Math.max(...keys(op$).map(Number));
-  }
+  () => 0 < orders.value?.length,
+  () =>
+    nextTick(() => {
+      {
+        if (0 < oid$.value) return;
+        console.log(`@init:oprd`);
+        // set latest o:id
+        const oLatest = last(
+          sortBy(orders.value, (node: IOrder) => new Date(node["created_at"]))
+        );
+        oid$.value = get(oLatest, "id");
+      }
+    })
 );
 
 // #eos
@@ -119,9 +118,15 @@ onceMountedOn(
             color="on-primary"
             elevation="1"
           >
+            <!-- @@doesnt show orig price -->
+            <!-- orderTotal -->
             <VChipProductPrice
               v-if="orderTotal"
-              :price-only="priceFormatLocale(orderTotal)"
+              :price-only="
+                priceFormatLocale(
+                  $calcOrderTotalOriginal(order_, orderProducts)
+                )
+              "
             >
               <VTooltip
                 text="Ukupna vrednost naručene robe"
@@ -430,20 +435,20 @@ onceMountedOn(
                   <!-- @@orders:list:right -->
                   <VList mandatory class="py-0" density="compact">
                     <template v-for="node in items" :key="node.raw.id">
+                      <!-- v-model="op$[node.raw.id]" -->
                       <ProductsForOrderWithDetails
-                        v-model="op$[node.raw.id]"
                         :order="find(orders, { id: node.raw.id })"
-                        v-slot="{ total, companies, products }"
+                        v-slot="{ total, products }"
                       >
+                        <!-- orderProducts = products;
+                      orderCompanies = companies;
+                      orderTotal = total; -->
                         <VListItem
                           color="primary"
                           :active="oid$ == node.raw.id"
                           @click="
                             () => {
                               oid$ = node.raw.id;
-                              orderProducts = products;
-                              orderCompanies = companies;
-                              orderTotal = total;
                             }
                           "
                           class="ps-3 pe-1"

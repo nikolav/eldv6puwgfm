@@ -1,9 +1,6 @@
 // @lodash
 import lodash from "lodash";
 const {
-  findIndex,
-  memoize,
-  invoke,
   assign,
   at,
   capitalize,
@@ -16,16 +13,19 @@ const {
   every,
   filter,
   find,
+  findIndex,
   first,
   forEach,
   get,
   has: hasOwn,
   has: hasPath,
   indexOf,
+  invoke,
   isEmpty,
   keys,
   last,
   map,
+  memoize,
   merge,
   noop,
   now,
@@ -50,8 +50,10 @@ const {
   values,
   words,
   zipObject,
+  sortBy,
 } = lodash;
 export {
+  sortBy,
   memoize,
   assign,
   at,

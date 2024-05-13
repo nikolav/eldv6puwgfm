@@ -6,7 +6,7 @@ export const useQueryProductsOnOrder = (OID?: any) => {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
   } = useAppConfig();
   const oid$ = ref();
-  const enabled$ = computed(() => 0 < oid$.value);
+  const enabled$ = computed(() => 0 < Number(oid$.value));
   watchEffect(() => {
     oid$.value = toValue(OID);
   });
