@@ -198,6 +198,25 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
   width: 100%;
 }
 
+/* name:Panel3 */
+.PANEL3-enter-active,
+.PANEL3-leave-active {
+  transition: all 0.24s ease-out;
+}
+
+.PANEL3-enter-from,
+.PANEL3-leave-to {
+  opacity: 0;
+  transform: translateX(12px);
+}
+.PANEL3-leave-active {
+  position: absolute !important;
+  width: 100%;
+}
+.PANEL3-move {
+  transition: transform 0.24s;
+}
+
 .products--list .cols5 {
   width: 20% !important;
   max-width: 20% !important;

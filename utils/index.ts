@@ -52,8 +52,12 @@ const {
   words,
   zipObject,
   sortBy,
+  random,
+  sampleSize,
 } = lodash;
 export {
+  sampleSize,
+  random,
   sortBy,
   memoize,
   assign,

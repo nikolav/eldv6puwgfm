@@ -11,6 +11,7 @@ import {
   BlogReceptiLinkProminent,
   VCardCompanyDisplay,
   TopicChat,
+  OverviewsFake,
 } from "@/components/app";
 import { LightboxSlides } from "@/components/ui";
 import { Dump } from "@/components/dev";
@@ -314,10 +315,208 @@ const slidesPromoMaterial = [
       </template>
     </LightboxSlides>
 
+    <div class="__spacer__ mt-12" />
+    <HeaderProminent
+      class="ps-12 mt-20 pb-4"
+      text="Kako su nas ocenili naši korisnici i kupci"
+    >
+      <template #prepend>
+        <svg
+          style="font-size: 4.55rem"
+          class="ms-5 opacity-20 translate-y-3"
+          width="1em"
+          height="1em"
+          viewBox="0 0 133.02 128.82"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g transform="translate(-13.488 -18.088)">
+            <path
+              stroke="currentColor"
+              fill="currentColor"
+              d="m63.077 145.7c-21.42-5.028-39.923-21.415-46.356-42.619-8.6254-25.803 0.33569-56.944 22.978-72.639 18.867-13.55 45.225-16.637 66.091-5.8316 24.842 12.029 40.859 40.821 35.968 68.297-0.64293 5.725-3.2614 11.134-4.5123 16.603 3.0499 11.07 7.1763 21.888 9.2671 33.184-0.68283 7.5403-10.478 1.9841-15.208 1.5276-7.5602-1.652-15.067-4.0762-22.825-4.4894-10.211 5.9798-22.55 6.9516-34.175 7.1794-3.766-0.0534-7.5593-0.30567-11.226-1.2124zm32.084-6.7589c6.3874-1.0104 11.639-7.5559 18.356-4.8339 8.1426 1.7308 16.139 4.4838 24.452 5.2306 4.2652-3.0563-2.416-10.744-2.4685-15.487-1.3289-5.0374-3.4181-10.106-4.3676-15.142 4.0151-10.405 7.1726-21.503 5.4427-32.756-3.6558-31.141-35.003-56.075-66.222-51.875-24.656 3.2019-47.077 23.132-50.328 48.27-4.4836 28.826 13.938 60.522 42.831 67.779 10.601 2.7678 21.892 2.0174 32.304-1.186z"
+            />
+          </g>
+        </svg>
+      </template>
+    </HeaderProminent>
+    <OverviewsFake />
+
     <div class="text-disabled">
-      <h4>6. red: par utisaka korisnika</h4>
       <h5>7. red: prijava mail lista</h5>
       <h5>8. red: small text, likovi</h5>
+    </div>
+    <div class="smalltext">
+      <p>
+        <small
+          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam unde
+          facilis corrupti officia provident reprehenderit voluptas, sit
+          repellat at accusantium quisquam sapiente aperiam iusto perspiciatis
+          non possimus nostrum, quibusdam, veniam laboriosam hic labore autem
+          omnis debitis. Cum vel modi ratione natus distinctio totam placeat
+          similique, ut veritatis esse sapiente fugiat, iusto consectetur, eum
+          accusantium officia corporis tempore molestiae ducimus praesentium
+          suscipit! Rerum vitae consequatur quibusdam, beatae cumque accusamus
+          est, sit minima laboriosam excepturi, aperiam quas eaque deleniti ipsa
+          libero porro reiciendis distinctio recusandae. Veniam deserunt
+          architecto, nihil sed perferendis laudantium at officiis perspiciatis
+          consequuntur, cupiditate reiciendis ipsam asperiores quibusdam amet!
+          Nostrum in atque quos eligendi voluptas! Corrupti nostrum tempora ex
+          consequuntur deserunt, mollitia incidunt ipsa vitae perspiciatis
+          exercitationem aperiam et iusto! Unde?</small
+        >
+      </p>
+      <p>
+        <small
+          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam unde
+          facilis corrupti officia provident reprehenderit voluptas, sit
+          repellat at accusantium quisquam sapiente aperiam iusto perspiciatis
+          non possimus nostrum, quibusdam, veniam laboriosam hic labore autem
+          omnis debitis. Cum vel modi ratione natus distinctio totam placeat
+          similique, ut veritatis esse sapiente fugiat, iusto consectetur, eum
+          accusantium officia corporis tempore molestiae ducimus praesentium
+          suscipit! Rerum vitae consequatur quibusdam, beatae cumque accusamus
+          est, sit minima laboriosam excepturi, aperiam quas eaque deleniti ipsa
+          libero porro reiciendis distinctio recusandae. Veniam deserunt
+          architecto, nihil sed perferendis laudantium at officiis perspiciatis
+          consequuntur, cupiditate reiciendis ipsam asperiores quibusdam amet!
+          Nostrum in atque quos eligendi voluptas! Corrupti nostrum tempora ex
+          consequuntur deserunt, mollitia incidunt ipsa vitae perspiciatis
+          exercitationem aperiam et iusto! Unde?</small
+        >
+      </p>
+      <p>
+        <small
+          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam unde
+          facilis corrupti officia provident reprehenderit voluptas, sit
+          repellat at accusantium quisquam sapiente aperiam iusto perspiciatis
+          non possimus nostrum, quibusdam, veniam laboriosam hic labore autem
+          omnis debitis. Cum vel modi ratione natus distinctio totam placeat
+          similique, ut veritatis esse sapiente fugiat, iusto consectetur, eum
+          accusantium officia corporis tempore molestiae ducimus praesentium
+          suscipit! Rerum vitae consequatur quibusdam, beatae cumque accusamus
+          est, sit minima laboriosam excepturi, aperiam quas eaque deleniti ipsa
+          libero porro reiciendis distinctio recusandae. Veniam deserunt
+          architecto, nihil sed perferendis laudantium at officiis perspiciatis
+          consequuntur, cupiditate reiciendis ipsam asperiores quibusdam amet!
+          Nostrum in atque quos eligendi voluptas! Corrupti nostrum tempora ex
+          consequuntur deserunt, mollitia incidunt ipsa vitae perspiciatis
+          exercitationem aperiam et iusto! Unde?</small
+        >
+      </p>
+      <p>
+        <small
+          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam unde
+          facilis corrupti officia provident reprehenderit voluptas, sit
+          repellat at accusantium quisquam sapiente aperiam iusto perspiciatis
+          non possimus nostrum, quibusdam, veniam laboriosam hic labore autem
+          omnis debitis. Cum vel modi ratione natus distinctio totam placeat
+          similique, ut veritatis esse sapiente fugiat, iusto consectetur, eum
+          accusantium officia corporis tempore molestiae ducimus praesentium
+          suscipit! Rerum vitae consequatur quibusdam, beatae cumque accusamus
+          est, sit minima laboriosam excepturi, aperiam quas eaque deleniti ipsa
+          libero porro reiciendis distinctio recusandae. Veniam deserunt
+          architecto, nihil sed perferendis laudantium at officiis perspiciatis
+          consequuntur, cupiditate reiciendis ipsam asperiores quibusdam amet!
+          Nostrum in atque quos eligendi voluptas! Corrupti nostrum tempora ex
+          consequuntur deserunt, mollitia incidunt ipsa vitae perspiciatis
+          exercitationem aperiam et iusto! Unde?</small
+        >
+      </p>
+      <p>
+        <small
+          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam unde
+          facilis corrupti officia provident reprehenderit voluptas, sit
+          repellat at accusantium quisquam sapiente aperiam iusto perspiciatis
+          non possimus nostrum, quibusdam, veniam laboriosam hic labore autem
+          omnis debitis. Cum vel modi ratione natus distinctio totam placeat
+          similique, ut veritatis esse sapiente fugiat, iusto consectetur, eum
+          accusantium officia corporis tempore molestiae ducimus praesentium
+          suscipit! Rerum vitae consequatur quibusdam, beatae cumque accusamus
+          est, sit minima laboriosam excepturi, aperiam quas eaque deleniti ipsa
+          libero porro reiciendis distinctio recusandae. Veniam deserunt
+          architecto, nihil sed perferendis laudantium at officiis perspiciatis
+          consequuntur, cupiditate reiciendis ipsam asperiores quibusdam amet!
+          Nostrum in atque quos eligendi voluptas! Corrupti nostrum tempora ex
+          consequuntur deserunt, mollitia incidunt ipsa vitae perspiciatis
+          exercitationem aperiam et iusto! Unde?</small
+        >
+      </p>
+      <p>
+        <small
+          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam unde
+          facilis corrupti officia provident reprehenderit voluptas, sit
+          repellat at accusantium quisquam sapiente aperiam iusto perspiciatis
+          non possimus nostrum, quibusdam, veniam laboriosam hic labore autem
+          omnis debitis. Cum vel modi ratione natus distinctio totam placeat
+          similique, ut veritatis esse sapiente fugiat, iusto consectetur, eum
+          accusantium officia corporis tempore molestiae ducimus praesentium
+          suscipit! Rerum vitae consequatur quibusdam, beatae cumque accusamus
+          est, sit minima laboriosam excepturi, aperiam quas eaque deleniti ipsa
+          libero porro reiciendis distinctio recusandae. Veniam deserunt
+          architecto, nihil sed perferendis laudantium at officiis perspiciatis
+          consequuntur, cupiditate reiciendis ipsam asperiores quibusdam amet!
+          Nostrum in atque quos eligendi voluptas! Corrupti nostrum tempora ex
+          consequuntur deserunt, mollitia incidunt ipsa vitae perspiciatis
+          exercitationem aperiam et iusto! Unde?</small
+        >
+      </p>
+      <p>
+        <small
+          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam unde
+          facilis corrupti officia provident reprehenderit voluptas, sit
+          repellat at accusantium quisquam sapiente aperiam iusto perspiciatis
+          non possimus nostrum, quibusdam, veniam laboriosam hic labore autem
+          omnis debitis. Cum vel modi ratione natus distinctio totam placeat
+          similique, ut veritatis esse sapiente fugiat, iusto consectetur, eum
+          accusantium officia corporis tempore molestiae ducimus praesentium
+          suscipit! Rerum vitae consequatur quibusdam, beatae cumque accusamus
+          est, sit minima laboriosam excepturi, aperiam quas eaque deleniti ipsa
+          libero porro reiciendis distinctio recusandae. Veniam deserunt
+          architecto, nihil sed perferendis laudantium at officiis perspiciatis
+          consequuntur, cupiditate reiciendis ipsam asperiores quibusdam amet!
+          Nostrum in atque quos eligendi voluptas! Corrupti nostrum tempora ex
+          consequuntur deserunt, mollitia incidunt ipsa vitae perspiciatis
+          exercitationem aperiam et iusto! Unde?</small
+        >
+      </p>
+      <p>
+        <small
+          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam unde
+          facilis corrupti officia provident reprehenderit voluptas, sit
+          repellat at accusantium quisquam sapiente aperiam iusto perspiciatis
+          non possimus nostrum, quibusdam, veniam laboriosam hic labore autem
+          omnis debitis. Cum vel modi ratione natus distinctio totam placeat
+          similique, ut veritatis esse sapiente fugiat, iusto consectetur, eum
+          accusantium officia corporis tempore molestiae ducimus praesentium
+          suscipit! Rerum vitae consequatur quibusdam, beatae cumque accusamus
+          est, sit minima laboriosam excepturi, aperiam quas eaque deleniti ipsa
+          libero porro reiciendis distinctio recusandae. Veniam deserunt
+          architecto, nihil sed perferendis laudantium at officiis perspiciatis
+          consequuntur, cupiditate reiciendis ipsam asperiores quibusdam amet!
+          Nostrum in atque quos eligendi voluptas! Corrupti nostrum tempora ex
+          consequuntur deserunt, mollitia incidunt ipsa vitae perspiciatis
+          exercitationem aperiam et iusto! Unde?</small
+        >
+      </p>
+      <p>
+        <small
+          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam unde
+          facilis corrupti officia provident reprehenderit voluptas, sit
+          repellat at accusantium quisquam sapiente aperiam iusto perspiciatis
+          non possimus nostrum, quibusdam, veniam laboriosam hic labore autem
+          omnis debitis. Cum vel modi ratione natus distinctio totam placeat
+          similique, ut veritatis esse sapiente fugiat, iusto consectetur, eum
+          accusantium officia corporis tempore molestiae ducimus praesentium
+          suscipit! Rerum vitae consequatur quibusdam, beatae cumque accusamus
+          est, sit minima laboriosam excepturi, aperiam quas eaque deleniti ipsa
+          libero porro reiciendis distinctio recusandae. Veniam deserunt
+          architecto, nihil sed perferendis laudantium at officiis perspiciatis
+          consequuntur, cupiditate reiciendis ipsam asperiores quibusdam amet!
+          Nostrum in atque quos eligendi voluptas! Corrupti nostrum tempora ex
+          consequuntur deserunt, mollitia incidunt ipsa vitae perspiciatis
+          exercitationem aperiam et iusto! Unde?</small
+        >
+      </p>
     </div>
   </section>
 </template>

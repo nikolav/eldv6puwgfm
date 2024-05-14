@@ -6,3 +6,12 @@ export const priceFormatLocale = (value: number) =>
     // currencyDisplay: "symbol",
     minimumFractionDigits: 2,
   }).format(value);
+
+export const numberFormatLocale = (value: number) =>
+  new Intl.NumberFormat("sr-RS", {
+    style: "decimal",
+    // currency: "RSD",
+    // maximumSignificantDigits: 3,
+    // currencyDisplay: "symbol",
+    // minimumFractionDigits: 2,
+  }).format(value);

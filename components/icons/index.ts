@@ -96,3 +96,5 @@ export { default as IconShine } from "./IconShine.vue";
 export { default as IconStarFat } from "./IconStarFat.vue";
 export { default as IconPdf } from "./IconPdf.vue";
 export { default as IconYotubeVideo } from "./IconYotubeVideo.vue";
+export { default as IconStar } from "./IconStar.vue";
+
