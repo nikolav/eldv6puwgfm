@@ -1,10 +1,9 @@
 <script setup lang="ts">
-
 // @@eos
 </script>
 <template>
   <section class="component--">
-    <VCardTitle class="text-center text-h1">KANTAR.RS,  📰 Blog</VCardTitle>
+    <VCardTitle class="text-center text-h1">KANTAR.RS, 📜 Recepti</VCardTitle>
     <VCardSubtitle class="text-center"
       >👷🏻‍♂️ strana je još uvek u izradi</VCardSubtitle
     >

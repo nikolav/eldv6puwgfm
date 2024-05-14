@@ -20,6 +20,7 @@
                   KANTAR.RS blog
                 </h2>
                 <VBtn
+                  :to="{ name: 'blog' }"
                   variant="elevated"
                   elevation="3"
                   size="x-large"
@@ -92,13 +93,17 @@
               />
             </VSheet>
             <div class="position-relative col-span-3">
-              <VCardTitle
-                class="z-10 position-absolute start-2 bottom-4 !tracking-wide"
-              >
-                <span class="!underline !underline-offset-2">
-                  Omiljeni recepti naših korisnika...
-                </span>
-              </VCardTitle>
+              <NuxtLink :to="{ name: 'recepti' }">
+                <VCardTitle
+                  class="z-10 position-absolute start-2 bottom-4 !tracking-wide"
+                >
+                  <span
+                    class="link--prominent-base !underline !underline-offset-2"
+                  >
+                    Omiljeni recepti naših korisnika...
+                  </span>
+                </VCardTitle>
+              </NuxtLink>
               <VSheet
                 rounded="lg"
                 elevation="2"

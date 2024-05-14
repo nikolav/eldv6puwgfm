@@ -31,6 +31,8 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconStarFat,
+  IconShine,
   IconRoadSign,
   IconPlant,
   IconProductSearch,
@@ -253,6 +255,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconStarFat: IconStarFat,
+        iconShine: IconShine,
         iconRoadSign: IconRoadSign,
         iconPlant: IconPlant,
         iIconProductSearch: IconProductSearch,

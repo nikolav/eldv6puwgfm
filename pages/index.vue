@@ -16,35 +16,47 @@ import { Dump } from "@/components/dev";
 definePageMeta({
   scrollToTop: false,
 });
-const { lgAndUp } = useDisplay();
+
+// utils
+const auth = useStoreApiAuth();
+const { mdAndUp } = useDisplay();
 
 // stores
-const { products: productsSelection } = useQueryProductsOnly(
-  shuffle([3, 4, 5, 6, 2, 1])
+const qPidsRandomRWD = computed(() =>
+  mdAndUp.value
+    ? {
+        random: true,
+        limit: 6,
+      }
+    : {
+        random: true,
+        limit: 4,
+      }
 );
+const { products: productsSelection } = useQueryProductsSearch(qPidsRandomRWD);
 
-// const { products$ } = useQueryProductsAll();
-// const { reload: reloadAll } = useApiStorage(true, true);
+const qPidsLatestRWD = computed(() =>
+  mdAndUp.value ? { sortBy: 5, limit: 3 } : { sortBy: 5, limit: 2 }
+);
+const { products: productsLatest } = useQueryProductsSearch(qPidsLatestRWD);
 
-const auth = useStoreApiAuth();
-const user_ = computed(() => auth.user$);
-const logUser = () => {
-  console.clear();
-  console.log(user_);
-};
 // #eos
 </script>
 
 <template>
   <section id="page-demo" class="*pa-2 *pa-md-4">
     <!-- izdvajamo -->
-    <div class="__spacer__ mt-8" />
+    <div class="__spacer__ mt-12" />
     <HeaderProminent
-      class="ps-10 mt-4"
+      class="ps-12 mt-6"
       text="Ovog meseca za Vas smo izdvojili: "
     >
       <template #prepend>
-        <VIcon class="opacity-20" :size="64" icon="$iconPlant" />
+        <VIcon
+          style="font-size: 5.22rem"
+          class="rotate-[-5deg] opacity-20 translate-x-3"
+          icon="$iconStarFat"
+        />
       </template>
     </HeaderProminent>
     <VContainer class="mx-auto">
@@ -78,9 +90,13 @@ const logUser = () => {
 
     <!-- blog, receipt, links -->
     <div class="__scacer__ mt-20" />
-    <HeaderProminent class="ps-10 mt-5" text="Ostanite u toku sa trendovima">
+    <HeaderProminent class="ps-10 mt-8" text="Ostanite u toku sa trendovima">
       <template #prepend>
-        <VIcon class="ms-3 opacity-20" :size="81" icon="$iconRoadSign" />
+        <VIcon
+          style="font-size: 6.22rem"
+          class="ms-3 opacity-20"
+          icon="$iconRoadSign"
+        />
       </template>
     </HeaderProminent>
     <BlogReceptiLinkProminent />
@@ -88,8 +104,8 @@ const logUser = () => {
     <!-- welcome -->
     <div class="__scacer__ mt-20" />
     <HeaderProminent
-      class="ps-10 mt-8"
-      text="Veliki pozdrav našim novim proizvođačima i zanatlijama"
+      class="ps-10 mt-12"
+      text="Veliki pozdrav našim novim članovima 🚀💪🏻"
     >
       <template #prepend>
         <div style="font-size: 8rem" class="d-flex items-center justify-center">
@@ -110,11 +126,62 @@ const logUser = () => {
         </div>
       </template>
     </HeaderProminent>
+    <VContainer>
+      <div class="__placer__ d-flex items-start gap-2 px-12">
+        <VCardCompanyDisplay :user="auth.user$" />
+        <VCardCompanyDisplay :user="{ id: 3 }" />
+      </div>
+    </VContainer>
 
-    <VCardCompanyDisplay :user="user_" />
+    <!-- novi proizvode -->
+    <HeaderProminent
+      class="ps-12 mt-32 pb-5"
+      text="Najnoviji ulistani proizvodi"
+    >
+      <template #prepend>
+        <VIcon
+          style="font-size: 6.22rem"
+          icon="$iconShine"
+          class="opacity-30 ps-5 translate-y-5 translate-x-2"
+        />
+      </template>
+    </HeaderProminent>
+    <VContainer class="mx-auto">
+      <VRow dense>
+        <VCol :sm="6" :md="4" v-for="p in productsLatest" :key="p.id">
+          <CardProductDisplay @product-photos-change="noop" :product="p" />
+        </VCol>
+      </VRow>
+    </VContainer>
+
+    <!-- user help -->
+    <div class="__spacer__ mt-24">
+      <HeaderProminent
+        class="ps-10 mt-5"
+        text="Pomažemo Vam da se Vaš proizvod vidi"
+      >
+        <template #prepend>
+          <div class="__placer__ text-center" style="font-size: 6.22rem">
+            <svg
+              class="opacity-20 -translate-y-2"
+              width="1em"
+              height="1em"
+              viewBox="0 0 152.31 207.29"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g transform="translate(-36.345 -8.8538)">
+                <path
+                  fill="currentColor"
+                  d="m67.892 212.13c-1.3952-4.6191 2.1765-4.2712 5.6716-4 29.79 0.18051 59.597-0.44518 89.373 0.45611 6.8404-2.5577 12.214 9.0284 2.9312 7.0506-32.652 0.79369-65.317 0.39529-97.976 0.49329v-4zm9-39.75v-30.75h85v61.5h-85v-30.75zm66.448 8.3853c6.0593-7.0087 1.8526-19.88-8.3427-18.578-12.861-0.60782-26.078-1.1055-38.687 1.8704-5.88 4.5262-5.0523 18.625 4.2436 18.364 13.773 1.3736 28.042 2.0727 41.625-1.0053l1.1614-0.65079zm-49.448-47.015c1.6748-7.3693 16.938-1.5308 18.204-12.147 3.67-9.5353 3.2442-19.933 4.0395-29.973-9.1199-6.8233-17.756-14.322-24.92-23.221-6.7551-4.4435-16.091-4.9081-21.33-12.092-8.4177-9.2231-13.819-21.574-14.683-33.996 4.2839-7.2845 20.532 2.3688 20.691-8.238-0.80823-4.0181 0.39655-6.0109 4.6403-4.9464 27.287 0.16443 54.573 0.32885 81.86 0.49328-0.30849 5.2914 0.84278 11.573 7.9213 9.4988 9.3584-2.5856 17.21 3.6175 11.286 12.979-3.8837 14.787-13.386 30.739-29.624 33.669-10.426 6.36-16.8 17.797-27.464 23.995-3.289 8.4876-0.54251 18.569 0.0996 27.552 0.10664 11.328 11.704 12.388 19.927 13.874 1.0775 10.611-16.223 3.9594-22.829 5.9334-9.0911-0.50762-18.706 1.2149-27.418-1.4258l-0.34863-0.83835zm37.083-53.294c14.707-15.502 21.892-36.656 23.802-57.623-1.8065-5.4827-15.751-3.7776-11.909 4.4825-0.77678 20.595-6.1523 41.703-18.657 58.386 0.42033 2.2447 5.8568-4.7045 6.7649-5.2458zm-47.668-26.076c-3.9991-8.3769-5.6026-17.553-7.665-26.49-5.947-4.348-18.303-2.1546-11.257 7.1057 3.7115 9.4236 9.5996 19.314 19.579 22.915 1.0443-0.84764-0.62878-2.612-0.65678-3.5303zm76.22 0.89886c9.0737-6.5366 14.459-17.306 16.47-28.069-6.5739-2.9568-16.703-0.8036-14.981 8.6663-0.91512 7.3367-6.1079 16.014-6.1389 22.128 1.7299-0.57472 3.1742-1.7036 4.6493-2.7253zm-81.52 53.536c1.19-6.2656-13.897-5.9927-3.0276-9.3464 2.607-2.8891 4.4215-10.118 5.9067-1.8205 0.53732 3.3822 12.441 3.0008 5.452 5.0847-4.9481-0.69695-6.6861 11.727-8.3311 6.0822zm-31.44-18.045c2.3824-7.3396-17.634-7.0946-7.1765-10.64 8.1393 1.7196 7.681-18.939 11.579-6.2049-1.3353 6.6569 17.663 6.9719 6.4592 10.194-7.0668-1.9795-7.161 19.523-10.861 6.6504zm131.84-6.5787c-0.57031-5.0555-13.495-5.1762-3.374-7.7589 3.6621-1.6578 5.0566-11.525 6.8811-2.6847 1.5243 3.5434 12.062 4.4588 3.2944 6.5722-2.9422 0.14306-5.4144 11.586-6.8015 3.8714z"
+                />
+              </g>
+            </svg>
+          </div>
+        </template>
+      </HeaderProminent>
+    </div>
 
     <div class="text-disabled">
-      <h3>4. red: novo: proizvodi, proizvodkaci /2 reda</h3>
       <h3>5. red: medaia, video, ytube, promo</h3>
       <h4>6. red: par utisaka korisnika</h4>
       <h5>7. red: prijava mail lista</h5>

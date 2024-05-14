@@ -92,3 +92,5 @@ export { default as IconUserShield } from "./IconUserShield.vue";
 export { default as IconProductSearch } from "./IconProductSearch.vue";
 export { default as IconPlant } from "./IconPlant.vue";
 export { default as IconRoadSign } from "./IconRoadSign.vue";
+export { default as IconShine } from "./IconShine.vue";
+export { default as IconStarFat } from "./IconStarFat.vue";

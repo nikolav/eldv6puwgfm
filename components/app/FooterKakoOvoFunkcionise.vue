@@ -47,7 +47,7 @@ import { TopicChat } from "@/components/app";
               class="text-h6 !font-sans !leading-loose"
               style="font-size: 0.88rem !important"
             >
-              Razgledate i otkrivate nove proizvode iz našeg bogatog okruženja.
+              Razgledate i otkrivate nove proizvode sa našeg bogatog podneblja.
             </h4>
             <p class="mt-5">
               Kao i na pijaci, napravite svoj izbor kod proizvođača i zanatlija.

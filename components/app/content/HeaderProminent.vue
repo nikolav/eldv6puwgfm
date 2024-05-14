@@ -21,7 +21,7 @@ const props = defineProps<{ text: string }>();
       </h2>
       <slot name="append" />
     </div>
-    <VDivider class="ma-0 border-opacity-50 mb-8 mt-3" length="88%" />
+    <VDivider class="ma-0 border-opacity-50 mb-5 mt-3" length="88%" />
   </VContainer>
 </template>
 <style lang="scss" scoped>
