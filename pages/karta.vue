@@ -11,6 +11,7 @@ import {
   ProductPublicUrl,
   VChipDistrict,
   LightboxProductImages,
+  HeaderProminent,
 } from "@/components/app";
 import { LightboxImages } from "@/components/ui";
 // import { Dump } from "@/components/dev";
@@ -73,13 +74,18 @@ watch(
 <template>
   <section class="page--karta pb-12">
     <VContainer class="ma-0 pa-0 mx-auto mt-5">
-      <h2
-        class="text-truncate font-sans tracking-wider opacity-80"
-        style="font-size: 155%"
+      <HeaderProminent
+        text="Sve iz prve ruke od naših najboljih proizvođača i zanatljia"
+        class="ps-12 mt-12"
       >
-        Sve iz prve ruke od najboljih proizvođača i zanatljia Srbije...
-      </h2>
-      <VDivider class="ma-0 border-opacity-50 mb-8 mt-1" length="88%" />
+        <template #prepend>
+          <VIcon
+            class="ms-5 opacity-20"
+            style="font-size: 7.56rem"
+            icon="$iconFarmhouse"
+          />
+        </template>
+      </HeaderProminent>
       <VRow class="ma-0 pa-0">
         <!-- @@md:right -->
         <VCol :order="2" :order-lg="1" lg="9" class="ma-0 pa-0">

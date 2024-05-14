@@ -23,24 +23,52 @@ definePageMeta({
 
 // utils
 const auth = useStoreApiAuth();
-const { mdAndUp } = useDisplay();
+const { smAndUp, mdAndUp, lgAndUp } = useDisplay();
 
-// stores
+// products selection
 const qPidsRandomRWD = computed(() =>
-  mdAndUp.value
+  lgAndUp.value
+    ? {
+        random: true,
+        limit: 10,
+      }
+    : mdAndUp.value
+    ? {
+        random: true,
+        limit: 8,
+      }
+    : smAndUp.value
     ? {
         random: true,
         limit: 6,
       }
     : {
         random: true,
-        limit: 4,
+        limit: 3,
       }
 );
 const { products: productsSelection } = useQueryProductsSearch(qPidsRandomRWD);
 
 const qPidsLatestRWD = computed(() =>
-  mdAndUp.value ? { sortBy: 5, limit: 3 } : { sortBy: 5, limit: 2 }
+  lgAndUp.value
+    ? {
+        sortBy: 5,
+        limit: 10,
+      }
+    : mdAndUp.value
+    ? {
+        sortBy: 5,
+        limit: 8,
+      }
+    : smAndUp.value
+    ? {
+        sortBy: 5,
+        limit: 6,
+      }
+    : {
+        sortBy: 5,
+        limit: 3,
+      }
 );
 const { products: productsLatest } = useQueryProductsSearch(qPidsLatestRWD);
 
@@ -94,13 +122,29 @@ const toggleEmailSaved = useToggleFlag();
         />
       </template>
     </HeaderProminent>
-    <VContainer class="mx-auto">
+
+    <VContainer fluid class="products--list">
+      <VRow dense>
+        <VCol
+          :class="lgAndUp ? 'cols5' : undefined"
+          :sm="4"
+          :md="3"
+          lg="auto"
+          v-for="p in productsSelection"
+          :key="p.id"
+        >
+          <CardProductDisplay @product-photos-change="noop" :product="p" />
+        </VCol>
+      </VRow>
+    </VContainer>
+
+    <!-- <VContainer class="mx-auto">
       <VRow dense>
         <VCol :sm="6" :md="4" v-for="p in productsSelection" :key="p.id">
           <CardProductDisplay @product-photos-change="noop" :product="p" />
         </VCol>
       </VRow>
-    </VContainer>
+    </VContainer> -->
 
     <!-- 
       <VContainer fluid class="products--list">
@@ -163,7 +207,7 @@ const toggleEmailSaved = useToggleFlag();
     </HeaderProminent>
     <VContainer>
       <div class="__placer__ d-flex items-start gap-2 px-12">
-        <VCardCompanyDisplay :user="auth.user$" />
+        <VCardCompanyDisplay :user="{ id: 1 }" />
         <VCardCompanyDisplay :user="{ id: 3 }" />
       </div>
     </VContainer>
@@ -181,9 +225,23 @@ const toggleEmailSaved = useToggleFlag();
         />
       </template>
     </HeaderProminent>
-    <VContainer class="mx-auto">
+    <!-- <VContainer class="mx-auto">
       <VRow dense>
         <VCol :sm="6" :md="4" v-for="p in productsLatest" :key="p.id">
+          <CardProductDisplay @product-photos-change="noop" :product="p" />
+        </VCol>
+      </VRow>
+    </VContainer> -->
+    <VContainer fluid class="products--list">
+      <VRow dense>
+        <VCol
+          :class="lgAndUp ? 'cols5' : undefined"
+          :sm="4"
+          :md="3"
+          lg="auto"
+          v-for="p in productsLatest"
+          :key="p.id"
+        >
           <CardProductDisplay @product-photos-change="noop" :product="p" />
         </VCol>
       </VRow>
@@ -407,261 +465,7 @@ const toggleEmailSaved = useToggleFlag();
         </VContainer>
       </VCol>
     </MailingListSave>
-
-    <VSpacer class="mb-48" />
-
-    <VContainer
-      fluid
-      class="pt-12 !pb-32 bg-stone-400 border-t-lg border-primary border-opacity-100"
-    >
-      <div class="mx-12 space-y-3">
-        <section>
-          <h2>Ko smo mi?</h2>
-          <p>
-            <small>
-              KANTAR.RS je online pijaca za sveže i sušene proizvode koji
-              okuplja strastvene proizvođače i zanatlije, naslednike autentičnog
-              znanja i potrošače zabrinute za zdraviju, ukusniju i odgovorniju
-              hranu.
-            </small>
-          </p>
-        </section>
-        <section>
-          <h2>Naša misija</h2>
-          <h3 style="font-size: 88%">Proizvođači i zanatlije</h3>
-          <p>
-            <small>
-              Pomažemo im da promovišu svoj rad, pomažemo da zablistaju u svom
-              regionu, podržavamo ih da razviju svoju direktnu prodaju.
-            </small>
-          </p>
-          <h3 style="font-size: 88%">Kupci</h3>
-          <p>
-            <small>
-              Nudimo ukus i transparentnost, upoznajemo Vas sa malim,
-              kvalitetnim proizvođačima kojima je teško pristupiti (koje ne
-              morate nužno pronaći u blizini vašeg doma) i moći ćete da direktno
-              naručite njihove sveže proizvode u Vaš dom na dan po Vašem izboru.
-            </small>
-          </p>
-        </section>
-        <section>
-          <h2>Naša vizija: Razmena bez posrednika</h2>
-          <p>
-            <small>
-              Pomažemo im da promovišu svoj rad, pomažemo da zablistaju u svom
-              regionu, podržavamo ih da razviju svoju direktnu prodaju.
-            </small>
-          </p>
-          <p>
-            <small>
-              KANTAR.RS uspostavlja direktnu, autentičnu i trajnu vezu sa našim
-              proizvođačima i zanatlijama. Svaki dan, održavamo i razvijamo ovu
-              vezu, stavljajući ljude u srce našeg projekta.
-            </small>
-          </p>
-          <p>
-            <small>
-              Nudimo virtuelnu pijacu za raznovrsnu, zdravu i ukusnu hranu koju
-              proizvode lokalni proizvođači poštujući svoju zemlju i životnu
-              sredinu.
-            </small>
-          </p>
-          <p>
-            <small>
-              Smatramo da je od suštinske važnosti da se promoviše regionalni
-              zanatlija i da se njegovo proizvod predstavi u što je moguće većem
-              broju ljudi. Stoga stavljamo našu digitalnu ekspertizu u službu
-              njihovog zanatskog znanja.
-            </small>
-          </p>
-          <p>
-            <small>
-              U KANTAR.RS posvećeni smo radu sa strastvenim proizvođačima koji
-              stavljaju kvalitet i transparentnost u centar svojih briga. Ovo su
-              vrednosti koje želimo da prenesemo radeći u duhu otvorenosti,
-              razmene i saradnje.
-            </small>
-          </p>
-          <p>
-            <small>
-              Konačno, sa žarom branimo i promovišemo srpsko kulinarsko nasleđe.
-              Zato što se kolektivnim zalaganjem bolje konzumira pojedinačno.
-            </small>
-          </p>
-          <p>
-            <small> KANTAR.RS: Delimo ono što je dobro! </small>
-          </p>
-        </section>
-        <section>
-          <h2>Naša obaveza: Kvalitet! Kvalitet ! Kvalitet !</h2>
-          <p>
-            <small>
-              Kvalitet porekla: proizvodi na našim tezgama prvenstveno
-              ispunjavaju zvanične kriterijume kvaliteta i proizvedeni su
-              korišćenjem održivih ili organskih metoda poljoprivrede. Postoji
-              potpuna transparentnost o poreklu proizvoda - Mesto proizvodnje,
-              uzgoj/klanje i prerada.
-            </small>
-          </p>
-          <p>
-            <small>
-              Kvalitet transporta: svaka porudžbina se preuzima direktno na
-              mestu proizvodnje, i isporučuje kupcima od strane proizvođača. Ako
-              se na KANTAR.RS pošalje nekoliko porudžbina, one će automatski
-              biti grupisane zajedno za isporuku na željeni dan.
-            </small>
-          </p>
-          <p>
-            <small>
-              Poštovanje hladnog lanca: Tokom celog putovanja, temperatura se
-              prati pomoću RFID čipa i podaci se šalju u namensku ćeliju za
-              nadzor.
-            </small>
-          </p>
-        </section>
-        <section>
-          <h2>Kako funkcioniše direktna isporuka proizvođača?</h2>
-          <p>
-            <small>
-              KANTAR.RS je tržište za lokalne proizvode, kupujete direktno od
-              proizvođača i zanatlija koji se onda brinu o isporuci svojih
-              proizvoda do vas, pojedinačno. Ali da bi se porudžbine grupisale
-              prilikom isporuke, KANTAR.RS je razvio algoritam koji omogućava
-              kupcu da odabere dan isporuke na osnovu kriterijuma isporuke
-              proizvođača i da grupiše porudžbinu od nekoliko proizvođača tokom
-              poslednjeg kilometra.
-            </small>
-          </p>
-        </section>
-      </div>
-    </VContainer>
-    <VRow
-      no-gutters
-      class="pa-12 bg-stone-500 ma-0 border-t border-primary-darken-1 border-opacity-100"
-      style="font-size: 81%"
-    >
-      <VCol sm="4" class="d-flex flex-col items-center">
-        <NuxtLink to="/">
-          <strong class="">
-            <VIcon
-              color="primary-darken-1"
-              style="font-size: 8rem"
-              icon="$iconLogoKantarH"
-              class="-translate-y-[3rem] -translate-x-[5rem]"
-            />
-          </strong>
-        </NuxtLink>
-      </VCol>
-      <VCol sm="4">
-        <h2>KANTAR.RS</h2>
-        <h5>
-          <NuxtLink to="/">
-            <a>Kako ovo radi?</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>Sponzori</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>Česta pitanja</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>Izbor</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>KANTAR.RS recenzije</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>Svi naši proizvođači i zanatlije</a>
-          </NuxtLink>
-        </h5>
-      </VCol>
-      <VCol sm="4">
-        <h2>Kontaktirajte nas</h2>
-        <h5>
-          <NuxtLink to="/">
-            <a>Pitanje ? Kontaktirajte nas</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>Pratite svoju isporuku</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>Zapošljavamo</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>Da li ste ozbiljan kupac?</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>Da li želite da prodajete na KANTAR.RS?</a>
-          </NuxtLink>
-        </h5>
-      </VCol>
-    </VRow>
-    <VRow
-      style="font-size: 1.22rem"
-      class="bg-black/90 ma-0 pa-1 !text-white/20 text-body-2 !font-mono d-flex items-center justify-evenly"
-    >
-      <small>
-        <NuxtLink to="/">
-          <a>&copy; 2024. kantar.rs</a>
-        </NuxtLink>
-      </small>
-      <small>
-        <NuxtLink to="/">
-          <a>uslovi</a>
-        </NuxtLink>
-      </small>
-      <small>
-        <NuxtLink to="/">
-          <a>prava</a>
-        </NuxtLink>
-      </small>
-      <small>
-        <NuxtLink to="/">
-          <a>kolačići</a>
-        </NuxtLink>
-      </small>
-      <small>
-        <NuxtLink to="/">
-          <a>lični podaci</a>
-        </NuxtLink>
-      </small>
-      <small>
-        <NuxtLink to="/">
-          <a>saglasnost</a>
-        </NuxtLink>
-      </small>
-    </VRow>
   </section>
-  <!--
-
-
-    <VIcon
-            color="primary-darken-1"
-            style="font-size: 12rem"
-            icon="$iconLogoKantarH"
-          />
-    
-    
-  -->
 </template>
 
 <style scoped lang="scss">

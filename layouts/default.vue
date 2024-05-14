@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { AppBarMain, CartOpenBadgePrimary } from "@/components/app";
+import {
+  AppBarMain,
+  CartOpenBadgePrimary,
+  FooterSmallText,
+} from "@/components/app";
 import { MainSearchBox } from "@/components/ui";
 import { PRODUCTION$ } from "@/config";
 import { useDisplay } from "vuetify";
@@ -50,7 +54,7 @@ watch(search_, debounceSearchHandle);
 
 <template>
   <section
-    class="layout--default *bg-blue"
+    class="layout--default"
     :style="`padding-top: ${appBarHeight}px`"
   >
     <!-- @cart:button -->
@@ -144,6 +148,7 @@ watch(search_, debounceSearchHandle);
         <p>Lorem!</p>
       </slot>
     </VMain>
+    <FooterSmallText />
   </section>
 </template>
 

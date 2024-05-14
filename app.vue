@@ -222,4 +222,5 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
   max-width: 20% !important;
   flex-basis: 20% !important;
 }
+
 </style>
