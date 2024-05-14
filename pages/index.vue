@@ -12,8 +12,9 @@ import {
   VCardCompanyDisplay,
   TopicChat,
   OverviewsFake,
+  MailingListSave,
 } from "@/components/app";
-import { LightboxSlides } from "@/components/ui";
+import { LightboxSlides, VSnackbarStatusMessage } from "@/components/ui";
 import { Dump } from "@/components/dev";
 
 definePageMeta({
@@ -62,11 +63,23 @@ const slidesPromoMaterial = [
   },
 ];
 
+const saveEmail$ = ref();
+const toggleEmailSaved = useToggleFlag();
+
 // #eos
 </script>
 
 <template>
   <section id="page-demo" class="*pa-2 *pa-md-4">
+    <!-- mail-save --status -->
+    <VSnackbarStatusMessage v-model="toggleEmailSaved.isActive.value">
+      <VCardText>
+        <strong style="font-size: 1.55rem"> 👌🏻 </strong>
+        Email je uspešno sačuvan. Informisaćemo Vas putem elektronske pošte o
+        novostima na KANTAR.RS. Hvala.
+      </VCardText>
+    </VSnackbarStatusMessage>
+
     <!-- izdvajamo -->
     <div class="__spacer__ mt-12" />
     <HeaderProminent
@@ -112,7 +125,7 @@ const slidesPromoMaterial = [
 
     <!-- blog, receipt, links -->
     <div class="__scacer__ mt-20" />
-    <HeaderProminent class="ps-10 mt-8" text="Ostanite u toku sa trendovima">
+    <HeaderProminent class="ps-10 mt-8" text="Budite u toku sa trendovima">
       <template #prepend>
         <VIcon
           style="font-size: 6.22rem"
@@ -184,7 +197,7 @@ const slidesPromoMaterial = [
       >
         <template #append>
           <VSpacer />
-          <div class="scale-125 translate-y-2 me-8">
+          <div class="scale-125 translate-y-2 me-10">
             <TopicChat
               color="info-darken-2"
               title="Korisnička podrška"
@@ -221,7 +234,7 @@ const slidesPromoMaterial = [
               <VSheet
                 @click="galleryOpen"
                 v-ripple
-                height="156"
+                height="256"
                 color="transparent"
                 class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
                 elevation="2"
@@ -229,8 +242,9 @@ const slidesPromoMaterial = [
                 rounded="lg"
               >
                 <div
-                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[56%] shadow pt-2"
+                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
                 >
+                  <VSpacer class="mb-8" />
                   <VCardTitle
                     style="font-size: 120% !important"
                     class="text-center text-h5 !font-sans"
@@ -251,7 +265,7 @@ const slidesPromoMaterial = [
               <VSheet
                 @click="galleryOpen({ startIndex: 1 })"
                 v-ripple
-                height="156"
+                height="256"
                 color="transparent"
                 class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
                 elevation="2"
@@ -259,8 +273,9 @@ const slidesPromoMaterial = [
                 rounded="lg"
               >
                 <div
-                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[56%] shadow pt-2"
+                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
                 >
+                  <VSpacer class="mb-8" />
                   <VCardTitle
                     style="font-size: 1.33rem !important"
                     class="text-center text-h5 !font-sans"
@@ -283,7 +298,7 @@ const slidesPromoMaterial = [
               <VSheet
                 @click="galleryOpen({ startIndex: 2 })"
                 v-ripple
-                height="156"
+                height="256"
                 color="transparent"
                 class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
                 elevation="2"
@@ -291,14 +306,15 @@ const slidesPromoMaterial = [
                 rounded="lg"
               >
                 <div
-                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[56%] shadow pt-2"
+                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
                 >
+                  <VSpacer class="mb-8" />
                   <VCardTitle
                     style="font-size: 1.33rem !important"
                     class="text-center text-h5 !font-sans"
                   >
                     <h3 class="text-white" style="font-size: 81%">
-                      Priprema slika za sajtu
+                      Priprema slika za sajt
                     </h3>
                   </VCardTitle>
                   <VCardSubtitle
@@ -318,7 +334,7 @@ const slidesPromoMaterial = [
     <div class="__spacer__ mt-12" />
     <HeaderProminent
       class="ps-12 mt-20 pb-4"
-      text="Kako su nas ocenili naši korisnici i kupci"
+      text="Ovako su nas ocenili naši korisnici i kupci"
     >
       <template #prepend>
         <svg
@@ -341,8 +357,58 @@ const slidesPromoMaterial = [
     </HeaderProminent>
     <OverviewsFake />
 
+    <!-- mail-lista --prijava -->
+    <MailingListSave
+      @email-saved="toggleEmailSaved.on"
+      v-slot="{ save: mailSave }"
+    >
+      <VSpacer class="mb-32" />
+      <HeaderProminent
+        class="ps-10 mt-8"
+        text="Ostanite informisani o proizvodima na KANTAR.RS"
+      >
+        <template #prepend>
+          <VIcon
+            class="opacity-20 ms-5 rotate-[-2deg] -translate-y-2"
+            style="font-size: 6.22rem"
+            icon="$iconEnvelopeOpenHandDrawn"
+          />
+        </template>
+      </HeaderProminent>
+      <VCol offset-sm="1" class="*bg-red !max-w-[912px]">
+        <VContainer>
+          <VRow class="!ms-20">
+            <VCol sm="6">
+              <VCardText>
+                Želim da povremeno dobijam obaveštenja o proizvodima i uslugama
+                na KANTAR.RS na ovu email adresu:
+              </VCardText>
+            </VCol>
+            <VCol sm="6">
+              <VForm
+                @submit.prevent="mailSave(saveEmail$)"
+                autocomplete="off"
+                class="d-flex items-center"
+              >
+                <VTextField
+                  type="email"
+                  name="save_email"
+                  prepend-icon="$iconEmailAt"
+                  v-model.trim="saveEmail$"
+                  variant="underlined"
+                  clearable
+                />
+                <VBtn class="ms-3" size="x-large" type="submit" variant="text"
+                  >ok</VBtn
+                >
+              </VForm>
+            </VCol>
+          </VRow>
+        </VContainer>
+      </VCol>
+    </MailingListSave>
+
     <div class="text-disabled">
-      <h5>7. red: prijava mail lista</h5>
       <h5>8. red: small text, likovi</h5>
     </div>
     <div class="smalltext">

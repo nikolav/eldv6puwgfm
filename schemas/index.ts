@@ -8,3 +8,4 @@ export { schemaTask } from "./task";
 export { schemaUserIsCompany } from "./user-is-company";
 export { schemaUsersIsDefault } from "./user-is-default";
 export { schemaUsersNotReserved } from "./users-is-user";
+export { schemaEmail } from "./email";

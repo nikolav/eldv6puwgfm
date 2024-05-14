@@ -9,6 +9,7 @@ export const useTopics = () => {
       COM_PHOTOS_prefix,
     },
     key: {
+      MAILING_LIST,
       CHAT_MAIN,
       TOPIC_CHAT_COM_prefix,
       TOPIC_CHAT_PRODUCTS_prefix,
@@ -44,8 +45,11 @@ export const useTopics = () => {
     uid ? `${COM_PHOTOS_prefix}${uid}` : "";
   const comLikes = (uid: number | undefined) =>
     uid ? `${COM_LIKES_prefix}${uid}` : "";
+
   return {
     CHAT_MAIN,
+    MAILING_LIST,
+    //
     authProfile,
     chatOrder,
     comChat,

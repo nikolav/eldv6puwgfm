@@ -74,7 +74,7 @@ export const useDocs = <TData = TDocData>(
 
   const { watchProcessing } = useStoreAppProcessing();
   watchProcessing(loading);
-  
+
   // @io/listen
   watchEffect(() => useIOEvent(ioEvent$.value, reload));
 
@@ -90,6 +90,9 @@ export const useDocs = <TData = TDocData>(
     upsert,
     remove,
     reload,
+
+    // # alias
+    commit: upsert,
 
     // # manage doc tags
     tags,
