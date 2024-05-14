@@ -31,6 +31,8 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconYotubeVideo,
+  IconPdf,
   IconStarFat,
   IconShine,
   IconRoadSign,
@@ -255,6 +257,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconYotubeVideo: IconYotubeVideo,
+        iconPdf: IconPdf,
         iconStarFat: IconStarFat,
         iconShine: IconShine,
         iconRoadSign: IconRoadSign,

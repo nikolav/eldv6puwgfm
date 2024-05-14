@@ -8,3 +8,4 @@ export { default as UserAvatarPicker } from "./UserAvatarPicker.vue";
 export { default as LightboxImages } from "./LightboxImages.vue";
 export { default as VSnackbarStatusMessage } from "./VSnackbarStatusMessage.vue";
 export { default as MainSearchBox } from "./MainSearchBox.vue";
+export { default as LightboxSlides } from "./LightboxSlides.vue";

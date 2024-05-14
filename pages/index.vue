@@ -10,7 +10,9 @@ import {
   HeaderProminent,
   BlogReceptiLinkProminent,
   VCardCompanyDisplay,
+  TopicChat,
 } from "@/components/app";
+import { LightboxSlides } from "@/components/ui";
 import { Dump } from "@/components/dev";
 
 definePageMeta({
@@ -39,6 +41,25 @@ const qPidsLatestRWD = computed(() =>
   mdAndUp.value ? { sortBy: 5, limit: 3 } : { sortBy: 5, limit: 2 }
 );
 const { products: productsLatest } = useQueryProductsSearch(qPidsLatestRWD);
+
+// --slides-promo
+const slidesPromoMaterial = [
+  {
+    type: "pdf",
+    src: "/prodajna-prezentacija.pdf",
+    caption: "Prodajna prezentacija | KANTAR.RS",
+  },
+  {
+    type: "pdf",
+    src: "/uputstvo-za-fotografisanje-hrane.pdf",
+    caption: "Uputstvo za fotografisanje hrane | KANTAR.RS",
+  },
+  {
+    type: "youtube",
+    src: "https://youtu.be/YLXs6MUna70",
+    caption: "Obrada slika za sajt | KANTAR.RS",
+  },
+];
 
 // #eos
 </script>
@@ -105,7 +126,7 @@ const { products: productsLatest } = useQueryProductsSearch(qPidsLatestRWD);
     <div class="__scacer__ mt-20" />
     <HeaderProminent
       class="ps-10 mt-12"
-      text="Veliki pozdrav našim novim članovima 🚀💪🏻"
+      text="Veliki pozdrav novim članovima 🚀💪🏻"
     >
       <template #prepend>
         <div style="font-size: 8rem" class="d-flex items-center justify-center">
@@ -160,10 +181,20 @@ const { products: productsLatest } = useQueryProductsSearch(qPidsLatestRWD);
         class="ps-10 mt-5"
         text="Pomažemo Vam da se Vaš proizvod vidi"
       >
+        <template #append>
+          <VSpacer />
+          <div class="scale-125 translate-y-2 me-8">
+            <TopicChat
+              color="info-darken-2"
+              title="Korisnička podrška"
+              topic="user-assist:web"
+            />
+          </div>
+        </template>
         <template #prepend>
-          <div class="__placer__ text-center" style="font-size: 6.22rem">
+          <div class="__placer__ text-center" style="font-size: 6.67rem">
             <svg
-              class="opacity-20 -translate-y-2"
+              class="opacity-20 -translate-y-2 rotate-[-2deg]"
               width="1em"
               height="1em"
               viewBox="0 0 152.31 207.29"
@@ -180,9 +211,110 @@ const { products: productsLatest } = useQueryProductsSearch(qPidsLatestRWD);
         </template>
       </HeaderProminent>
     </div>
+    <LightboxSlides :slides="slidesPromoMaterial">
+      <template #activator="{ open: galleryOpen }">
+        <VContainer class="mx-auto">
+          <VRow>
+            <!-- :cell-1 -->
+            <VCol sm="4">
+              <VSheet
+                @click="galleryOpen"
+                v-ripple
+                height="156"
+                color="transparent"
+                class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
+                elevation="2"
+                id="bg-image--rHZRlaBLqOX"
+                rounded="lg"
+              >
+                <div
+                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[56%] shadow pt-2"
+                >
+                  <VCardTitle
+                    style="font-size: 120% !important"
+                    class="text-center text-h5 !font-sans"
+                  >
+                    <h3 class="text-white">Onlajn prisustvo i obrt</h3>
+                  </VCardTitle>
+                  <VCardSubtitle
+                    class="!text-white text-body-2 !font-mono text-end !opacity-50"
+                  >
+                    <VIcon icon="$iconPdf" />
+                    <em class="align-bottom"> prezentacija.pdf </em>
+                  </VCardSubtitle>
+                </div>
+              </VSheet>
+            </VCol>
+            <!-- :cell-2 -->
+            <VCol sm="4">
+              <VSheet
+                @click="galleryOpen({ startIndex: 1 })"
+                v-ripple
+                height="156"
+                color="transparent"
+                class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
+                elevation="2"
+                id="bg-image--Kqn6iKlGsN1zeu"
+                rounded="lg"
+              >
+                <div
+                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[56%] shadow pt-2"
+                >
+                  <VCardTitle
+                    style="font-size: 1.33rem !important"
+                    class="text-center text-h5 !font-sans"
+                  >
+                    <h3 class="text-white" style="font-size: 81%">
+                      Dobra reklama dobar proizvod
+                    </h3>
+                  </VCardTitle>
+                  <VCardSubtitle
+                    class="!text-white text-body-2 !font-mono text-end !opacity-50"
+                  >
+                    <VIcon icon="$iconPdf" />
+                    <em class="align-bottom"> fotografija.pdf </em>
+                  </VCardSubtitle>
+                </div>
+              </VSheet>
+            </VCol>
+            <!-- :cell-3 -->
+            <VCol sm="4">
+              <VSheet
+                @click="galleryOpen({ startIndex: 2 })"
+                v-ripple
+                height="156"
+                color="transparent"
+                class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
+                elevation="2"
+                id="bg-image--MwnPyfU7q"
+                rounded="lg"
+              >
+                <div
+                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[56%] shadow pt-2"
+                >
+                  <VCardTitle
+                    style="font-size: 1.33rem !important"
+                    class="text-center text-h5 !font-sans"
+                  >
+                    <h3 class="text-white" style="font-size: 81%">
+                      Priprema slika za sajtu
+                    </h3>
+                  </VCardTitle>
+                  <VCardSubtitle
+                    class="-translate-y-[3px] !text-white text-body-2 !font-mono text-end !opacity-50"
+                  >
+                    <VIcon size="x-large" icon="$iconYotubeVideo" />
+                    <em class="align-bottom"> Slike za web </em>
+                  </VCardSubtitle>
+                </div>
+              </VSheet>
+            </VCol>
+          </VRow>
+        </VContainer>
+      </template>
+    </LightboxSlides>
 
     <div class="text-disabled">
-      <h3>5. red: medaia, video, ytube, promo</h3>
       <h4>6. red: par utisaka korisnika</h4>
       <h5>7. red: prijava mail lista</h5>
       <h5>8. red: small text, likovi</h5>
@@ -191,4 +323,22 @@ const { products: productsLatest } = useQueryProductsSearch(qPidsLatestRWD);
 </template>
 
 <style scoped lang="scss">
+#bg-image--rHZRlaBLqOX {
+  background: white url("~/assets/images/prezentacija-demo.png");
+  background-size: 155%;
+  background-position: 20% 32%;
+  background-repeat: no-repeat;
+}
+#bg-image--Kqn6iKlGsN1zeu {
+  background: white url("~/assets/images/photography01.jpg");
+  background-size: 152%;
+  background-position: 33% 33%;
+  background-repeat: no-repeat;
+}
+#bg-image--MwnPyfU7q {
+  background: white url("~/assets/images/marketing-dm.jpg");
+  background-size: 112%;
+  background-position: 15% 59%;
+  background-repeat: no-repeat;
+}
 </style>

@@ -4,7 +4,7 @@ import { TopicChat } from "@/components/app";
 // @@eos
 </script>
 <template>
-  <VContainer class="bg-stone-200 rounded-lg mx-auto pa-10 border-s-lg">
+  <VContainer class="bg-stone-200 rounded-lg mx-auto pa-10 border-s-lg shadow">
     <HeaderProminent class="ps-8" text="KANTAR.RS, kako ovo funkcioniše?">
       <template #prepend>
         <VIcon class="opacity-20" :size="35" icon="$iconHelpCircle" />
@@ -147,5 +147,4 @@ import { TopicChat } from "@/components/app";
     </VRow>
   </VContainer>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

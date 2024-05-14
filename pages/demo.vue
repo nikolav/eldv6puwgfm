@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
+import { LightboxSlides } from "@/components/ui";
 // import {
 //   GoogleAuthProvider,
 //   FacebookAuthProvider,
@@ -26,7 +27,35 @@ definePageMeta({
 // const { profile, avatar } = useProfileData(3);
 
 const auth = useStoreApiAuth();
-const user = computed(() => auth.user$);
+
+const { $lightbox } = useNuxtApp();
+
+const ok = () => {
+  $lightbox.open([
+    {
+      type: "pdf",
+      src: "/prodajna-prezentacija.pdf",
+      caption: "Prodajna prezentacija",
+    },
+  ]);
+};
+const slidesPdf = [
+{
+    type: "pdf",
+    src: "/prodajna-prezentacija.pdf",
+    caption: "Prodajna prezentacija | KANTAR.RS",
+  },
+  {
+    type: "pdf",
+    src: "/uputstvo-za-fotografisanje-hrane.pdf",
+    caption: "Uputstvo za fotografisanje hrane | KANTAR.RS",
+  },
+  {
+    type: "youtube",
+    src: "https://youtu.be/YLXs6MUna70",
+    caption: "Obrada slika za sajt | KANTAR.RS",
+  },
+];
 // #eos
 </script>
 <template>
@@ -37,6 +66,16 @@ const user = computed(() => auth.user$);
     <VBtn @click="facebookAuth">auth:facebook</VBtn>
     <VBtn @click="signOut(fbAuth)">logout</VBtn> -->
     <hr />
+    <LightboxSlides
+      :slides="slidesPdf"
+      :options="{
+        startIndex: 0,
+      }"
+    >
+      <template #activator="{ open: galleryOpen }">
+        <VBtn @click="galleryOpen">:show</VBtn>
+      </template>
+    </LightboxSlides>
   </section>
 </template>
 <style lang="scss" scoped>
