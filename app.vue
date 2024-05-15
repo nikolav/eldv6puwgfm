@@ -23,7 +23,7 @@ const htmlAttrs = computed(() => ({
   class: DARK === theme.value ? "dark" : LIGHT,
 }));
 useHead({
-  titleTemplate: (ttl) => (ttl ? `${ttl} | kantar.rs` : "kantar.rs"),
+  titleTemplate: (ttl) => (ttl ? `${ttl} | kantar.rs` : "KANTAR.RS"),
   htmlAttrs,
 });
 
@@ -81,6 +81,15 @@ provide(AVATAR, avatarUrl);
 const gProductsChange$ = useGlobalVariable(PRODUCTS_CHANGE);
 useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
   gProductsChange$.value = Date.now();
+});
+
+useSeoMeta({
+  title: "KANTAR.RS",
+  ogTitle: "KANTAR.RS",
+  description: "KANTAR.RS",
+  ogDescription: "KANTAR.RS",
+  ogImage: "https://nikolav.rs/kantar-rs/kantarlogo.jpg",
+  twitterCard: "summary_large_image",
 });
 
 // @@eos
@@ -222,5 +231,4 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
   max-width: 20% !important;
   flex-basis: 20% !important;
 }
-
 </style>

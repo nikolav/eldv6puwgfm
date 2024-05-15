@@ -47,6 +47,8 @@ export default defineNuxtConfig({
     "@nuxtjs/apollo",
     // https://image.nuxt.com/
     "@nuxt/image",
+    // https://github.com/stefanobartoletti/nuxt-social-share
+    "@stefanobartoletti/nuxt-social-share",
     // https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
@@ -103,7 +105,7 @@ export default defineNuxtConfig({
       charset: "utf-8",
       viewport:
         "width=device-width, initial-scale=1.0, shrink-to-fit=no, minimum-scale=1",
-      title: "🏪",
+      title: "",
       // https://www.geeksforgeeks.org/meta-tags-in-nuxt-js/
       meta,
       //

@@ -17,15 +17,18 @@ import {
 
 const PRODUCTS_LIST_OFFSET_BOTTOM = 18;
 definePageMeta({
-  layout: "user-profile",
   middleware: "authorized",
+  layout: false,
+  //  layout: "user-profile",
 });
 
-const route = useRoute();
+// const route = useRoute();
 const auth = useStoreApiAuth();
-if (auth.isCompany$) {
-  route.meta.layout = "company-profile";
-}
+setPageLayout(auth.isCompany$ ? "company-profile" : "user-profile");
+// if (auth.isCompany$) {
+//   // route.meta.layout = "company-profile";
+//   // setPageLayout(auth.isCompany$ ? "company-profile" : "user-profile");
+// }
 
 const {
   app: { DEFAULT_NO_IMAGE },
@@ -100,7 +103,7 @@ onceMountedOn(
 
 // #eos
 </script>
- <template>
+<template>
   <section class="page--user-orders">
     <!-- <Dump :data="{ op$ }" /> -->
 
@@ -511,5 +514,4 @@ onceMountedOn(
     </div>
   </section>
 </template>
- <style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
