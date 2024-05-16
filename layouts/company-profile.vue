@@ -18,6 +18,13 @@ const sidebarLinksCompanyProfile = [
     size: "large",
   },
   {
+    icon: "$iconChatBubbles",
+    tooltip: "Inbox",
+    to: "company-profile-inbox",
+    title: "inbox",
+    size: 26,
+  },
+  {
     icon: "$iconChecklist",
     tooltip: "Moje narudžbenice",
     to: "user-orders",
@@ -25,12 +32,13 @@ const sidebarLinksCompanyProfile = [
     size: 26,
   },
   {
-    icon: "$iconChatBubbles",
-    tooltip: "Inbox",
-    to: "company-profile-inbox",
-    title: "inbox",
-    size: 26,
+    icon: "$iconIdCardCompany",
+    tooltip: "Lična karta",
+    to: "company-profile-id",
+    title: "profil-id",
+    size: "large",
   },
+
   {
     icon: "$iconBox",
     tooltip: "Ponuda/Asortiman",
@@ -39,11 +47,11 @@ const sidebarLinksCompanyProfile = [
     size: undefined,
   },
   {
-    icon: "$iconIdCardCompany",
-    tooltip: "Lična karta",
-    to: "company-profile-id",
-    title: "profil-id",
-    size: "large",
+    icon: "$iconCheck",
+    tooltip: "Recepti",
+    to: "recepti-uredi",
+    title: "recepti-uredi",
+    size: undefined,
   },
   {
     icon: "$iconSettings",
@@ -105,5 +113,4 @@ const sidebarLinksCompanyProfile = [
     </VMain>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

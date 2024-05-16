@@ -53,10 +53,7 @@ watch(search_, debounceSearchHandle);
 </script>
 
 <template>
-  <section
-    class="layout--default"
-    :style="`padding-top: ${appBarHeight}px`"
-  >
+  <section class="layout--default" :style="`padding-top: ${appBarHeight}px`">
     <!-- @cart:button -->
     <CartOpenBadgePrimary
       :badge-offset="9"
@@ -143,9 +140,12 @@ watch(search_, debounceSearchHandle);
     </VSheet>
 
     <!-- @page:main -->
-    <VMain class="*bg-blue *pt-0">
+    <VMain
+      class="*bg-blue"
+      :class="null != $route.meta.layoutDefaultPaddingTop ? 'pt-0' : ''"
+    >
       <slot>
-        <p>Lorem!</p>
+        <span> Lorem! </span>
       </slot>
     </VMain>
     <FooterSmallText />

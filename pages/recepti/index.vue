@@ -1,20 +1,15 @@
 <script setup lang="ts">
+definePageMeta({
+  layoutDefaultPaddingTop: false,
+});
 // @@eos
 </script>
 <template>
-  <section class="component--">
-    <VCardTitle class="text-center text-h1">KANTAR.RS, 📜 Recepti</VCardTitle>
-    <VCardSubtitle class="text-center"
-      >👷🏻‍♂️ strana je još uvek u izradi</VCardSubtitle
-    >
-    <VCardActions class="my-5">
+  <section class="page--recepti">
+    <VToolbar elevation="1" density="comfortable">
       <VSpacer />
-      <NuxtLink to="/">
-        <VBtn size="x-large">🏠 Kantar.rs</VBtn>
-      </NuxtLink>
-      <VSpacer />
-    </VCardActions>
+      @todo --recepti-pretraga
+    </VToolbar>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -33,7 +33,7 @@ const search$$ = useStoreSearchConfig();
 // #eos
 </script>
 <template>
-  <VAppBar flat :height="props.height" elevation="1" id="appbar--main">
+  <VAppBar flat :height="height" elevation="1" id="appbar--main">
     <!-- @@ -->
     <VAppBarTitle
       v-if="smAndUp"

@@ -7,22 +7,22 @@ const {
 } = useAppConfig();
 const menu = [
   {
-    page: "Narudžbenice",
-    icon: "$iconChecklist",
-    iconSize: "large",
-    to: "user-orders",
-  },
-  {
     page: "Moj profil",
     icon: "$iconUserCircle",
     iconSize: "x-large",
     to: "user-profile",
   },
   {
-    page: "Omiljeno",
-    icon: "$iconCheck",
+    page: "Narudžbenice",
+    icon: "$iconChecklist",
     iconSize: "large",
-    to: "user-favourites",
+    to: "user-orders",
+  },
+  {
+    page: "Recepti",
+    icon: "$iconCheck",
+    iconSize: "x-large",
+    to: "recepti-uredi",
   },
 ];
 
@@ -58,5 +58,4 @@ const menu = [
     </VMain>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
