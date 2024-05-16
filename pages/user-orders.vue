@@ -18,17 +18,12 @@ import {
 const PRODUCTS_LIST_OFFSET_BOTTOM = 18;
 definePageMeta({
   middleware: "authorized",
-  layout: false,
-  //  layout: "user-profile",
+  layout: "user-profile",
 });
 
 // const route = useRoute();
 const auth = useStoreApiAuth();
-setPageLayout(auth.isCompany$ ? "company-profile" : "user-profile");
-// if (auth.isCompany$) {
-//   // route.meta.layout = "company-profile";
-//   // setPageLayout(auth.isCompany$ ? "company-profile" : "user-profile");
-// }
+if (auth.isCompany$) setPageLayout("company-profile");
 
 const {
   app: { DEFAULT_NO_IMAGE },

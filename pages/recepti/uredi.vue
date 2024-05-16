@@ -2,12 +2,11 @@
 import { Dump } from "@/components/dev";
 
 definePageMeta({
-  layout: false,
+  layout: "user-profile",
   middleware: "authorized",
 });
 const auth = useStoreApiAuth();
-setPageLayout(auth.isCompany$ ? "company-profile" : "user-profile");
-
+if (auth.isCompany$) setPageLayout("company-profile");
 
 // @@eos
 </script>

@@ -9,7 +9,7 @@ const menu = [
   {
     page: "Moj profil",
     icon: "$iconUserCircle",
-    iconSize: "x-large",
+    iconSize: 35,
     to: "user-profile",
   },
   {
@@ -40,7 +40,13 @@ const menu = [
     >
       <div class="d-flex flex-col items-center gap-5 pt-5">
         <template v-for="node in menu" :key="node.page">
-          <VBtn :to="{ name: node.to }" icon variant="text" color="on-primary">
+          <VBtn
+            :active="false"
+            :to="{ name: node.to }"
+            icon
+            variant="text"
+            color="on-primary"
+          >
             <VIcon :icon="node.icon" :size="node?.iconSize" />
             <VTooltip
               :offset="[3, 0]"
