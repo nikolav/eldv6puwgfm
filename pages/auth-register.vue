@@ -65,7 +65,6 @@ const authSubmitRegister = async () => {
 <template>
   <section class="page-auth-register">
     <VForm
-      class="mt-5"
       @submit.prevent="mBeforeAuthRunTOS(authSubmitRegister)"
       autocomplete="off"
     >
@@ -90,9 +89,9 @@ const authSubmitRegister = async () => {
                 class="space-y-8 *text-medium-emphasis pa-5"
                 style="font-size: 1.22rem"
               >
-                <p class="leading-normal indent-3">
-                  Za pristup uslugama koje nudimo potrebna je registracija kao
-                  kupac ili prodavac.
+                <p class="leading-normal indent-4 *text-center">
+                  Registrujte se kao kupac ili prodavac na našoj platformi i
+                  pronađite sve naše male privredniike i zanatlije.
                 </p>
                 <p class="text-center">Hvala na poverenju.</p>
                 <p class="text-center">Vaš kantar.rs</p>

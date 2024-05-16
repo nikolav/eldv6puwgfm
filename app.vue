@@ -6,7 +6,11 @@
 // });
 
 import { SpinnerAppProcessing } from "@/components/ui";
-import { Cart, TopicChatSidebarMain } from "@/components/app";
+import {
+  Cart,
+  TopicChatSidebarMain,
+  NotifyUnauthenticated,
+} from "@/components/app";
 import { PROFILE, AVATAR } from "@/src";
 
 // defs
@@ -41,6 +45,7 @@ onceOn(
   () => auth.initialized$ && !auth.isAuth$,
   () => {
     nextTick(() => {
+      console.clear();
       if (!auth.token$) auth.tokenPutDefault();
     });
   }
@@ -97,6 +102,9 @@ useSeoMeta({
 
 <template>
   <VApp :theme="theme" id="app-main">
+    <!-- popup @!auth -->
+    <NotifyUnauthenticated />
+
     <!-- @@chat:main -->
     <TopicChatSidebarMain />
 

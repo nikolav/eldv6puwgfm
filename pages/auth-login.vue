@@ -46,7 +46,7 @@ const authSubmitLogin = async () => {
     pauth.successful();
     authInputsClear();
   }
-  
+
   pauth.done();
 };
 
@@ -219,8 +219,8 @@ const authSubmitLogin = async () => {
                 class="space-y-8 *text-medium-emphasis pa-5"
                 style="font-size: 1.22rem"
               >
-                <p class="leading-normal indent-3">
-                  Za pristup uslugama koje nudimo potrebna je prijava na sistem.
+                <p class=" leading-normal *indent-4 text-center">
+                  Za pristup uslugama koje nudimo potrebna je prijava.
                 </p>
                 <p class="text-center">Hvala na poverenju.</p>
                 <p class="text-center">Vaš kantar.rs</p>
