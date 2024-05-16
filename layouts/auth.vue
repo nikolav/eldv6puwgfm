@@ -2,7 +2,6 @@
 import { ServiceDescriptionAuth } from "@/components/app";
 
 const { routeNameByTitle, cache } = useAppMenu();
-const route_ = useRoute();
 
 // #eos
 </script>
@@ -26,7 +25,7 @@ const route_ = useRoute();
       <VSpacer />
       <NuxtLink :to="{ name: 'index' }">
         <VIcon
-          size="122"
+          :size="152"
           color="primary-lighten-1"
           icon="$iconLogoKantarH"
           class="hover:scale-105 transition-transform"
@@ -39,17 +38,10 @@ const route_ = useRoute();
     </VToolbar>
 
     <VMain>
-      <VContainer class="*bg-red mt-sm-4 mt-lg-8" fluid>
-        <VRow justify="center">
-          <VCol md="5" class="*bg-blue-200">
-            <slot>
-              <p>lorem</p>
-            </slot>
-          </VCol>
-          <VCol md="7" class="*bg-red-200">
-            <ServiceDescriptionAuth />
-          </VCol>
-        </VRow>
+      <VContainer class="*bg-red mt-2 mt-sm-8">
+        <slot>
+          <p>@auth</p>
+        </slot>
       </VContainer>
     </VMain>
   </section>

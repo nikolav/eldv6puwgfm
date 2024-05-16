@@ -31,6 +31,10 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconKeyTwoFilled,
+  IconTwitterX,
+  IconFacebookColor,
+  IconGoogleColor,
   IconFarmhouse,
   IconStar,
   IconYotubeVideo,
@@ -240,6 +244,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         menu: IconMenu,
         // # add: <VIcon icon="$other">
         // # @icons:kantar.rs
+        iconFacebookColor: IconFacebookColor,
         iconBrasno: IconBrasno,
         iconGlobeKantar: IconGlobeKantar,
         iconKantarKorpa2: IconKantarKorpa2,
@@ -259,6 +264,9 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconKeyTwo: IconKeyTwoFilled,
+        iconTwitterX: IconTwitterX,
+        iconGoogleColor: IconGoogleColor,
         iconFarmhouse: IconFarmhouse,
         iconStar: IconStar,
         iconYotubeVideo: IconYotubeVideo,

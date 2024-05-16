@@ -27,19 +27,8 @@ const pClasses = `text-body-1 !font-sans sm:indent-4`;
           teritoriji grada Beograda na kućnu adresu od sada je dostupno putem
           naše platforme KANTAR.RS.
         </p>
-        <p :class="pClasses">
-          Dostava može da bude isplanirana na dan po izboru kupca kao i po
-          načinu dostave (dostava putem kurir službe, dostava putem pošte, lična
-          dostava na kućnu adresu i dostava na određene punktove za preuzimanje.
-          KANTAR.RS olakšava način komunikacije između proizvođača i potrošača
-          ujedno štedi vreme prilikom izbor artikal i samog poručivanja.
-          Proizvođači prisutni na našoj platformi su srpski i svi su odabrani od
-          strane našeg tima na osnovu zvaničnih kriterijuma i kvaliteta domaćih
-          prehrambenih proizvoda i zanatske proizvodne prakse.
-        </p>
       </VCardText>
     </VCard>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

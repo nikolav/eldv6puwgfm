@@ -6,9 +6,7 @@ definePageMeta({
   middleware: "guest",
 });
 
-const { APP_PROCESSING } = useAppConfig().key;
-const flags$ = useStoreFlags();
-const auth = useStoreApiAuth();
+const auth = useStoreApiAuthProvideSocial();
 
 const authEmail$ = ref("");
 const authPassword$ = ref("");
@@ -18,109 +16,244 @@ const authInputsClear = () => {
   authPassword$.value = "";
 };
 
+const watchIDEmail = useUniqueId();
+const watchIDPassword = useUniqueId();
+const { watchProcessing } = useStoreAppProcessing();
+const pauth = useProcessMonitor();
+watchProcessing(() => pauth.processing.value);
 const authSubmitLogin = async () => {
-  let creds;
-  let error_;
-  try {
-    creds = schemaAuthCredentials.parse({
-      email: authEmail$.value,
-      password: authPassword$.value,
-    });
-  } catch (error) {
-    // pass
-    error_ = error;
-    console.error({ error });
+  if (!authEmail$.value) {
+    return watchIDEmail();
   }
-  if (!creds) return;
-  //
-  try {
-    flags$.on(APP_PROCESSING);
-    console.log(`@authSubmit:login`);
-    await auth.login(creds);
-  } catch (error) {
-    error_ = error;
-    console.log({ "auth:error": error });
+  if (!authPassword$.value) {
+    return watchIDPassword();
   }
-  //
-  if (!error_) authInputsClear();
-  flags$.off(APP_PROCESSING);
+
+  try {
+    pauth.begin();
+    await auth.api.login(
+      schemaAuthCredentials.parse({
+        email: authEmail$.value,
+        password: authPassword$.value,
+      })
+    );
+  } catch (error) {
+    pauth.setError(error);
+    console.log({ "error:login:submit": error });
+  }
+
+  if (!pauth.error.value) {
+    pauth.successful();
+    authInputsClear();
+  }
+  
+  pauth.done();
 };
 
 // #eos
 </script>
 <template>
   <section class="page-auth-login">
-    <VForm @submit.prevent="authSubmitLogin" autocomplete="off">
-      <VCard
-        elevation="2"
-        class="pa-1 pa-sm-2 mx-auto backdrop-blur-lg"
-        max-width="550"
-        color="rgba(255,255,255,.55)"
-      >
-        <VCardTitle class="d-flex justify-between">
-          <NuxtLink to="auth-login">
-            <a class="text-primary-darken-1">Prijava</a>
-          </NuxtLink>
-          <NuxtLink to="auth-register">
-            <a class="text-medium-emphasis hover:underline opacity-60"
-              >Registracija</a
+    <VForm class="mt-5" @submit.prevent="authSubmitLogin" autocomplete="off">
+      <VContainer class="pa-0 ma-0">
+        <VRow no-gutters class="pa-0 ma-0 gap-0">
+          <!-- cell:l -->
+          <VCol sm="6" class="pa-0 m-0">
+            <VCard
+              elevation="1"
+              class="py-3 ms-auto backdrop-blur-lg pb-6"
+              color="rgba(255,255,255,.55)"
+              rounded="s-xl e-0"
+              max-width="392"
             >
-          </NuxtLink>
-        </VCardTitle>
-        <VCardText class="mt-2 mt-sm-4">
-          <VTextField
-            clearable
-            variant="underlined"
-            type="email"
-            v-model="authEmail$"
-            label="Email: *"
-          >
-            <template #prepend>
-              <VIcon
-                size="large"
-                icon="$iconEnvelope"
-                class="!opacity-30 -rotate-2"
-                color="primary-darken-1"
-              />
-            </template>
-          </VTextField>
-          <VTextField
-            clearable
-            variant="underlined"
-            autocomplete="off"
-            type="password"
-            v-model="authPassword$"
-            label="Lozinka: *"
-          >
-            <template #prepend>
-              <VIcon
-                size="large"
-                icon="$iconKey"
-                class="!opacity-30"
-                color="primary-darken-1"
-              />
-            </template>
-          </VTextField>
-        </VCardText>
-        <VCardActions class="d-flex flex-col gap-y-6 sm:gap-y-8 pt-4">
-          <VBtn
-            size="large"
-            block
-            variant="tonal"
-            color="primary-darken-1"
-            type="submit"
-          >
-            Ok
-          </VBtn>
-          <NuxtLink :to="{ name: 'auth-register' }">
-            <a class="cursor-pointer hover:underline text-primary-darken-1">
-              <em> Registracija, nemam nalog. </em>
-            </a>
-          </NuxtLink>
-        </VCardActions>
-      </VCard>
+              <VCardText class="px-6 mt-2 mt-sm-4">
+                <VTextField
+                  v-effect="{ watch: watchIDEmail.ID }"
+                  clearable
+                  variant="plain"
+                  type="email"
+                  v-model.trim="authEmail$"
+                  label="Email: *"
+                >
+                  <template #prepend>
+                    <VIcon
+                      size="large"
+                      icon="$iconEnvelope"
+                      class="!opacity-30 -rotate-2"
+                      color="primary-darken-1"
+                    />
+                  </template>
+                </VTextField>
+                <VTextField
+                  v-effect="{ watch: watchIDPassword.ID }"
+                  clearable
+                  variant="plain"
+                  autocomplete="off"
+                  type="password"
+                  v-model.trim="authPassword$"
+                  label="Lozinka: *"
+                >
+                  <template #prepend>
+                    <VIcon
+                      size="large"
+                      icon="$iconKey"
+                      class="!opacity-30"
+                      color="primary-darken-1"
+                    />
+                  </template>
+                </VTextField>
+              </VCardText>
+              <VCardActions class="pt-4">
+                <VSpacer />
+                <VBtn
+                  size="x-large"
+                  variant="tonal"
+                  color="primary-darken-1"
+                  type="submit"
+                  min-width="69%"
+                  rounded="lg2"
+                >
+                  Prijava
+                </VBtn>
+                <VSpacer />
+              </VCardActions>
+              <div class="d-flex items-center gap-3 my-3 opacity-50">
+                <VDivider class="border-opacity-100" />
+                <VIcon class="opacity-30" size="small" icon="$iconLock" />
+                <VDivider class="border-opacity-100" />
+              </div>
+              <VCardActions>
+                <VSpacer />
+                <VBtn
+                  size="x-large"
+                  variant="tonal"
+                  color="primary-darken-1 position-relative"
+                  width="69%"
+                  rounded="lg2"
+                  @click="auth.loginFacebook"
+                >
+                  <VIcon
+                    class="position-absolute start-3 top-1/2 -translate-y-[50%]"
+                    icon="$iconFacebookColor"
+                  />
+                  <span>Facebook</span>
+                  <VTooltip
+                    activator="parent"
+                    open-delay="345"
+                    location="bottom"
+                    class="d-flex items-center"
+                  >
+                    <VIcon
+                      start
+                      class="opacity-30 -translate-y-[2px]"
+                      size="small"
+                      icon="$iconLock"
+                    />
+                    <span
+                      >Prijava sa
+                      <em class="!font-sans text-body-2 !font-italic"
+                        >facebook</em
+                      >
+                      nalogom</span
+                    >
+                  </VTooltip>
+                </VBtn>
+                <VSpacer />
+              </VCardActions>
+              <VCardActions class="mt-2">
+                <VSpacer />
+                <VBtn
+                  size="x-large"
+                  variant="tonal"
+                  color="primary-darken-1 position-relative"
+                  width="69%"
+                  rounded="lg2"
+                  @click="auth.loginGoogle"
+                >
+                  <VIcon
+                    class="position-absolute start-3 top-1/2 -translate-y-[50%]"
+                    icon="$iconGoogleColor"
+                  />
+                  <span>Google</span>
+                  <VTooltip
+                    activator="parent"
+                    open-delay="345"
+                    location="bottom"
+                    class="d-flex items-center"
+                  >
+                    <VIcon
+                      start
+                      class="opacity-30 -translate-y-[2px]"
+                      size="small"
+                      icon="$iconLock"
+                    />
+                    <span
+                      >Prijava sa
+                      <em class="!font-sans text-body-2 !font-italic"
+                        >google</em
+                      >
+                      nalogom</span
+                    >
+                  </VTooltip>
+                </VBtn>
+                <VSpacer />
+              </VCardActions>
+            </VCard>
+          </VCol>
+          <!-- cell:r -->
+          <VCol sm="6" class="pa-0 ma-0">
+            <VCard
+              max-width="392"
+              rounded="s-0 e-xl"
+              class="border-primary border-opacity-75 pa-3 ma-0 fill-height me-auto !bg-stone-50 d-flex flex-col"
+              elevation="1"
+              id="id--tpy4lTkbF"
+              border="s"
+            >
+              <VCardItem
+                class="opacity-75 text-center text-medium-emphasis font-italic !font-sans text-body-1"
+              >
+                Dobrodošli nazad
+              </VCardItem>
+              <VCardText
+                class="space-y-8 *text-medium-emphasis pa-5"
+                style="font-size: 1.22rem"
+              >
+                <p class="leading-normal indent-3">
+                  Za pristup uslugama koje nudimo potrebna je prijava na sistem.
+                </p>
+                <p class="text-center">Hvala na poverenju.</p>
+                <p class="text-center">Vaš kantar.rs</p>
+              </VCardText>
+
+              <VSpacer />
+              <VCardItem class="*bg-red pe-1">
+                <template #append>
+                  <VBtn :to="{ name: 'auth-register' }" variant="plain" icon>
+                    <VIcon icon="$next" size="large" />
+                  </VBtn>
+                </template>
+                <VCardSubtitle
+                  class="text-center ms-12"
+                  style="font-size: 1.022rem"
+                >
+                  <NuxtLink :to="{ name: 'auth-register' }">
+                    <a class="text-primary-darken-1 link--prominent-base">
+                      Registracija, nemam nalog
+                    </a>
+                  </NuxtLink>
+                </VCardSubtitle>
+              </VCardItem>
+            </VCard>
+          </VCol>
+        </VRow>
+      </VContainer>
     </VForm>
   </section>
 </template>
 <style lang="scss" scoped>
+#id--tpy4lTkbF {
+  background: white url("~/assets/images/bg-serbia-01-1.png");
+  background-size: cover;
+}
 </style>

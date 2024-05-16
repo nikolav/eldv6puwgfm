@@ -111,8 +111,6 @@ export const useStoreApiAuth = defineStore("auth", () => {
       if (chatNameDefault === chatName) return;
       chatName$.value = startCase(chatName);
     } else {
-      // clear fb auth
-      await signOut(firebaseAuth);
       // signal logout to apollo
       // await onLogoutApollo(undefined, true);
       await onLogoutApollo();
@@ -175,6 +173,9 @@ export const useStoreApiAuth = defineStore("auth", () => {
             //  set token invalid
             token$.value = "";
             status.successful();
+
+            // clear fb auth
+            await signOut(firebaseAuth);
           }
         },
       });

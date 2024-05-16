@@ -30,15 +30,18 @@ export default defineNuxtPlugin((nuxtapp) => {
         // trigger animation
         el.classList.add(ANIMATED_, animation_);
       });
-
-    watchEffect(async () => {
-      if (!toValue(value$)) return;
-      try {
-        onEnd(await animatecss_());
-      } catch (error_) {
-        // pass
+    
+    watch(
+      () => toValue(value$),
+      async (val) => {
+        if (!val) return;
+        try {
+          onEnd(await animatecss_());
+        } catch (error_) {
+          // pass
+        }
       }
-    });
+    );
   });
 });
 // <CartButton v-effect:headShake="{ watch: isActive$ }"/>
