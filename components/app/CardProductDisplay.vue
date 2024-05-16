@@ -9,6 +9,7 @@ import {
   VChipProductPrice,
   TopicRating,
   LightboxProductImages,
+  SocialShareTopicButton,
 } from "@/components/app";
 const props = defineProps<{ product: IProduct }>();
 const emit = defineEmits<{
@@ -82,13 +83,20 @@ const cart = useStoreCart();
               :topic="`${PRODUCTS_LIKES_prefix}${props.product.id}`"
               class="scale-90"
             />
+            <SocialShareTopicButton
+              :title="product.name || ''"
+              :image="productImageSrcSample$"
+              :url="productPublicUrl_"
+              color="primary-darken-1"
+              :icon-size="24"
+            />
             <LightboxProductImages :product="props.product">
               <template #activator="props_">
                 <VBtn
                   v-bind="props_"
                   color="primary"
                   size="small"
-                  class="mx-2"
+                  class="me-2"
                   icon
                   variant="text"
                 >
@@ -268,5 +276,4 @@ const cart = useStoreCart();
     </VHover>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

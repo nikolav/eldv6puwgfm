@@ -102,5 +102,7 @@ export { default as IconGoogleColor } from "./IconGoogleColor.vue";
 export { default as IconFacebookColor } from "./IconFacebookColor.vue";
 export { default as IconTwitterX } from "./IconTwitterX.vue";
 export { default as IconKeyTwoFilled } from "./IconKeyTwoFilled.vue";
+export { default as IconLinkedin } from "./IconLinkedin.vue";
+
 
 
