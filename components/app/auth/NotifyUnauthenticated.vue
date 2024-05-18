@@ -9,7 +9,7 @@ const auth = useStoreApiAuth();
 const toggleAuthWarning = useToggleFlag();
 onceMountedOn(
   () => auth.isDefault$,
-  () => setTimeout(toggleAuthWarning.on, random(15678, 25678))
+  () => setTimeout(toggleAuthWarning.on, random(52345, 90123))
 );
 const enabled = computed(
   () => !auth.isAuthenticated$ && toggleAuthWarning.isActive.value

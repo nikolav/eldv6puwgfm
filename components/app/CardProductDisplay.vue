@@ -36,6 +36,9 @@ watch(dImages$, () => emit("productPhotosChange"));
 const uid = computed(() => props.product.user_id);
 const { profile, companyPublicUrl: companyUrl } = useUserData(uid);
 
+const auth = useStoreApiAuth();
+const ownsProduct = computed(() => uid.value == get(auth.user$, "id"));
+
 const productImageSrcSample$ = computed(() =>
   isEmpty(dImages$.value)
     ? DEFAULT_NO_PRODUCT_IMAGE_FOUND
@@ -238,10 +241,12 @@ const cart = useStoreCart();
             <div class="d-flex justify-end">
               <VChipProductPrice :product="props.product" />
             </div>
+            <!-- @@ -->
             <VBtn
+              :disabled="ownsProduct"
               @click="cart.increase(props.product.id, 1)"
               block
-              class="*px-4 group/btn-korpa mt-4 justify-end pe-7"
+              class="*px-4 group/btn-korpa mt-4 justify-end pe-7 disabled:!opacity-20"
               color="transparent"
               variant="flat"
               border

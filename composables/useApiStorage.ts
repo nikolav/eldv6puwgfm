@@ -119,7 +119,8 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
 
   // @@download
   const download = async (file_id: string = "") => {
-    const path = publicUrl(file_id);
+    // const path = publicUrl(file_id);
+    const path = resourceUrl(file_id);
     return file_id && path
       ? await navigateTo(path, {
           external: true,
