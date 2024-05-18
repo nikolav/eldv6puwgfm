@@ -38,5 +38,4 @@ const avatarUrl = inject(AVATAR);
     </VAvatar>
   </strong>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

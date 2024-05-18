@@ -165,7 +165,7 @@ watch(
                                       ]"
                                       @click="onClick"
                                       :size="81"
-                                      :force="avatar.value"
+                                      :force="avatar.value || DEFAULT_NO_IMAGE"
                                     />
                                   </template>
                                 </LightboxImages>

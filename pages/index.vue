@@ -208,7 +208,6 @@ const toggleEmailSaved = useToggleFlag();
     <VContainer>
       <div class="__placer__ d-flex items-start gap-2 px-12">
         <VCardCompanyDisplay :user="{ id: 1 }" />
-        <VCardCompanyDisplay :user="{ id: 3 }" />
       </div>
     </VContainer>
 

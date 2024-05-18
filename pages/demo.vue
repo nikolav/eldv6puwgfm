@@ -7,11 +7,14 @@ definePageMeta({
 
 // const col1 = collection(fdb, "data:1");
 
+const auth = useStoreApiAuth();
+
 // #eos
 </script>
 <template>
   <section class="page--demo.index">
     <NuxtLink :to="{ name: 'index' }">-index-</NuxtLink>
+    <Dump :data="{ user: auth.user$ }" />
     <!-- <SocialShare
       :style="false"
       :label="false"

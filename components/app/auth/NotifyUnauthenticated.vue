@@ -2,6 +2,7 @@
 // defs
 // utils
 // stores
+const route = useRoute();
 const {
   app: { DEFAULT_TRANSITION },
 } = useAppConfig();
@@ -12,7 +13,10 @@ onceMountedOn(
   () => setTimeout(toggleAuthWarning.on, random(52345, 90123))
 );
 const enabled = computed(
-  () => !auth.isAuthenticated$ && toggleAuthWarning.isActive.value
+  () =>
+    !auth.isAuthenticated$ &&
+    toggleAuthWarning.isActive.value &&
+    !String(route.name).startsWith("auth-")
 );
 // @@eos
 </script>

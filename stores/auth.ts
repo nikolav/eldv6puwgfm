@@ -63,7 +63,6 @@ export const useStoreApiAuth = defineStore("auth", () => {
       try {
         return schemaAuthData.parse(responseAuth);
       } catch (error) {
-        console.log({ error });
         // pass
       }
       return null;

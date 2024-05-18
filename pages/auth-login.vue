@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { schemaAuthCredentials } from "@/schemas";
+import { NotifyLoginUnsuccessfull } from "@/components/app";
 
 definePageMeta({
   layout: "auth",
   middleware: "guest",
 });
-
 const auth = useStoreApiAuthProvideSocial();
-
 const authEmail$ = ref("");
 const authPassword$ = ref("");
 
@@ -16,11 +15,18 @@ const authInputsClear = () => {
   authPassword$.value = "";
 };
 
+const toggleAuthSubmitError = useToggleFlag();
 const watchIDEmail = useUniqueId();
 const watchIDPassword = useUniqueId();
 const { watchProcessing } = useStoreAppProcessing();
 const pauth = useProcessMonitor();
 watchProcessing(() => pauth.processing.value);
+watch(
+  () => auth.api.error,
+  (autherr) => {
+    if (autherr) toggleAuthSubmitError.on();
+  }
+);
 const authSubmitLogin = async () => {
   if (!authEmail$.value) {
     return watchIDEmail();
@@ -49,11 +55,11 @@ const authSubmitLogin = async () => {
 
   pauth.done();
 };
-
 // #eos
 </script>
 <template>
   <section class="page-auth-login">
+    <NotifyLoginUnsuccessfull v-model="toggleAuthSubmitError.isActive.value" />
     <VForm class="mt-5" @submit.prevent="authSubmitLogin" autocomplete="off">
       <VContainer class="pa-0 ma-0">
         <VRow no-gutters class="pa-0 ma-0 gap-0">
@@ -219,7 +225,7 @@ const authSubmitLogin = async () => {
                 class="space-y-8 *text-medium-emphasis pa-5"
                 style="font-size: 1.22rem"
               >
-                <p class=" leading-normal *indent-4 text-center">
+                <p class="leading-normal *indent-4 text-center">
                   Za pristup uslugama koje nudimo potrebna je prijava.
                 </p>
                 <p class="text-center">Hvala na poverenju.</p>
