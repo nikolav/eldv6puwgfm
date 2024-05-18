@@ -141,7 +141,7 @@ watch(search_, debounceSearchHandle);
 
     <!-- @page:main -->
     <VMain
-      class="*bg-blue"
+      class="*bg-blue min-h-[712px]"
       :class="null != $route.meta.layoutDefaultPaddingTop ? 'pt-0' : ''"
     >
       <slot>

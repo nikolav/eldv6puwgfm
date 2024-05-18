@@ -265,13 +265,14 @@ const slidesPrint = [
                           <LightboxSlides :slides="slidesVideo">
                             <template #activator="{ open: openGalleryVideo }">
                               <VImg
+                                border
                                 rounded="lg"
                                 cover
                                 @click="openGalleryVideo"
                                 width="100%"
                                 min-height="152"
                                 src="~/assets/images/kompozicija-small.png"
-                                class="hover:opacity-95 opacity-90 position-relative overflow-hidden cursor-pointer"
+                                class="!shadow hover:opacity-95 opacity-90 position-relative overflow-hidden cursor-pointer"
                               >
                                 <div
                                   class="position-absolute bottom-0 inset-x-0 bg-black/60 text-white/80 h-[41%] d-flex items-center"
@@ -286,13 +287,14 @@ const slidesPrint = [
                           <LightboxSlides :slides="slidesPhotos">
                             <template #activator="{ open: openGalleryPhotos }">
                               <VImg
+                                border
                                 rounded="lg"
                                 cover
                                 @click="openGalleryPhotos"
                                 width="100%"
                                 min-height="152"
                                 src="~/assets/images/flase-rakija-small.png"
-                                class="hover:opacity-95 opacity-90 position-relative overflow-hidden cursor-pointer"
+                                class="shadow hover:opacity-95 opacity-90 position-relative overflow-hidden cursor-pointer"
                               >
                                 <div
                                   class="position-absolute bottom-0 inset-x-0 bg-black/60 text-white/80 h-[41%] d-flex items-center"
@@ -309,13 +311,14 @@ const slidesPrint = [
                           <LightboxSlides :slides="slidesPrint">
                             <template #activator="{ open: openGalleryPrint }">
                               <VImg
+                                border
                                 rounded="lg"
                                 cover
                                 @click="openGalleryPrint"
                                 width="100%"
                                 min-height="152"
                                 src="~/assets/images/pencils-right.png"
-                                class="hover:opacity-95 opacity-90 position-relative overflow-hidden cursor-pointer"
+                                class="shadow hover:opacity-95 opacity-90 position-relative overflow-hidden cursor-pointer"
                               >
                                 <div
                                   class="position-absolute bottom-0 inset-x-0 bg-black/60 text-white/80 h-[41%] d-flex items-center"
