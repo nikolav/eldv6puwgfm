@@ -11,9 +11,9 @@ const meta: TMeta = [
   { name: "theme-color", content: "#fafafa" },
 ];
 
-// --force-https-if-heroku
+// --force-https
 // <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-if (/herokuapp\.com/.test(API_URL))
+if (API_URL.startsWith("https"))
   meta.push({
     "http-equiv": "Content-Security-Policy",
     content: "upgrade-insecure-requests",

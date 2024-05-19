@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import type { OrNoValue, ITopicChatMessage } from "@/types";
 import {
+  ChatControllsBasic,
+  ChatRenderSimpleList,
+  LightboxProductImages,
+  LikeDislikeStatus,
   ProductAdd,
   ProductsEdit,
-  ChatRenderSimpleList,
-  ChatControllsBasic,
-  LightboxProductImages,
   ProvideProductLikeDislikeTopic,
-  LikeDislikeStatus,
   ProvideProductMessagesCount,
   ProvideProductRatingTopic,
-  TopicRatingStatus,
   ProvideProductsTotalAmountOrdered,
+  TopicRatingStatus,
 } from "@/components/app";
 import { useDisplay } from "vuetify";
 
@@ -267,6 +267,7 @@ const toggleChatControlls = useToggleFlag();
       />
     </VDialog>
 
+    <!-- @@data --list-products -->
     <div class="px-2 px-sm-6 mt-2 mt-sm-4">
       <VPagination
         v-if="1 < paginationLength$"
@@ -279,8 +280,9 @@ const toggleChatControlls = useToggleFlag();
       />
 
       <!-- @@products:crud -->
-      <VCard max-width="856" class="mx-auto" rounded="t-lg">
-        <VToolbar height="48" color="primary" flat>
+      <VCard max-width="912" class="mx-auto mt-2 mt-sm-8" rounded="t-lg">
+        <!-- toolbar -->
+        <VToolbar color="primary" flat class="px-2">
           <VToolbarTitle v-if="smAndUp">
             <VIcon start size="small" class="opacity-50" icon="$iconBoxes" />
             <strong class="ps-2 space-x-2">
@@ -302,14 +304,13 @@ const toggleChatControlls = useToggleFlag();
           <VSpacer v-if="!smAndUp" />
 
           <!-- @@products:controlls -->
-          <VToolbarItems :class="`*pe-2 ${smAndUp ? 'space-x-4' : undefined}`">
+          <divs :class="`pe-2 ${smAndUp ? 'space-x-5' : undefined}`">
             <!-- product.edit -->
             <VBtn
               @click="toggleProductsEdit.on"
               :disabled="null == selectedProduct$"
-              rounded="circle"
               icon
-              ><VIcon icon="$edit" />
+              ><VIcon icon="$edit" size="large" />
               <VTooltip
                 activator="parent"
                 location="bottom"
@@ -325,7 +326,7 @@ const toggleChatControlls = useToggleFlag();
                   :disabled="!selectedProduct$ || disabled_"
                   rounded="circle"
                   icon
-                  ><VIcon icon="$iconImages" />
+                  ><VIcon icon="$iconImages" size="large" />
                   <VTooltip
                     open-delay="345"
                     activator="parent"
@@ -393,7 +394,7 @@ const toggleChatControlls = useToggleFlag();
               rounded="circle"
               icon
               color="success"
-              ><VIcon icon="$iconPlusCircle" :size="35" />
+              ><VIcon icon="$iconPlusCircle" :size="41" />
               <VTooltip
                 activator="parent"
                 text="Ulistaj nov proizvod..."
@@ -401,18 +402,23 @@ const toggleChatControlls = useToggleFlag();
                 location="bottom"
               />
             </VBtn>
-          </VToolbarItems>
+          </divs>
           <VSpacer v-if="!smAndUp" />
         </VToolbar>
 
-        <!-- @@products:table -->
+        <!-- @@products:manage -->
         <VDataIterator
           :items="products$"
           :items-per-page="perPage"
           :page="pageLager$"
         >
           <template #no-data>
-            <p>no data</p>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Repellendus deserunt mollitia fuga quas reiciendis? Consequatur
+              deserunt eos esse ipsum blanditiis at fugiat! Asperiores, nam
+              laboriosam sunt corporis veritatis quisquam laudantium.
+            </p>
           </template>
 
           <template #default="{ items: products }">
