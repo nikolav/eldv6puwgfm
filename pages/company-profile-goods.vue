@@ -12,6 +12,7 @@ import {
   ProvideProductRatingTopic,
   ProvideProductsTotalAmountOrdered,
   TopicRatingStatus,
+  NoDataProducts,
 } from "@/components/app";
 import { useDisplay } from "vuetify";
 
@@ -413,12 +414,7 @@ const toggleChatControlls = useToggleFlag();
           :page="pageLager$"
         >
           <template #no-data>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Repellendus deserunt mollitia fuga quas reiciendis? Consequatur
-              deserunt eos esse ipsum blanditiis at fugiat! Asperiores, nam
-              laboriosam sunt corporis veritatis quisquam laudantium.
-            </p>
+            <NoDataProducts />
           </template>
 
           <template #default="{ items: products }">

@@ -13,7 +13,11 @@ const meta: TMeta = [
 
 // --force-https
 // <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-if (API_URL.startsWith("https"))
+if (
+  /dnofiq4anfaqwrzctj\.xyz/.test(API_URL)
+  // API_URL.startsWith("https")
+  // || /herokuapp\.com/.test(API_URL)
+)
   meta.push({
     "http-equiv": "Content-Security-Policy",
     content: "upgrade-insecure-requests",

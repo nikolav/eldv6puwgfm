@@ -40,8 +40,8 @@ const slidesPrint = [
     <VSpacer />
     <VCardText class="indent-4 space-y-5">
       <p style="font-size: 1.022rem">
-        Ako želite da budete primećeni i da se Vaš proizvod bolje vidi za Vas
-        smo napravili
+        Želite da budete primećeni i da se Vaš proizvod bolje vidi? Za Vas smo
+        napravili
         <NuxtLink :to="{ name: 'paketi' }" external target="_blank">
           <a
             style="font-size: 1.12rem !important"
@@ -49,10 +49,10 @@ const slidesPrint = [
             >pakete</a
           >
         </NuxtLink>
-        koji to omogućavaju. Pogledajte i izaberite onaj koji Vam više odgovara.
+        koji to omogućuju. Pogledajte i izaberite onaj koji Vam više odgovara.
       </p>
       <p style="font-size: 1.022rem">
-        Evo par uspešnih primera i saveta koji mogu pomoći:
+        Evo i par uspešnih primera i saveta koji mogu pomoći:
       </p>
       <VContainer>
         <VRow>

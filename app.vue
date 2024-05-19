@@ -45,7 +45,7 @@ onceOn(
   () => auth.initialized$ && !auth.isAuth$,
   () => {
     nextTick(() => {
-      console.clear();
+      // console.clear();
       if (!auth.token$) auth.tokenPutDefault();
     });
   }
