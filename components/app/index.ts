@@ -10,6 +10,7 @@ export * from "./map";
 export * from "./content";
 export * from "./auth";
 export * from "./nodata";
+export * from "./packages";
 export { default as AppBarMain } from "./AppBarMain.vue";
 // export { default as CardCartItem } from "./korpa/CardCartItem.vue";
 export { default as CardInbox } from "./CardInbox.vue";

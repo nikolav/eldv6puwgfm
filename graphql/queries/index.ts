@@ -402,3 +402,10 @@ export const Q_companiesCountedByDistrict = gql`
     companiesCountedByDistrict
   }
 `;
+
+export const Q_packagesIsPromoted = gql`
+  query q_packagesIsPromoted($pid: ID!) {
+    packagesIsPromoted(pid: $pid)
+  }
+`;
+

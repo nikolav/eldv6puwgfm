@@ -286,6 +286,7 @@ export default defineAppConfig({
     IOEVENT_STORAGE_CHANGE: "@storage:",
     IOEVENT_USER_POSTS_CHANGE_prefix: "@change:posts:rBN5PAj9uZM9wrOq5:",
     IOEVENT_STORY_PHOTOS_CHANGE_prefix: "@change:story:images:VDMf82FNKpfl6m:",
+    IOEVENT_PACKAGES_PROMOTED_prefix: "@packages:promoted:",
   },
   theme: {
     DEFAULT: themeLight,

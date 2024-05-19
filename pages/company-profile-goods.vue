@@ -5,6 +5,7 @@ import {
   ChatRenderSimpleList,
   LightboxProductImages,
   LikeDislikeStatus,
+  NoDataProducts,
   ProductAdd,
   ProductsEdit,
   ProvideProductLikeDislikeTopic,
@@ -12,7 +13,6 @@ import {
   ProvideProductRatingTopic,
   ProvideProductsTotalAmountOrdered,
   TopicRatingStatus,
-  NoDataProducts,
 } from "@/components/app";
 import { useDisplay } from "vuetify";
 

@@ -128,3 +128,10 @@ export const M_postsImagesDrop = gql`
     }
   }
 `;
+
+export const M_packagesSetPromoted = gql`
+  mutation m_packagesSetPromoted($pid: ID!, $status: Boolean!) {
+    packagesSetPromoted(pid: $pid, status: $status)
+  }
+`;
+
