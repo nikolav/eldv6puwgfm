@@ -39,20 +39,33 @@ const slidesPrint = [
     >
     <VSpacer />
     <VCardText class="indent-4 space-y-5">
-      <p style="font-size: 1.022rem">
+      <p
+        style="
+          font-size: 1.022rem;
+          line-height: 1.44rem;
+          letter-spacing: 0.41px;
+        "
+      >
         Želite da budete primećeni i da se Vaš proizvod bolje vidi? Za Vas smo
         napravili
         <NuxtLink :to="{ name: 'paketi' }" external target="_blank">
           <a
             style="font-size: 1.12rem !important"
             class="!font-sans d-inline text-primary link--prominent-base text-body-1"
-            >pakete</a
+            >ove pakete usluga</a
           >
         </NuxtLink>
         koji to omogućuju. Pogledajte i izaberite onaj koji Vam više odgovara.
       </p>
-      <p style="font-size: 1.022rem">
-        Evo i par uspešnih primera i saveta koji mogu pomoći:
+      <p
+        style="
+          font-size: 1.022rem;
+          line-height: 1.44rem;
+          letter-spacing: 0.41px;
+        "
+      >
+        Evo i par uspešnih primera i saveta koji mogu pomoći da porudžbine stižu
+        redovno u Vaše sanduče:
       </p>
       <VContainer>
         <VRow>

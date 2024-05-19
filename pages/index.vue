@@ -1,18 +1,17 @@
 <script setup lang="ts">
 // https://github.com/surmon-china/videojs-player
-// import { VideoPlayer } from "@videojs-player/vue";
 
 import { useDisplay } from "vuetify";
 import {
-  CardProductDisplay,
   // LikeDislike,
+  BlogReceptiLinkProminent,
+  CardProductDisplay,
   FooterKakoOvoFunkcionise,
   HeaderProminent,
-  BlogReceptiLinkProminent,
-  VCardCompanyDisplay,
-  TopicChat,
-  OverviewsFake,
   MailingListSave,
+  OverviewsFake,
+  TopicChat,
+  VCardCompanyDisplay,
 } from "@/components/app";
 import { LightboxSlides, VSnackbarStatusMessage } from "@/components/ui";
 import { Dump } from "@/components/dev";
