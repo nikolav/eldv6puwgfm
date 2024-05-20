@@ -431,6 +431,7 @@ const toggleChatControlls = useToggleFlag();
                   <span>poručeno</span>
                 </small>
                 <small
+                  v-if="auth.isPremium"
                   class="min-w-[64px] text-center d-inline-flex flex-col items-center opacity-50 leading-tight pe-2"
                   style="font-size: 72%"
                 >
@@ -507,8 +508,10 @@ const toggleChatControlls = useToggleFlag();
                       :product="node.raw"
                       v-slot="{ amount }"
                     >
+                      <!-- @@ -->
                       <small
                         class="ms-3 d-inline-block min-w-[68px] text-center"
+                        :class="[!auth.isPremium ? '!min-w-[58px]' : undefined]"
                       >
                         <strong
                           style="font-size: 92% !important"
