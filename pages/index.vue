@@ -93,6 +93,7 @@ const slidesPromoMaterial = [
 const saveEmail$ = ref();
 const toggleEmailSaved = useToggleFlag();
 
+const { products: productsPromo } = useQueryProductsPromo();
 // #eos
 </script>
 
@@ -108,14 +109,15 @@ const toggleEmailSaved = useToggleFlag();
     </VSnackbarStatusMessage>
 
     <!-- izdvajamo -->
-    <div class="__spacer__ mt-12" />
+    <div class="__spacer__ mt-10" />
     <HeaderProminent
-      class="ps-12 mt-6"
       text="Ovog meseca za Vas smo izdvojili: "
+      class="ps-12 mt-6 text-medium-emphasis"
+      style="font-size: 2.55rem"
     >
       <template #prepend>
         <VIcon
-          style="font-size: 5.22rem"
+          style="font-size: 7.22rem"
           class="rotate-[-5deg] opacity-20 translate-x-3"
           icon="$iconStarFat"
         />
@@ -137,6 +139,35 @@ const toggleEmailSaved = useToggleFlag();
       </VRow>
     </VContainer>
 
+    <!-- sponzorisano -->
+    <div class="__spacer__ mt-36" />
+    <HeaderProminent
+      class="ps-12 mt-12 text-medium-emphasis"
+      text="Sponozorisano i povlašćeno članstvo:"
+      style="font-size: 2.55rem"
+    >
+      <template #prepend>
+        <VIcon
+          style="font-size: 10.22rem"
+          class="rotate-[-5deg] opacity-20 translate-x-3"
+          icon="$iconMedal"
+        />
+      </template>
+    </HeaderProminent>
+    <VContainer fluid class="products--list">
+      <VRow dense>
+        <VCol
+          :class="lgAndUp ? 'cols5' : undefined"
+          :sm="4"
+          :md="3"
+          lg="auto"
+          v-for="p in productsPromo"
+          :key="p.id"
+        >
+          <CardProductDisplay @product-photos-change="noop" :product="p" />
+        </VCol>
+      </VRow>
+    </VContainer>
     <!-- <VContainer class="mx-auto">
       <VRow dense>
         <VCol :sm="6" :md="4" v-for="p in productsSelection" :key="p.id">
@@ -163,15 +194,19 @@ const toggleEmailSaved = useToggleFlag();
   -->
 
     <!-- footer, info -->
-    <div class="__scacer__ mt-20" />
+    <VSpacer class="__scacer__ mt-36" />
     <FooterKakoOvoFunkcionise class="mt-16" />
 
     <!-- blog, receipt, links -->
-    <div class="__scacer__ mt-20" />
-    <HeaderProminent class="ps-10 mt-8" text="Budite u toku sa trendovima">
+    <VSpacer class="__scacer__ mt-36" />
+    <HeaderProminent
+      style="font-size: 2.44rem"
+      class="ps-10 mt-8 text-medium-emphasis"
+      text="Budite u toku sa trendovima"
+    >
       <template #prepend>
         <VIcon
-          style="font-size: 6.22rem"
+          style="font-size: 8rem"
           class="ms-3 opacity-20"
           icon="$iconRoadSign"
         />
@@ -180,13 +215,17 @@ const toggleEmailSaved = useToggleFlag();
     <BlogReceptiLinkProminent />
 
     <!-- welcome -->
-    <div class="__scacer__ mt-20" />
+    <div class="__scacer__ mt-32" />
     <HeaderProminent
-      class="ps-10 mt-12"
+      class="ps-10 mt-12 text-medium-emphasis"
       text="Veliki pozdrav novim članovima 🚀💪🏻"
+      style="font-size: 2.44rem"
     >
       <template #prepend>
-        <div style="font-size: 8rem" class="d-flex items-center justify-center">
+        <div
+          style="font-size: 10rem"
+          class="d-flex items-center justify-center"
+        >
           <svg
             class="opacity-20 ms-4"
             width="1em"
@@ -211,13 +250,15 @@ const toggleEmailSaved = useToggleFlag();
     </VContainer>
 
     <!-- novi proizvode -->
+    <div class="__spacer__ mt-24" />
     <HeaderProminent
-      class="ps-12 mt-32 pb-5"
+      class="ps-12 mt-32 pb-5 text-medium-emphasis"
       text="Najnoviji ulistani proizvodi"
+      style="font-size: 2.44rem"
     >
       <template #prepend>
         <VIcon
-          style="font-size: 6.22rem"
+          style="font-size: 9.22rem"
           icon="$iconShine"
           class="opacity-30 ps-5 translate-y-5 translate-x-2"
         />
@@ -246,10 +287,11 @@ const toggleEmailSaved = useToggleFlag();
     </VContainer>
 
     <!-- user help -->
-    <div class="__spacer__ mt-24">
+    <VSpacer class="__spacer__ mt-32">
       <HeaderProminent
-        class="ps-10 mt-5"
+        class="ps-10 mt-5 text-medium-emphasis"
         text="Pomažemo Vam da se Vaš proizvod vidi"
+        style="font-size: 2.55rem"
       >
         <template #append>
           <VSpacer />
@@ -262,7 +304,7 @@ const toggleEmailSaved = useToggleFlag();
           </div>
         </template>
         <template #prepend>
-          <div class="__placer__ text-center" style="font-size: 6.67rem">
+          <div class="__placer__ text-center" style="font-size: 10rem">
             <svg
               class="opacity-20 -translate-y-2 rotate-[-2deg]"
               width="1em"
@@ -280,7 +322,7 @@ const toggleEmailSaved = useToggleFlag();
           </div>
         </template>
       </HeaderProminent>
-    </div>
+    </VSpacer>
     <LightboxSlides :slides="slidesPromoMaterial">
       <template #activator="{ open: galleryOpen }">
         <VContainer class="mx-auto">
@@ -387,14 +429,15 @@ const toggleEmailSaved = useToggleFlag();
       </template>
     </LightboxSlides>
 
-    <div class="__spacer__ mt-12" />
+    <div class="__spacer__ mt-32" />
     <HeaderProminent
-      class="ps-12 mt-20 pb-4"
+      class="ps-12 mt-20 pb-4 text-medium-emphasis"
       text="Ovako su nas ocenili naši korisnici i kupci"
+      style="font-size: 2rem"
     >
       <template #prepend>
         <svg
-          style="font-size: 4.55rem"
+          style="font-size: 5.67rem"
           class="ms-5 opacity-20 translate-y-3"
           width="1em"
           height="1em"
@@ -414,19 +457,20 @@ const toggleEmailSaved = useToggleFlag();
     <OverviewsFake />
 
     <!-- mail-lista --prijava -->
+    <div class="__spacer__ mt-48" />
     <MailingListSave
       @email-saved="toggleEmailSaved.on"
       v-slot="{ save: mailSave }"
     >
-      <VSpacer class="mb-32" />
       <HeaderProminent
-        class="ps-10 mt-8"
-        text="Ostanite informisani o proizvodima na KANTAR.RS"
+        class="ps-10 mt-8 text-medium-emphasis"
+        text="Ostanite informisani o novostima na KANTAR.RS"
+        style="font-size: 2rem"
       >
         <template #prepend>
           <VIcon
             class="opacity-20 ms-5 rotate-[-2deg] -translate-y-2"
-            style="font-size: 6.22rem"
+            style="font-size: 8rem"
             icon="$iconEnvelopeOpenHandDrawn"
           />
         </template>
@@ -435,7 +479,7 @@ const toggleEmailSaved = useToggleFlag();
         <VContainer>
           <VRow class="!ms-20">
             <VCol sm="6">
-              <VCardText>
+              <VCardText style="font-size: 106%" class="opacity-80">
                 Želim da povremeno dobijam obaveštenja o proizvodima i uslugama
                 na KANTAR.RS na ovu email adresu:
               </VCardText>

@@ -104,3 +104,4 @@ export { default as IconTwitterX } from "./IconTwitterX.vue";
 export { default as IconKeyTwoFilled } from "./IconKeyTwoFilled.vue";
 export { default as IconLinkedin } from "./IconLinkedin.vue";
 export { default as IconStartOutline } from "./IconStartOutline.vue";
+export { default as IconMedal } from "./IconMedal.vue";

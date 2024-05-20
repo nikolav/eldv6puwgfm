@@ -5,9 +5,13 @@ import { TopicChat } from "@/components/app";
 </script>
 <template>
   <VContainer class="bg-stone-200 rounded-lg mx-auto pa-10 border-s-lg shadow">
-    <HeaderProminent class="ps-8" text="KANTAR.RS, kako ovo funkcioniše?">
+    <HeaderProminent
+      style="font-size: 2rem"
+      class="ps-12 text-medium-emphasis"
+      text="KANTAR.RS, kako ovo funkcioniše?"
+    >
       <template #prepend>
-        <VIcon class="opacity-20" :size="35" icon="$iconHelpCircle" />
+        <VIcon class="opacity-20" :size="42" icon="$iconHelpCircle" />
       </template>
       <template #append>
         <VSpacer />

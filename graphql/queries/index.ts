@@ -409,3 +409,29 @@ export const Q_packagesIsPromoted = gql`
   }
 `;
 
+export const Q_productsPromo = gql`
+  query q_productsPromo {
+    productsListPromo {
+      id
+      name
+      price
+      price_history
+      description
+      stockType
+      stock
+      onSale
+      user_id
+      user {
+        id
+        email
+        created_at
+        updated_at
+      }
+      tags
+      docs
+      created_at
+      updated_at
+    }
+  }
+`;
+
