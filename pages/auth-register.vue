@@ -93,6 +93,32 @@ const authSubmitRegister = async () => {
                   Registrujte se kao kupac ili prodavac na našoj platformi i
                   pronađite sve naše male privredniike i zanatlije.
                 </p>
+
+                <p class="leading-normal indent-4 *text-center">
+                  Nakon registracije i ulistavanja Vaše robe, predlažemo da
+                  pogledate pakete sa uslugama koje smo pripremili za sve
+                  ozbiljnije članove:
+                </p>
+
+                <div class="d-flex justify-center">
+                  <NuxtLink :to="{ name: 'paketi' }" target="_blank">
+                    <VIcon
+                      id="ID--WXzQojkrKIoa15"
+                      class="cursor-pointer hover:scale-[102%] transition-transform opacity-80 hover:opacity-90"
+                      :size="72"
+                      color="warning-darken-1"
+                      icon="$iconMedal"
+                    />
+                  </NuxtLink>
+                  <VTooltip
+                    activator="#ID--WXzQojkrKIoa15"
+                    open-delay="345"
+                    location="bottom"
+                    text="Premium članstvo..."
+                  />
+                </div>
+
+                <VSpacer class="mt-16" />
                 <p class="text-center">Hvala na poverenju.</p>
                 <p class="text-center">Vaš kantar.rs</p>
               </VCardText>

@@ -17,6 +17,7 @@ export const useTopics = () => {
       PRODUCTS_LIKES_prefix,
       COM_RATING_prefix,
       COM_LIKES_prefix,
+      TOPIC_CHAT_PACKAGES,
     },
   } = useAppConfig();
   const comChat = (comid: number | undefined) =>
@@ -49,6 +50,7 @@ export const useTopics = () => {
   return {
     CHAT_MAIN,
     MAILING_LIST,
+    TOPIC_CHAT_PACKAGES,
     //
     authProfile,
     chatOrder,

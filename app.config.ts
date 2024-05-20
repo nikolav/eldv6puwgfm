@@ -193,6 +193,7 @@ export default defineAppConfig({
     TOPIC_CHAT_COM_prefix: "chat:com:EMs0Q::",
     TOPIC_CHAT_PRODUCTS_prefix: "chat:products:vyuoiOe3eZW7::",
     TOPIC_RATINGS: "ratings:N1cdcqMM",
+    TOPIC_CHAT_PACKAGES: "packages:m8D57QF14M",
   },
   //
   FIELDS_OMIT_STORAGE_META: ["id", "created_at", "updated_at", "__typename"],

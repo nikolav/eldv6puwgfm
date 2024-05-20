@@ -61,6 +61,7 @@ const search$$ = useStoreSearchConfig();
     </VAppBarTitle>
 
     <template #append>
+      <!-- :search -->
       <VBtn :id="search$$.BUTTON_ID" icon variant="text" color="primary">
         <VIcon icon="$iconSearchSettings" :size="32" />
         <VTooltip
@@ -92,6 +93,20 @@ const search$$ = useStoreSearchConfig();
         </VMenu>
       </VBtn>
 
+      <NuxtLink :to="{ name: 'paketi' }" target="_blank">
+        <VBtn icon variant="text" color="primary" class="ms-6">
+          <VIcon :size="30" icon="$iconMedal" class="-rotate-[4deg]" />
+          <VTooltip activator="parent" location="bottom" open-delay="345">
+            Postanite
+            <em class="!tracking-wider text-body-2 text-warning !font-bold"
+              >Premium</em
+            >
+            član...
+          </VTooltip>
+        </VBtn>
+      </NuxtLink>
+
+      <!-- :auth -->
       <VBtn
         v-if="!auth.isAuth$ || auth.isDefault$"
         :to="{ name: 'auth-login' }"
@@ -113,6 +128,8 @@ const search$$ = useStoreSearchConfig();
           open-delay="456"
         />
       </VBtn>
+
+      <!-- :nav -->
       <template v-else>
         <VBtn
           :to="{ name: routeNameByTitle(appMenuCache.get()) }"
