@@ -31,6 +31,7 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconStartOutline,
   IconLinkedin,
   IconKeyTwoFilled,
   IconTwitterX,
@@ -265,6 +266,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconStartOutline: IconStartOutline,
         iconLinkedin: IconLinkedin,
         iconKeyTwo: IconKeyTwoFilled,
         iconTwitterX: IconTwitterX,

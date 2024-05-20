@@ -2,7 +2,7 @@
 import { Dump } from "@/components/dev";
 import {
   SocialShareTopicButton,
-  VBtnTogglePackageGold,
+  VBtnTogglePackagesPromoted,
 } from "@/components/app";
 definePageMeta({
   layout: "blank",
@@ -13,18 +13,18 @@ definePageMeta({
 const auth = useStoreApiAuth();
 const { products } = useProducts();
 
-const { isPromoted, setPromoted } = useQueryProductPromo(12);
 // #eos
 </script>
 <template>
   <section class="page--demo.index">
     <NuxtLink :to="{ name: 'index' }">-index-</NuxtLink>
-    <VBtn @click="setPromoted(!isPromoted)">promo:12:toggle</VBtn>
-    <!-- <template v-for="p in products" :key="p.id">
-      <VBtnTogglePackageGold :product="p" />
-    </template> -->
+    <div class="space-x-1">
+      <template v-for="p in products" :key="p.id">
+        <VBtnTogglePackagesPromoted :product="p" />
+      </template>
+    </div>
     <hr />
-    <Dump :data="{ isPromoted, user: auth.user$, products }" />
+    <Dump :data="{ user: auth.user$, products }" />
   </section>
 </template>
 <style lang="scss" scoped>

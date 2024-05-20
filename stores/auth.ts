@@ -88,6 +88,10 @@ export const useStoreApiAuth = defineStore("auth", () => {
   );
   const isAuthenticated$ = computed(() => isAuth$.value && !isDefault$.value);
 
+  const isPremium = computed(() =>
+    some(["silver", "gold"], (pkgType) => get(user$.value, pkgType))
+  );
+
   // apply auth token to Apollo client
   // ..if GraphQL API expects authentication to be passed via a HTTP header
   const {
@@ -218,5 +222,8 @@ export const useStoreApiAuth = defineStore("auth", () => {
     tokenPutDefault: () => {
       token$.value = TOKEN_DEFAULT;
     },
+
+    // packages
+    isPremium,
   };
 });

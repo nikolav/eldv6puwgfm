@@ -1,2 +1,2 @@
-export { default as VBtnTogglePackageGold } from "./VBtnTogglePackageGold.vue";
+export { default as VBtnTogglePackagesPromoted } from "./VBtnTogglePackagesPromoted.vue";
 

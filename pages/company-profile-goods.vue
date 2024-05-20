@@ -13,6 +13,7 @@ import {
   ProvideProductRatingTopic,
   ProvideProductsTotalAmountOrdered,
   TopicRatingStatus,
+  VBtnTogglePackagesPromoted,
 } from "@/components/app";
 import { useDisplay } from "vuetify";
 
@@ -33,6 +34,7 @@ const {
 
 const { smAndUp, width, xs } = useDisplay();
 
+const auth = useStoreApiAuth();
 const {
   products: products$,
   remove: productsRemove,
@@ -422,11 +424,18 @@ const toggleChatControlls = useToggleFlag();
               <small class="font-mono opacity-30">Ref#</small>
               <template #append>
                 <small
-                  class="min-w-[64px] text-center d-inline-flex flex-col items-center opacity-50 leading-tight pe-4"
+                  class="min-w-[64px] text-center d-inline-flex flex-col items-center opacity-50 leading-tight pe-3"
                   style="font-size: 72%"
                 >
                   <span>ukupno</span>
                   <span>poručeno</span>
+                </small>
+                <small
+                  class="min-w-[64px] text-center d-inline-flex flex-col items-center opacity-50 leading-tight pe-2"
+                  style="font-size: 72%"
+                >
+                  <span>promo</span>
+                  <span>proizvodi</span>
                 </small>
               </template>
             </VListItem>
@@ -469,7 +478,7 @@ const toggleChatControlls = useToggleFlag();
                   {{ node.raw.name }}</VListItemTitle
                 >
                 <template #append>
-                  <div class="d-flex items-center gap-8 opacity-75">
+                  <div class="d-flex items-center gap-5 opacity-75">
                     <ProvideProductRatingTopic
                       :product="node.raw"
                       v-slot="{ topic }"
@@ -498,7 +507,9 @@ const toggleChatControlls = useToggleFlag();
                       :product="node.raw"
                       v-slot="{ amount }"
                     >
-                      <small class="d-inline-block min-w-[64px] text-center">
+                      <small
+                        class="ms-3 d-inline-block min-w-[68px] text-center"
+                      >
                         <strong
                           style="font-size: 92% !important"
                           class="text-body-2 !font-sans !font-bold"
@@ -509,6 +520,11 @@ const toggleChatControlls = useToggleFlag();
                         }}</span>
                       </small>
                     </ProvideProductsTotalAmountOrdered>
+                    <!-- @@ -->
+                    <VBtnTogglePackagesPromoted
+                      v-if="auth.isPremium"
+                      :product="node.raw"
+                    />
                   </div>
                 </template>
               </VListItem>
