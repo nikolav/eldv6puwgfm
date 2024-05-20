@@ -78,14 +78,14 @@ watch(
         <template #text>
           <div>
             <VCardTitle
-              class="ps-12 mt-5 text-truncate font-sans tracking-wider opacity-80"
+              class="ps-12 mt-5 text-truncate font-sans !tracking-wide opacity-80"
               style="font-size: 2rem"
               v-bind="$attrs"
             >
               Cela Srbija na dlanu
             </VCardTitle>
             <VCardSubtitle
-              class="ps-12 text-truncate font-sans tracking-wider opacity-80"
+              class="ps-12 text-truncate font-sans !tracking-wider opacity-80"
               style="font-size: 155%"
               v-bind="$attrs"
             >
