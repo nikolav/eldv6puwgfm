@@ -2,7 +2,8 @@ import type { IUser } from "@/types";
 import { Q_companiesList } from "@/graphql";
 export const useQueryCompaniesList = (
   district: any = undefined,
-  approvedOnly = false
+  approvedOnly = false,
+  listAll = false
 ) => {
   const district$ = ref();
   watchEffect(() => {
@@ -11,7 +12,8 @@ export const useQueryCompaniesList = (
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
   } = useAppConfig();
-  const enabled = computed(() => !!district.value);
+  // const enabled = computed(() => !!district$.value);
+  const enabled = ref(true);
   const { result, load, refetch, loading } = useLazyQuery<{
     companiesList: IUser[];
   }>(
@@ -19,6 +21,7 @@ export const useQueryCompaniesList = (
     {
       approved: approvedOnly,
       district: district$,
+      all: listAll,
     },
     {
       enabled,

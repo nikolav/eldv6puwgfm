@@ -369,8 +369,8 @@ export const Q_productsTotalAmountOrdered = gql`
 `;
 
 export const Q_companiesList = gql`
-  query q_companiesList($approved: Boolean, $district: String) {
-    companiesList(approved: $approved, district: $district) {
+  query q_companiesList($approved: Boolean, $district: String, $all: Boolean) {
+    companiesList(approved: $approved, district: $district, all: $all) {
       id
       email
       products {

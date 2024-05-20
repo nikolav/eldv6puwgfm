@@ -89,10 +89,12 @@ useIOEvent(IOEVENT_PRODUCTS_CHANGE, () => {
 });
 
 useSeoMeta({
-  title: "KANTAR.RS",
-  ogTitle: "KANTAR.RS",
-  description: "KANTAR.RS",
-  ogDescription: "KANTAR.RS",
+  title: "kantar.rs @nikolav.rs",
+  ogTitle: "kantar.rs @nikolav.rs",
+  description:
+    "kantar.rs | portal namenjen je isključivo onima koji gaje ljubav prema prirodi , selu, zavičaju i gastronomiji @nikolav.rs",
+  ogDescription:
+    "kantar.rs | portal namenjen je isključivo onima koji gaje ljubav prema prirodi , selu, zavičaju i gastronomiji @nikolav.rs",
   ogImage: "https://nikolav.rs/kantar-rs/kantarlogo.jpg",
   twitterCard: "summary_large_image",
 });

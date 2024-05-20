@@ -1,6 +1,5 @@
 import type { IUser } from "@/types";
 import { Q_users } from "@/graphql";
-
 export const useQueryUsers = () => {
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
@@ -14,8 +13,8 @@ export const useQueryUsers = () => {
     }
   );
   const reload = async () => await refetch();
-  const users_ = computed(() => get(result.value, "users") || []);
+  const users = computed(() => get(result.value, "users") || []);
   onceMountedOn(true, load);
   watchEffect(() => useIOEvent(IOEVENT_AUTH_NEWUSER, reload));
-  return { users: users_, reload };
+  return { users, reload };
 };

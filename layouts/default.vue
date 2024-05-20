@@ -53,7 +53,10 @@ watch(search_, debounceSearchHandle);
 </script>
 
 <template>
-  <section class="layout--default" :style="`padding-top: ${appBarHeight}px`">
+  <section
+    class="layout--default bg-[#FAF9F9]"
+    :style="`padding-top: ${appBarHeight}px;`"
+  >
     <!-- @cart:button -->
     <CartOpenBadgePrimary
       :badge-offset="9"

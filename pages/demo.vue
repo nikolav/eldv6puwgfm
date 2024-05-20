@@ -10,21 +10,23 @@ definePageMeta({
 
 // const col1 = collection(fdb, "data:1");
 
-const auth = useStoreApiAuth();
-const { products } = useProducts();
+// const auth = useStoreApiAuth();
+// const { products } = useProducts();
+
+const { companies } = useQueryCompaniesList(undefined, undefined, true);
 
 // #eos
 </script>
 <template>
   <section class="page--demo.index">
     <NuxtLink :to="{ name: 'index' }">-index-</NuxtLink>
-    <div class="space-x-1">
+    <!-- <div class="space-x-1">
       <template v-for="p in products" :key="p.id">
         <VBtnTogglePackagesPromoted :product="p" />
       </template>
-    </div>
+    </div> -->
     <hr />
-    <Dump :data="{ user: auth.user$, products }" />
+    <Dump :data="{ companies }" />
   </section>
 </template>
 <style lang="scss" scoped>

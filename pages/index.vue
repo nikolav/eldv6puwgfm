@@ -94,6 +94,15 @@ const saveEmail$ = ref();
 const toggleEmailSaved = useToggleFlag();
 
 const { products: productsPromo } = useQueryProductsPromo();
+
+const { companies: companiesAll } = useQueryCompaniesList(
+  undefined,
+  false,
+  true
+);
+const companiesNew = computed(() =>
+  dataSortedByDateDesc(companiesAll.value).slice(0, 10)
+);
 // #eos
 </script>
 
@@ -120,6 +129,7 @@ const { products: productsPromo } = useQueryProductsPromo();
           style="font-size: 7.22rem"
           class="rotate-[-5deg] opacity-20 translate-x-3"
           icon="$iconStarFat"
+          color="primary"
         />
       </template>
     </HeaderProminent>
@@ -143,15 +153,28 @@ const { products: productsPromo } = useQueryProductsPromo();
     <div class="__spacer__ mt-36" />
     <HeaderProminent
       class="ps-12 mt-12 text-medium-emphasis"
-      text="Sponozorisano i povlašćeno članstvo:"
       style="font-size: 2.55rem"
     >
       <template #prepend>
         <VIcon
-          style="font-size: 10.22rem"
+          style="font-size: 12rem"
           class="rotate-[-5deg] opacity-20 translate-x-3"
           icon="$iconMedal"
+          color="primary"
         />
+      </template>
+      <template #text>
+        <h2
+          class="ps-16 mt-12 text-truncate font-sans tracking-wider text-medium-emphasis"
+          style="font-size: 3.14rem"
+          text="Ovog meseca za Vas smo izdvojili: "
+        >
+          Naši
+          <NuxtLink :to="{ name: 'paketi' }" target="_blank">
+            <a class="link--prominent text-primary-lighten-1"> PREMIUM </a>
+          </NuxtLink>
+          članovi
+        </h2>
       </template>
     </HeaderProminent>
     <VContainer fluid class="products--list">
@@ -209,6 +232,7 @@ const { products: productsPromo } = useQueryProductsPromo();
           style="font-size: 8rem"
           class="ms-3 opacity-20"
           icon="$iconRoadSign"
+          color="primary"
         />
       </template>
     </HeaderProminent>
@@ -227,7 +251,7 @@ const { products: productsPromo } = useQueryProductsPromo();
           class="d-flex items-center justify-center"
         >
           <svg
-            class="opacity-20 ms-4"
+            class="opacity-20 ms-4 text-primary"
             width="1em"
             height="1em"
             viewBox="0 0 428.06 240.24"
@@ -245,7 +269,11 @@ const { products: productsPromo } = useQueryProductsPromo();
     </HeaderProminent>
     <VContainer>
       <div class="__placer__ d-flex items-start gap-2 px-12">
-        <VCardCompanyDisplay :user="{ id: 1 }" />
+        <VCardCompanyDisplay
+          v-for="com in companiesNew"
+          :key="com.id"
+          :user="com"
+        />
       </div>
     </VContainer>
 
@@ -261,6 +289,7 @@ const { products: productsPromo } = useQueryProductsPromo();
           style="font-size: 9.22rem"
           icon="$iconShine"
           class="opacity-30 ps-5 translate-y-5 translate-x-2"
+          color="primary"
         />
       </template>
     </HeaderProminent>
@@ -287,7 +316,7 @@ const { products: productsPromo } = useQueryProductsPromo();
     </VContainer>
 
     <!-- user help -->
-    <VSpacer class="__spacer__ mt-32">
+    <VSpacer class="__spacer__ mt-40">
       <HeaderProminent
         class="ps-10 mt-5 text-medium-emphasis"
         text="Pomažemo Vam da se Vaš proizvod vidi"
@@ -304,9 +333,9 @@ const { products: productsPromo } = useQueryProductsPromo();
           </div>
         </template>
         <template #prepend>
-          <div class="__placer__ text-center" style="font-size: 10rem">
+          <div class="__placer__ text-center" style="font-size: 11rem">
             <svg
-              class="opacity-20 -translate-y-2 rotate-[-2deg]"
+              class="opacity-20 -translate-y-2 rotate-[-2deg] text-primary"
               width="1em"
               height="1em"
               viewBox="0 0 152.31 207.29"
@@ -438,7 +467,7 @@ const { products: productsPromo } = useQueryProductsPromo();
       <template #prepend>
         <svg
           style="font-size: 5.67rem"
-          class="ms-5 opacity-20 translate-y-3"
+          class="ms-5 opacity-20 translate-y-3 text-primary"
           width="1em"
           height="1em"
           viewBox="0 0 133.02 128.82"
@@ -457,7 +486,7 @@ const { products: productsPromo } = useQueryProductsPromo();
     <OverviewsFake />
 
     <!-- mail-lista --prijava -->
-    <div class="__spacer__ mt-48" />
+    <div class="__spacer__ mt-40" />
     <MailingListSave
       @email-saved="toggleEmailSaved.on"
       v-slot="{ save: mailSave }"
@@ -472,6 +501,7 @@ const { products: productsPromo } = useQueryProductsPromo();
             class="opacity-20 ms-5 rotate-[-2deg] -translate-y-2"
             style="font-size: 8rem"
             icon="$iconEnvelopeOpenHandDrawn"
+            color="primary"
           />
         </template>
       </HeaderProminent>

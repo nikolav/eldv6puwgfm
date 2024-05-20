@@ -74,14 +74,29 @@ watch(
 <template>
   <section class="page--karta pb-12">
     <VContainer class="ma-0 pa-0 mx-auto mt-5">
-      <HeaderProminent
-        text="Sve iz prve ruke od naših najboljih proizvođača i zanatljia"
-        class="ps-12 mt-12"
-      >
+      <HeaderProminent style="font-size: 2.55rem">
+        <template #text>
+          <div>
+            <VCardTitle
+              class="ps-12 mt-5 text-truncate font-sans tracking-wider opacity-80"
+              style="font-size: 2rem"
+              v-bind="$attrs"
+            >
+              Cela Srbija na dlanu
+            </VCardTitle>
+            <VCardSubtitle
+              class="ps-12 text-truncate font-sans tracking-wider opacity-80"
+              style="font-size: 155%"
+              v-bind="$attrs"
+            >
+              Najbolji srpski proizvođači i zanatlije na jednom mestu
+            </VCardSubtitle>
+          </div>
+        </template>
         <template #prepend>
           <VIcon
             class="ms-5 opacity-20"
-            style="font-size: 7.56rem"
+            style="font-size: 10rem"
             icon="$iconFarmhouse"
           />
         </template>
