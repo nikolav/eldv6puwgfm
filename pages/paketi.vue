@@ -1,12 +1,52 @@
 <script setup lang="ts">
+import { HeaderProminent } from "@/components/app";
+import { API_URL } from "@/config";
+
+const packageSelected = async (packageType: string) => {
+  console.log({ packageType });
+  try {
+    await $fetch(`${trim(API_URL, "/")}/packages-request`, {
+      method: "POST",
+      body: {
+        type: "type",
+        message:
+          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus qui tenetur exercitationem!",
+      },
+    });
+  } catch (error) {
+    //
+  }
+};
+
 // @@eos
 </script>
 <template>
   <section class="page--paketi">
     <VSpacer class="mt-16" />
-
     <VContainer class="!max-w-[1450px] mx-auto">
-      <VDivider class="border-opacity-50 my-12" />
+      <HeaderProminent>
+        <template #text>
+          <h2
+            class="ps-20 mt-16 text-truncate font-sans !tracking-wider opacity-60"
+            style="font-size: 3rem"
+          >
+            <strong>
+              Paketi usluga
+              <NuxtLink :to="{ name: 'index' }" target="_blank">
+                <a class="link--prominent-base text-primary"> kantar.rs </a>
+              </NuxtLink>
+            </strong>
+          </h2>
+        </template>
+        <template #prepend>
+          <VIcon
+            style="font-size: 12rem"
+            class="rotate-[-5deg] opacity-20 translate-x-3"
+            icon="$iconMedal"
+          />
+        </template>
+      </HeaderProminent>
+      <VSpacer class="mb-5" />
       <VRow>
         <!-- bronze -->
         <VCol md="4">
@@ -35,7 +75,7 @@
             <VCardTitle class="mt-10 text-medium-emphasis text-center">
               Uključuje:
             </VCardTitle>
-            <VCardText class="pa-3">
+            <VCardText class="pa-3" style="font-size: 1.034rem">
               <VList class="font-sans" bg-color="transparent">
                 <VListItem>
                   <VIcon class="opacity-40" icon="$iconCheck" />
@@ -91,7 +131,7 @@
             <VCardTitle class="mt-10 text-medium-emphasis text-center">
               Uključuje:
             </VCardTitle>
-            <VCardText class="pa-3">
+            <VCardText class="pa-3" style="font-size: 1.034rem">
               <VList class="font-sans" bg-color="transparent">
                 <VListItem>
                   <VIcon class="opacity-40" icon="$iconCheck" />
@@ -124,6 +164,7 @@
             <VCardActions class="position-absolute bottom-0 w-full">
               <VSpacer />
               <VBtn
+                @click="packageSelected('srebrni')"
                 height="4rem"
                 width="55%"
                 variant="elevated"
@@ -170,7 +211,7 @@
             <VCardTitle class="mt-10 text-medium-emphasis text-center">
               Uključuje:
             </VCardTitle>
-            <VCardText class="pa-3">
+            <VCardText class="pa-3" style="font-size: 1.034rem">
               <VList class="font-sans" bg-color="transparent">
                 <VListItem>
                   <VIcon class="opacity-40" icon="$iconCheck" />
@@ -208,6 +249,7 @@
             <VCardActions class="position-absolute bottom-0 w-full">
               <VSpacer />
               <VBtn
+                @click="packageSelected('zlatni')"
                 class="px-5 ma-5"
                 color="#eab308"
                 elevation="1"

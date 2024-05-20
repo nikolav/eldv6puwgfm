@@ -101,7 +101,7 @@ const { companies: companiesAll } = useQueryCompaniesList(
   true
 );
 const companiesNew = computed(() =>
-  dataSortedByDateDesc(companiesAll.value).slice(0, 10)
+  dataSortedByDateDesc(companiesAll.value).slice(0, 4)
 );
 // #eos
 </script>
@@ -218,64 +218,68 @@ const companiesNew = computed(() =>
 
     <!-- footer, info -->
     <VSpacer class="__scacer__ mt-36" />
-    <FooterKakoOvoFunkcionise class="mt-16" />
+    <FooterKakoOvoFunkcionise class="mt-16 !max-w-[1350px] !mx-auto" />
 
     <!-- blog, receipt, links -->
     <VSpacer class="__scacer__ mt-36" />
-    <HeaderProminent
-      style="font-size: 2.44rem"
-      class="ps-10 mt-8 text-medium-emphasis"
-      text="Budite u toku sa trendovima"
-    >
-      <template #prepend>
-        <VIcon
-          style="font-size: 8rem"
-          class="ms-3 opacity-20"
-          icon="$iconRoadSign"
-          color="primary"
-        />
-      </template>
-    </HeaderProminent>
-    <BlogReceptiLinkProminent />
+    <div class="max-w-[1366px] mx-auto">
+      <HeaderProminent
+        style="font-size: 2.44rem"
+        class="ps-10 mt-8 text-medium-emphasis"
+        text="Budite u toku sa trendovima"
+      >
+        <template #prepend>
+          <VIcon
+            style="font-size: 8rem"
+            class="ms-3 opacity-20"
+            icon="$iconRoadSign"
+            color="primary"
+          />
+        </template>
+      </HeaderProminent>
+      <BlogReceptiLinkProminent />
+    </div>
 
     <!-- welcome -->
     <div class="__scacer__ mt-32" />
-    <HeaderProminent
-      class="ps-10 mt-12 text-medium-emphasis"
-      text="Veliki pozdrav novim članovima 🚀💪🏻"
-      style="font-size: 2.44rem"
-    >
-      <template #prepend>
-        <div
-          style="font-size: 10rem"
-          class="d-flex items-center justify-center"
-        >
-          <svg
-            class="opacity-20 ms-4 text-primary"
-            width="1em"
-            height="1em"
-            viewBox="0 0 428.06 240.24"
-            xmlns="http://www.w3.org/2000/svg"
+    <div class="max-w-[1366px] mx-auto">
+      <HeaderProminent
+        class="ps-10 mt-12 text-medium-emphasis"
+        text="Veliki pozdrav novim članovima 🚀💪🏻"
+        style="font-size: 2.44rem"
+      >
+        <template #prepend>
+          <div
+            style="font-size: 10rem"
+            class="d-flex items-center justify-center"
           >
-            <g transform="translate(-15.972 -15.381)">
-              <path
-                fill="currentColor"
-                d="m115.01 200.28c-0.41825-17.762 0.98827-35.701-1.158-53.34-13.283-5.1183-27.181-11.26-38.678-20.395-24.005-18.779-47.876-41.358-57.927-70.889-8.0927-21.766 24.546-36.648 35.601-15.621 12.377 21.573 28.487 41.617 50.37 54.157 26.224 16.742 57.308 21.742 86.708 29.996 41.019 12.232 76.082 43.721 89.685 84.689 1.3877 13.619 22.239 45.267-2.5103 45.295-15.952 3.5533-33.684 1.6888-32.4-18.312-5.2194-16.5-12.382-33.595-25.97-44.915-3.3595 11.606-1.0688 25.012-1.7214 37.386v25.842h-102v-53.892zm189.59 47.192c-3.7845-38.254-20.518-75.119-47.624-102.48 6.1764-13.003 34.868-14.51 50.262-19.79 40.367-8.9446 80.622-31 99.56-69.31 6.2594-19.801 42.762-14.459 36.511 8.0553-7.6959 30.064-31.839 52.951-55.973 70.878-12.181 12.796-41.828 11.195-36.182 34.925-0.26671 28.138-0.0968 56.278-0.14496 84.416h-45.724c-0.22879-2.2331-0.45759-4.4663-0.68638-6.6994zm-13.566-134.84c-28.59-6.6266-40.713-45.565-21.667-67.59 16.296-21.865 52.746-20.23 67.496 2.4582 15.898 20.496 6.2164 52.692-17.278 62.584-8.8167 4.1986-19.134 5.2452-28.551 2.548zm-133.92-8.5429c-28.797-5.1177-45.729-41.744-29.705-66.694 13.937-26.098 54.279-29.901 72.608-6.5027 21.644 22.542 8.9143 63.855-20.627 72.129-7.1751 2.2694-14.914 2.5304-22.276 1.0671z"
-              />
-            </g>
-          </svg>
+            <svg
+              class="opacity-20 ms-4 text-primary"
+              width="1em"
+              height="1em"
+              viewBox="0 0 428.06 240.24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g transform="translate(-15.972 -15.381)">
+                <path
+                  fill="currentColor"
+                  d="m115.01 200.28c-0.41825-17.762 0.98827-35.701-1.158-53.34-13.283-5.1183-27.181-11.26-38.678-20.395-24.005-18.779-47.876-41.358-57.927-70.889-8.0927-21.766 24.546-36.648 35.601-15.621 12.377 21.573 28.487 41.617 50.37 54.157 26.224 16.742 57.308 21.742 86.708 29.996 41.019 12.232 76.082 43.721 89.685 84.689 1.3877 13.619 22.239 45.267-2.5103 45.295-15.952 3.5533-33.684 1.6888-32.4-18.312-5.2194-16.5-12.382-33.595-25.97-44.915-3.3595 11.606-1.0688 25.012-1.7214 37.386v25.842h-102v-53.892zm189.59 47.192c-3.7845-38.254-20.518-75.119-47.624-102.48 6.1764-13.003 34.868-14.51 50.262-19.79 40.367-8.9446 80.622-31 99.56-69.31 6.2594-19.801 42.762-14.459 36.511 8.0553-7.6959 30.064-31.839 52.951-55.973 70.878-12.181 12.796-41.828 11.195-36.182 34.925-0.26671 28.138-0.0968 56.278-0.14496 84.416h-45.724c-0.22879-2.2331-0.45759-4.4663-0.68638-6.6994zm-13.566-134.84c-28.59-6.6266-40.713-45.565-21.667-67.59 16.296-21.865 52.746-20.23 67.496 2.4582 15.898 20.496 6.2164 52.692-17.278 62.584-8.8167 4.1986-19.134 5.2452-28.551 2.548zm-133.92-8.5429c-28.797-5.1177-45.729-41.744-29.705-66.694 13.937-26.098 54.279-29.901 72.608-6.5027 21.644 22.542 8.9143 63.855-20.627 72.129-7.1751 2.2694-14.914 2.5304-22.276 1.0671z"
+                />
+              </g>
+            </svg>
+          </div>
+        </template>
+      </HeaderProminent>
+      <VContainer>
+        <div class="__placer__ d-flex items-start gap-2 px-12">
+          <VCardCompanyDisplay
+            v-for="com in companiesNew"
+            :key="com.id"
+            :user="com"
+          />
         </div>
-      </template>
-    </HeaderProminent>
-    <VContainer>
-      <div class="__placer__ d-flex items-start gap-2 px-12">
-        <VCardCompanyDisplay
-          v-for="com in companiesNew"
-          :key="com.id"
-          :user="com"
-        />
-      </div>
-    </VContainer>
+      </VContainer>
+    </div>
 
     <!-- novi proizvode -->
     <div class="__spacer__ mt-24" />
@@ -316,7 +320,8 @@ const companiesNew = computed(() =>
     </VContainer>
 
     <!-- user help -->
-    <VSpacer class="__spacer__ mt-40">
+    <VSpacer class="__spacer__ mt-40" />
+    <div class="max-w-[1366px] mx-auto">
       <HeaderProminent
         class="ps-10 mt-5 text-medium-emphasis"
         text="Pomažemo Vam da se Vaš proizvod vidi"
@@ -351,192 +356,197 @@ const companiesNew = computed(() =>
           </div>
         </template>
       </HeaderProminent>
-    </VSpacer>
-    <LightboxSlides :slides="slidesPromoMaterial">
-      <template #activator="{ open: galleryOpen }">
-        <VContainer class="mx-auto">
-          <VRow>
-            <!-- :cell-1 -->
-            <VCol sm="4">
-              <VSheet
-                @click="galleryOpen"
-                v-ripple
-                height="256"
-                color="transparent"
-                class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
-                elevation="2"
-                id="bg-image--rHZRlaBLqOX"
-                rounded="lg"
-              >
-                <div
-                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
+
+      <LightboxSlides :slides="slidesPromoMaterial">
+        <template #activator="{ open: galleryOpen }">
+          <VContainer class="mx-auto">
+            <VRow>
+              <!-- :cell-1 -->
+              <VCol sm="4">
+                <VSheet
+                  @click="galleryOpen"
+                  v-ripple
+                  height="256"
+                  color="transparent"
+                  class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
+                  elevation="2"
+                  id="bg-image--rHZRlaBLqOX"
+                  rounded="lg"
                 >
-                  <VSpacer class="mb-8" />
-                  <VCardTitle
-                    style="font-size: 120% !important"
-                    class="text-center text-h5 !font-sans"
+                  <div
+                    class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
                   >
-                    <h3 class="text-white">Onlajn prisustvo i obrt</h3>
-                  </VCardTitle>
-                  <VCardSubtitle
-                    class="!text-white text-body-2 !font-mono text-end !opacity-50"
-                  >
-                    <VIcon icon="$iconPdf" />
-                    <em class="align-bottom"> prezentacija.pdf </em>
-                  </VCardSubtitle>
-                </div>
-              </VSheet>
-            </VCol>
-            <!-- :cell-2 -->
-            <VCol sm="4">
-              <VSheet
-                @click="galleryOpen({ startIndex: 1 })"
-                v-ripple
-                height="256"
-                color="transparent"
-                class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
-                elevation="2"
-                id="bg-image--Kqn6iKlGsN1zeu"
-                rounded="lg"
-              >
-                <div
-                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
+                    <VSpacer class="mb-8" />
+                    <VCardTitle
+                      style="font-size: 120% !important"
+                      class="text-center text-h5 !font-sans"
+                    >
+                      <h3 class="text-white">Onlajn prisustvo i obrt</h3>
+                    </VCardTitle>
+                    <VCardSubtitle
+                      class="!text-white text-body-2 !font-mono text-end !opacity-50"
+                    >
+                      <VIcon icon="$iconPdf" />
+                      <em class="align-bottom"> prezentacija.pdf </em>
+                    </VCardSubtitle>
+                  </div>
+                </VSheet>
+              </VCol>
+              <!-- :cell-2 -->
+              <VCol sm="4">
+                <VSheet
+                  @click="galleryOpen({ startIndex: 1 })"
+                  v-ripple
+                  height="256"
+                  color="transparent"
+                  class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
+                  elevation="2"
+                  id="bg-image--Kqn6iKlGsN1zeu"
+                  rounded="lg"
                 >
-                  <VSpacer class="mb-8" />
-                  <VCardTitle
-                    style="font-size: 1.33rem !important"
-                    class="text-center text-h5 !font-sans"
+                  <div
+                    class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
                   >
-                    <h3 class="text-white" style="font-size: 81%">
-                      Dobra reklama dobar proizvod
-                    </h3>
-                  </VCardTitle>
-                  <VCardSubtitle
-                    class="!text-white text-body-2 !font-mono text-end !opacity-50"
-                  >
-                    <VIcon icon="$iconPdf" />
-                    <em class="align-bottom"> fotografija.pdf </em>
-                  </VCardSubtitle>
-                </div>
-              </VSheet>
-            </VCol>
-            <!-- :cell-3 -->
-            <VCol sm="4">
-              <VSheet
-                @click="galleryOpen({ startIndex: 2 })"
-                v-ripple
-                height="256"
-                color="transparent"
-                class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
-                elevation="2"
-                id="bg-image--MwnPyfU7q"
-                rounded="lg"
-              >
-                <div
-                  class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
+                    <VSpacer class="mb-8" />
+                    <VCardTitle
+                      style="font-size: 1.33rem !important"
+                      class="text-center text-h5 !font-sans"
+                    >
+                      <h3 class="text-white" style="font-size: 81%">
+                        Dobra reklama dobar proizvod
+                      </h3>
+                    </VCardTitle>
+                    <VCardSubtitle
+                      class="!text-white text-body-2 !font-mono text-end !opacity-50"
+                    >
+                      <VIcon icon="$iconPdf" />
+                      <em class="align-bottom"> fotografija.pdf </em>
+                    </VCardSubtitle>
+                  </div>
+                </VSheet>
+              </VCol>
+              <!-- :cell-3 -->
+              <VCol sm="4">
+                <VSheet
+                  @click="galleryOpen({ startIndex: 2 })"
+                  v-ripple
+                  height="256"
+                  color="transparent"
+                  class="cursor-pointer position-relative overflow-hidden opacity-95 hover:opacity-100"
+                  elevation="2"
+                  id="bg-image--MwnPyfU7q"
+                  rounded="lg"
                 >
-                  <VSpacer class="mb-8" />
-                  <VCardTitle
-                    style="font-size: 1.33rem !important"
-                    class="text-center text-h5 !font-sans"
+                  <div
+                    class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
                   >
-                    <h3 class="text-white" style="font-size: 81%">
-                      Priprema slika za sajt
-                    </h3>
-                  </VCardTitle>
-                  <VCardSubtitle
-                    class="-translate-y-[3px] !text-white text-body-2 !font-mono text-end !opacity-50"
-                  >
-                    <VIcon size="x-large" icon="$iconYotubeVideo" />
-                    <em class="align-bottom"> Slike za web </em>
-                  </VCardSubtitle>
-                </div>
-              </VSheet>
-            </VCol>
-          </VRow>
-        </VContainer>
-      </template>
-    </LightboxSlides>
+                    <VSpacer class="mb-8" />
+                    <VCardTitle
+                      style="font-size: 1.33rem !important"
+                      class="text-center text-h5 !font-sans"
+                    >
+                      <h3 class="text-white" style="font-size: 81%">
+                        Priprema slika za sajt
+                      </h3>
+                    </VCardTitle>
+                    <VCardSubtitle
+                      class="-translate-y-[3px] !text-white text-body-2 !font-mono text-end !opacity-50"
+                    >
+                      <VIcon size="x-large" icon="$iconYotubeVideo" />
+                      <em class="align-bottom"> Slike za web </em>
+                    </VCardSubtitle>
+                  </div>
+                </VSheet>
+              </VCol>
+            </VRow>
+          </VContainer>
+        </template>
+      </LightboxSlides>
+    </div>
 
     <div class="__spacer__ mt-32" />
-    <HeaderProminent
-      class="ps-12 mt-20 pb-4 text-medium-emphasis"
-      text="Ovako su nas ocenili naši korisnici i kupci"
-      style="font-size: 2rem"
-    >
-      <template #prepend>
-        <svg
-          style="font-size: 5.67rem"
-          class="ms-5 opacity-20 translate-y-3 text-primary"
-          width="1em"
-          height="1em"
-          viewBox="0 0 133.02 128.82"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g transform="translate(-13.488 -18.088)">
-            <path
-              stroke="currentColor"
-              fill="currentColor"
-              d="m63.077 145.7c-21.42-5.028-39.923-21.415-46.356-42.619-8.6254-25.803 0.33569-56.944 22.978-72.639 18.867-13.55 45.225-16.637 66.091-5.8316 24.842 12.029 40.859 40.821 35.968 68.297-0.64293 5.725-3.2614 11.134-4.5123 16.603 3.0499 11.07 7.1763 21.888 9.2671 33.184-0.68283 7.5403-10.478 1.9841-15.208 1.5276-7.5602-1.652-15.067-4.0762-22.825-4.4894-10.211 5.9798-22.55 6.9516-34.175 7.1794-3.766-0.0534-7.5593-0.30567-11.226-1.2124zm32.084-6.7589c6.3874-1.0104 11.639-7.5559 18.356-4.8339 8.1426 1.7308 16.139 4.4838 24.452 5.2306 4.2652-3.0563-2.416-10.744-2.4685-15.487-1.3289-5.0374-3.4181-10.106-4.3676-15.142 4.0151-10.405 7.1726-21.503 5.4427-32.756-3.6558-31.141-35.003-56.075-66.222-51.875-24.656 3.2019-47.077 23.132-50.328 48.27-4.4836 28.826 13.938 60.522 42.831 67.779 10.601 2.7678 21.892 2.0174 32.304-1.186z"
-            />
-          </g>
-        </svg>
-      </template>
-    </HeaderProminent>
-    <OverviewsFake />
-
-    <!-- mail-lista --prijava -->
-    <div class="__spacer__ mt-40" />
-    <MailingListSave
-      @email-saved="toggleEmailSaved.on"
-      v-slot="{ save: mailSave }"
-    >
+    <div class="max-w-[1492px] mx-auto">
       <HeaderProminent
-        class="ps-10 mt-8 text-medium-emphasis"
-        text="Ostanite informisani o novostima na KANTAR.RS"
+        class="ps-12 mt-20 pb-4 text-medium-emphasis"
+        text="Ovako su nas ocenili naši korisnici i kupci"
         style="font-size: 2rem"
       >
         <template #prepend>
-          <VIcon
-            class="opacity-20 ms-5 rotate-[-2deg] -translate-y-2"
-            style="font-size: 8rem"
-            icon="$iconEnvelopeOpenHandDrawn"
-            color="primary"
-          />
+          <svg
+            style="font-size: 5.67rem"
+            class="ms-5 opacity-20 translate-y-3 text-primary"
+            width="1em"
+            height="1em"
+            viewBox="0 0 133.02 128.82"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g transform="translate(-13.488 -18.088)">
+              <path
+                stroke="currentColor"
+                fill="currentColor"
+                d="m63.077 145.7c-21.42-5.028-39.923-21.415-46.356-42.619-8.6254-25.803 0.33569-56.944 22.978-72.639 18.867-13.55 45.225-16.637 66.091-5.8316 24.842 12.029 40.859 40.821 35.968 68.297-0.64293 5.725-3.2614 11.134-4.5123 16.603 3.0499 11.07 7.1763 21.888 9.2671 33.184-0.68283 7.5403-10.478 1.9841-15.208 1.5276-7.5602-1.652-15.067-4.0762-22.825-4.4894-10.211 5.9798-22.55 6.9516-34.175 7.1794-3.766-0.0534-7.5593-0.30567-11.226-1.2124zm32.084-6.7589c6.3874-1.0104 11.639-7.5559 18.356-4.8339 8.1426 1.7308 16.139 4.4838 24.452 5.2306 4.2652-3.0563-2.416-10.744-2.4685-15.487-1.3289-5.0374-3.4181-10.106-4.3676-15.142 4.0151-10.405 7.1726-21.503 5.4427-32.756-3.6558-31.141-35.003-56.075-66.222-51.875-24.656 3.2019-47.077 23.132-50.328 48.27-4.4836 28.826 13.938 60.522 42.831 67.779 10.601 2.7678 21.892 2.0174 32.304-1.186z"
+              />
+            </g>
+          </svg>
         </template>
       </HeaderProminent>
-      <VCol offset-sm="1" class="*bg-red !max-w-[912px]">
-        <VContainer>
-          <VRow class="!ms-20">
-            <VCol sm="6">
-              <VCardText style="font-size: 106%" class="opacity-80">
-                Želim da povremeno dobijam obaveštenja o proizvodima i uslugama
-                na KANTAR.RS na ovu email adresu:
-              </VCardText>
-            </VCol>
-            <VCol sm="6">
-              <VForm
-                @submit.prevent="mailSave(saveEmail$)"
-                autocomplete="off"
-                class="d-flex items-center"
-              >
-                <VTextField
-                  type="email"
-                  name="save_email"
-                  prepend-icon="$iconEmailAt"
-                  v-model.trim="saveEmail$"
-                  variant="underlined"
-                  clearable
-                />
-                <VBtn class="ms-3" size="x-large" type="submit" variant="text"
-                  >ok</VBtn
+      <OverviewsFake />
+    </div>
+
+    <!-- mail-lista --prijava -->
+    <div class="__spacer__ mt-40" />
+    <div class="max-w-[1492px] mx-auto">
+      <MailingListSave
+        @email-saved="toggleEmailSaved.on"
+        v-slot="{ save: mailSave }"
+      >
+        <HeaderProminent
+          class="ps-10 mt-8 text-medium-emphasis"
+          text="Ostanite informisani o novostima na KANTAR.RS"
+          style="font-size: 2rem"
+        >
+          <template #prepend>
+            <VIcon
+              class="opacity-20 ms-5 rotate-[-2deg] -translate-y-2"
+              style="font-size: 8rem"
+              icon="$iconEnvelopeOpenHandDrawn"
+              color="primary"
+            />
+          </template>
+        </HeaderProminent>
+        <VCol offset-sm="1" class="*bg-red !max-w-[912px]">
+          <VContainer>
+            <VRow class="!ms-20">
+              <VCol sm="6">
+                <VCardText style="font-size: 106%" class="opacity-80">
+                  Želim da povremeno dobijam obaveštenja o proizvodima i
+                  uslugama na KANTAR.RS na ovu email adresu:
+                </VCardText>
+              </VCol>
+              <VCol sm="6">
+                <VForm
+                  @submit.prevent="mailSave(saveEmail$)"
+                  autocomplete="off"
+                  class="d-flex items-center"
                 >
-              </VForm>
-            </VCol>
-          </VRow>
-        </VContainer>
-      </VCol>
-    </MailingListSave>
+                  <VTextField
+                    type="email"
+                    name="save_email"
+                    prepend-icon="$iconEmailAt"
+                    v-model.trim="saveEmail$"
+                    variant="underlined"
+                    clearable
+                  />
+                  <VBtn class="ms-3" size="x-large" type="submit" variant="text"
+                    >ok</VBtn
+                  >
+                </VForm>
+              </VCol>
+            </VRow>
+          </VContainer>
+        </VCol>
+      </MailingListSave>
+    </div>
   </section>
 </template>
 
