@@ -13,7 +13,7 @@ export const useQueryUsers = () => {
     }
   );
   const reload = async () => await refetch();
-  const users = computed(() => get(result.value, "users") || []);
+  const users = computed(() => result.value?.users || []);
   onceMountedOn(true, load);
   watchEffect(() => useIOEvent(IOEVENT_AUTH_NEWUSER, reload));
   return { users, reload };

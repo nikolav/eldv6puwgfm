@@ -2,11 +2,11 @@
 import { Dump } from "@/components/dev";
 import { useDisplay } from "vuetify";
 import {
-  OrdersProduct,
-  ChatOrder,
-  VCardOrderDetails,
   AvatarThumb,
+  ChatOrder,
   NoDataOrders,
+  OrdersProduct,
+  VCardOrderDetails,
 } from "@/components/app";
 
 // defs
@@ -58,6 +58,7 @@ const {
 const { watchProcessing } = useStoreAppProcessing();
 
 // computes
+const uid = computed(() => get(auth.user$, "id"));
 const orderIdActive = (id: number) => id == orderActive$.value;
 const order_ = computed(() =>
   orderActive$.value
@@ -77,7 +78,7 @@ const {
   profile: profileUser,
 } = useProfileData(() => user_.value?.id);
 const topicChatOrderUser$ = computed(() =>
-  chatOrder(orderActive$.value, get(auth.user$, "id"), user_.value?.id)
+  chatOrder(orderActive$.value, uid.value, user_.value?.id)
 );
 
 // watchers
@@ -96,10 +97,23 @@ watchEffect(() => {
 
 const toggleUserInfoActive = useToggleFlag();
 
+const { savePdf } = useSavePdf();
+const orderDownload = async () => {
+  if (!orderActive$.value) return;
+  await savePdf({
+    filename: `kantar-računi:${orderActive$.value}@${uid.value}.pdf`,
+    data: {
+      template: "order-items",
+      oid: orderActive$.value,
+      uid: uid.value,
+    },
+  });
+};
+
 // #eos
 </script>
 <template>
-  <section class="page--company-profile">
+  <section class="page--company-profile-orders-received">
     <!-- <Dump :data="{ order_ }" /> -->
 
     <VDialog
@@ -128,8 +142,8 @@ const toggleUserInfoActive = useToggleFlag();
 
     <!-- @@content -->
     <div class="vcard--placer px-1 mt-2 mt-sm-8">
-      <VCard rounded="t-lg" max-width="856" class="mx-auto">
-        <!-- @orders-crud:toolbar -->
+      <VCard rounded="t-lg" max-width="912" class="mx-auto">
+        <!-- :toolbar -->
         <VCardItem class="bg-primary">
           <VCardTitle class="ps-2"
             ><span v-if="smAndUp" class="opacity-60">Primljene narudžbe</span>
@@ -143,9 +157,25 @@ const toggleUserInfoActive = useToggleFlag();
               </template>
             </VBadge>
           </VCardTitle>
-          <!-- @orders-crud:actions -->
+          <!-- :actions -->
           <template #append>
             <div class="space-x-2">
+              <!-- order:print -->
+              <VBtn
+                @click="orderDownload"
+                color="on-primary"
+                icon
+                variant="text"
+              >
+                <VIcon icon="$iconFileDownload" />
+                <VTooltip
+                  activator="parent"
+                  location="bottom"
+                  open-delay="345"
+                  text="Preuzmi obračun"
+                />
+              </VBtn>
+
               <VBtn
                 @click="toggleOrderDetails"
                 :disabled="!(order_?.code || order_?.description)"
@@ -198,7 +228,7 @@ const toggleUserInfoActive = useToggleFlag();
             </div>
           </template>
         </VCardItem>
-        <!-- @orders-crud:list -->
+        <!-- :orders -->
         <VContainer fluid class="ma-0 pa-1 bg-stone-50">
           <VRow dense>
             <VCol :order="1" :order-sm="0" sm="7">
