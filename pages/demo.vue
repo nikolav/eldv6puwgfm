@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
-import {
-  SocialShareTopicButton,
-  VBtnTogglePackagesPromoted,
-} from "@/components/app";
+
 definePageMeta({
   layout: "blank",
 });
 
-// const col1 = collection(fdb, "data:1");
-
-// const auth = useStoreApiAuth();
-// const { products } = useProducts();
-
-const { companies } = useQueryCompaniesList(undefined, undefined, true);
-
+const { savePdf } = useSavePdf();
+const dl = async () => {
+  console.log(
+    await savePdf({
+      filename: "file.pdf",
+      data: { name: "time", value: Date.now() },
+    })
+  );
+};
 // #eos
 </script>
 <template>
@@ -26,7 +25,7 @@ const { companies } = useQueryCompaniesList(undefined, undefined, true);
       </template>
     </div> -->
     <hr />
-    <Dump :data="{ companies }" />
+    <VBtn @click="dl">pdf:dl</VBtn>
   </section>
 </template>
 <style lang="scss" scoped>

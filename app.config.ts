@@ -343,4 +343,7 @@ export default defineAppConfig({
   story: {
     STORY_MIN_CONTENT_LENGTH: 10,
   },
+  pdf: {
+    DEFAULT_DOWNLOAD_FILENAME: "DEFAULT.pdf",
+  },
 });
