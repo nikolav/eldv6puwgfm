@@ -7,4 +7,5 @@ export const schemaAuthData = z.object({
   approved: z.boolean(),
   silver: z.boolean(),
   gold: z.boolean(),
+  admin: z.boolean(),
 });

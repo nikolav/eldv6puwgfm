@@ -31,6 +31,8 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconInvoice,
+  IconBasketFull,
   IconFileDownloadFilled,
   IconMedal,
   IconStartOutline,
@@ -268,6 +270,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconInvoice: IconInvoice,
+        iconBasketFull: IconBasketFull,
         iconFileDownload: IconFileDownloadFilled,
         iconMedal: IconMedal,
         iconStartOutline: IconStartOutline,

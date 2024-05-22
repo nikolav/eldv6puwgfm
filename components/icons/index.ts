@@ -106,3 +106,5 @@ export { default as IconLinkedin } from "./IconLinkedin.vue";
 export { default as IconStartOutline } from "./IconStartOutline.vue";
 export { default as IconMedal } from "./IconMedal.vue";
 export { default as IconFileDownloadFilled } from "./IconFileDownloadFilled.vue";
+export { default as IconBasketFull } from "./IconBasketFull.vue";
+export { default as IconInvoice } from "./IconInvoice.vue";

@@ -1,5 +1,6 @@
 import fileSaver from "file-saver";
-import { URL_PDF_DL, URL_APP_PUBLIC, ENDPOINT_GRAPHQL } from "@/config";
+import { ENDPOINT_GRAPHQL } from "@/config";
+import { error } from "console";
 
 const { saveAs } = fileSaver;
 
@@ -58,6 +59,7 @@ export const useSavePdf = () => {
     if (!procSavePdf.error.value) procSavePdf.successful();
   };
   return {
+    error: procSavePdf.error.value,
     savePdf,
   };
 };

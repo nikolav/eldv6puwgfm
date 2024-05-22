@@ -16,6 +16,6 @@ export const useProfileData = (UID?: any) => {
       profile.value?.lastName || profile.value?.ownerLastName || ""
     )
   );
-
-  return { profile, avatar, fullName };
+  const publicUrl = useCompanyPublicUrl(uid$, () => profile.value?.name);
+  return { profile, avatar, fullName, publicUrl };
 };

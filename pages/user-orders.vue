@@ -13,7 +13,11 @@ import {
   VChipProductPriceBase,
   WithComProfile,
   WithComPublicUrl,
+  NoDataOrdersPlaced,
+  WithProfileData,
+  AvatarThumb,
 } from "@/components/app";
+import { VListItem } from "vuetify/lib/components/index.mjs";
 
 const PRODUCTS_LIST_OFFSET_BOTTOM = 18;
 definePageMeta({
@@ -26,7 +30,7 @@ const auth = useStoreApiAuth();
 if (auth.isCompany$) setPageLayout("company-profile");
 
 const {
-  app: { DEFAULT_NO_IMAGE },
+  app: { DEFAULT_NO_IMAGE, DEFAULT_TRANSITION },
 } = useAppConfig();
 
 // refs, computes
@@ -96,6 +100,8 @@ onceMountedOn(
     })
 );
 
+const { savePdf } = useSavePdf();
+
 // #eos
 </script>
 <template>
@@ -112,70 +118,7 @@ onceMountedOn(
         :items-per-page="perPage"
       >
         <template #no-data>
-          <div class="__spacer__ *bg-red border-s mt-10">
-            <VCardTitle class="text-medium-emphasis text-center">
-              <h4>Nemate nijednu narudžbenicu.</h4>
-              <h5>
-                Još uvek niste poručili robu na
-                <NuxtLink :to="{ name: 'index' }" target="_blank"
-                  ><a class="link--prominent-base text-primary"> kantar.rs </a>
-                </NuxtLink>
-              </h5>
-            </VCardTitle>
-            <VContainer>
-              <VRow>
-                <VCol sm="7">
-                  <VCardText
-                    class="space-y-5 indent-2"
-                    style="font-size: 1.011rem"
-                  >
-                    <p>
-                      Postoji više načina na koje možete doći do onoga što Vas
-                      zanima na kantar.rs:
-                    </p>
-                    <p>
-                      Prvo i najočigledije, ako tražite robu iz određene
-                      kategorije, na svakoj strani istaknut je<NuxtLink
-                        :to="{ name: 'index' }"
-                        target="_blank"
-                        ><a class="link--prominent-base text-primary"
-                          >brzi meni
-                        </a>
-                      </NuxtLink>
-                      sa linkovima ka svakodnevnim namirinicama, pićem i
-                      zanatskim proizvodima u ponudi.
-                    </p>
-                    <p>
-                      Ako još uvek ne nalazite šta Vam odgovara, uporedite
-                      <em class="text-body-1">sve</em> preduzetnike Srbije
-                      ulistane u naš sistem i lično im se obratite.<NuxtLink
-                        :to="{ name: 'karta' }"
-                        target="_blank"
-                        ><a class="link--prominent-base text-primary"
-                          >Pretražite celu Srbiju
-                        </a>
-                      </NuxtLink>
-                      u dva klika...
-                    </p>
-                    <p>
-                      Takođe, za preciznu pretragu, tu je i klasična pretraga
-                      proizvoda po tekstu i kriterijumima u vrhu strane ako
-                      znate tačno šta Vas zanima.
-                    </p>
-                    <p>Hvala na poverenju.</p>
-                    <p>Vaš kantar.rs 👋🏻</p>
-                  </VCardText>
-                </VCol>
-                <VCol sm="5" class="*bg-red">
-                  <VImg
-                    width="88%"
-                    src="/kantarlogo.jpg"
-                    class="mx-auto mt-5 opacity-10"
-                  />
-                </VCol>
-              </VRow>
-            </VContainer>
-          </div>
+          <NoDataOrdersPlaced />
         </template>
 
         <!-- @@toolbar -->
@@ -204,6 +147,103 @@ onceMountedOn(
                 open-delay="222"
               />
             </VChipProductPrice>
+
+            <!-- @@ -->
+            <VBtn
+              :disabled="isEmpty(companiesForOrder)"
+              class="ms-12 -rotate-2"
+              icon
+              variant="text"
+              density="comfortable"
+              color="primary-darken-2"
+            >
+              <VIcon size="x-large" icon="$iconInvoice" />
+              <VMenu
+                activator="parent"
+                location="end"
+                open-on-click
+                :transition="DEFAULT_TRANSITION"
+                :close-on-content-click="false"
+                :offset="[-48, 24]"
+              >
+                <template #default="{ isActive }">
+                  <VCard rounded="t-lg" width="312" max-width="312">
+                    <VCardItem
+                      class="bg-primary-lighten-1 *d-flex *items-center"
+                    >
+                      <pre
+                        style="font-size: 88%"
+                        class="text-body-2 d-inline-flex me-5 opacity-30"
+                      >
+#{{ oid$ }}</pre
+                      >
+                      <em class="opacity-75">Gazdinstva:</em>
+                      <template #append>
+                        <VBtn
+                          @click="isActive.value = false"
+                          color="on-primary"
+                          icon
+                          variant="plain"
+                          class="translate-x-2"
+                          density="comfortable"
+                        >
+                          <VIcon icon="$close" />
+                        </VBtn>
+                      </template>
+                    </VCardItem>
+                    <div class="py-3">
+                      <template v-for="com in companiesForOrder" :key="com.id">
+                        <WithProfileData
+                          :user-id="com.id"
+                          v-slot="{ profile, avatar, publicUrl }"
+                        >
+                          <VListItem>
+                            <template #prepend>
+                              <AvatarThumb :force="avatar" />
+                            </template>
+                            <VListItemTitle class="ps-3">
+                              <NuxtLink :to="publicUrl" target="_blank">
+                                <a class="link--prominent-base text-primary">
+                                  {{ profile?.name }}
+                                </a>
+                              </NuxtLink>
+                            </VListItemTitle>
+                            <template #append>
+                              <VBtn
+                                @click="
+                                  () =>
+                                    savePdf({
+                                      filename: `#${oid$}:${profile?.name}.pdf`,
+                                      data: {
+                                        template: 'order-items',
+                                        oid: oid$,
+                                        uid: com.id,
+                                      },
+                                    })
+                                "
+                                color="primary-darken-1"
+                                icon
+                                variant="text"
+                                density="comfortable"
+                              >
+                                <VIcon icon="$iconFileDownload" />
+                              </VBtn>
+                            </template>
+                          </VListItem>
+                        </WithProfileData>
+                      </template>
+                    </div>
+                  </VCard>
+                </template>
+              </VMenu>
+              <VTooltip
+                text="Fakture"
+                location="bottom"
+                activator="parent"
+                open-delay="345"
+              />
+            </VBtn>
+
             <VSpacer />
             <VPagination
               v-if="1 < paginationLength"
@@ -238,8 +278,13 @@ onceMountedOn(
             <VRow dense>
               <!-- @@col:left -->
               <VCol cols="7">
-                <VCardTitle class="opacity-80">
-                  <h4>Naručena roba:</h4>
+                <VCardTitle class="opacity-80 d-flex items-center ps-0">
+                  <VIcon
+                    class="opacity-40"
+                    icon="$iconBasketFull"
+                    size="x-large"
+                  />
+                  <h4 class="ms-4 translate-y-1">Naručena roba:</h4>
                 </VCardTitle>
                 <template v-if="0 < orderProducts?.length">
                   <VSheet
