@@ -8,6 +8,7 @@ import {
   OrdersProduct,
   VCardOrderDetails,
 } from "@/components/app";
+import { template } from "lodash";
 
 // defs
 definePageMeta({
@@ -97,7 +98,7 @@ watchEffect(() => {
 
 const toggleUserInfoActive = useToggleFlag();
 
-const { savePdf } = useSavePdf();
+const { savePdf, printPdf } = useSavePdf();
 const orderDownload = async () => {
   if (!orderActive$.value) return;
   await savePdf({
@@ -107,6 +108,12 @@ const orderDownload = async () => {
       oid: orderActive$.value,
       uid: uid.value,
     },
+  });
+};
+const orderPrint = async () => {
+  if (!orderActive$.value) return;
+  await printPdf({
+    data: { template: "order-items", oid: orderActive$.value, uid: uid.value },
   });
 };
 
@@ -159,23 +166,7 @@ const orderDownload = async () => {
           </VCardTitle>
           <!-- :actions -->
           <template #append>
-            <div class="space-x-2">
-              <!-- order:print -->
-              <VBtn
-                @click="orderDownload"
-                color="on-primary"
-                icon
-                variant="text"
-              >
-                <VIcon icon="$iconFileDownload" />
-                <VTooltip
-                  activator="parent"
-                  location="bottom"
-                  open-delay="345"
-                  text="Preuzmi obračun"
-                />
-              </VBtn>
-
+            <div class="space-x-3">
               <VBtn
                 @click="toggleOrderDetails"
                 :disabled="!(order_?.code || order_?.description)"
@@ -223,6 +214,31 @@ const orderDownload = async () => {
                   open-delay="345"
                   text="Poruke..."
                   location="bottom"
+                />
+              </VBtn>
+              <!-- order:dl -->
+              <VBtn
+                @click="orderDownload"
+                color="on-primary"
+                icon
+                variant="text"
+              >
+                <VIcon icon="$iconFileDownload" />
+                <VTooltip
+                  activator="parent"
+                  location="bottom"
+                  open-delay="345"
+                  text="Preuzmi obračun"
+                />
+              </VBtn>
+              <!-- order:print -->
+              <VBtn @click="orderPrint" color="on-primary" icon variant="text">
+                <VIcon size="large" icon="$iconPrint" />
+                <VTooltip
+                  activator="parent"
+                  location="bottom"
+                  open-delay="345"
+                  text="Štampaj"
                 />
               </VBtn>
             </div>
