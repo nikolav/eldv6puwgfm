@@ -1,6 +1,12 @@
 import fileSaver from "file-saver";
+// https://github.com/crabbly/print.js
+import printjs from "print-js";
 import { ENDPOINT_GRAPHQL } from "@/config";
-import { error } from "console";
+
+interface IPdfDataInput {
+  filename?: string;
+  data: Record<string, any>;
+}
 
 const { saveAs } = fileSaver;
 
@@ -17,17 +23,11 @@ export const useSavePdf = () => {
     pdf: { DEFAULT_DOWNLOAD_FILENAME },
   } = useAppConfig();
   watchProcessing(() => procSavePdf.processing.value);
-  // render pdf endpoint
-  //  load data in --headless chrome;
-  //   save bytes client side
-  const savePdf = async ({
-    // .filename .data{}
-    filename = DEFAULT_DOWNLOAD_FILENAME,
-    data = <Record<string, any>>{},
-  }) => {
+  const pdf = async (options: IPdfDataInput) => {
+    let d;
     try {
       procSavePdf.begin();
-      const d = get(
+      d = get(
         await $fetch(ENDPOINT_GRAPHQL, {
           method: "POST",
           headers: {
@@ -38,12 +38,31 @@ export const useSavePdf = () => {
           body: {
             query: query,
             variables: {
-              data,
+              data: options.data,
             },
           },
         }),
         "data.pdfDownload"
       );
+    } catch (error) {
+      procSavePdf.setError(error);
+    } finally {
+      procSavePdf.done();
+    }
+    if (!procSavePdf.error.value) procSavePdf.successful();
+    return d;
+  };
+  // render pdf endpoint
+  //  load data in --headless chrome;
+  //   save bytes client side
+  const savePdf = async ({
+    // .filename .data{}
+    filename = DEFAULT_DOWNLOAD_FILENAME,
+    data = {},
+  }: IPdfDataInput) => {
+    const d = await pdf({ data });
+    try {
+      procSavePdf.begin();
       const bs = atob(d ? String(d) : "");
       const len = bs.length;
       const bytes = new Uint8Array(len);
@@ -58,8 +77,12 @@ export const useSavePdf = () => {
     }
     if (!procSavePdf.error.value) procSavePdf.successful();
   };
+  const printPdf = async (options: IPdfDataInput) =>
+    printjs({ printable: await pdf(options), type: "pdf", base64: true });
   return {
     error: procSavePdf.error.value,
     savePdf,
+    printPdf,
+    pdf,
   };
 };

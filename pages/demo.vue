@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
+import { template } from "lodash";
+import printjs from "print-js";
 
 definePageMeta({
   layout: "blank",
@@ -18,20 +20,24 @@ definePageMeta({
 //   });
 // };
 const auth = useStoreApiAuth();
+const { printPdf } = useSavePdf();
 
+const dl = async () => {
+  await printPdf({
+    data: {
+      template: "order-items",
+      oid: 1,
+      uid: 1,
+    },
+  });
+};
 // #eos
 </script>
 <template>
   <section class="page--demo.index">
     <NuxtLink :to="{ name: 'index' }">-index-</NuxtLink>
-    <Dump :data="{ user: auth.user$ }" />
-    <!-- <VBtn @click="dl">pdf:dl</VBtn> -->
-    <!-- <div class="space-x-1">
-      <template v-for="p in products" :key="p.id">
-        <VBtnTogglePackagesPromoted :product="p" />
-      </template>
-    </div> -->
     <hr />
+    <VBtn @click="dl">dl</VBtn>
   </section>
 </template>
 <style lang="scss" scoped>
