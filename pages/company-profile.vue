@@ -183,20 +183,6 @@ const orderPrint = async () => {
                 />
               </VBtn>
               <VBtn
-                icon
-                variant="text"
-                color="on-primary"
-                @click="ordersReload"
-              >
-                <VIcon icon="$loading" size="large" />
-                <VTooltip
-                  location="bottom"
-                  activator="parent"
-                  open-delay="345"
-                  text="Osveži listu narudžbi"
-                />
-              </VBtn>
-              <VBtn
                 :disabled="!topicChatOrderUser$"
                 variant="text"
                 color="on-primary"
@@ -239,6 +225,21 @@ const orderPrint = async () => {
                   location="bottom"
                   open-delay="345"
                   text="Štampaj"
+                />
+              </VBtn>
+              <!-- orders:reload -->
+              <VBtn
+                icon
+                variant="text"
+                color="on-primary"
+                @click="ordersReload"
+              >
+                <VIcon icon="$loading" size="large" />
+                <VTooltip
+                  location="bottom"
+                  activator="parent"
+                  open-delay="345"
+                  text="Osveži listu narudžbi"
                 />
               </VBtn>
             </div>

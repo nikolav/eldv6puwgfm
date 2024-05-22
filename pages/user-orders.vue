@@ -100,7 +100,7 @@ onceMountedOn(
     })
 );
 
-const { savePdf } = useSavePdf();
+const { savePdf, printPdf } = useSavePdf();
 
 // #eos
 </script>
@@ -155,7 +155,7 @@ const { savePdf } = useSavePdf();
               icon
               variant="text"
               density="comfortable"
-              color="primary-darken-2"
+              color="primary-darken-1"
             >
               <VIcon size="x-large" icon="$iconInvoice" />
               <VMenu
@@ -167,7 +167,7 @@ const { savePdf } = useSavePdf();
                 :offset="[-48, 24]"
               >
                 <template #default="{ isActive }">
-                  <VCard rounded="t-lg" width="312" max-width="312">
+                  <VCard rounded="t-lg" width="355" max-width="355">
                     <VCardItem
                       class="bg-primary-lighten-1 *d-flex *items-center"
                     >
@@ -221,12 +221,31 @@ const { savePdf } = useSavePdf();
                                       },
                                     })
                                 "
-                                color="primary-darken-1"
+                                color="primary"
                                 icon
                                 variant="text"
                                 density="comfortable"
                               >
                                 <VIcon icon="$iconFileDownload" />
+                              </VBtn>
+                              <VBtn
+                                @click="
+                                  () =>
+                                    printPdf({
+                                      data: {
+                                        template: 'order-items',
+                                        oid: oid$,
+                                        uid: com.id,
+                                      },
+                                    })
+                                "
+                                color="primary"
+                                icon
+                                variant="text"
+                                density="comfortable"
+                                class="ms-3"
+                              >
+                                <VIcon icon="$iconPrint" />
                               </VBtn>
                             </template>
                           </VListItem>
