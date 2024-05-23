@@ -7,29 +7,29 @@ definePageMeta({
   layout: "blank",
 });
 
-// const { savePdf } = useSavePdf();
-
-// const dl = async () => {
-//   await savePdf({
-//     filename: `out--${idGen()}.pdf`,
-//     data: {
-//       template: "order-items",
-//       uid: 1,
-//       oid: 1,
-//     },
-//   });
-// };
-const auth = useStoreApiAuth();
-const { printPdf } = useSavePdf();
-
-const dl = async () => {
-  await printPdf({
-    data: {
-      template: "order-items",
-      oid: 1,
-      uid: 1,
+const { upload, publicUrl, info, ls } = useFirebaseStorage("foo/1");
+const { onChange, open } = useFileDialog({ accept: "image/*" });
+onChange(async (lsFiles) => {
+  const file = get(lsFiles, "[0]");
+  if (!file) return;
+  const res = await upload({
+    file1: {
+      name: `${Date.now()}.${get(file, "name")}`,
+      file,
     },
   });
+  console.log({ res });
+});
+const url = async () => {
+  const u = await publicUrl("nikolav.me.0.jpg");
+  console.log({ url: u });
+};
+const meta = async () => {
+  const i = await info("nikolav.me.0.jpg");
+  console.log({ info: i });
+};
+const list = async () => {
+  console.log({ ls: await ls() });
 };
 // #eos
 </script>
@@ -37,7 +37,10 @@ const dl = async () => {
   <section class="page--demo.index">
     <NuxtLink :to="{ name: 'index' }">-index-</NuxtLink>
     <hr />
-    <VBtn @click="dl">dl</VBtn>
+    <VBtn @click="open">ok</VBtn>
+    <VBtn @click="url">url</VBtn>
+    <VBtn @click="meta">meta</VBtn>
+    <VBtn @click="list">list</VBtn>
   </section>
 </template>
 <style lang="scss" scoped>
