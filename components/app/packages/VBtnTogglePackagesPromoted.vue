@@ -32,7 +32,7 @@ const { isPromoted, setPromoted } = useQueryProductPromo(
           : '👍🏻 Promoviši ovaj proizvod.'
       "
       location="bottom"
-      open-delay="1234"
+      open-delay="567"
       activator="parent"
     />
   </VBtn>

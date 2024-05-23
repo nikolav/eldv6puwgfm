@@ -9,6 +9,7 @@ export const useTopics = () => {
       COM_PHOTOS_prefix,
     },
     key: {
+      PAKETI_UPLATA,
       MAILING_LIST,
       CHAT_MAIN,
       TOPIC_CHAT_COM_prefix,
@@ -46,12 +47,16 @@ export const useTopics = () => {
     uid ? `${COM_PHOTOS_prefix}${uid}` : "";
   const comLikes = (uid: number | undefined) =>
     uid ? `${COM_LIKES_prefix}${uid}` : "";
+  const domainPackagesPayment = (uid: number | undefined) =>
+    uid ? `${trimEnd(PAKETI_UPLATA, "/")}/${uid}` : `misc`;
 
   return {
+    PAKETI_UPLATA,
     CHAT_MAIN,
     MAILING_LIST,
     TOPIC_CHAT_PACKAGES,
     //
+    domainPackagesPayment,
     authProfile,
     chatOrder,
     comChat,

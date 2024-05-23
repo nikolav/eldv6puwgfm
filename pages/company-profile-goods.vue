@@ -14,6 +14,7 @@ import {
   ProvideProductsTotalAmountOrdered,
   TopicRatingStatus,
   VBtnTogglePackagesPromoted,
+  VBtnFabPaketiUplata,
 } from "@/components/app";
 import { useDisplay } from "vuetify";
 
@@ -114,6 +115,15 @@ const toggleChatControlls = useToggleFlag();
 </script>
 <template>
   <section class="page--company-profile-goods">
+    <!-- @fab --paketi-uplate -->
+    <template v-if="auth.isPremium">
+      <Teleport to="body">
+        <div class="__placer__ position-fixed bottom-12 end-5 z-[1]">
+          <VBtnFabPaketiUplata />
+        </div>
+      </Teleport>
+    </template>
+
     <!-- @com.channel:product -->
     <VNavigationDrawer
       v-model="toggleProductChat.isActive.value"
@@ -287,7 +297,7 @@ const toggleChatControlls = useToggleFlag();
         <!-- toolbar -->
         <VToolbar color="primary" flat class="px-2">
           <VToolbarTitle v-if="smAndUp">
-            <VIcon start size="small" class="opacity-50" icon="$iconBoxes" />
+            <VIcon start class="opacity-50" icon="$iconBoxes" />
             <strong class="ps-2 space-x-2">
               <em class="opacity-75">Lager</em>
               <VBadge
@@ -397,7 +407,7 @@ const toggleChatControlls = useToggleFlag();
               rounded="circle"
               icon
               color="success"
-              ><VIcon icon="$iconPlusCircle" :size="41" />
+              ><VIcon icon="$iconPlusCircle" :size="48" />
               <VTooltip
                 activator="parent"
                 text="Ulistaj nov proizvod..."
@@ -457,7 +467,7 @@ const toggleChatControlls = useToggleFlag();
                 <template #prepend>
                   <small
                     style="font-size: 72%"
-                    class="opacity-40 font-mono min-w-[36px] ps-1 align-baseline"
+                    class="opacity-40 font-mono min-w-[36px] ps-[5px] align-baseline"
                   >
                     #{{ node.raw.id }}
                   </small>
@@ -525,6 +535,7 @@ const toggleChatControlls = useToggleFlag();
                     </ProvideProductsTotalAmountOrdered>
                     <!-- @@ -->
                     <VBtnTogglePackagesPromoted
+                      class="me-1"
                       v-if="auth.isPremium"
                       :product="node.raw"
                     />

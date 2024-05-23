@@ -6,18 +6,9 @@ import {
   deleteObject,
   listAll,
 } from "firebase/storage";
-import type { StorageReference } from "firebase/storage";
 import { storage } from "@/services/firebase";
-import type { OrNoValue } from "@/types";
+import type { IInputFileUpload } from "@/types";
 
-interface IInputFileUpload {
-  [title: string]: {
-    // change filename for storing
-    name?: string;
-    // bytes to upload
-    file: File;
-  };
-}
 export const useFirebaseStorage = (STORE?: any) => {
   const store$ = ref();
   watchEffect(() => {
@@ -29,47 +20,38 @@ export const useFirebaseStorage = (STORE?: any) => {
 
   // ref:store
   const refStore = fbRef(storage, store$.value);
-
-  const upload = async (files: IInputFileUpload) => {
-    // store result title:fileUrl pairs
-    const uplResult = <Record<string, OrNoValue<string>>>{};
-
-    if (!isEmpty(files)) {
-      try {
-        upl.begin();
-        each(files, (node, title) => {
-          if (!node.file) return;
-          const path = node?.name || node.file.name;
-          const refStorageNode = fbRef(refStore, path);
-          const uploadTask = uploadBytesResumable(refStorageNode, node.file);
-          uploadTask.on(
-            "state_changed",
-            // progress
-            (snapshot) => {
-              const progress =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log({ "upload:progress": progress });
-            },
-            // error
-            (error) => {
-              upl.setError(error);
-            },
-            // success
-            async () => {
-              uplResult[title] = await getDownloadURL(uploadTask.snapshot.ref);
-            }
-          );
-        });
-      } catch (error) {
-        upl.setError(error);
-      } finally {
-        upl.done();
-      }
-      if (!upl.error.value) upl.successful();
-    }
-    //
-    return uplResult;
-  };
+  // https://firebase.google.com/docs/storage/web/upload-files?hl=en&authuser=0
+  const upload = async (files: IInputFileUpload) =>
+    await Promise.all(
+      map(
+        files,
+        (node, title) =>
+          new Promise((resolve, reject) => {
+            if (!node?.file) return reject(null);
+            const path = node?.name || node.file.name;
+            const refStorageNode = fbRef(refStore, path);
+            const uploadTask = uploadBytesResumable(refStorageNode, node.file);
+            uploadTask.on(
+              "state_changed",
+              // progress
+              (snapshot) => {
+                const progress =
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log({ [`${title} --upload-progress`]: progress });
+              },
+              // error
+              (error) => {
+                return reject(error);
+              },
+              // success
+              async () => {
+                const url = await getDownloadURL(uploadTask.snapshot.ref);
+                return !url ? reject(null) : resolve({ [title]: url });
+              }
+            );
+          })
+      )
+    );
   const publicUrl = async (path: string) => {
     const refNode = fbRef(refStore, path);
     return await getDownloadURL(refNode);

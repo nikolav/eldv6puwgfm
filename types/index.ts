@@ -249,3 +249,12 @@ export interface IInputSendMail {
   template: string;
   data?: Record<string, any>;
 }
+
+export interface IInputFileUpload {
+  [title: string]: {
+    // change filename for storing
+    name?: string;
+    // bytes to upload
+    file: File;
+  };
+}
