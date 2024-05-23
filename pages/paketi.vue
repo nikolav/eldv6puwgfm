@@ -75,14 +75,17 @@ const { width: wCardBronze } = useElementSize(refCardBronze);
       v-model="togglePackagesRequestStatus.isActive.value"
       color="transparent"
       variant="text"
-      location="top"
+      location="bottom"
       :transition="DEFAULT_TRANSITION"
     >
       <VAlert rounded="lg" type="success" prominent elevation="4">
         <div class="d-flex justify-between items-center gap-4 sm:gap-8">
           <strong style="font-size: 1.55rem" class="ms-1">👌🏻</strong>
-          <div style="font-size: 1.022rem" class="tracking-wide leading-normal">
-            <p>Vaša poruka je uspešno poslata.</p>
+          <div
+            style="font-size: 1.022rem"
+            class="tracking-wide leading-normal text-center"
+          >
+            <p>Vaš zahtev je uspešno prosleđen.</p>
             <p>Očekujte uskoro odgovor od našeg tima.</p>
           </div>
           <strong style="font-size: 1.55rem">👋🏻</strong>
