@@ -15,14 +15,16 @@ const upl = useProcessMonitor();
 watchProcessing(() => upl.processing.value);
 // @photo: store receit, notify
 onChange(async (lsFIles) => {
+  let photo;
   const file = first(lsFIles);
   if (!file) return;
   try {
     upl.begin();
-    const photo = get(
+    photo = get(
       first(
         await upload({
           photo: {
+            // prepend timestamp for quick date sort in firebase ui
             name: `${Date.now()}.${get(file, "name")}`,
             file,
           },
@@ -30,16 +32,11 @@ onChange(async (lsFIles) => {
       ),
       "photo"
     );
+
     if (!photo) throw "--error: receit upload failed";
-    const status = get(
-      await sendMail({
-        template: "paketi-uplata",
-        subject: "paketi:uplata",
-        data: { photo },
-      }),
-      "status"
-    );
-    if (!("ok" == status)) throw "--error notify email failed";
+
+    // @success, receit saved, trigger feedback
+    toggleFeedbackReceitCommited.on();
   } catch (error) {
     upl.setError(error);
   } finally {
@@ -47,9 +44,14 @@ onChange(async (lsFIles) => {
   }
   if (!upl.error.value) {
     upl.successful();
-    // @success --alert-tooggle
-    toggleFeedbackReceitCommited.on();
+    // send email notification
+    await sendMail({
+      template: "paketi-uplata",
+      subject: "paketi:uplata",
+      data: { photo },
+    });
   }
+  // reset state
   fileDialogReset();
 });
 
