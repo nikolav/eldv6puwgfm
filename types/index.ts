@@ -243,3 +243,9 @@ export interface IPostInputData {
   title?: string;
   content?: string;
 }
+
+export interface IInputSendMail {
+  subject: string;
+  template: string;
+  data?: Record<string, any>;
+}
