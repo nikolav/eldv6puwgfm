@@ -435,18 +435,19 @@ const toggleChatControlls = useToggleFlag();
               <template #append>
                 <small
                   class="min-w-[64px] text-center d-inline-flex flex-col items-center opacity-50 leading-tight pe-3"
+                  :class="[!auth.isGold ? '-translate-x-1' : undefined]"
                   style="font-size: 72%"
                 >
                   <span>ukupno</span>
                   <span>poručeno</span>
                 </small>
                 <small
-                  v-if="auth.isPremium"
+                  v-if="auth.isGold"
                   class="min-w-[64px] text-center d-inline-flex flex-col items-center opacity-50 leading-tight pe-2"
                   style="font-size: 72%"
                 >
                   <span>promo</span>
-                  <span>proizvodi</span>
+                  <span>proizvod</span>
                 </small>
               </template>
             </VListItem>
@@ -521,7 +522,7 @@ const toggleChatControlls = useToggleFlag();
                       <!-- @@ -->
                       <small
                         class="ms-3 d-inline-block min-w-[68px] text-center"
-                        :class="[!auth.isPremium ? '!min-w-[58px]' : undefined]"
+                        :class="[!auth.isGold ? '!min-w-[58px]' : undefined]"
                       >
                         <strong
                           style="font-size: 92% !important"
@@ -536,7 +537,7 @@ const toggleChatControlls = useToggleFlag();
                     <!-- @@ -->
                     <VBtnTogglePackagesPromoted
                       class="me-1"
-                      v-if="auth.isPremium"
+                      v-if="auth.isGold"
                       :product="node.raw"
                     />
                   </div>

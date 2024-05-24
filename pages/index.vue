@@ -169,11 +169,7 @@ const companiesNew = computed(() =>
           style="font-size: 3.14rem"
           text="Ovog meseca za Vas smo izdvojili: "
         >
-          Naši
-          <NuxtLink :to="{ name: 'paketi' }" target="_blank">
-            <a class="link--prominent text-primary-lighten-1"> PREMIUM </a>
-          </NuxtLink>
-          članovi
+          Premium članovi
         </h2>
       </template>
     </HeaderProminent>
