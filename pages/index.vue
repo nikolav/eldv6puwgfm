@@ -25,28 +25,52 @@ const auth = useStoreApiAuth();
 const { smAndUp, mdAndUp, lgAndUp } = useDisplay();
 
 // products selection
-const qPidsRandomRWD = computed(() =>
+// const qPidsRandomRWD = computed(() =>
+//   lgAndUp.value
+//     ? {
+//         random: true,
+//         limit: 10,
+//       }
+//     : mdAndUp.value
+//     ? {
+//         random: true,
+//         limit: 8,
+//       }
+//     : smAndUp.value
+//     ? {
+//         random: true,
+//         limit: 6,
+//       }
+//     : {
+//         random: true,
+//         limit: 3,
+//       }
+// );
+// const { products: productsSelection } = useQueryProductsSearch(qPidsRandomRWD);
+
+// products popular
+const qPidsPopularRWD = computed(() =>
   lgAndUp.value
     ? {
-        random: true,
+        sortBy: 8,
         limit: 10,
       }
     : mdAndUp.value
     ? {
-        random: true,
+        sortBy: 8,
         limit: 8,
       }
     : smAndUp.value
     ? {
-        random: true,
+        sortBy: 8,
         limit: 6,
       }
     : {
-        random: true,
+        sortBy: 8,
         limit: 3,
       }
 );
-const { products: productsSelection } = useQueryProductsSearch(qPidsRandomRWD);
+const { products: productsPopular } = useQueryProductsSearch(qPidsPopularRWD);
 
 const qPidsLatestRWD = computed(() =>
   lgAndUp.value
@@ -117,9 +141,10 @@ const companiesNew = computed(() =>
       </VCardText>
     </VSnackbarStatusMessage>
 
-    <!-- izdvajamo -->
     <div class="__spacer__ mt-10" />
-    <HeaderProminent
+
+    <!-- izdvajamo -->
+    <!-- <HeaderProminent
       text="Ovog meseca za Vas smo izdvojili: "
       class="ps-12 mt-6 text-medium-emphasis"
       style="font-size: 2.55rem"
@@ -147,10 +172,41 @@ const companiesNew = computed(() =>
           <CardProductDisplay @product-photos-change="noop" :product="p" />
         </VCol>
       </VRow>
+    </VContainer> -->
+
+    <!-- popularno -->
+    <HeaderProminent
+      text="Najtraženije na kantar.rs "
+      class="ps-12 mt-6 text-medium-emphasis"
+      style="font-size: 2.55rem"
+    >
+      <template #prepend>
+        <VIcon
+          style="font-size: 7.22rem"
+          class="rotate-[-5deg] opacity-20 translate-x-3"
+          icon="$iconStarFat"
+          color="primary"
+        />
+      </template>
+    </HeaderProminent>
+
+    <VContainer fluid class="products--list">
+      <VRow dense>
+        <VCol
+          v-for="p in productsPopular"
+          :class="lgAndUp ? 'cols5' : undefined"
+          :sm="4"
+          :md="3"
+          lg="auto"
+          :key="p.id"
+        >
+          <CardProductDisplay @product-photos-change="noop" :product="p" />
+        </VCol>
+      </VRow>
     </VContainer>
 
     <!-- sponzorisano -->
-    <div class="__spacer__ mt-36" />
+    <div class="__spacer__ mt-32" />
     <HeaderProminent
       class="ps-12 mt-12 text-medium-emphasis"
       style="font-size: 2.55rem"
