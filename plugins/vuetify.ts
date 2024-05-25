@@ -9,6 +9,8 @@ import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 
 import { light2, dark } from "@/assets/themes";
 
+// import { srLatn } from "vuetify/locale";
+
 import {
   IconAddToCart as IconKantarKorpa2,
   IconBrasno,
@@ -31,6 +33,7 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconCalendarEventOutline,
   IconTruckTransit,
   IconPackageReady,
   IconCircleFilled,
@@ -275,6 +278,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconCalendar: IconCalendarEventOutline,
         iconTruckTransit: IconTruckTransit,
         iconPackageReady: IconPackageReady,
         iconCircle: IconCircleFilled,
@@ -395,10 +399,12 @@ export default defineNuxtPlugin((nuxtApp) => {
       },
     },
     // locale: {
-    //   locale: 'zhHans',
-    //   fallback: 'sv',
-    //   messages: { zhHans, pl, sv }
-    // }
+    //   locale: "srLatn",
+    //   messages: { srLatn },
+    //   // fallback: "en",
+    //   // locale: 'zhHans',
+    //   // messages: { zhHans, pl, sv }
+    // },
   });
   // @@
   nuxtApp.vueApp.use(vuetify);

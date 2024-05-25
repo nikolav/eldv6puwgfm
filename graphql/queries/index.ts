@@ -462,3 +462,9 @@ export const Q_getOrderProductsStatusByCompany = gql`
   }
 `;
 
+export const Q_getOrderProductsDeliveryDate = gql`
+  query q_getOrderProductsDeliveryDate($oid: ID!, $uid: ID!) {
+    getOrderProductsDeliveryDate(oid: $oid, uid: $uid)
+  }
+`;
+

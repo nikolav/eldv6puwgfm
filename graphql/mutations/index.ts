@@ -158,3 +158,9 @@ export const M_orderProductsStatusByCompany = gql`
   }
 `;
 
+export const M_orderProductsDeliveryDateByCompany = gql`
+  mutation m_orderProductsDeliveryDateByCompany($oid: ID!, $uid: ID!, $date: String!) {
+    orderProductsDeliveryDateByCompany(oid: $oid, uid: $uid, date: $date)
+  }
+`;
+

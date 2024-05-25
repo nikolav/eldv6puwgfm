@@ -291,6 +291,7 @@ export default defineAppConfig({
     IOEVENT_STORY_PHOTOS_CHANGE_prefix: "@change:story:images:VDMf82FNKpfl6m:",
     IOEVENT_PACKAGES_PROMOTED_prefix: "@packages:promoted:",
     IOEVENT_ORDER_PRODUCTS_STATUS: "GXV5QkH2yjmZ:",
+    IOEVENT_ORDER_PRODUCTS_DELIVERY_AT: "5jzXPwQZmSnh2i5NTg:",
   },
   theme: {
     DEFAULT: themeLight,

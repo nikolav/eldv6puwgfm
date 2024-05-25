@@ -8,6 +8,7 @@ import {
   OrdersProduct,
   VCardOrderDetails,
   VSelectManageOrderStatus,
+  VBtnOrderProductsDeliveryAt,
 } from "@/components/app";
 
 // defs
@@ -161,10 +162,13 @@ const orderPrint = async () => {
           <!-- :actions -->
           <template #append>
             <div class="space-x-3 d-inline-flex items-center">
-              
+
+              <!-- @@order-products deliver-at by com -->
+              <VBtnOrderProductsDeliveryAt class="me-2" :oid="orderActive$" />
+
               <!-- @@order-products status by com -->
               <VSelectManageOrderStatus :oid="orderActive$" />
-              
+
               <!-- order:details -->
               <VBtn
                 @click="toggleOrderDetails"
@@ -246,7 +250,6 @@ const orderPrint = async () => {
                   text="Osveži listu narudžbi"
                 />
               </VBtn>
-
             </div>
           </template>
         </VCardItem>

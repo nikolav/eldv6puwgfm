@@ -113,3 +113,4 @@ export { default as IconReceitSendOutline } from "./IconReceitSendOutline.vue";
 export { default as IconCircleFilled } from "./IconCircleFilled.vue";
 export { default as IconPackageReady } from "./IconPackageReady.vue";
 export { default as IconTruckTransit } from "./IconTruckTransit.vue";
+export { default as IconCalendarEventOutline } from "./IconCalendarEventOutline.vue";
