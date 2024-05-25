@@ -33,6 +33,8 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconBoxReady,
+  IconChecklistOk,
   IconCalendarEventOutline,
   IconTruckTransit,
   IconPackageReady,
@@ -278,6 +280,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconBoxReady: IconBoxReady,
+        iconChecklistOk: IconChecklistOk,
         iconCalendar: IconCalendarEventOutline,
         iconTruckTransit: IconTruckTransit,
         iconPackageReady: IconPackageReady,

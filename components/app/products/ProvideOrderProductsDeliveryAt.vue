@@ -1,8 +1,12 @@
 <script setup lang="ts">
 const props = defineProps<{
   oid: number | undefined;
+  uid?: number | undefined;
 }>();
-const { productsDelivery } = useQueryManageOrder(() => props.oid);
+const { productsDelivery } = useQueryManageOrder(
+  () => props.oid,
+  () => props.uid
+);
 
 const deliveryAt = computed(() =>
   isEmpty(productsDelivery.value)

@@ -5,28 +5,12 @@ export default {
 </script>
 <script setup lang="ts">
 const props = defineProps<{ oid: number | undefined }>();
+const {
+  orders: { ORDER_STATUS },
+} = useAppConfig();
 const { loading, productsStatus, updateProductsStatus } = useQueryManageOrder(
   () => props.oid
 );
-
-const ORDER_STATUS = {
-  1: {
-    icon: "$iconCheck",
-    title: "Narudžbenica primljena",
-  },
-  2: {
-    icon: "$iconBattery",
-    title: "Priprema robe",
-  },
-  3: {
-    icon: "$iconPackageReady",
-    title: "Roba spremna",
-  },
-  4: {
-    icon: "$iconTruckTransit",
-    title: "Roba u tranzitu",
-  },
-};
 
 const status_ = computed(() =>
   isEmpty(productsStatus.value)
@@ -103,7 +87,7 @@ const items = [
       v-bind="$attrs"
     >
       <template #prepend-inner>
-         <VIcon class="pa-0 ma-0" :icon="icon_" />
+        <VIcon class="pa-0 ma-0" :icon="icon_" />
       </template>
     </VSelect>
     <VTooltip location="bottom" open-delay="345" activator="parent">

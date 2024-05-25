@@ -114,3 +114,5 @@ export { default as IconCircleFilled } from "./IconCircleFilled.vue";
 export { default as IconPackageReady } from "./IconPackageReady.vue";
 export { default as IconTruckTransit } from "./IconTruckTransit.vue";
 export { default as IconCalendarEventOutline } from "./IconCalendarEventOutline.vue";
+export { default as IconChecklistOk } from "./IconChecklistOk.vue";
+export { default as IconBoxReady } from "./IconBoxReady.vue";

@@ -5,4 +5,5 @@ export { default as ProductsListByCategory } from "./ProductsListByCategory.vue"
 export { default as ProductPriceInline } from "./ProductPriceInline.vue";
 export { default as ProvideProductsTotalAmountOrdered } from "./ProvideProductsTotalAmountOrdered.vue";
 export { default as ProvideOrderProductsDeliveryAt } from "./ProvideOrderProductsDeliveryAt.vue";
+export { default as ProvideOrderProductsPackageStatus } from "./ProvideOrderProductsPackageStatus.vue";
 

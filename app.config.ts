@@ -350,4 +350,27 @@ export default defineAppConfig({
   pdf: {
     DEFAULT_DOWNLOAD_FILENAME: "DEFAULT.pdf",
   },
+  orders: {
+    ORDER_STATUS: {
+      1: {
+        // icon: "$iconCheck",
+        icon: "$iconChecklistOk",
+        title: "Narudžbenica primljena",
+      },
+      2: {
+        icon: "$iconBattery",
+        title: "Priprema pošiljke",
+      },
+      3: {
+        // icon: "$iconPackageReady",
+        icon: "$iconBoxReady",
+        title: "Roba spremna",
+      },
+      4: {
+        // icon: "$iconTruckTransit",
+        icon: "$iconDeliveryTruck",
+        title: "Roba u tranzitu",
+      },
+    },
+  },
 });

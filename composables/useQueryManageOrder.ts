@@ -2,18 +2,18 @@ import type { IOrder } from "@/types";
 import {
   Q_ordersOne,
   M_manageOrder,
-  M_orderProductsStatusByCompany,
-  Q_getOrderProductsStatusByCompany,
   M_orderProductsDeliveryDateByCompany,
+  M_orderProductsStatusByCompany,
   Q_getOrderProductsDeliveryDate,
+  Q_getOrderProductsStatusByCompany,
 } from "@/graphql";
-export const useQueryManageOrder = (OID?: any) => {
+export const useQueryManageOrder = (OID?: any, UID?: any) => {
   const oid = ref();
   watchEffect(() => {
     oid.value = toValue(OID);
   });
   const auth = useStoreApiAuth();
-  const uid = computed(() => get(auth.user$, "id"));
+  const uid = computed(() => toValue(UID) || get(auth.user$, "id"));
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
     io: {

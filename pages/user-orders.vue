@@ -3,7 +3,9 @@ import { useDisplay } from "vuetify";
 import type { IUser, IOrder } from "@/types";
 // import { Dump } from "@/components/dev";
 import {
+  AvatarThumb,
   LightboxProductImages,
+  NoDataOrdersPlaced,
   ProductPublicUrl,
   ProductsForOrderWithDetails,
   ProvideChatData,
@@ -13,11 +15,10 @@ import {
   VChipProductPriceBase,
   WithComProfile,
   WithComPublicUrl,
-  NoDataOrdersPlaced,
   WithProfileData,
-  AvatarThumb,
+  ProvideOrderProductsDeliveryAt,
+  ProvideOrderProductsPackageStatus,
 } from "@/components/app";
-import { VListItem } from "vuetify/lib/components/index.mjs";
 
 const PRODUCTS_LIST_OFFSET_BOTTOM = 18;
 definePageMeta({
@@ -31,6 +32,7 @@ if (auth.isCompany$) setPageLayout("company-profile");
 
 const {
   app: { DEFAULT_NO_IMAGE, DEFAULT_TRANSITION },
+  orders: { ORDER_STATUS },
 } = useAppConfig();
 
 // refs, computes
@@ -299,17 +301,18 @@ const { savePdf, printPdf } = useSavePdf();
               <VCol cols="7">
                 <VCardTitle class="opacity-80 d-flex items-center ps-0">
                   <VIcon
-                    class="opacity-40"
+                    class="opacity-20"
                     icon="$iconBasketFull"
                     size="x-large"
                   />
                   <h4 class="ms-4 translate-y-1">Naručena roba:</h4>
                 </VCardTitle>
+
                 <template v-if="0 < orderProducts?.length">
                   <VSheet
                     ref="boxProductsList"
                     border="t"
-                    class="__placer__ py-2 ps-0 pe-1 scrollbar-thin-light overflow-auto space-y-2"
+                    class="__placer__ py-2 pe-[2px] scrollbar-thin-light overflow-auto space-y-2"
                     :height="boxProductsListHeight"
                   >
                     <!-- @@order:product:details --card -->
@@ -322,212 +325,292 @@ const { savePdf, printPdf } = useSavePdf();
                             :user-id="p.user.id"
                             v-slot="{ profile }"
                           >
-                            <VSheet
-                              v-bind="props_"
-                              elevation="1"
-                              rounded="lg2"
-                              max-height="92"
-                              height="92"
-                              class="d-flex overflow-hidden !bg-slate-50"
+                            <ProvideOrderProductsDeliveryAt
+                              :oid="oid$"
+                              :uid="p.user.id"
+                              v-slot="{ deliveryAt }"
                             >
-                              <!-- @@image -->
-                              <div class="fill-height">
-                                <LightboxProductImages :product="p">
-                                  <template
-                                    #activator="{ onClick, images, disabled }"
-                                  >
-                                    <VHover open-delay="222">
-                                      <template
-                                        #default="{ props: props_, isHovering }"
-                                      >
-                                        <VImg
-                                          v-bind="props_"
-                                          cover
-                                          width="116"
-                                          class="fill-height cursor-pointer hover:scale-[102%] transition-transform"
-                                          position="relative"
-                                          @click="onClick"
-                                          :src="
-                                            !disabled
-                                              ? resourceUrl(
-                                                  get(
-                                                    sample(images),
-                                                    'data.file_id'
-                                                  )
-                                                )
-                                              : DEFAULT_NO_IMAGE
-                                          "
-                                        >
-                                          <VFadeTransition>
-                                            <VIcon
-                                              v-if="isHovering"
-                                              class="opacity-50 z-[1] position-absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%]"
-                                              size="55"
-                                              color="white"
-                                              icon="$iconImages"
-                                            />
-                                          </VFadeTransition>
-                                        </VImg>
-                                      </template>
-                                    </VHover>
-                                  </template>
-                                </LightboxProductImages>
-                              </div>
-                              <!-- @@details:body -->
-                              <div class="*bg-red grow ps-3 pt-1">
-                                <h2 class="w-full text-truncate">
-                                  <ProductPublicUrl
-                                    :product="p"
-                                    v-slot="{ url }"
-                                  >
-                                    <NuxtLink
-                                      :to="url"
-                                      external
-                                      target="_blank"
-                                    >
-                                      <a
-                                        class="text-primary link--prominent-base"
-                                      >
-                                        {{ p?.name || "" }}
-                                      </a>
-                                    </NuxtLink>
-                                  </ProductPublicUrl>
-                                </h2>
-                                <div
-                                  class="__placer__ ms-n2 d-flex items-center"
-                                >
-                                  <VChipProductCategory
-                                    class="scale-[92%]"
-                                    :product="p"
-                                  />
-                                  <VChipProductPriceBase
-                                    class="opacity-90 scale-[92%] ms-n1"
-                                    size="x-small"
-                                    :price-only="
-                                      $productPriceForOrder(order_, p) || 0
-                                    "
-                                  >
-                                    <template #append>
-                                      <small>/{{ p?.stockType }}</small>
-                                    </template>
-                                  </VChipProductPriceBase>
-                                </div>
-                                <div class="pt-3">
-                                  <small
-                                    class="scale-[95%] d-inline-flex items-center gap-2"
-                                  >
-                                    <VIcon
-                                      class="opacity-30"
-                                      size="small"
-                                      icon="$iconDowntown"
-                                    />
-                                    <!-- @@ -->
-                                    <TopicRatingStatus
-                                      size="x-small"
-                                      :topic="ratingCompany(p.user.id)"
-                                    />
-                                    <WithComPublicUrl
-                                      :company-id="p.user.id"
-                                      :company-name="profile?.name"
-                                      v-slot="{ companyUrl }"
-                                    >
-                                      <NuxtLink
-                                        :to="companyUrl"
-                                        external
-                                        target="_blank"
-                                      >
-                                        <a
-                                          class="text-primary link--prominent-base"
-                                        >
-                                          {{ profile?.name || "" }}
-                                        </a>
-                                        <VIcon
-                                          size="x-small"
-                                          class="-translate-y-px ms-1 opacity-40"
-                                          icon="$iconExternalLink"
-                                        />
-                                      </NuxtLink>
-                                    </WithComPublicUrl>
-                                  </small>
-                                </div>
-                              </div>
-                              <div
-                                class="pa-0 fill-height *min-w-[92px] *bg-primary3 d-flex flex-col items-end"
+                              <ProvideOrderProductsPackageStatus
+                                :oid="oid$"
+                                :uid="p.user.id"
+                                v-slot="{ orderStatus }"
                               >
-                                <!-- @@btn:chat -->
-                                <ProvideChatData
-                                  :topic="
-                                    topicChatOnOrder(
-                                      order_?.id,
-                                      p.user.id,
-                                      uid$
-                                    )
-                                  "
-                                  v-slot="{ length: currentChatLength }"
+                                <!-- @@card, adjust @height here -->
+                                <!--  explicit height v-if has order details -->
+                                <VSheet
+                                  elevation="1"
+                                  rounded="lg2"
+                                  class="d-flex overflow-hidden !bg-slate-50"
+                                  :height="deliveryAt || orderStatus ? 128 : 93"
+                                  v-bind="props_"
                                 >
-                                  <VBtn
-                                    @click="
-                                      topicChatMain = topicChatOnOrder(
-                                        order_?.id,
-                                        p.user.id,
-                                        uid$
-                                      )
-                                    "
-                                    class="ma-1 z-[1] transition-opacity"
-                                    :class="
-                                      isHovering_ ? 'opacity-100' : 'opacity-40'
-                                    "
-                                    density="comfortable"
-                                    icon
-                                    variant="text"
-                                  >
-                                    <VBadge
-                                      :model-value="0 < currentChatLength"
-                                      :content="currentChatLength"
-                                      color="primary3"
-                                      location="top start"
-                                      :offset-y="5"
-                                    >
-                                      <VIcon :size="28" icon="$iconChatDots" />
-                                    </VBadge>
-                                    <VTooltip
-                                      text="Poruka prodavcu..."
-                                      activator="parent"
-                                      open-delay="345"
-                                      location="bottom"
-                                    />
-                                  </VBtn>
-                                </ProvideChatData>
-
-                                <VSpacer />
-                                <div
-                                  style="font-size: 88%"
-                                  class="opacity-95 scale-[87%] text-end pa-0 font-sans"
-                                >
-                                  <p>
-                                    <strong
-                                      >{{ p?.amount
-                                      }}<span
-                                        class="opacity-40 translate-x-[2px] d-inline-block"
-                                        >{{ p?.stockType }}</span
-                                      ></strong
-                                    >
-                                  </p>
-                                  <p>
-                                    <strong>
-                                      {{
-                                        priceFormatLocale(
-                                          $calcOrderTotalOriginal(order_, [p])
-                                        )
-                                      }}<span
-                                        class="opacity-40 translate-x-[2px] d-inline-block"
-                                        >RSD</span
+                                  <!-- @@image -->
+                                  <div class="*fill-height">
+                                    <LightboxProductImages :product="p">
+                                      <template
+                                        #activator="{
+                                          onClick,
+                                          images,
+                                          disabled,
+                                        }"
                                       >
-                                    </strong>
-                                  </p>
-                                </div>
-                              </div>
-                            </VSheet>
+                                        <VHover open-delay="222">
+                                          <template
+                                            #default="{
+                                              props: props_,
+                                              isHovering,
+                                            }"
+                                          >
+                                            <VImg
+                                              width="116"
+                                              cover
+                                              class="fill-height cursor-pointer hover:scale-[102%] transition-transform"
+                                              position="relative"
+                                              @click="onClick"
+                                              :src="
+                                                !disabled
+                                                  ? resourceUrl(
+                                                      get(
+                                                        sample(images),
+                                                        'data.file_id'
+                                                      )
+                                                    )
+                                                  : DEFAULT_NO_IMAGE
+                                              "
+                                              v-bind="props_"
+                                            >
+                                              <VFadeTransition>
+                                                <VIcon
+                                                  v-if="isHovering"
+                                                  class="opacity-50 z-[1] position-absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%]"
+                                                  size="55"
+                                                  color="white"
+                                                  icon="$iconImages"
+                                                />
+                                              </VFadeTransition>
+                                            </VImg>
+                                          </template>
+                                        </VHover>
+                                      </template>
+                                    </LightboxProductImages>
+                                  </div>
+
+                                  <!-- @@details:body -->
+                                  <div class="*bg-red-200 grow ps-3 pt-1">
+                                    <!-- @@title, product name -->
+                                    <h2 class="w-full text-truncate">
+                                      <ProductPublicUrl
+                                        :product="p"
+                                        v-slot="{ url }"
+                                      >
+                                        <NuxtLink
+                                          :to="url"
+                                          external
+                                          target="_blank"
+                                        >
+                                          <a
+                                            class="text-primary link--prominent-base"
+                                          >
+                                            {{ p?.name || "" }}
+                                          </a>
+                                        </NuxtLink>
+                                      </ProductPublicUrl>
+                                    </h2>
+
+                                    <!-- row2, category, price.base -->
+                                    <div
+                                      class="__placer__ ms-n2 d-flex items-center mt-1"
+                                    >
+                                      <VChipProductCategory
+                                        class="scale-[92%]"
+                                        :product="p"
+                                      />
+                                      <VChipProductPriceBase
+                                        class="opacity-90 scale-[92%] ms-n1"
+                                        size="x-small"
+                                        :price-only="
+                                          $productPriceForOrder(order_, p) || 0
+                                        "
+                                      >
+                                        <template #append>
+                                          <small>/{{ p?.stockType }}</small>
+                                        </template>
+                                      </VChipProductPriceBase>
+                                    </div>
+
+                                    <!-- row3 company info -->
+                                    <div class="pt-3">
+                                      <small
+                                        class="scale-[95%] d-inline-flex items-center gap-2"
+                                      >
+                                        <VIcon
+                                          class="opacity-30"
+                                          size="small"
+                                          icon="$iconDowntown"
+                                        />
+                                        <!-- @@ -->
+                                        <TopicRatingStatus
+                                          size="x-small"
+                                          :topic="ratingCompany(p.user.id)"
+                                        />
+                                        <WithComPublicUrl
+                                          :company-id="p.user.id"
+                                          :company-name="profile?.name"
+                                          v-slot="{ companyUrl }"
+                                        >
+                                          <NuxtLink
+                                            :to="companyUrl"
+                                            external
+                                            target="_blank"
+                                          >
+                                            <a
+                                              class="text-primary link--prominent-base"
+                                            >
+                                              {{ profile?.name || "" }}
+                                            </a>
+                                            <VIcon
+                                              size="x-small"
+                                              class="-translate-y-px ms-1 opacity-40"
+                                              icon="$iconExternalLink"
+                                            />
+                                          </NuxtLink>
+                                        </WithComPublicUrl>
+                                      </small>
+                                    </div>
+
+                                    <!-- @@row4 order status, delivery-at -->
+                                    <div
+                                      v-if="deliveryAt || orderStatus"
+                                      class="d-flex items-center gap-4 mt-1"
+                                    >
+                                      <small v-if="orderStatus">
+                                        <VIcon
+                                          color="primary-darken-1"
+                                          size="x-large"
+                                          :icon="
+                                            get(
+                                              ORDER_STATUS,
+                                              `[${orderStatus}].icon`
+                                            )
+                                          "
+                                        />
+                                        <VTooltip
+                                          location="bottom"
+                                          open-delay="222"
+                                          activator="parent"
+                                          :text="
+                                            get(
+                                              ORDER_STATUS,
+                                              `[${orderStatus}].title`
+                                            )
+                                          "
+                                        />
+                                      </small>
+                                      <small
+                                        v-if="deliveryAt"
+                                        style="font-weight: bold"
+                                        class="*translate-y-px cursor-default d-inline-block !font-sans text-body-2 text-success-darken-2 text-truncate d-flex items-center ma-0 pa-0"
+                                      >
+                                        <span>
+                                          {{ $formated_DMMMYYYY(deliveryAt) }}
+                                        </span>
+                                        <VTooltip
+                                          text="Datum isporuke"
+                                          location="bottom"
+                                          open-delay="222"
+                                          activator="parent"
+                                        />
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- sheet end -->
+                                  <div
+                                    class="*bg-blue-200 pa-0 *fill-height d-flex flex-col items-end"
+                                  >
+                                    <!-- @@btn:chat -->
+                                    <ProvideChatData
+                                      :topic="
+                                        topicChatOnOrder(
+                                          order_?.id,
+                                          p.user.id,
+                                          uid$
+                                        )
+                                      "
+                                      v-slot="{ length: currentChatLength }"
+                                    >
+                                      <VBtn
+                                        @click="
+                                          topicChatMain = topicChatOnOrder(
+                                            order_?.id,
+                                            p.user.id,
+                                            uid$
+                                          )
+                                        "
+                                        class="ma-1 z-[1] transition-opacity"
+                                        :class="
+                                          isHovering_
+                                            ? 'opacity-100'
+                                            : 'opacity-40'
+                                        "
+                                        density="comfortable"
+                                        icon
+                                        variant="text"
+                                      >
+                                        <VBadge
+                                          :model-value="0 < currentChatLength"
+                                          :content="currentChatLength"
+                                          color="primary3"
+                                          location="top start"
+                                          :offset-y="5"
+                                        >
+                                          <VIcon
+                                            :size="28"
+                                            icon="$iconChatDots"
+                                          />
+                                        </VBadge>
+                                        <VTooltip
+                                          text="Poruka prodavcu..."
+                                          activator="parent"
+                                          open-delay="345"
+                                          location="bottom"
+                                        />
+                                      </VBtn>
+                                    </ProvideChatData>
+
+                                    <VSpacer />
+                                    <div
+                                      style="font-size: 88%"
+                                      class="opacity-95 scale-[87%] text-end pa-1 font-sans"
+                                    >
+                                      <p>
+                                        <strong
+                                          >{{ p?.amount
+                                          }}<span
+                                            class="opacity-40 translate-x-[2px] d-inline-block"
+                                            >{{ p?.stockType }}</span
+                                          ></strong
+                                        >
+                                      </p>
+                                      <p>
+                                        <strong style="font-size: 92%">
+                                          {{
+                                            priceFormatLocale(
+                                              $calcOrderTotalOriginal(order_, [
+                                                p,
+                                              ])
+                                            )
+                                          }}<span
+                                            class="opacity-40 translate-x-[2px] d-inline-block"
+                                            >RSD</span
+                                          >
+                                        </strong>
+                                      </p>
+                                    </div>
+                                  </div>
+                                </VSheet>
+                              </ProvideOrderProductsPackageStatus>
+                            </ProvideOrderProductsDeliveryAt>
                           </WithComProfile>
                         </template>
                       </VHover>
