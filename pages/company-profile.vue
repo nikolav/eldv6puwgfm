@@ -9,6 +9,8 @@ import {
   VCardOrderDetails,
   VSelectManageOrderStatus,
   VBtnOrderProductsDeliveryAt,
+  WithProfileData,
+  ProvideOrderProductsDeliveryAt,
 } from "@/components/app";
 
 // defs
@@ -162,7 +164,6 @@ const orderPrint = async () => {
           <!-- :actions -->
           <template #append>
             <div class="space-x-3 d-inline-flex items-center">
-
               <!-- @@order-products deliver-at by com -->
               <VBtnOrderProductsDeliveryAt class="me-2" :oid="orderActive$" />
 
@@ -388,43 +389,67 @@ const orderPrint = async () => {
                     color="primary"
                     class="bg-transparent orders--list"
                   >
-                    <VListItem
-                      v-for="order in items"
-                      :key="order.raw.id"
-                      @click="orderActive$ = order.raw.id"
-                      :active="orderIdActive(order.raw.id)"
-                      class="ps-2"
-                      rounded
-                    >
-                      <VListItemTitle class="d-flex items-center">
-                        <pre
-                          class="text-xs d-inline-block translate-y-px text-disabled me-4"
+                    <template v-for="order in items" :key="order.raw.id">
+                      <WithProfileData
+                        :user-id="order.raw.user_id"
+                        v-slot="{ fullName }"
+                      >
+                        <ProvideOrderProductsDeliveryAt
+                          :oid="order.raw.id"
+                          v-slot="{ deliveryAt }"
                         >
+                          <VListItem
+                            @click="orderActive$ = order.raw.id"
+                            :active="orderIdActive(order.raw.id)"
+                            class="ps-2"
+                            rounded
+                          >
+                            <VListItemTitle class="d-flex items-center">
+                              <pre
+                                class="text-xs d-inline-block translate-y-px text-disabled me-4"
+                              >
 #{{ order.raw.id }}</pre
-                        >
-                        <span class="d-inline-block text-truncate">
-                          {{ emailStartByUserId(order.raw.user_id) }}
-                        </span>
-                        <VSpacer />
-                        <pre
-                          class="translate-y-px d-inline-block text-disabled text-xs font-italic"
-                          >{{ $formated_DMMMYYYY(order.raw.created_at) }}</pre
-                        >
-                      </VListItemTitle>
-                      <template #prepend>
-                        <VIcon
-                          :color="
-                            orderIdActive(order.raw.id) ? 'primary' : undefined
-                          "
-                          :icon="
-                            orderIdActive(order.raw.id)
-                              ? '$iconCheckboxOn'
-                              : '$iconCheckboxOff'
-                          "
-                          size="large"
-                        />
-                      </template>
-                    </VListItem>
+                              >
+                              <span class="d-inline-block text-truncate">
+                                {{
+                                  fullName ||
+                                  emailStartByUserId(order.raw.user_id)
+                                }}
+                              </span>
+                              <VSpacer />
+                              <div class="d-flex flex-col">
+                                <pre
+                                  class="translate-y-px d-inline-block text-xs font-italic text-disabled"
+                                  >{{
+                                    $formated_DMMMYYYY(order.raw.created_at)
+                                  }}</pre
+                                >
+                                <pre
+                                  v-if="deliveryAt"
+                                  class="d-inline-block text-xs font-bold text-error-darken-1"
+                                  >{{ $formated_DMMMYYYY(deliveryAt) }}</pre
+                                >
+                              </div>
+                            </VListItemTitle>
+                            <template #prepend>
+                              <VIcon
+                                :color="
+                                  orderIdActive(order.raw.id)
+                                    ? 'primary'
+                                    : undefined
+                                "
+                                :icon="
+                                  orderIdActive(order.raw.id)
+                                    ? '$iconCheckboxOn'
+                                    : '$iconCheckboxOff'
+                                "
+                                size="large"
+                              />
+                            </template>
+                          </VListItem>
+                        </ProvideOrderProductsDeliveryAt>
+                      </WithProfileData>
+                    </template>
                   </VList>
                 </template>
               </VDataIterator>
