@@ -135,3 +135,26 @@ export const M_packagesSetPromoted = gql`
   }
 `;
 
+export const M_manageOrder = gql`
+  mutation m_manageOrder($oid: ID!, $data: JsonData!) {
+    manageOrderData(oid: $oid, data: $data) {
+      id
+      user_id
+      code
+      description
+      completed
+      canceled
+      status
+      delivery_at
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const M_orderProductsStatusByCompany = gql`
+  mutation m_orderProductsStatusByCompany($oid: ID!, $uid: ID!, $status: Int!) {
+    orderProductsStatusByCompany(oid: $oid, uid: $uid, status: $status)
+  }
+`;
+

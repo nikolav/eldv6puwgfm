@@ -271,6 +271,7 @@ export default defineAppConfig({
   },
   //
   io: {
+    IOEVENT_ORDER_UPDATED: "@change:orders:xFeTiEWutrmUxHNp:",
     IOEVENT_AUTH_NEWUSER: "@auth:newuser",
     IOEVENT_COM_PHOTOS_CHANGE_prefix: "change:com-photos:",
     IOEVENT_DOC_CHANGE_prefix: "change://doc@",
@@ -289,6 +290,7 @@ export default defineAppConfig({
     IOEVENT_USER_POSTS_CHANGE_prefix: "@change:posts:rBN5PAj9uZM9wrOq5:",
     IOEVENT_STORY_PHOTOS_CHANGE_prefix: "@change:story:images:VDMf82FNKpfl6m:",
     IOEVENT_PACKAGES_PROMOTED_prefix: "@packages:promoted:",
+    IOEVENT_ORDER_PRODUCTS_STATUS: "GXV5QkH2yjmZ:",
   },
   theme: {
     DEFAULT: themeLight,

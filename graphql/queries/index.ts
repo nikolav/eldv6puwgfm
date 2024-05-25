@@ -175,12 +175,14 @@ export const Q_productsListPopular = gql`
 export const Q_ordersReceived = gql`
   query q_ordersReceived {
     ordersReceived {
-      user_id
       id
+      user_id
       code
       description
       completed
       canceled
+      status
+      delivery_at
       created_at
       updated_at
     }
@@ -302,6 +304,8 @@ export const Q_ordersListByUser = gql`
       description
       completed
       canceled
+      status
+      delivery_at
       created_at
       updated_at
     }
@@ -432,6 +436,29 @@ export const Q_productsPromo = gql`
       created_at
       updated_at
     }
+  }
+`;
+
+export const Q_ordersOne = gql`
+  query q_ordersOne($oid: ID!) {
+    ordersOne(oid: $oid) {
+      id
+      user_id
+      code
+      description
+      completed
+      canceled
+      status
+      delivery_at
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const Q_getOrderProductsStatusByCompany = gql`
+  query q_getOrderProductsStatusByCompany($oid: ID!, $uid: ID!) {
+    getOrderProductsStatusByCompany(oid: $oid, uid: $uid)
   }
 `;
 

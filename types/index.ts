@@ -183,6 +183,8 @@ export interface IOrder {
   description?: OrNoValue<string>;
   completed?: OrNoValue<boolean>;
   canceled?: OrNoValue<boolean>;
+  status: OrNoValue<number>;
+  delivery_at: string;
   created_at: string;
   updated_at: string;
 }

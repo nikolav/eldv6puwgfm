@@ -111,3 +111,5 @@ export { default as IconInvoice } from "./IconInvoice.vue";
 export { default as IconPrint } from "./IconPrint.vue";
 export { default as IconReceitSendOutline } from "./IconReceitSendOutline.vue";
 export { default as IconCircleFilled } from "./IconCircleFilled.vue";
+export { default as IconPackageReady } from "./IconPackageReady.vue";
+export { default as IconTruckTransit } from "./IconTruckTransit.vue";

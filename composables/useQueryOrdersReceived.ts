@@ -6,6 +6,7 @@ export const useQueryOrdersReceived = () => {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
     io: { IOEVENT_ORDERS_CHANGE },
   } = useAppConfig();
+  const { watchProcessing } = useStoreAppProcessing();
   const auth = useStoreApiAuth();
   const uid = computed(() => get(auth.user$, "id"));
   const { result, load, refetch, loading } = useLazyQuery<{
@@ -23,6 +24,7 @@ export const useQueryOrdersReceived = () => {
   // @io:listen
   watchEffect(() => useIOEvent(ioEvent_.value, reload));
 
+  watchProcessing(loading);
   // #
   return {
     orders: orders_,

@@ -7,8 +7,8 @@ import {
   NoDataOrders,
   OrdersProduct,
   VCardOrderDetails,
+  VSelectManageOrderStatus,
 } from "@/components/app";
-import { template } from "lodash";
 
 // defs
 definePageMeta({
@@ -30,11 +30,7 @@ const toggleOrderDetails = useToggleFlag();
 // stores
 const auth = useStoreApiAuth();
 const { users } = useQueryUsers();
-const {
-  orders: orders_,
-  reload: ordersReload,
-  loading: ordersLoading,
-} = useQueryOrdersReceived();
+const { orders: orders_, reload: ordersReload } = useQueryOrdersReceived();
 const { order_id$, products: products_ } = useQueryOrdersProducts();
 const { topic$: chatId$, data: chatOrder$ } = useDocs();
 
@@ -56,7 +52,6 @@ const {
   length: paginationLength$,
   page$,
 } = usePaginateData({ data: orders_, perPage: 5 });
-const { watchProcessing } = useStoreAppProcessing();
 
 // computes
 const uid = computed(() => get(auth.user$, "id"));
@@ -83,7 +78,6 @@ const topicChatOrderUser$ = computed(() =>
 );
 
 // watchers
-watchProcessing(ordersLoading);
 watchEffect(() => {
   order_id$.value = orderActive$.value;
 });
@@ -166,7 +160,12 @@ const orderPrint = async () => {
           </VCardTitle>
           <!-- :actions -->
           <template #append>
-            <div class="space-x-3">
+            <div class="space-x-3 d-inline-flex items-center">
+              
+              <!-- @@order-products status by com -->
+              <VSelectManageOrderStatus :oid="orderActive$" />
+              
+              <!-- order:details -->
               <VBtn
                 @click="toggleOrderDetails"
                 :disabled="!(order_?.code || order_?.description)"
@@ -182,6 +181,8 @@ const orderPrint = async () => {
                   open-delay="345"
                 />
               </VBtn>
+
+              <!-- order:char -->
               <VBtn
                 :disabled="!topicChatOrderUser$"
                 variant="text"
@@ -202,6 +203,7 @@ const orderPrint = async () => {
                   location="bottom"
                 />
               </VBtn>
+
               <!-- order:dl -->
               <VBtn
                 @click="orderDownload"
@@ -217,6 +219,7 @@ const orderPrint = async () => {
                   text="Preuzmi obračun"
                 />
               </VBtn>
+
               <!-- order:print -->
               <VBtn @click="orderPrint" color="on-primary" icon variant="text">
                 <VIcon size="large" icon="$iconPrint" />
@@ -227,6 +230,7 @@ const orderPrint = async () => {
                   text="Štampaj"
                 />
               </VBtn>
+
               <!-- orders:reload -->
               <VBtn
                 icon
@@ -242,6 +246,7 @@ const orderPrint = async () => {
                   text="Osveži listu narudžbi"
                 />
               </VBtn>
+
             </div>
           </template>
         </VCardItem>
