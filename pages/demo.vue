@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { Dump } from "@/components/dev";
+import menuItems from "@/assets/menu-subcategories/subcategories.json";
+import { tree } from "nikolav-treets";
 
 definePageMeta({
   layout: "blank",
 });
 
- const { updateProductsDeliveryDate, productsDelivery } = useQueryManageOrder(1);
+const t = new tree("#");
+t.json({ title: "@main", chidren: menuItems });
 
-const dnow = () => new Date();
+const val$ = ref();
+const s$ = ref([]);
 
 // #eos
 </script>
@@ -15,10 +19,21 @@ const dnow = () => new Date();
   <section class="page--demo.index">
     <NuxtLink :to="{ name: 'index' }">-index-</NuxtLink>
     <hr />
-    <VBtn @click="updateProductsDeliveryDate(dnow())">d:now</VBtn>
-
+    <Dump :data="{ s$, val$ }" />
     <hr />
-    <Dump :data="{ productsDelivery }" />
+    <VList
+      v-model:selected="s$"
+      select-strategy="single-leaf"
+      mandatory
+      color="primary-lighten-2"
+      variant="flat"
+      density="compact"
+      lines="one"
+      class="py-0"
+      v-model="val$"
+      width="375"
+      :items="menuItems"
+    />
   </section>
 </template>
 <style lang="scss" scoped>

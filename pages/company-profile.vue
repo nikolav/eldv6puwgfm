@@ -267,7 +267,7 @@ const orderPrint = async () => {
                       <VMenu
                         open-on-hover
                         open-delay="345"
-                        max-width="480"
+                        max-width="512"
                         min-height="256"
                         :close-on-content-click="false"
                       >
