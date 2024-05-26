@@ -122,7 +122,7 @@ onceMountedOn(profile, resetFieldsFromStore);
                   variant="underlined"
                   name="user_address"
                   label="Adresa za isporuke *"
-                  hint="Ako se šalje kurir službom"
+                  hint="Za kurir službu"
                 />
               </div>
             </VCol>
