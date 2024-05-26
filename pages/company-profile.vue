@@ -12,7 +12,6 @@ import {
   WithProfileData,
   ProvideOrderProductsDeliveryAt,
 } from "@/components/app";
-
 // defs
 definePageMeta({
   layout: "company-profile",
@@ -272,22 +271,46 @@ const orderPrint = async () => {
                         min-height="256"
                         :close-on-content-click="false"
                       >
-                        <VSheet>
+                        <VSheet rounded="ts-xl">
                           <VCardText class="d-flex items-start gap-5">
                             <div class="space-y-4">
-                              <p>
-                                <a
-                                  class="text-info link--prominent-base"
-                                  :href="`mailto:${user_?.email}`"
-                                  >{{ user_?.email }}</a
-                                >
-                              </p>
                               <p v-if="profileUser?.phone">
                                 <a
                                   class="text-info link--prominent-base"
                                   :href="`tel:${profileUser.phone}`"
-                                  >{{ profileUser.phone }}</a
                                 >
+                                  <VIcon start icon="$iconPhone" />
+                                  <span class="ms-1">
+                                    {{ profileUser.phone }}
+                                  </span>
+                                </a>
+                              </p>
+                              <p v-if="profileUser?.address">
+                                <NuxtLink
+                                  :to="
+                                    googleMapsAddressLink(profileUser.address)
+                                  "
+                                  external
+                                  target="_blank"
+                                >
+                                  <a class="text-info link--prominent-base">
+                                    <VIcon start icon="$iconLocation" />
+                                    <span class="ms-1">
+                                      {{ profileUser.address }}
+                                    </span>
+                                  </a>
+                                </NuxtLink>
+                              </p>
+                              <p>
+                                <a
+                                  class="text-info link--prominent-base"
+                                  :href="`mailto:${user_?.email}`"
+                                >
+                                  <VIcon start icon="$iconEnvelope" />
+                                  <span class="ms-1">
+                                    {{ user_?.email }}
+                                  </span>
+                                </a>
                               </p>
                             </div>
                             <p
