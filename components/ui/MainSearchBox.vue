@@ -15,7 +15,7 @@ const submitSearch = noop;
     <!-- @main:search -->
     <VForm
       @submit.prevent
-      class="*bg-red mx-auto mt-[92px] max-w-[512px] sm:max-w-[550px] sm:mt-[112px] sm:translate-x-[7.45rem]"
+      class="*bg-red mx-auto mt-[92px] max-w-[512px] sm:max-w-[550px] sm:mt-[122px] sm:translate-x-[7.45rem] 2xl:mt-[109px] 2xl:translate-x-[20rem]"
     >
       <VTextField
         :model-value="props.modelValue"
@@ -48,5 +48,4 @@ const submitSearch = noop;
     </VForm>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

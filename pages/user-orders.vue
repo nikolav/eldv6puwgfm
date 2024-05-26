@@ -258,7 +258,7 @@ const { savePdf, printPdf } = useSavePdf();
                 </template>
               </VMenu>
               <VTooltip
-                text="Fakture"
+                text="Računi"
                 location="bottom"
                 activator="parent"
                 open-delay="345"

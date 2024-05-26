@@ -20,7 +20,7 @@ defineEmits<{
     @update:model-value="(v) => $emit('update:modelValue', v)"
     v-model="props.modelValue"
   >
-    <VAlert v-bind="$attrs" type="success" prominent elevation="4">
+    <VAlert rounded="lg" type="success" prominent elevation="4" v-bind="$attrs">
       <template #default>
         <slot />
       </template>

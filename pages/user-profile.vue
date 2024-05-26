@@ -20,9 +20,10 @@ const FIELDS = [
   "firstName",
   "lastName",
   "phone",
-  "facebook",
-  "instagram",
+  "address",
   "userNote",
+  // "facebook",
+  // "instagram",
 ];
 
 const { watchProcessing } = useStoreAppProcessing();
@@ -73,14 +74,14 @@ onceMountedOn(profile, resetFieldsFromStore);
 <template>
   <section class="page--user-profile">
     <VSnackbarStatusMessage v-model="toggleFormUploadStatus.isActive.value">
-      <strong style="font-size: 133%">👌🏻</strong> Profil je uspešno sačuvan.
+      Profil je uspešno sačuvan.
     </VSnackbarStatusMessage>
     <VForm
       @submit.prevent="submit"
       autocomplete="off"
       class="__placer__ mt-1 mt-sm-8"
     >
-      <VCard max-width="812" class="mx-auto" rounded="t-lg">
+      <VCard max-width="912" class="mx-auto" rounded="t-lg">
         <VCardItem class="bg-primary min-h-[64px]">
           <template #append><UserAvatarPicker /></template>
           <VCardTitle class="ms-5 opacity-50">Moji kontakt podaci</VCardTitle>
@@ -88,15 +89,15 @@ onceMountedOn(profile, resetFieldsFromStore);
         <VContainer fluid>
           <VRow dense>
             <!-- @@form:left -->
-            <VCol sm="6">
-              <div class="__placer__ pa-4 space-y-2">
+            <VCol sm="7">
+              <div class="__placer__ pa-4 space-y-5">
                 <VTextField
                   density="comfortable"
                   v-model="form.firstName.value"
                   clearable
                   variant="underlined"
                   name="user_first_name"
-                  label="Ime"
+                  label="Ime *"
                 />
                 <VTextField
                   density="comfortable"
@@ -104,7 +105,7 @@ onceMountedOn(profile, resetFieldsFromStore);
                   clearable
                   variant="underlined"
                   name="user_last_name"
-                  label="Prezime"
+                  label="Prezime *"
                 />
                 <VTextField
                   density="comfortable"
@@ -112,28 +113,21 @@ onceMountedOn(profile, resetFieldsFromStore);
                   clearable
                   variant="underlined"
                   name="user_phone"
-                  label="Telefon"
+                  label="Telefon *"
                 />
                 <VTextField
                   density="comfortable"
-                  v-model="form.facebook.value"
+                  v-model="form.address.value"
                   clearable
                   variant="underlined"
-                  name="user_facebook"
-                  label="Facebook"
-                />
-                <VTextField
-                  density="comfortable"
-                  v-model="form.instagram.value"
-                  clearable
-                  variant="underlined"
-                  name="user_instagram"
-                  label="Instagram"
+                  name="user_address"
+                  label="Adresa za isporuke *"
+                  hint="Ako se šalje kurir službom"
                 />
               </div>
             </VCol>
             <!-- @@form:right -->
-            <VCol sm="6">
+            <VCol sm="5">
               <div class="__placer__ fill-height rounded ps-5 pe-3 pt-3">
                 <VTextarea
                   v-model="form.userNote.value"
@@ -174,5 +168,4 @@ onceMountedOn(profile, resetFieldsFromStore);
     </VForm>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

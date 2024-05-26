@@ -70,17 +70,18 @@ watch(search_, debounceSearchHandle);
     <AppBarMain :height="appBarHeight" />
 
     <!-- @header -->
-    <VSheet min-height="512" class="d-flex flex-col *items-center">
+    <VSheet elevation="0" rounded="0" min-height="512" class="d-flex flex-col">
       <!-- @header:top -->
       <!-- image="/header-main-06-huge.png" -->
       <!-- <VImg position="0 81%" /> -->
-      <VCard rounded="0" variant="flat" class="grow *bg-primary2">
+      <VCard flat elevation="0" rounded="0" variant="flat" class="grow">
         <template #image>
           <!--  -->
+          <!-- src="/header-main-06-scaled-150.png" -->
           <VParallax
-            :position="`${xs ? 0 : 35}px 98%`"
-            :scale="0.91"
-            src="/header-main-06-scaled-150.png"
+            :position="`${xs ? 0 : 14}px 98%`"
+            :scale="0.95"
+            src="/header-main-07.png"
           />
         </template>
 
