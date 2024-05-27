@@ -3,6 +3,7 @@ import {
   AppBarMain,
   CartOpenBadgePrimary,
   FooterSmallText,
+  VCardMenuPopup,
 } from "@/components/app";
 import { MainSearchBox } from "@/components/ui";
 import { PRODUCTION$ } from "@/config";
@@ -12,7 +13,6 @@ import { useDisplay } from "vuetify";
 const {
   layout: { appBarHeight },
   key: { PRODUCTS_SEARCH },
-  app: { DEFAULT_TRANSITION },
 } = useAppConfig();
 
 // refs, computes
@@ -50,6 +50,8 @@ const cart = useStoreCart();
 // @watchers
 watch(search_, debounceSearchHandle);
 
+// const refMenu = ref();
+// onClickOutside(refMenu);
 // # eos
 </script>
 
@@ -142,23 +144,34 @@ watch(search_, debounceSearchHandle);
             <span>{{ node.title }}</span>
             <VMenu
               v-if="!['Izbor', 'Karta'].includes(node.title)"
-              transition="fade-transition"
+              :transition="false"
               activator="parent"
               open-on-hover
               open-delay="222"
               close-delay="222"
               location="bottom"
               :offset="[-5, 0]"
-              
             >
-              <VSheet min-height="256" elevation="2">
-                <p>
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Corporis, repellat? Suscipit corrupti eum laboriosam deserunt,
-                  culpa consequatur. Modi, blanditiis debitis inventore soluta
-                  ratione quos eligendi eum nisi, odio obcaecati earum.
-                </p>
-              </VSheet>
+              <template #default="{ isActive: isActiveMenu }">
+                <VCardMenuPopup
+                  :menu-item="node"
+                  :close="
+                    () => {
+                      isActiveMenu.value = false;
+                    }
+                  "
+                  min-height="256"
+                  elevation="2"
+                >
+                  <p>
+                    [{{ isActiveMenu }}] Lorem ipsum dolor sit, amet consectetur
+                    adipisicing elit. Corporis, repellat? Suscipit corrupti eum
+                    laboriosam deserunt, culpa consequatur. Modi, blanditiis
+                    debitis inventore soluta ratione quos eligendi eum nisi,
+                    odio obcaecati earum.
+                  </p>
+                </VCardMenuPopup>
+              </template>
             </VMenu>
           </VBtn>
         </VSlideGroupItem>

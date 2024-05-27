@@ -1,16 +1,18 @@
 import type { IProduct } from "@/types";
 import { Q_productsListByTags } from "@/graphql";
-export const useQueryProductsByCategory = (c$?: any) => {
+export const useQueryProductsByCategory = (LS?: any) => {
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
-    io: { IOEVENT_PRODUCTS_CHANGE_prefix },
+    // io: { IOEVENT_PRODUCTS_CHANGE_prefix },
   } = useAppConfig();
-  const category$ = ref();
-  const tags_ = computed(() => [category$.value]);
-  const enabled_ = computed(() => every(tags_.value, (r$) => !!toValue(r$)));
-  watchEffect(() => {
-    category$.value = toValue(c$);
-  });
+  // const category$ = ref();
+  // const tags_ = computed(() => [category$.value]);
+  const tags_ = computed(() => toValue(LS));
+  // const enabled_ = computed(() => every(tags_.value, (r$) => !!toValue(r$)));
+  const enabled_ = computed(() => !isEmpty(tags_.value));
+  // watchEffect(() => {
+  //   category$.value = toValue(LS);
+  // });
   const { result, load, refetch, loading } = useLazyQuery<{
     productsListByTags: IProduct[];
   }>(
@@ -29,13 +31,13 @@ export const useQueryProductsByCategory = (c$?: any) => {
   const reload = async () => await refetch();
   onceMountedOn(true, load);
 
-  const ioevent_ = computed(() =>
-    enabled_.value ? `${IOEVENT_PRODUCTS_CHANGE_prefix}${category$.value}` : ""
-  );
-  watchEffect(() => useIOEvent(ioevent_.value, reload));
+  // const ioevent_ = computed(() =>
+  //   enabled_.value ? `${IOEVENT_PRODUCTS_CHANGE_prefix}${category$.value}` : ""
+  // );
+  // watchEffect(() => useIOEvent(ioevent_.value, reload));
 
   return {
-    category$,
+    // category$,
     products,
     reload,
     loading,

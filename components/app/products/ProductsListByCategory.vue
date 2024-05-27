@@ -1,17 +1,48 @@
 <script setup lang="ts">
-// import { Dump } from "@/components/dev";
 import { useDisplay } from "vuetify";
 import { useAppMenu } from "@/composables/app";
 import { CardProductDisplay } from "@/components/app";
 
-// utils
-const { current$, productCategoryByPageTitle } = useAppMenu();
+
+// get page query param, default to current$
+//  figure out subtree nodes,
+//   send categories from node subtree, node inclusive
+
+
+const route = useRoute();
 const { lgAndUp } = useDisplay();
 
-// sotres
-const { products, reload } = useQueryProductsByCategory(() =>
-  productCategoryByPageTitle(current$.value)
+// utils
+const { current$, menuTopCategoryByPageTitle } = useAppMenu();
+const { nodeByValue, nodeMain } = useStoreMenuCategoriesFull();
+
+// get search term
+//  query.q || cache@current-page-title
+const c$ = computed(
+  () =>
+    String(route.query?.q || "") || menuTopCategoryByPageTitle(current$.value)
 );
+const {
+  products: { PRODUCT_CATEGORY_prefix },
+} = useAppConfig();
+
+// calc prefixed categoris from subtree
+//   ['@product:category:A'...]
+const qcategories = computed(() => {
+  if (!c$.value) return;
+  let node =
+    nodeMain.ls().find((node) => c$.value === node.value()?.category) ||
+    nodeByValue(c$.value);
+
+  if (node)
+    return node.lsa([node]).map((node) => {
+      const val = node.value();
+      return `${PRODUCT_CATEGORY_prefix}${val.category || val.value}`;
+    });
+});
+
+// stores
+const { products, reload } = useQueryProductsByCategory(qcategories);
 
 // #eos
 </script>
@@ -33,5 +64,4 @@ const { products, reload } = useQueryProductsByCategory(() =>
     </VContainer>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -47,6 +47,11 @@ export const useAppMenu = () => {
     return c ? `${PRODUCT_CATEGORY_prefix}${c}` : "";
   };
 
+  // finds item with .category matching title
+  //  for building categories list in `ProductsListByCategory` comp.
+  const menuTopCategoryByPageTitle = (title: string | undefined) =>
+    find(menuCategories, { title })?.category || "";
+
   const destroy = () => {
     cache.clear();
     current$.value = null;
@@ -67,6 +72,7 @@ export const useAppMenu = () => {
     titleByRouteName,
     routeNameByTitle,
     productCategoryByPageTitle,
+    menuTopCategoryByPageTitle,
     cache,
     destroy,
   };
