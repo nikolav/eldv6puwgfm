@@ -3,13 +3,13 @@
 import { mergeProps } from "vue";
 import type { IProduct, IStorageFileInfo } from "@/types";
 import {
-  LikeDislike,
-  TopicChat,
-  GetCategoryTitleFromTag,
-  VChipProductPrice,
-  TopicRating,
   LightboxProductImages,
+  LikeDislike,
+  ProductCategory,
   SocialShareTopicButton,
+  TopicChat,
+  TopicRating,
+  VChipProductPrice,
 } from "@/components/app";
 const props = defineProps<{ product: IProduct }>();
 const emit = defineEmits<{
@@ -224,12 +224,12 @@ const cart = useStoreCart();
                   />
                 </template>
                 <small class="*text-medium-emphasis ms-[.11rem]">
-                  <GetCategoryTitleFromTag
-                    :category-tag="first(props.product.tags)"
+                  <ProductCategory
+                    :product="props.product"
                     v-slot="{ category }"
                   >
                     {{ category }}
-                  </GetCategoryTitleFromTag>
+                  </ProductCategory>
                 </small>
               </VChip>
             </VChipGroup>

@@ -16,6 +16,15 @@ export const useStoreMenuCategoriesFull = defineStore("menu-full", () => {
     isEmpty(nodes)
       ? undefined
       : value && get(nodeByValue(value)?.value(), "title");
+  const nodeHead = (c: string | undefined) => {
+    if (!c) return;
+    let node = nodes.find((node) => c === node.value()?.value);
+    for (; node && nodeMain !== node; node = node.parent()) {
+      if ("category" in node.value()) {
+        return node;
+      }
+    }
+  };
   // all prefixed categories up to parent @model
   // const categories = (value: string | undefined) => {
   //   const cls = <string[]>[];
@@ -34,7 +43,14 @@ export const useStoreMenuCategoriesFull = defineStore("menu-full", () => {
   return {
     nodes,
     categoryByValue,
+
     // categories,
     menuItems,
+
+    // top category node
+    nodeHead,
+
+    // root; hold top categories
+    nodeMain,
   };
 });
