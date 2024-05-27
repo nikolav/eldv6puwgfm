@@ -50,7 +50,7 @@ watch(
     </VBtn>
     <em
       v-if="selectedCategory"
-      class="max-w-[256px] pt-1 text-body-1 !font-sans text-center text-medium-emphasis"
+      class="max-w-[234px] pt-1 text-body-1 !font-sans text-center text-medium-emphasis"
       >{{ selectedCategory }}</em
     >
     <VNavigationDrawer

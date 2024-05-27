@@ -1,8 +1,7 @@
 <script setup lang="ts">
 // http://localhost:3000/proizvodi?q=vestibulum-1-1
 import { useDisplay } from "vuetify";
-import type { IStorageFileInfo, ICompanyProfile, IProduct } from "@/types";
-import { TOKEN_DEFAULT } from "@/config";
+import type { IStorageFileInfo } from "@/types";
 import {
   AddToCartButtonPrimary,
   CartOpenBadgePrimary,
@@ -18,21 +17,18 @@ definePageMeta({
 
 const {
   layout: { CAROUSEL_NAV_OFFSET_product_page },
-  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND, DEFAULT_NO_IMAGE },
-  docs: { PRODUCT_IMAGES, TAG_COMPANY_PROFILE_prefix },
+  app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
   key: {
     TOPIC_CHAT_PRODUCTS_prefix,
     PRODUCT_RATING_prefix,
     PRODUCTS_LIKES_prefix,
   },
-  products: { categories: pCategories },
   urls: { QUERY },
 } = useAppConfig();
 
 const { height: wHeight, mdAndUp, smAndUp } = useDisplay();
 const route = useRoute();
 const auth = useStoreApiAuth();
-const cart = useStoreCart();
 
 // auth default .readonly
 onceOn(
@@ -50,38 +46,23 @@ const { products } = useQueryProductsOnly([pid]);
 const p$ = computed(() => first(products.value)!);
 const pid$ = computed(() => get(p$.value, "id"));
 
-// stroes
-const { publicUrl } = useApiStorage(true, true);
-
-// profile
 const comId$ = computed(() => Number(get(p$.value, "user_id")));
-const tagComProfile$ = computed(() =>
-  comId$.value ? `${TAG_COMPANY_PROFILE_prefix}${comId$.value}` : undefined
-);
-const { data: comProfile } = useDoc<ICompanyProfile>(tagComProfile$);
-const comName$ = computed(() => get(comProfile.value, "data.name"));
+const {
+  // profile: comProfile,
+  avatar: avatarUrl,
+  publicUrl: comPublicUrl$,
+} = useProfileData(comId$);
 const pName$ = computed(() => startCase(String(get(p$.value, "name") || "")));
 useHead({
   title: pName$,
 });
-const comPublicUrl$ = useCompanyPublicUrl(comId$, comName$);
 const { categoryTitleTop: pCategory$ } = useGetProductCategory(p$);
-// const pCategory$ = computed(() =>
-//   get(find(pCategories, { value: get(p$.value, "tags[0]") }), "title")
-// );
-// @@
-const avatarUrl = computed(
-  () =>
-    publicUrl(get(comProfile.value, "data.avatar.data.file_id")) ||
-    DEFAULT_NO_IMAGE
-);
+
 // images
-const { topic$: topicProductImages, data: productImages } =
-  useDocs<IStorageFileInfo>();
-watchEffect(() => {
-  if (!pid$.value) return;
-  topicProductImages.value = `${PRODUCT_IMAGES}${pid$.value}`;
-});
+const { productImages: domainProductImages } = useTopics();
+const { data: productImages } = useDocs<IStorageFileInfo>(() =>
+  domainProductImages(pid$.value)
+);
 
 // on images loaded: init carousel; run setup once
 const imageFileIdCurrent = ref("");
@@ -93,7 +74,7 @@ onceOn(
   }
 );
 
-// layout stuff
+// layout
 const carouselNav = ref();
 const { height: carouselNavHeight } = useElementSize(carouselNav);
 const carouselHeight = computed(
@@ -134,7 +115,7 @@ const carouselHeight = computed(
                     cover
                     v-for="node in productImages"
                     :key="node.id"
-                    :src="publicUrl(get(node, 'data.file_id'))"
+                    :src="resourceUrl(get(node, 'data.file_id'))"
                     :value="get(node, 'data.file_id')"
                   />
                 </VCarousel>
@@ -173,7 +154,7 @@ const carouselHeight = computed(
                             @click="
                               imageFileIdCurrent = get(node, 'data.file_id')
                             "
-                            :src="publicUrl(get(node, 'data.file_id'))"
+                            :src="resourceUrl(get(node, 'data.file_id'))"
                           />
                         </VSheet>
                       </template>
