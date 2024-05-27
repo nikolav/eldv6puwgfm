@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
+import { VBtnCategorySelect } from "@/components/app";
 
 const props_ = defineProps<{
   close: () => void;
@@ -9,9 +10,13 @@ const props_ = defineProps<{
 const { smAndUp } = useDisplay();
 
 const {
-  key: { PRODUCT_ADD, APP_PROCESSING },
+  key: { PRODUCT_ADD },
   docs: { PRODUCT_IMAGES },
-  products: { categories: CATEGORIES, fields: FIELDS },
+  products: {
+    // categories: CATEGORIES,
+    fields: FIELDS,
+    PRODUCT_CATEGORY_prefix,
+  },
   io: { IOEVENT_PRODUCT_IMAGES_CHANGE_prefix },
 } = useAppConfig();
 
@@ -29,17 +34,11 @@ const product = reduce(
   <Record<string, Ref>>{}
 );
 
-// @file: image1
-const fileImage01$ = ref();
-const productImage01$ = ref();
-watch(fileImage01$, async ([image1]) => {
-  productImage01$.value = null == image1 ? undefined : await dataUrl(image1);
-});
-// @file: image2
-const fileImage02$ = ref();
-const productImage02$ = ref();
-watch(fileImage02$, async ([image2]) => {
-  productImage02$.value = null == image2 ? undefined : await dataUrl(image2);
+// @file: image
+const fileImage$ = ref();
+const productImage$ = ref();
+watch(fileImage$, async ([image]) => {
+  productImage$.value = null == image ? undefined : await dataUrl(image);
 });
 
 const pid$ = ref();
@@ -52,12 +51,7 @@ const ioEventPics$ = computed(() =>
 
 const { upsert: productsUpsert } = useProducts();
 const { upload } = useApiStorage();
-
-const flags = useStoreFlags();
-const { tags, topic$, reload: productImagesReload } = useDocs();
-watch(ptag$, (ptag) => {
-  topic$.value = ptag;
-});
+const { tags, reload: productImagesReload } = useDocs(ptag$);
 
 // reload @product:images updates
 watchEffect(() => {
@@ -65,23 +59,27 @@ watchEffect(() => {
 });
 
 const fieldsReset = () => {
-  fileImage01$.value = [];
-  fileImage02$.value = [];
+  fileImage$.value = [];
   product.name.value = undefined;
   product.price.value = undefined;
   product.category.value = undefined;
   product.stock.value = undefined;
   product.stockType.value = undefined;
-  product.onSale.value = undefined;
   product.description.value = undefined;
 };
 
+const { watchProcessing } = useStoreAppProcessing();
+const pc1 = useProcessMonitor();
+watchProcessing(() => pc1.processing.value);
 // @@submit
 const submitProductAdd = async () => {
   const form = reduce(
     FIELDS,
     (data, field) => {
-      const val = toValue(product[field]);
+      const val =
+        "category" !== field
+          ? toValue(product[field])
+          : `${PRODUCT_CATEGORY_prefix}${toValue(product[field])}`;
       if (null != val) {
         data[field] = val;
       }
@@ -89,36 +87,34 @@ const submitProductAdd = async () => {
     },
     <Record<string, any>>{}
   );
+
   if (isEmpty(form)) return;
 
   try {
-    flags.on(APP_PROCESSING);
+    pc1.begin();
     pid$.value = get(await productsUpsert(form), "data.productsUpsert.id");
     if (!pid$.value) throw "--error-submitProductAdd";
 
-    // product saved, upload images
+    // product saved, upload image
     const resUpload = await upload({
-      image1: {
-        file: get(fileImage01$.value, "[0]"),
-        data: {},
-      },
-      image2: {
-        file: get(fileImage02$.value, "[0]"),
+      image: {
+        file: get(fileImage$.value, "[0]"),
         data: {},
       },
     });
     //
-    const id1 = Number(get(resUpload, "image1.id"));
-    const id2 = Number(get(resUpload, "image2.id"));
+    const id1 = Number(get(resUpload, "image.id"));
     const ptag = ptag$.value;
     //
     if (id1) await tags(id1, { [ptag]: true });
-    if (id2) await tags(id2, { [ptag]: true });
   } catch (error) {
     console.log(`@catch: error`);
     console.error(error);
+    pc1.setError(error);
+  } finally {
+    pc1.done();
   }
-  flags.off(APP_PROCESSING);
+  if (!pc1.error.value) pc1.successful();
   if (pid$.value) {
     // show status snackbar
     props_.statusToggleProductAddedOn();
@@ -233,7 +229,9 @@ const submitProductAdd = async () => {
           <!-- @rows:2 -->
           <div class="d-sm-flex justify-between items-center mt-4">
             <!-- @fields:category -->
-            <VSelect
+            <VBtnCategorySelect v-model="product.category.value" />
+
+            <!-- <VSelect
               v-model="product.category.value"
               center-affix
               label="Robna grupa *"
@@ -249,7 +247,7 @@ const submitProductAdd = async () => {
                   start
                 />
               </template>
-            </VSelect>
+            </VSelect> -->
 
             <!-- @fields:stock-type .jm -->
             <VSpacer v-if="smAndUp" />
@@ -272,6 +270,7 @@ const submitProductAdd = async () => {
                 <pre class="font-italic opacity-30">JM.</pre>
               </template>
             </VSelect>
+            <VSpacer v-if="smAndUp" />
 
             <!-- @fields:stock -->
             <VTextField
@@ -299,47 +298,23 @@ const submitProductAdd = async () => {
           <div class="mt-2">
             <VContainer fluid>
               <VRow dense justify="space-between">
-                <VCol sm="4" class="*bg-red">
-                  <VCheckbox
-                    v-model="product.onSale.value"
-                    color="primary"
-                    label="Rasprodaja"
-                    class="ps-sm-4"
-                  />
-                </VCol>
-                <VCol sm="4" class="*bg-red">
+                <VCol sm="8" offset-sm="4" class="*bg-red">
                   <VFileInput
-                    v-model="fileImage01$"
-                    label="Slika, 1."
-                    variant="solo"
+                    single-line
+                    v-model="fileImage$"
+                    label="Slika"
+                    rounded
+                    variant="solo-filled"
                     density="comfortable"
                     class="text-truncate !text-sm"
-                    @click:clear="fileImage01$ = []"
+                    @click:clear="fileImage$ = []"
                     prepend-icon="$iconImage"
                     center-affix
                   />
                   <VImg
                     class="mx-auto d-block"
                     width="96"
-                    :src="productImage01$"
-                    max-height="96"
-                  />
-                </VCol>
-                <VCol sm="4" class="*bg-red">
-                  <VFileInput
-                    v-model="fileImage02$"
-                    label="Slika, 2."
-                    variant="solo"
-                    density="comfortable"
-                    class="text-truncate !text-sm"
-                    @click:clear="fileImage02$ = []"
-                    prepend-icon="$iconImage"
-                    center-affix
-                  />
-                  <VImg
-                    :src="productImage02$"
-                    class="mx-auto d-block"
-                    width="96"
+                    :src="productImage$"
                     max-height="96"
                   />
                 </VCol>
@@ -353,7 +328,7 @@ const submitProductAdd = async () => {
               class="pa-1"
               variant="underlined"
               clearable
-              label="Opis, Detalji"
+              label="Detaljan opis "
               v-model="product.description.value"
             />
           </div>

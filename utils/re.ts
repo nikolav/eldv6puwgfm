@@ -4,3 +4,4 @@ export const re_jwt =
 export const reMatchViewUser = /\/gazdinstvo/;
 export const reMatchViewProduct = /\/proizvodi/;
 export const reMatchViewStory = /\/prica/;
+export const reAfterLastColon = /\:(\w*)$/;

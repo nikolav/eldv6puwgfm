@@ -12,6 +12,7 @@ import { useDisplay } from "vuetify";
 const {
   layout: { appBarHeight },
   key: { PRODUCTS_SEARCH },
+  app: { DEFAULT_TRANSITION },
 } = useAppConfig();
 
 // refs, computes
@@ -88,6 +89,7 @@ watch(search_, debounceSearchHandle);
         <!-- @@search:main -->
         <MainSearchBox v-model="search_" />
       </VCard>
+
       <!-- @header:menu-categories -->
       <VSlideGroup
         class="border--bottom-thin bg-cover bg-[url('~/assets/images/carpet.png')] border-t-md border-primary-darken-1 border-opacity-75 shadow"
@@ -138,6 +140,26 @@ watch(search_, debounceSearchHandle);
               />
             </strong>
             <span>{{ node.title }}</span>
+            <VMenu
+              v-if="!['Izbor', 'Karta'].includes(node.title)"
+              transition="fade-transition"
+              activator="parent"
+              open-on-hover
+              open-delay="222"
+              close-delay="222"
+              location="bottom"
+              :offset="[-5, 0]"
+              
+            >
+              <VSheet min-height="256" elevation="2">
+                <p>
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                  Corporis, repellat? Suscipit corrupti eum laboriosam deserunt,
+                  culpa consequatur. Modi, blanditiis debitis inventore soluta
+                  ratione quos eligendi eum nisi, odio obcaecati earum.
+                </p>
+              </VSheet>
+            </VMenu>
           </VBtn>
         </VSlideGroupItem>
       </VSlideGroup>

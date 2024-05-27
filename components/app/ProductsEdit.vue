@@ -4,11 +4,11 @@
 // "price",
 // "stockType",
 // "stock",
-// "onSale",
 // "description",
 
 import { useDisplay } from "vuetify";
 import type { OrNoValue } from "@/types";
+import { VBtnCategorySelect } from "@/components/app";
 
 // defs
 const props_ = defineProps<{
@@ -16,9 +16,9 @@ const props_ = defineProps<{
   close: () => void;
 }>();
 const {
-  key: { PRODUCT_EDIT, APP_PROCESSING },
+  key: { PRODUCT_EDIT },
   docs: { PRODUCT_IMAGES },
-  products: { fields: FIELDS, categories: CATEGORIES, PRODUCT_CATEGORY_prefix },
+  products: { fields: FIELDS, PRODUCT_CATEGORY_prefix },
   io: { IOEVENT_PRODUCT_IMAGES_CHANGE_prefix },
 } = useAppConfig();
 const FIELDS_updatable = FIELDS;
@@ -26,24 +26,26 @@ const FIELDS_updatable = FIELDS;
 // utils
 const { smAndUp } = useDisplay();
 
-// stores
+// stores :product
 const { products: products$, upsert: productsCommit } = useProducts();
-// manage product images
-const { remove: productImagesRemove, upload, publicUrl, IO } = useApiStorage();
-const {
-  topic$,
-  data: productImages$,
-  reload: productImagesReload,
-  tags,
-} = useDocs();
-
-// computes
 const product$ = computed(() =>
   find(products$.value, { id: props_.product_id })
 );
 const pid$ = computed(() => get(product$.value, "id"));
 
+// manage product images
+const { remove: productImagesRemove, upload, publicUrl, IO } = useApiStorage();
+const { productImages } = useTopics();
+const {
+  data: productImages$,
+  reload: productImagesReload,
+  tags,
+} = useDocs(() => productImages(pid$.value));
+
 const category$ = ref();
+const categoryModel = computed(() =>
+  category$.value ? afterLastColon(category$.value) : undefined
+);
 const categoryTag = () =>
   find(get(product$.value, "tags"), (tag: string) =>
     tag.startsWith(PRODUCT_CATEGORY_prefix)
@@ -57,13 +59,12 @@ watchEffect(() => {
 const ioEventPics$ = computed(() =>
   pid$.value ? `${IOEVENT_PRODUCT_IMAGES_CHANGE_prefix}${pid$.value}` : ""
 );
-watch(pid$, (pid) => {
-  topic$.value = pid ? `${PRODUCT_IMAGES}${pid}` : "";
-});
 watchEffect(() => {
   useIOEvent(ioEventPics$.value, productImagesReload);
 });
-useIOEvent(IO.value, productImagesReload);
+watchEffect(() => {
+  useIOEvent(IO.value, productImagesReload);
+});
 
 // forms
 const $$main = useStoreMain();
@@ -78,6 +79,12 @@ const productData = reduce(
   },
   <Record<string, Ref>>{}
 );
+
+// update formdata @combobox change
+watchEffect(() => {
+  if (!category$.value) return;
+  productData.category.value = category$.value;
+});
 const productDataInitFromStore = () => {
   FIELDS_updatable.forEach((field) => {
     if (field !== "category") {
@@ -87,11 +94,9 @@ const productDataInitFromStore = () => {
     category$.value = categoryTag();
   });
 };
-// update formdata @combobox change
-watchEffect(() => {
-  if (!category$.value) return;
-  productData.category.value = category$.value;
-});
+const atModelCategory = (value: string) => {
+  category$.value = `${PRODUCT_CATEGORY_prefix}${value}`;
+};
 
 // init product cache @mounted
 // onceMountedOn(pid$, productDataInitFromStore);
@@ -107,20 +112,18 @@ onMounted(() => {
 
 // refs/flags
 const fileImage1$ = ref();
-const $$flags = useStoreFlags();
 const toggleSnackbarProductEditStatus = useToggleFlag();
 
-// handlers
+const { watchProcessing } = useStoreAppProcessing();
+const pc1 = useProcessMonitor();
+watchProcessing(() => pc1.processing.value);
+// form handle
 const submitProductsEdit = async () => {
-  let pid;
   let resUpload;
-
-  let statusSuccess_ = true;
-  const err = new Error("--submitProductsEdit");
+  const err = "--error-submit-products-edit";
 
   try {
-    pid = pid$.value;
-    if (!pid) throw err;
+    if (!pid$.value) throw err;
 
     const form = reduce(
       FIELDS_updatable,
@@ -130,12 +133,13 @@ const submitProductsEdit = async () => {
       },
       <Record<string, any>>{}
     );
+
     if (isEmpty(form)) throw err;
 
-    $$flags.on(APP_PROCESSING);
+    pc1.begin();
     // @debug
     // await productsCommit(form, pid);
-    console.log({ "@product:updated": await productsCommit(form, pid) });
+    console.log({ "@product:updated": await productsCommit(form, pid$.value) });
 
     const file1 = get(toValue(fileImage1$), "[0]");
     if (file1) {
@@ -147,23 +151,39 @@ const submitProductsEdit = async () => {
     }
     const docIdImage1 = Number(get(resUpload, "image.id"));
     if (docIdImage1)
-      await tags(docIdImage1, { [`${PRODUCT_IMAGES}${pid}`]: true });
+      await tags(docIdImage1, { [`${PRODUCT_IMAGES}${pid$.value}`]: true });
   } catch (error) {
-    // pass
-    statusSuccess_ = false;
+    pc1.setError(error);
+  } finally {
+    pc1.done();
   }
-  $$flags.off(APP_PROCESSING);
-  if (statusSuccess_) toggleSnackbarProductEditStatus.on();
+  if (!pc1.error.value) {
+    pc1.successful();
+    toggleSnackbarProductEditStatus.on();
+  }
 };
 const onClickProductImagesRemove = async (file_id: string) => {
   try {
-    $$flags.on(APP_PROCESSING);
+    pc1.begin();
     await productImagesRemove(file_id);
   } catch (error) {
-    // pass
+    console.error(error);
+    pc1.setError(error);
+  } finally {
+    pc1.done();
   }
-  $$flags.off(APP_PROCESSING);
+  if (!pc1.error.value) pc1.successful();
 };
+const imageClear = () => (fileImage1$.value = []);
+watch(
+  () => pc1.success.value,
+  (ok) => {
+    if (!ok) return;
+    // clear image;
+    //  no duplicate uploads
+    imageClear();
+  }
+);
 // @@eos
 </script>
 <template>
@@ -290,24 +310,10 @@ const onClickProductImagesRemove = async (file_id: string) => {
           <!-- @rows:2 -->
           <div class="d-sm-flex justify-between items-center mt-4">
             <!-- @fields:category -->
-            <!-- :disabled="false" -->
-            <VSelect
-              :items="CATEGORIES"
-              v-model="category$"
-              center-affix
-              label="Robna grupa *"
-              class="sm:w-1/3"
-              variant="solo"
-            >
-              <template v-if="smAndUp" #prepend>
-                <VIcon
-                  size="large"
-                  color="primary-darken-2"
-                  icon="$IconFolderFilled"
-                  start
-                />
-              </template>
-            </VSelect>
+            <VBtnCategorySelect
+              @update:model-value="atModelCategory"
+              :model-value="categoryModel"
+            />
 
             <!-- @fields:stock-type .jm -->
             <VSpacer v-if="smAndUp" />
@@ -330,6 +336,7 @@ const onClickProductImagesRemove = async (file_id: string) => {
                 <pre class="font-italic opacity-30">JM.</pre>
               </template>
             </VSelect>
+            <VSpacer v-if="smAndUp" />
 
             <!-- @fields:stock -->
             <VTextField
@@ -358,21 +365,23 @@ const onClickProductImagesRemove = async (file_id: string) => {
             <VContainer fluid>
               <VRow justify="space-between">
                 <VCol sm="4" class="*bg-red">
-                  <VCheckbox
+                  <!-- <VCheckbox
                     v-model="productData.onSale.value"
                     color="primary"
                     label="Rasprodaja"
                     class="*ps-sm-4"
-                  />
+                  /> -->
                 </VCol>
                 <VCol sm="7" class="*bg-red" offset-sm="1">
                   <VFileInput
                     v-model="fileImage1$"
+                    rounded
+                    single-line
                     label="Dodaj novu sliku proizvoda"
-                    variant="solo"
+                    variant="solo-filled"
                     density="comfortable"
                     class="text-truncate !text-sm"
-                    @click:clear="fileImage1$ = []"
+                    @click:clear="imageClear"
                     prepend-icon="$iconImage"
                     center-affix
                   />
@@ -480,5 +489,4 @@ const onClickProductImagesRemove = async (file_id: string) => {
     </VForm>
   </VSheet>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

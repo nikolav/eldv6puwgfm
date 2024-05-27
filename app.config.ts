@@ -55,7 +55,7 @@ export default defineAppConfig({
       "price",
       "stockType",
       "stock",
-      "onSale",
+      // "onSale",
       "description",
     ],
     categories: [

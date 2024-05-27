@@ -13,8 +13,8 @@ import {
   ProvideProductRatingTopic,
   ProvideProductsTotalAmountOrdered,
   TopicRatingStatus,
-  VBtnTogglePackagesPromoted,
   VBtnFabPaketiUplata,
+  VBtnTogglePackagesPromoted,
 } from "@/components/app";
 import { useDisplay } from "vuetify";
 
