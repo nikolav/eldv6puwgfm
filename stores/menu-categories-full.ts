@@ -52,5 +52,8 @@ export const useStoreMenuCategoriesFull = defineStore("menu-full", () => {
 
     // root; hold top categories
     nodeMain,
+
+    // node @value
+    nodeByValue,
   };
 });

@@ -4,11 +4,11 @@ import { useDisplay } from "vuetify";
 import type { IStorageFileInfo, ICompanyProfile, IProduct } from "@/types";
 import { TOKEN_DEFAULT } from "@/config";
 import {
-  TopicRating,
+  AddToCartButtonPrimary,
+  CartOpenBadgePrimary,
   LikeDislike,
   TopicChat,
-  CartOpenBadgePrimary,
-  AddToCartButtonPrimary,
+  TopicRating,
   VChipProductPrice,
 } from "@/components/app";
 
@@ -65,9 +65,10 @@ useHead({
   title: pName$,
 });
 const comPublicUrl$ = useCompanyPublicUrl(comId$, comName$);
-const pCategory$ = computed(() =>
-  get(find(pCategories, { value: get(p$.value, "tags[0]") }), "title")
-);
+const { categoryTitleTop: pCategory$ } = useGetProductCategory(p$);
+// const pCategory$ = computed(() =>
+//   get(find(pCategories, { value: get(p$.value, "tags[0]") }), "title")
+// );
 // @@
 const avatarUrl = computed(
   () =>
