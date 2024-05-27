@@ -110,5 +110,6 @@ onClickOutside(refVCardMenuPopup, props.close);
 <style lang="scss" scoped>
 .bg--popup {
   background-image: url("~/assets/images/carpet-menu.png") !important;
+  background-position-y: bottom !important;
 }
 </style>
