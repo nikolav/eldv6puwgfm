@@ -164,10 +164,17 @@ const orderPrint = async () => {
           <template #append>
             <div class="space-x-3 d-inline-flex items-center">
               <!-- @@order-products deliver-at by com -->
-              <VBtnOrderProductsDeliveryAt class="me-2" :oid="orderActive$" />
+              <VBtnOrderProductsDeliveryAt
+                :disabled="!orderActive$"
+                class="me-2"
+                :oid="orderActive$"
+              />
 
               <!-- @@order-products status by com -->
-              <VSelectManageOrderStatus :oid="orderActive$" />
+              <VSelectManageOrderStatus
+                :disabled="!orderActive$"
+                :oid="orderActive$"
+              />
 
               <!-- order:details -->
               <VBtn
@@ -210,6 +217,7 @@ const orderPrint = async () => {
 
               <!-- order:dl -->
               <VBtn
+                :disabled="!orderActive$"
                 @click="orderDownload"
                 color="on-primary"
                 icon
@@ -225,7 +233,13 @@ const orderPrint = async () => {
               </VBtn>
 
               <!-- order:print -->
-              <VBtn @click="orderPrint" color="on-primary" icon variant="text">
+              <VBtn
+                :disabled="!orderActive$"
+                @click="orderPrint"
+                color="on-primary"
+                icon
+                variant="text"
+              >
                 <VIcon size="large" icon="$iconPrint" />
                 <VTooltip
                   activator="parent"
