@@ -151,6 +151,8 @@ watch(search_, debounceSearchHandle);
               close-delay="222"
               location="bottom"
               :offset="[-5, 0]"
+              width="100%"
+              class="w-full"
             >
               <template #default="{ isActive: isActiveMenu }">
                 <VCardMenuPopup
@@ -160,8 +162,6 @@ watch(search_, debounceSearchHandle);
                       isActiveMenu.value = false;
                     }
                   "
-                  min-height="256"
-                  elevation="2"
                 >
                   <p>
                     [{{ isActiveMenu }}] Lorem ipsum dolor sit, amet consectetur
