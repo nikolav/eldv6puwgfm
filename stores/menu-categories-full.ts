@@ -19,6 +19,12 @@ export const useStoreMenuCategoriesFull = defineStore("menu-full", () => {
       ? undefined
       : value && get(nodeByValue(value)?.value(), "title");
 
+  const includedCategoriesPrefixed = (node: any) =>
+    node.lsa([node]).map((node: any) => {
+      const val = node.value();
+      return `${PRODUCT_CATEGORY_prefix}${val.category || val.value}`;
+    });
+
   const nodeHead = (c: string | undefined) => {
     if (!c) return;
     let node = nodes.find((node) => c === node.value()?.value);
@@ -29,7 +35,15 @@ export const useStoreMenuCategoriesFull = defineStore("menu-full", () => {
     }
   };
 
-  // const categories = () => {};
+  const categoriesIncludedByValue = (value: string) => {
+    const nodefrom = nodeByValue(value);
+    return nodefrom ? includedCategoriesPrefixed(nodefrom) : [];
+  };
+
+  const categoriesTopInclusive = (ctg: string) => {
+    const node = nodeMain.ls().find((node) => ctg === node.value()?.category);
+    return node ? includedCategoriesPrefixed(node) : [];
+  };
 
   return {
     nodes,
@@ -46,5 +60,12 @@ export const useStoreMenuCategoriesFull = defineStore("menu-full", () => {
 
     // node @value
     nodeByValue,
+
+    // list all categories inclded in subtree under node with provided .value
+    //  for products search
+    categoriesIncludedByValue,
+
+    // list all included categories from suntree from top menu node
+    categoriesTopInclusive,
   };
 });

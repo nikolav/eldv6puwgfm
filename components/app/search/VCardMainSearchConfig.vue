@@ -1,4 +1,4 @@
- <script lang="ts">
+<script lang="ts">
 export default {
   inheritAttrs: false,
 };
@@ -17,6 +17,7 @@ const {
 } = useAppConfig();
 
 // utils
+const { categoriesTopInclusive } = useStoreMenuCategoriesFull();
 
 // form
 const { query$, products: productsSearchResult } = useQueryProductsSearch();
@@ -36,8 +37,23 @@ const {
   },
   {
     onSubmit: (data) => {
-      console.log({ "searching:products": data });
-      query$.value = data;
+      // console.log({ data });
+      // transform .category field to mapped categories from subtree 
+      const q = transform(
+        data,
+        (data, value, field: string) => {
+          data[field] =
+            "category" !== field
+              ? value
+              : value
+              ? categoriesTopInclusive(afterLastColon(value))
+              : undefined;
+          return data;
+        },
+        <Record<string, any>>{}
+      );
+      // console.log({ "searching:products": q });
+      query$.value = q;
     },
   }
 );
