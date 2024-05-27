@@ -231,24 +231,6 @@ const submitProductAdd = async () => {
             <!-- @fields:category -->
             <VBtnCategorySelect v-model="product.category.value" />
 
-            <!-- <VSelect
-              v-model="product.category.value"
-              center-affix
-              label="Robna grupa *"
-              :items="CATEGORIES"
-              variant="solo"
-              class="sm:w-1/3"
-            >
-              <template v-if="smAndUp" #prepend>
-                <VIcon
-                  size="large"
-                  color="primary-darken-2"
-                  icon="$IconFolderFilled"
-                  start
-                />
-              </template>
-            </VSelect> -->
-
             <!-- @fields:stock-type .jm -->
             <VSpacer v-if="smAndUp" />
             <VSelect
@@ -298,11 +280,11 @@ const submitProductAdd = async () => {
           <div class="mt-2">
             <VContainer fluid>
               <VRow dense justify="space-between">
-                <VCol sm="8" offset-sm="4" class="*bg-red">
+                <VCol sm="7" offset-sm="5" class="*bg-red">
                   <VFileInput
                     single-line
                     v-model="fileImage$"
-                    label="Slika"
+                    label="Slika proizvoda"
                     rounded
                     variant="solo-filled"
                     density="comfortable"

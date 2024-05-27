@@ -41,6 +41,11 @@ const {
   remove: productsRemove,
   reload: productsReload,
 } = useProducts();
+const sortedProducts = computed(() =>
+  isEmpty(products$.value)
+    ? products$.value
+    : dataSortedByDateDesc(products$.value, "updated_at")
+);
 
 const toggleProductAdd = useToggleFlag();
 const toggleProductsEdit = useToggleFlag();
@@ -420,8 +425,9 @@ const toggleChatControlls = useToggleFlag();
         </VToolbar>
 
         <!-- @@products:manage -->
+        <!-- :items="products$" -->
         <VDataIterator
-          :items="products$"
+          :items="sortedProducts"
           :items-per-page="perPage"
           :page="pageLager$"
         >
