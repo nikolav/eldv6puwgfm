@@ -13,19 +13,35 @@ import { useDisplay } from "vuetify";
 const {
   layout: { appBarHeight },
   key: { PRODUCTS_SEARCH },
+  products: { PRODUCT_CATEGORY_prefix },
 } = useAppConfig();
 
 // refs, computes
 const search_ = ref("");
 
+const { nodesValues } = useStoreMenuCategoriesFull();
 // helpers
 //  handle product text searches
 const productsSearchResutlt$ = useState(PRODUCTS_SEARCH);
 const { query$, products: productsSearchResult } = useQueryProductsSearch();
 const debounceSearchHandle = debounce((value) => {
-  const q = value ? { text: String(value).trim() } : undefined;
-  if (!q) return;
+  const term = String(value).trim();
+  if (!term) return;
+
+  // send .isText flag for text-only specific search
+  const q = <Record<string, any>>{ isText: true, text: term };
+
+  //  filter menu *nodes items for .text
+  //    filter nodes where similarText(node.title)(text)
+  //     map result to ctg tags
+  const ctgMatched = filter(nodesValues, (val) =>
+    similarText(val.title, 5)(term)
+  ).map((val) => `${PRODUCT_CATEGORY_prefix}${val.category || val.value}`);
+
+  q["category"] = ctgMatched;
+
   console.log({ "searching:products:text-search": q });
+
   query$.value = q;
 }, 789);
 onceMountedOn(true, () => {

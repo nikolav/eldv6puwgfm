@@ -10,6 +10,7 @@ export const useStoreMenuCategoriesFull = defineStore("menu-full", () => {
   t.json({ title: "@main", children: menuItems });
 
   const nodes = t.root().lsa();
+  const nodesValues = nodes.map((node) => node.value());
   const nodeMain = t.root().first();
 
   const nodeByValue = (value: string) =>
@@ -47,6 +48,7 @@ export const useStoreMenuCategoriesFull = defineStore("menu-full", () => {
 
   return {
     nodes,
+    nodesValues,
     categoryByValue,
 
     // categories,
