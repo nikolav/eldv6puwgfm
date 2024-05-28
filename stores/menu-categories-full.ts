@@ -1,4 +1,4 @@
-import isEmpty from "lodash/isEmpty";
+// import isEmpty from "lodash/isEmpty";
 import { tree } from "nikolav-treets";
 import menuItems from "~/assets/menu-subcategories/subcategories.json";
 
@@ -15,10 +15,9 @@ export const useStoreMenuCategoriesFull = defineStore("menu-full", () => {
 
   const nodeByValue = (value: string) =>
     nodes.find((node) => value === node.value()?.value);
+
   const categoryByValue = (value: string | undefined) =>
-    isEmpty(nodes)
-      ? undefined
-      : value && get(nodeByValue(value)?.value(), "title");
+    value && get(nodeByValue(value)?.value(), "title");
 
   const includedCategoriesPrefixed = (node: any) =>
     node.lsa([node]).map((node: any) => {
@@ -67,7 +66,7 @@ export const useStoreMenuCategoriesFull = defineStore("menu-full", () => {
     //  for products search
     categoriesIncludedByValue,
 
-    // list all included categories from suntree from top menu node
+    // list all included categories in subtree start from top node
     categoriesTopInclusive,
   };
 });

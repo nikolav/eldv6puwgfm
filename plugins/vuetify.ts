@@ -33,6 +33,9 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconEyeOff,
+  IconEye,
+  IconRescue,
   IconBoxReady,
   IconChecklistOk,
   IconCalendarEventOutline,
@@ -280,6 +283,9 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconEyeOff: IconEyeOff,
+        iconEye: IconEye,
+        iconRescue: IconRescue,
         iconBoxReady: IconBoxReady,
         iconChecklistOk: IconChecklistOk,
         iconCalendar: IconCalendarEventOutline,

@@ -116,3 +116,6 @@ export { default as IconTruckTransit } from "./IconTruckTransit.vue";
 export { default as IconCalendarEventOutline } from "./IconCalendarEventOutline.vue";
 export { default as IconChecklistOk } from "./IconChecklistOk.vue";
 export { default as IconBoxReady } from "./IconBoxReady.vue";
+export { default as IconRescue } from "./IconRescue.vue";
+export { default as IconEye } from "./IconEye.vue";
+export { default as IconEyeOff } from "./IconEyeOff.vue";

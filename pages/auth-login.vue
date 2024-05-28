@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { schemaAuthCredentials } from "@/schemas";
-import { NotifyLoginUnsuccessfull } from "@/components/app";
+import { NotifyLoginUnsuccessfull, ResetPasswordRequestLink } from "@/components/app";
 
 definePageMeta({
   layout: "auth",
@@ -123,6 +123,7 @@ const authSubmitLogin = async () => {
                 </VBtn>
                 <VSpacer />
               </VCardActions>
+              <ResetPasswordRequestLink />
               <div class="d-flex items-center gap-3 my-3 opacity-50">
                 <VDivider class="border-opacity-100" />
                 <VIcon class="opacity-30" size="small" icon="$iconLock" />

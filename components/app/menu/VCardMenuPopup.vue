@@ -54,7 +54,7 @@ onClickOutside(refVCardMenuPopup, props.close);
             density="comfortable"
             class="py-0"
             rounded
-             color="primary"
+            color="primary"
           >
             <template
               v-for="node in main?.ls() || []"
@@ -99,17 +99,13 @@ onClickOutside(refVCardMenuPopup, props.close);
         </VCol>
       </VRow>
     </VContainer>
-
-    <!-- <div>
-      <NuxtLink :to="{ name: menuItem.to, query: { q: 'DsNF9SuGquY0iMd6h' } }">
-        <a> -nav- {{ menuItem.to }} </a>
-      </NuxtLink>
-    </div> -->
   </VCard>
 </template>
 <style lang="scss" scoped>
 .bg--popup {
   background-image: url("~/assets/images/carpet-menu.png") !important;
   background-position-y: bottom !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
 }
 </style>
