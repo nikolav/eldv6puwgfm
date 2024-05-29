@@ -2,7 +2,6 @@
 import { useDisplay } from "vuetify";
 import type { ICompanyProfile } from "@/types";
 import { VSnackbarStatusMessage } from "@/components/ui";
-import { Dump } from "@/components/dev";
 
 definePageMeta({
   layout: "company-profile",
@@ -209,7 +208,12 @@ const profileComplete = computed(() => isEmpty(profileFieldsIncomplete.value));
     </VCard>
 
     <!-- profile complete -->
-    <VCard max-width="812" class="mx-auto mt-12 pa-3" elevation="1">
+    <VCard
+      max-width="812"
+      class="mx-auto mt-12 pa-3"
+      elevation="1"
+      :class="[!auth.isCompany$ ? 'opacity-20' : undefined]"
+    >
       <div v-if="!profileComplete">
         <VCardTitle>
           <VIcon size="x-large" start color="error" icon="$warning" />
@@ -218,7 +222,7 @@ const profileComplete = computed(() => isEmpty(profileFieldsIncomplete.value));
         <VCardText>
           <VCardSubtitle>Dodajte ova polja:</VCardSubtitle>
           <p>
-            <VChipGroup column color="error">
+            <VChipGroup :disabled="!auth.isCompany$" column color="error">
               <VChip
                 v-for="field in profileFieldsIncomplete"
                 :key="field"
