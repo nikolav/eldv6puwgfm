@@ -98,7 +98,7 @@ const toggleShowResetRequestScreen = useToggleFlag();
                 v-model.trim="form.email.value"
                 variant="underlined"
                 label="Email adresa naloga za resetovanje lozinke *"
-                hint="Stiže Vam link forme za obnovu lozinke na ovu adresu"
+                hint="Stiže Vam link forme za promenu lozinke na ovu adresu"
                 clearable
               >
                 <template #prepend>
@@ -139,7 +139,7 @@ const toggleShowResetRequestScreen = useToggleFlag();
           location="bottom"
           open-delay="345"
           activator="parent"
-          text="Pošalji zahtev za obnovu lozinke..."
+          text="Pošalji zahtev za promenu lozinke..."
         />
       </a>
     </slot>

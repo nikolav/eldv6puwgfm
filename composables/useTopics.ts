@@ -28,7 +28,7 @@ export const useTopics = () => {
   const productImages = (pid: number | undefined) =>
     pid ? `${PRODUCT_IMAGES}${pid}` : "";
   const authProfile = (uid: number | undefined) =>
-    uid && `${TAG_AUTH_PROFILE_prefix}${uid}`;
+    uid ? `${TAG_AUTH_PROFILE_prefix}${uid}` : "";
   const ratingProduct = (pid: number | undefined) =>
     pid ? `${PRODUCT_RATING_prefix}${pid}` : "";
   const likesProduct = (pid: number | undefined) =>

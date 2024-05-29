@@ -15,17 +15,9 @@ export const useDocs = <TData = TDocData>(
   watchEffect(() => {
     topic$.value = toValue(initialTopic);
   });
-  const auth = useStoreApiAuth();
-  const mounted$ = useMounted();
   const toggleEnabled = useToggleFlag(initialEnabled);
   const enabled$ = computed(
-    () =>
-      !!(
-        mounted$.value &&
-        toggleEnabled.isActive.value &&
-        topic$.value &&
-        auth.isAuth$
-      )
+    () => !!(toggleEnabled.isActive.value && topic$.value)
   );
 
   const { result, refetch, load, loading, error } = useLazyQuery<{
@@ -50,8 +42,10 @@ export const useDocs = <TData = TDocData>(
     enabled$.value ? `${IOEVENT_DOCS_CHANGE_JsonData}${topic$.value}` : ""
   );
 
-  const { mutate: mutateDocsUpsert } = useMutation<IDoc<TData>>(M_docsUpsert);
-  const { mutate: mutateDocsRm } = useMutation<OrNull<IDoc<TData>>>(M_docsRm);
+  const { mutate: mutateDocsUpsert, loading: upsertLoading } =
+    useMutation<IDoc<TData>>(M_docsUpsert);
+  const { mutate: mutateDocsRm, loading: rmLoading } =
+    useMutation<OrNull<IDoc<TData>>>(M_docsRm);
 
   const upsert = async (data: TData, id: OrNoValue<number> = null) => {
     if (enabled$.value)
@@ -62,7 +56,8 @@ export const useDocs = <TData = TDocData>(
     if (id && enabled$.value) await mutateDocsRm({ topic: topic$.value, id });
   };
 
-  const { mutate: mutateDocTags } = useMutation(M_docsTags);
+  const { mutate: mutateDocTags, loading: tagsLoading } =
+    useMutation(M_docsTags);
   const tags = async (
     id: OrNoValue<number>,
     argsTags: Record<string, boolean>
@@ -73,7 +68,13 @@ export const useDocs = <TData = TDocData>(
       : await mutateDocTags({ id, tags: argsTags }));
 
   const { watchProcessing } = useStoreAppProcessing();
-  watchProcessing(loading);
+  watchProcessing(
+    () =>
+      loading.value ||
+      upsertLoading.value ||
+      rmLoading.value ||
+      tagsLoading.value
+  );
 
   // @io/listen
   watchEffect(() => useIOEvent(ioEvent$.value, reload));

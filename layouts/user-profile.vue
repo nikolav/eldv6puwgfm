@@ -24,6 +24,16 @@ const menu = [
     iconSize: "x-large",
     to: "recepti-uredi",
   },
+  {
+    type: "spacer",
+  },
+  {
+    page: "Podešavanja",
+    icon: "$iconSettings",
+    iconSize: "x-large",
+    to: "company-profile-config",
+    class: "opacity-20"
+  },
 ];
 
 // #eos
@@ -38,14 +48,16 @@ const menu = [
       :width="userProfileDrawerWidth"
       class="*bg-red"
     >
-      <div class="d-flex flex-col items-center gap-5 pt-5">
+      <div class="d-flex flex-col items-center gap-5 pt-5 fill-height pb-3">
         <template v-for="node in menu" :key="node.page">
           <VBtn
+            v-if="'spacer' != node.type"
             :active="false"
             :to="{ name: node.to }"
             icon
             variant="text"
             color="on-primary"
+            :class="node.class"
           >
             <VIcon :icon="node.icon" :size="node?.iconSize" />
             <VTooltip
@@ -56,6 +68,7 @@ const menu = [
               open-delay="345"
             />
           </VBtn>
+          <VSpacer v-else />
         </template>
       </div>
     </VNavigationDrawer>

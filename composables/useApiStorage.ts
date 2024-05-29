@@ -24,13 +24,13 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
 
   const auth = useStoreApiAuth();
   const toggleEnabled = useToggleFlag(initialEnabled);
-  const mounted$ = useMounted();
   const uid$ = computed(() => get(auth.user$, "id"));
+
   // @@enabled
   const enabled$ = computed(
-    () => !!(mounted$.value && toggleEnabled.isActive.value && auth.isAuth$)
+    () => !!(toggleEnabled.isActive.value && auth.isAuth$)
   );
-
+  const { watchProcessing } = useStoreAppProcessing();
   const {
     load: loadStorage,
     result,
@@ -89,8 +89,8 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
     });
     if (!numfiles) return;
 
-    uploadStatus.begin();
     try {
+      uploadStatus.begin();
       const { data } = await axios<Record<string, TFileData>>({
         url: URL_STORAGE,
         method: "POST",
@@ -109,9 +109,11 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
     } finally {
       uploadStatus.done();
     }
+    if (!uploadStatus.error.value) uploadStatus.successful();
   };
 
-  // @@publicUrl
+  // @@publicUrl,
+  //   (@usage own files)
   const publicUrl = (file_id: string = "") =>
     file_id && find(files$.value, { file_id, public: true })
       ? `${URL_STORAGE}/${file_id}`
@@ -119,7 +121,6 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
 
   // @@download
   const download = async (file_id: string = "") => {
-    // const path = publicUrl(file_id);
     const path = resourceUrl(file_id);
     return file_id && path
       ? await navigateTo(path, {
@@ -130,18 +131,22 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
   };
 
   // @@remove
-  const { mutate: mutateRemoveFile } = useMutation(M_STORAGE_FILE_REMOVE);
+  const { mutate: mutateRemoveFile, loading: rmLoading } = useMutation(
+    M_STORAGE_FILE_REMOVE
+  );
   const remove = async (fileID: string = "") => {
     if (fileID && enabled$.value) return await mutateRemoveFile({ fileID });
   };
 
+  // @@meta
   const topicStorageMeta_ = computed(() =>
     enabled$.value ? `${TAG_STORAGE}${uid$.value}` : ""
   );
-
-  // @@meta
-  const { upsert: metaPut, IOEVENT: IOEVENT_STORAGE_META_CHANGE } =
-    useDocs(topicStorageMeta_);
+  const {
+    upsert: metaPut,
+    IOEVENT: IOEVENT_STORAGE_META_CHANGE,
+    loading: metaLoading,
+  } = useDocs(topicStorageMeta_);
   const meta = async (values: Record<string, any>, file_id: string) => {
     if (!enabled$.value) return;
 
@@ -163,13 +168,16 @@ export const useApiStorage = (initialEnabled = true, __list_all = false) => {
     );
   };
 
+  watchProcessing(
+    () =>
+      loading.value ||
+      uploadStatus.processing.value ||
+      rmLoading.value ||
+      metaLoading.value
+  );
   // @io/listen
-  watchEffect(() => {
-    useIOEvent(toValue(ioevent_), reloadFiles);
-  });
-  watchEffect(() => {
-    useIOEvent(toValue(IOEVENT_STORAGE_META_CHANGE), reloadFiles);
-  });
+  watchEffect(() => useIOEvent(ioevent_.value, reloadFiles));
+  watchEffect(() => useIOEvent(IOEVENT_STORAGE_META_CHANGE.value, reloadFiles));
 
   return {
     // # ls

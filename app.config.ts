@@ -34,6 +34,7 @@ export default defineAppConfig({
     FIELDS: [
       "about",
       "address",
+      "city",
       "delivery",
       "district",
       "facebook",
@@ -42,6 +43,7 @@ export default defineAppConfig({
       "ownerFirstName",
       "ownerLastName",
       "phone",
+      "pib",
       "pin",
       "slug",
     ],

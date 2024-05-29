@@ -2,7 +2,7 @@
 import { useDisplay } from "vuetify";
 import menuDistricts from "@/assets/districts-serbia.json";
 import type { ICompanyProfile, IStorageFileInfo } from "@/types";
-import { UserAvatarPicker } from "@/components/ui";
+import { UserAvatarPicker, VSnackbarStatusMessage } from "@/components/ui";
 
 // defs
 definePageMeta({
@@ -13,8 +13,6 @@ useHead({
   title: "Lična karta gazdinstva",
 });
 const {
-  key: { FORM_COMPANY_ID, APP_PROCESSING },
-  docs: { TAG_COMPANY_PROFILE_prefix, COM_PHOTOS_prefix },
   com: { FIELDS },
   links: {
     external: { RPU: lnRPU },
@@ -24,30 +22,41 @@ const {
 
 // stores
 const auth = useStoreApiAuth();
-const uid = get(auth.user$, "id");
-const { data: comProfile, put: profileUpsert } = useDoc<ICompanyProfile>(
-  `${TAG_COMPANY_PROFILE_prefix}${uid}`
-);
+const uid = computed(() => get(auth.user$, "id"));
+const { authProfile, userPhotos } = useTopics();
+const {
+  data: comProfile,
+  commit: profileUpsert,
+  loading: profileProcessing,
+} = useDoc<ICompanyProfile>(() => authProfile(uid.value));
+
 // # handle com photos
-const tag_COM_PHOTOS = `${COM_PHOTOS_prefix}${uid}`;
-const { upload, publicUrl, remove, IO } = useApiStorage();
+const tag_COM_PHOTOS = computed(() => userPhotos(uid.value));
+const { upload, remove, IO } = useApiStorage();
 const {
   data: comPhotos$,
   tags,
   reload,
 } = useDocs<IStorageFileInfo>(tag_COM_PHOTOS);
+
+const ioeventPhotosChange = computed(() =>
+  uid.value ? `${IOEVENT_COM_PHOTOS_CHANGE_prefix}${uid.value}` : ""
+);
 watchEffect(() => useIOEvent(IO.value, reload));
-useIOEvent(`${IOEVENT_COM_PHOTOS_CHANGE_prefix}${uid}`, reload);
+watchEffect(() => useIOEvent(ioeventPhotosChange.value, reload));
 
 // flags
 const toggleProfileSaved = useToggleFlag();
-const toggleProfileUpdating = useToggleFlag();
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+
+const pc1 = useProcessMonitor();
+const { watchProcessing } = useStoreAppProcessing();
+watchProcessing(() => pc1.processing.value);
 
 // refs
 const tab$ = ref("kontakt");
 const comName = computed(() => get(comProfile.value, "data.name"));
-const comPagePublicUrl_ = useCompanyPublicUrl(uid, comName);
+const comPagePublicUrl = useCompanyPublicUrl(() => uid.value, comName);
+// refs:carousel
 const carouselCurrent$ = ref();
 const comImage$ = ref();
 
@@ -58,8 +67,8 @@ const {
   dump: dumpFormData,
   valid: formValid,
 } = useFormDataFields(
-  FORM_COMPANY_ID,
-  // all fields True()
+  "byKq66p1JWSlZ11RkVG",
+  // all *True
   FIELDS.reduce((res, field) => {
     res[field] = True;
     return res;
@@ -78,66 +87,69 @@ const resetComImage = () => {
 };
 const submitFormCompanyId = async () => {
   if (!formValid.value) return;
-  let error_;
   try {
-    toggleProfileUpdating.on();
+    pc1.begin();
     await profileUpsert(dumpFormData());
   } catch (error) {
-    error_ = error;
+    pc1.setError(error);
+  } finally {
+    pc1.done();
   }
-  if (!error_) toggleProfileSaved.on();
-  toggleProfileUpdating.off();
+  if (!pc1.error.value) {
+    pc1.successful();
+    toggleProfileSaved.on();
+  }
 };
 
 const submitComImageUpload = async () => {
-  let err_;
   let resUpload;
-  let id;
+  let imgID;
 
   const file = get(comImage$.value, "[0]");
   if (!file) return;
 
   try {
-    appProcessing$.value = true;
+    pc1.begin();
     resUpload = await upload({
       image: {
         file,
         data: {},
       },
     });
-    id = Number(get(resUpload, "image.id"));
-    if (!id) throw "--submitComImageUpload:no-id";
+    imgID = Number(get(resUpload, "image.id"));
+    if (!imgID) throw "--submitComImageUpload:no-id";
     // image uploaded; bind `doc-tag`
-    await tags(id, { [tag_COM_PHOTOS]: true });
+    await tags(imgID, { [tag_COM_PHOTOS.value]: true });
   } catch (error) {
-    err_ = error;
+    pc1.setError(error);
+  } finally {
+    pc1.done();
   }
 
-  if (!err_) {
+  if (!pc1.error.value) {
     resetComImage();
     carouselCurrent$.value = get(resUpload, "image.data.file_id");
+    pc1.successful();
   }
-
-  appProcessing$.value = false;
 };
 
 const comPhotosRemove = async () => {
   if (!carouselCurrent$.value) return;
 
-  let err_;
   let resRm;
 
   try {
-    appProcessing$.value = true;
+    pc1.begin();
     resRm = await remove(carouselCurrent$.value);
   } catch (error) {
-    err_ = error;
-    // pass
+    pc1.setError(error);
+  } finally {
+    pc1.done();
   }
-  if (!err_) {
+  if (!pc1.error.value) {
     // drop `doc-tag` link
     await tags(Number(get(resRm, "data.storageRemoveFile.file.id")), {
-      [tag_COM_PHOTOS]: false,
+      [tag_COM_PHOTOS.value]: false,
     });
     // rm:success; set random current slide
     // @nextpaint, await io
@@ -146,8 +158,8 @@ const comPhotosRemove = async () => {
         carouselCurrent$.value = get(sample(comPhotos$.value), "data.file_id");
       }
     });
+    pc1.successful();
   }
-  appProcessing$.value = false;
 };
 
 // watch
@@ -155,9 +167,11 @@ const { runSetup: formInit } = useRunSetupOnce(formDataInitFromStore);
 onMounted(() => {
   watch(comProfile, formInit);
 });
+// onceMountedOn(comProfile, formDataInitFromStore);
+
 watchEffect(() => {
   form.slug.value = toLower(
-    words(form.name.value).concat(String(uid)).join("-")
+    words(form.name.value).concat(String(uid.value)).join("-")
   );
 });
 
@@ -165,51 +179,35 @@ watchEffect(() => {
 </script>
 <template>
   <section class="page--company-profile-id px-2 px-sm-8">
-    <!-- @@todo, reuse component -->
-    <!-- @status: --profile-saved -->
-    <VSnackbar
-      variant="text"
-      color="transparent"
-      @update:model-value="
-        (val) => {
-          if (!val) toggleProfileSaved.off();
-        }
-      "
-      v-model="toggleProfileSaved.isActive.value"
-    >
-      <VAlert type="success" prominent elevation="4">
-        <template #append>
-          <VBtn
-            @click="toggleProfileSaved.off"
-            icon
-            variant="plain"
-            color="on-success"
-          >
-            <VIcon icon="$close" />
-          </VBtn>
-        </template>
+    <!-- @status --profile-saved -->
+    <VSnackbarStatusMessage v-model="toggleProfileSaved.isActive.value">
+      <p class="text-center" style="font-size: 1rem">
         <strong> Profil je uspešno sačuvan. </strong>
-      </VAlert>
-    </VSnackbar>
+      </p>
+    </VSnackbarStatusMessage>
 
     <!-- @form: --start -->
     <VForm @submit.prevent="submitFormCompanyId">
-      <VCard max-width="812" class="*bg-red mx-auto mt-2 mt-md-8">
-        <VCardTitle class="bg-primary pa-4 px-6 d-flex items-center">
-          <h2 v-if="smAndUp" class="ms-1 *text-center text-h5 !font-sans">
-            <NuxtLink :to="comPagePublicUrl_" external target="_blank">
+      <VCard
+        max-width="912"
+        rounded="t-lg"
+        class="*bg-red mx-auto mt-2 mt-md-8"
+      >
+        <VCardTitle class="bg-primary pa-5 px-6 d-flex items-center">
+          <h2 v-if="smAndUp" class="ms-1 text-h5 !font-sans">
+            <NuxtLink :to="comPagePublicUrl" external target="_blank">
               <a
                 class="d-inline-block transition-transform hover:scale-105 underline underline-offset-4 tracking-wide"
                 >Lična karta gazdinstva</a
               ><VIcon
-                size="28"
+                :size="24"
                 end
                 icon="$iconExternalLink"
-                class="opacity-40 translate-y-px ms-4"
+                class="opacity-30 translate-y-px ms-4"
               />
             </NuxtLink>
           </h2>
-          <NuxtLink v-else :to="comPagePublicUrl_" external target="_blank">
+          <NuxtLink v-else :to="comPagePublicUrl" external target="_blank">
             <VBtn color="on-primary" icon variant="text">
               <VIcon icon="$iconDowntown" />
             </VBtn>
@@ -225,7 +223,7 @@ watchEffect(() => {
             mandatory
             v-model="tab$"
             fixed-tabs
-            color="primary-darken-1"
+            color="primary"
             align-tabs="center"
             class="*mt-sm-2"
           >
@@ -243,7 +241,7 @@ watchEffect(() => {
             </VTab>
           </VTabs>
         </VCardItem>
-        <VCardText class="pt-2 *min-h-[302px] pb-1 *bg-red">
+        <VCardText class="pt-5">
           <VWindow v-model="tab$" mandatory class="overflow-visible" continuous>
             <!-- @@window.contact -->
             <VWindowItem
@@ -251,8 +249,9 @@ watchEffect(() => {
               transition="fade-transition"
               value="kontakt"
             >
-              <div class="px-sm-2 px-md-8 sm:space-y-4">
-                <div class="d-sm-flex items-baseline justify-between ga-4">
+              <div class="px-sm-2 px-md-5 sm:space-y-3">
+                <!-- row:1 -->
+                <div class="d-sm-flex items-baseline justify-between ga-5">
                   <VTextField
                     v-model="form.ownerFirstName.value"
                     name="ownerFirstName"
@@ -266,6 +265,7 @@ watchEffect(() => {
                         icon="$iconOwner"
                         size="x-large"
                         start
+                        class="!opacity-20"
                       />
                     </template>
                   </VTextField>
@@ -278,14 +278,15 @@ watchEffect(() => {
                   />
                 </div>
 
-                <div class="d-sm-flex items-baseline justify-between ga-4">
+                <!-- row:2 -->
+                <div class="d-sm-flex items-baseline justify-between ga-5">
                   <VTextField
                     name="name"
                     v-model="form.name.value"
                     variant="underlined"
                     label="Naziv gazdinstva"
                     clearable
-                    :class="smAndUp ? '!grow-[1.122]' : undefined"
+                    :class="smAndUp ? '!grow-[2]' : undefined"
                   >
                     <template v-if="smAndUp" #prepend>
                       <VIcon
@@ -293,19 +294,30 @@ watchEffect(() => {
                         icon="$iconDowntown"
                         size="x-large"
                         start
+                        class="!opacity-20"
                       />
                     </template>
                   </VTextField>
+
+                  <!-- @@pib -->
+                  <VTextField
+                    name="pib"
+                    v-model="form.pib.value"
+                    variant="underlined"
+                    label="PIB"
+                    clearable
+                    prefix="#"
+                  />
+
+                  <!-- @pin -->
                   <VTextField
                     name="pin"
                     v-model="form.pin.value"
                     variant="underlined"
                     label="Broj PG"
                     clearable
+                    prefix="#"
                   >
-                    <template #prepend-inner>
-                      <pre class="text-disabled text-sm">#</pre>
-                    </template>
                     <template v-if="smAndUp" #append>
                       <NuxtLink
                         :to="lnRPU"
@@ -323,7 +335,8 @@ watchEffect(() => {
                   </VTextField>
                 </div>
 
-                <div class="d-sm-flex items-end justify-between ga-4">
+                <!-- row:3 -->
+                <div class="d-sm-flex items-end justify-between ga-5">
                   <!-- @@ https://www.wikiwand.com/sr/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BD%D0%B8_%D0%BE%D0%BA%D1%80%D1%83%D0%B7%D0%B8_%D0%A1%D1%80%D0%B1%D0%B8%D1%98%D0%B5 -->
                   <VSelect
                     v-model="form.district.value"
@@ -331,7 +344,7 @@ watchEffect(() => {
                     label="Okrug *"
                     :items="menuDistricts"
                     variant="solo"
-                    :class="smAndUp ? 'max-w-[33%]' : undefined"
+                    :class="smAndUp ? 'max-w-[30%]' : undefined"
                   >
                     <template #item="{ item, props }">
                       <VListSubheader
@@ -350,10 +363,19 @@ watchEffect(() => {
                         size="large"
                         color="primary-darken-2"
                         icon="$iconLocation"
+                        class="!opacity-20"
                       />
                     </template>
                   </VSelect>
 
+                  <VTextField
+                    name="city"
+                    v-model="form.city.value"
+                    variant="underlined"
+                    label="Mesto"
+                    clearable
+                    :class="smAndUp ? '!grow-[.5]' : undefined"
+                  />
                   <VTextField
                     name="address"
                     v-model="form.address.value"
@@ -371,7 +393,7 @@ watchEffect(() => {
                     </template>
                   </VTextField>
                 </div>
-                <div class="d-flex items-center justify-between gap-4">
+                <div class="d-flex items-center justify-between gap-5">
                   <VTextField
                     name="phone"
                     v-model="form.phone.value"
@@ -384,6 +406,7 @@ watchEffect(() => {
                         color="primary-darken-2"
                         icon="$iconPhone"
                         size="x-large"
+                        class="!opacity-20"
                       />
                     </template>
                   </VTextField>
@@ -399,6 +422,7 @@ watchEffect(() => {
                         color="primary-darken-2"
                         icon="$iconFacebook"
                         size="x-large"
+                        class="!opacity-20"
                       />
                     </template>
                   </VTextField>
@@ -414,6 +438,7 @@ watchEffect(() => {
                         color="primary-darken-2"
                         icon="$iconInstagram"
                         size="x-large"
+                        class="!opacity-20"
                       />
                     </template>
                   </VTextField>
@@ -453,6 +478,7 @@ watchEffect(() => {
                   </template>
                   <template #append>
                     <VBtn
+                      rounded
                       type="submit"
                       variant="tonal"
                       color="primary-darken-1"
@@ -479,7 +505,7 @@ watchEffect(() => {
                   <VCarouselItem
                     v-for="node in comPhotos$"
                     :key="node.data.file_id"
-                    :src="publicUrl(node.data.file_id)"
+                    :src="resourceUrl(node.data.file_id)"
                     :value="node.data.file_id"
                   >
                     <div
@@ -522,6 +548,7 @@ watchEffect(() => {
                       size="42"
                       color="primary-darken-2"
                       start
+                      class="!opacity-20"
                     />
                   </template>
                 </VTextarea>
@@ -550,6 +577,7 @@ watchEffect(() => {
                       size="x-large"
                       color="primary-darken-2"
                       start
+                      class="!opacity-20"
                     />
                   </template>
                 </VTextarea>
@@ -557,8 +585,10 @@ watchEffect(() => {
             </VWindowItem>
           </VWindow>
         </VCardText>
-        <VCardActions class="pa-4 mt-2">
+
+        <VCardActions class="pa-4 px-sm-12 pb-sm-8">
           <VBtn
+            rounded
             @click="formDataInitFromStore"
             class="px-4 px-sm-6"
             color="secondary-lighten-1"
@@ -574,13 +604,14 @@ watchEffect(() => {
           </VBtn>
           <VSpacer />
           <VBtn
+            rounded
             class="px-4 px-sm-6"
             color="primary-darken-1"
             :size="smAndUp ? 'x-large' : undefined"
             variant="tonal"
             type="submit"
-            :disabled="toggleProfileUpdating.isActive.value"
-            :loading="toggleProfileUpdating.isActive.value"
+            :disabled="profileProcessing"
+            :loading="profileProcessing"
           >
             <VIcon
               :size="smAndUp ? 'large' : undefined"
@@ -594,5 +625,4 @@ watchEffect(() => {
     </VForm>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

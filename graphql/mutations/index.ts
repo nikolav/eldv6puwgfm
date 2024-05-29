@@ -164,3 +164,27 @@ export const M_orderProductsDeliveryDateByCompany = gql`
   }
 `;
 
+export const M_accountsArchive = gql`
+  mutation m_accountsArchive($uid: ID!) {
+    accountsArchive(uid: $uid)
+  }
+`;
+
+export const M_accountsDrop = gql`
+  mutation m_accountsDrop($uid: ID!) {
+    accountsDrop(uid: $uid)
+  }
+`;
+
+export const M_accountsSendVerifyEmailLink = gql`
+  mutation m_accountsSendVerifyEmailLink($uid: ID!, $url: String!) {
+    accountsSendVerifyEmailLink(uid: $uid, url: $url)
+  }
+`;
+
+export const M_accountsVeifyEmail = gql`
+  mutation m_accountsVeifyEmail($data: JsonData!) {
+    accountsVeifyEmail(data: $data)
+  }
+`;
+

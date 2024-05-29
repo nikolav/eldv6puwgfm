@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { IAuthProfile } from "@/types";
+
 // defs
 const {
   app: { DEFAULT_NO_IMAGE },
 } = useAppConfig();
-const auth = useStoreApiAuth();
 
 // flags
 const togglePickAvatarMenu = useToggleFlag();
@@ -13,7 +13,6 @@ const togglePickAvatarMenu = useToggleFlag();
 const file = ref();
 
 // utils
-const { watchProcessing } = useStoreAppProcessing();
 const {
   files,
   open: fileDialogOpen,
@@ -22,18 +21,13 @@ const {
 const { authProfile } = useTopics();
 
 // stores
+const auth = useStoreApiAuth();
 const {
-  loading: profileUpdating,
   commit: profileCommit,
   data: profileData,
-  reload: profileReolad,
-} = useDoc<IAuthProfile>(authProfile(get(auth.user$, "id")));
-const {
-  loading: fsLoading,
-  upload,
-  uploadStatus: upl,
-  remove: fsRemove,
-} = useApiStorage();
+  // reload: profileReolad,
+} = useDoc<IAuthProfile>(() => authProfile(get(auth.user$, "id")));
+const { upload, remove: fsRemove } = useApiStorage();
 
 // computed
 const avatarFileIdCurrent = computed(() =>
@@ -49,7 +43,6 @@ watchEffect(() => {
 const avatarRemove_ = async () => {
   await fsRemove(avatarFileIdCurrent.value);
   await profileCommit({
-    
     avatar: {},
   });
 };
@@ -81,9 +74,6 @@ const avatarSave = async () => {
 watchEffect(() => {
   file.value = first(files.value);
 });
-watchProcessing(
-  () => upl.processing.value || profileUpdating.value || fsLoading.value
-);
 watch(avatarCurrent, (url) => {
   if (url) {
     fileDialogReset();
@@ -184,5 +174,4 @@ watch(file, (fd) => {
     </VMenu>
   </VBtn>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
