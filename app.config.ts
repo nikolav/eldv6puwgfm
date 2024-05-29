@@ -375,4 +375,19 @@ export default defineAppConfig({
       },
     },
   },
+  account: {
+    fieldsRequired: {
+      about: "O nama",
+      address: "Adresa",
+      city: "Mesto",
+      delivery: "Dostava",
+      district: "Okrug",
+      name: "Naziv gazdinstva",
+      ownerFirstName: "Vlasnik, ime",
+      ownerLastName: "Vlasnik, prezime",
+      phone: "Telefon",
+      pib: "PIB",
+      pin: "Broj PG",
+    },
+  },
 });

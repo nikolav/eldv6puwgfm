@@ -468,3 +468,9 @@ export const Q_getOrderProductsDeliveryDate = gql`
   }
 `;
 
+export const Q_accountsIncompleteProfileFields = gql`
+  query q_accountsIncompleteProfileFields {
+    accountsIncompleteProfileFields
+  }
+`;
+

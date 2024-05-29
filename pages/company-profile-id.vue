@@ -175,6 +175,8 @@ watchEffect(() => {
   );
 });
 
+const rulesNoEmpty = (value: any) => !!(value && 0 < String(value).length);
+
 // @@eos
 </script>
 <template>
@@ -212,6 +214,7 @@ watchEffect(() => {
               <VIcon icon="$iconDowntown" />
             </VBtn>
           </NuxtLink>
+          <!-- @@ -->
           <VSpacer />
           <!-- user avatar -->
           <UserAvatarPicker />
@@ -258,6 +261,7 @@ watchEffect(() => {
                     variant="underlined"
                     label="Gazda, Ime"
                     clearable
+                    :rules="[rulesNoEmpty]"
                   >
                     <template v-if="smAndUp" #prepend>
                       <VIcon
@@ -275,6 +279,7 @@ watchEffect(() => {
                     variant="underlined"
                     label="Prezime"
                     clearable
+                    :rules="[rulesNoEmpty]"
                   />
                 </div>
 
@@ -287,6 +292,7 @@ watchEffect(() => {
                     label="Naziv gazdinstva"
                     clearable
                     :class="smAndUp ? '!grow-[2]' : undefined"
+                    :rules="[rulesNoEmpty]"
                   >
                     <template v-if="smAndUp" #prepend>
                       <VIcon
@@ -307,6 +313,7 @@ watchEffect(() => {
                     label="PIB"
                     clearable
                     prefix="#"
+                    :rules="[rulesNoEmpty]"
                   />
 
                   <!-- @pin -->
@@ -317,6 +324,7 @@ watchEffect(() => {
                     label="Broj PG"
                     clearable
                     prefix="#"
+                    :rules="[rulesNoEmpty]"
                   >
                     <template v-if="smAndUp" #append>
                       <NuxtLink
@@ -345,6 +353,7 @@ watchEffect(() => {
                     :items="menuDistricts"
                     variant="solo"
                     :class="smAndUp ? 'max-w-[30%]' : undefined"
+                    :rules="[rulesNoEmpty]"
                   >
                     <template #item="{ item, props }">
                       <VListSubheader
@@ -375,6 +384,7 @@ watchEffect(() => {
                     label="Mesto"
                     clearable
                     :class="smAndUp ? '!grow-[.5]' : undefined"
+                    :rules="[rulesNoEmpty]"
                   />
                   <VTextField
                     name="address"
@@ -382,6 +392,7 @@ watchEffect(() => {
                     variant="underlined"
                     label="Adresa"
                     clearable
+                    :rules="[rulesNoEmpty]"
                   >
                     <template v-if="false" #prepend>
                       <VIcon
@@ -400,6 +411,7 @@ watchEffect(() => {
                     variant="underlined"
                     label="Telefon"
                     clearable
+                    :rules="[rulesNoEmpty]"
                   >
                     <template v-if="smAndUp" #prepend>
                       <VIcon
@@ -541,6 +553,7 @@ watchEffect(() => {
                   center-affix
                   clearable
                   label="Opis načina dostave do kupaca"
+                  :rules="[rulesNoEmpty]"
                 >
                   <template v-if="smAndUp" #prepend>
                     <VIcon
@@ -570,6 +583,7 @@ watchEffect(() => {
                   center-affix
                   clearable
                   label="Istorijat, o nama, ukratko o našim proizvodima..."
+                  :rules="[rulesNoEmpty]"
                 >
                   <template v-if="smAndUp" #prepend>
                     <VIcon

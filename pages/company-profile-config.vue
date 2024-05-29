@@ -15,6 +15,7 @@ if (!auth.isCompany$) {
 const emailVerified = computed(() => get(auth.user$, "email_verified"));
 const {
   app: { DEFAULT_TRANSITION },
+  account: { fieldsRequired },
 } = useAppConfig();
 const { smAndUp } = useDisplay();
 const uid = computed(() => get(auth.user$, "id"));
@@ -43,8 +44,12 @@ const profileSettingsUpdate = async () => {
 };
 
 const { watchProcessing } = useStoreAppProcessing();
-const { accountArchive, accountDrop, accountSendVerifyEmailLink } =
-  useQueryManageAccount();
+const {
+  accountArchive,
+  accountDrop,
+  accountSendVerifyEmailLink,
+  profileFieldsIncomplete,
+} = useQueryManageAccount();
 const pc1 = useProcessMonitor();
 watchProcessing(() => pc1.processing.value);
 const toggleAccountArchivedStatus = useToggleFlag();
@@ -114,6 +119,8 @@ const accountSendVerifyEmailLinkConfirmed = async () => {
     }
   }
 };
+
+const profileComplete = computed(() => isEmpty(profileFieldsIncomplete.value));
 // googleCalendarEmbedLink
 // googleCalendarEditPageLink
 // @@eos
@@ -149,6 +156,7 @@ const accountSendVerifyEmailLinkConfirmed = async () => {
       <em class="ms-1">Podešavanja aplikacije</em>
     </VCardTitle>
 
+    <!-- verify email -->
     <VCard max-width="812" class="mx-auto mt-12 pa-3" elevation="1">
       <div v-if="!emailVerified">
         <VContainer>
@@ -196,6 +204,42 @@ const accountSendVerifyEmailLinkConfirmed = async () => {
             icon="$iconCheckboxOn"
           />
           <span class="ms-1">Email adresa je potvrđena.</span>
+        </VCardTitle>
+      </div>
+    </VCard>
+
+    <!-- profile complete -->
+    <VCard max-width="812" class="mx-auto mt-12 pa-3" elevation="1">
+      <div v-if="!profileComplete">
+        <VCardTitle>
+          <VIcon size="x-large" start color="error" icon="$warning" />
+          <span class="ms-1">Podaci profila nisu svi popunjeni.</span>
+        </VCardTitle>
+        <VCardText>
+          <VCardSubtitle>Dodajte ova polja:</VCardSubtitle>
+          <p>
+            <VChipGroup column color="error">
+              <VChip
+                v-for="field in profileFieldsIncomplete"
+                :key="field"
+                color="error"
+                class="bg-error-lighten-1"
+                :to="{ name: 'company-profile-id' }"
+                >{{ get(fieldsRequired, field) || field }}</VChip
+              >
+            </VChipGroup>
+          </p>
+        </VCardText>
+      </div>
+      <div v-else>
+        <VCardTitle>
+          <VIcon
+            size="x-large"
+            start
+            color="success-darken-2"
+            icon="$iconCheckboxOn"
+          />
+          <span class="ms-1">Podaci profila su uredno popunjeni.</span>
         </VCardTitle>
       </div>
     </VCard>

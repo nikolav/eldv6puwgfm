@@ -1,11 +1,17 @@
 import { URL_VERIFY_EMAIL } from "@/config";
 import {
+  Q_accountsIncompleteProfileFields,
   M_accountsArchive,
   M_accountsDrop,
   M_accountsSendVerifyEmailLink,
   M_accountsVeifyEmail,
 } from "@/graphql";
 export const useQueryManageAccount = () => {
+  const {
+    graphql: { STORAGE_QUERY_POLL_INTERVAL },
+    io: { IOEVENT_DOC_CHANGE_prefix },
+  } = useAppConfig();
+
   const auth = useStoreApiAuth();
   const uid = computed(() => get(auth.user$, "id"));
   const { watchProcessing } = useStoreAppProcessing();
@@ -26,18 +32,47 @@ export const useQueryManageAccount = () => {
   const accountVerifyEmail = async (key: string) =>
     await mutateVerifyEmail({ data: { key } });
 
-  //
-  watchProcessing(
+  // query incomplete profile fields
+  const {
+    result: qpResult,
+    load: qpLoad,
+    refetch: qpRefetch,
+    loading: qpLoading,
+  } = useLazyQuery<{
+    accountsIncompleteProfileFields: string[];
+  }>(Q_accountsIncompleteProfileFields, undefined, {
+    pollInterval: STORAGE_QUERY_POLL_INTERVAL,
+  });
+  onceMountedOn(true, qpLoad);
+  const profileFieldsIncomplete = computed(
+    () => qpResult.value?.accountsIncompleteProfileFields || []
+  );
+
+  const loading_ = computed(
     () =>
       archLoading.value ||
       rmLoading.value ||
       lnemailLoading.value ||
-      emailLoading.value
+      emailLoading.value ||
+      qpLoading.value
   );
+  watchProcessing(loading_);
+
+  // @updates:profile reload
+  const { authProfile } = useTopics();
+  const ioevent = computed(
+    () => `${IOEVENT_DOC_CHANGE_prefix}${authProfile(uid.value)}`
+  );
+  watchEffect(() => useIOEvent(ioevent.value, qpRefetch));
+
   return {
     accountArchive,
     accountDrop,
     accountSendVerifyEmailLink,
     accountVerifyEmail,
+    // profile
+    profileFieldsIncomplete,
+    // flags
+    loading: loading_,
   };
 };

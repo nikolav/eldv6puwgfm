@@ -69,6 +69,9 @@ const sidebarLinksCompanyProfile = [
   },
 ];
 
+const { profileFieldsIncomplete } = useQueryManageAccount();
+const profileComplete = computed(() => isEmpty(profileFieldsIncomplete.value));
+
 // #eos
 </script>
 <template>
@@ -99,20 +102,32 @@ const sidebarLinksCompanyProfile = [
                 : undefined,
               node.addClass,
             ]"
-            color="on-primary"
+            :color="
+              'profil-id' == node.title && !profileComplete
+                ? 'error-lighten-2'
+                : 'on-primary'
+            "
             variant="plain"
             :to="{ name: node.to }"
             class="text-none justify-start ms-1"
           >
             <VIcon start :icon="node.icon" :size="node.size" />
             <span class="ms-3">{{ node.text }}</span>
-            <!-- <VTooltip
+            <VBadge
+              v-if="'profil-id' == node.title && !profileComplete"
+              inline
+              :content="profileFieldsIncomplete.length || ''"
+              color="error"
+              class="ms-1"
+            />
+            <VTooltip
+              v-if="'profil-id' == node.title && !profileComplete"
               :offset="3"
               activator="parent"
               location="end"
-              :text="node.tooltip"
+              text="Dopunite svoj profil"
               open-delay="345"
-            /> -->
+            />
           </VBtn>
         </template>
       </div>
