@@ -60,7 +60,7 @@ const {
         density="comfortable"
         rounded="pill"
       >
-        <VToolbarTitle>my posts</VToolbarTitle>
+        <VToolbarTitle>🚧 strana u izradi</VToolbarTitle>
         <VBtn>1</VBtn>
         <VBtn>2</VBtn>
         <VBtn>3</VBtn>

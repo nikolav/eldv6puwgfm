@@ -16,27 +16,31 @@ const sidebarLinksCompanyProfile = [
     to: "company-profile",
     title: "profil",
     size: "large",
+    text: "Primljene narudžbe",
   },
   {
     icon: "$iconChatBubbles",
     tooltip: "Inbox",
     to: "company-profile-inbox",
     title: "inbox",
-    size: 26,
+    size: 22,
+    text: "Sanduče",
   },
   {
     icon: "$iconChecklist",
     tooltip: "Moje narudžbenice",
     to: "user-orders",
     title: "narudzbenice",
-    size: 26,
+    size: 22,
+    text: "Naručena roba",
   },
   {
     icon: "$iconIdCardCompany",
     tooltip: "Lična karta",
     to: "company-profile-id",
     title: "profil-id",
-    size: "large",
+    size: 24,
+    text: "Podaci o gazdinstvu",
   },
 
   {
@@ -44,14 +48,16 @@ const sidebarLinksCompanyProfile = [
     tooltip: "Ponuda/Asortiman",
     to: "company-profile-goods",
     title: "asortiman",
-    size: undefined,
+    size: 22,
+    text: "Asortiman",
   },
   {
     icon: "$iconCheck",
     tooltip: "Recepti",
     to: "recepti-uredi",
     title: "recepti-uredi",
-    size: undefined,
+    text: "Recepti",
+    addClass: "!opacity-20",
   },
   {
     icon: "$iconSettings",
@@ -59,6 +65,7 @@ const sidebarLinksCompanyProfile = [
     to: "company-profile-config",
     title: "So6pM8ilgo2AT",
     class: "mt-auto !opacity-20",
+    text: "Podešavanja",
   },
 ];
 
@@ -67,16 +74,16 @@ const sidebarLinksCompanyProfile = [
 <template>
   <section class="layout--company-profile *bg-red fill-height">
     <AppBarMain :height="appBarHeight" />
+    <!-- :width="companyProfileDrawerWidth" -->
     <VNavigationDrawer
       color="primary-darken-1"
       permanent
       location="start"
-      :width="companyProfileDrawerWidth"
       rounded="0"
       elevation="1"
     >
       <div
-        class="d-flex flex-col gap-y-2 sm:gap-y-6 text-center items-center h-[88vh] *bg-red"
+        class="d-flex flex-col gap-y-2 sm:gap-y-6 h-[90vh]"
         :class="smAndUp ? 'mt-4' : undefined"
       >
         <template
@@ -84,26 +91,28 @@ const sidebarLinksCompanyProfile = [
           :key="node.title"
         >
           <VBtn
-            :class="
+            :class="[
               isLastIndex(sidebarLinksCompanyProfile, i)
                 ? smAndUp
                   ? node.class
                   : undefined
-                : undefined
-            "
+                : undefined,
+              node.addClass,
+            ]"
             color="on-primary"
             variant="plain"
             :to="{ name: node.to }"
-            icon
+            class="text-none justify-start ms-1"
           >
-            <VIcon :icon="node.icon" :size="node.size" />
-            <VTooltip
+            <VIcon start :icon="node.icon" :size="node.size" />
+            <span class="ms-3">{{ node.text }}</span>
+            <!-- <VTooltip
               :offset="3"
               activator="parent"
               location="end"
               :text="node.tooltip"
               open-delay="345"
-            />
+            /> -->
           </VBtn>
         </template>
       </div>
