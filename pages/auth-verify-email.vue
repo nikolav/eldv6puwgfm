@@ -35,7 +35,7 @@ watch(key$, async (key) => {
         // user flagged email-verified, show success, redirect /
         toggleEmailVerifiedStatusSuccess.on();
         setTimeout(() => {
-          navigateTo({ name: "index" });
+          reloadNuxtApp({ path: "/", persistState: false });
         }, 4567);
       }
     }
