@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import {
-  SerbiaMapSVG,
-  ProvideProfileDataFull,
-  AvatarThumb,
-  TopicRatingStatus,
-  LikeDislikeStatus,
-  TopicChat,
-  ProductImages,
   AddToCartButtonPrimary,
-  ProductPublicUrl,
-  VChipDistrict,
-  LightboxProductImages,
+  AvatarThumb,
   HeaderProminent,
+  LightboxProductImages,
+  LikeDislikeStatus,
+  ProductImages,
+  ProductPublicUrl,
+  ProvideProfileDataFull,
+  SerbiaMapSVG,
+  TopicChat,
+  TopicRatingStatus,
+  VChipDistrict,
 } from "@/components/app";
 import { LightboxImages } from "@/components/ui";
 // import { Dump } from "@/components/dev";
@@ -399,7 +399,7 @@ watch(
                                             <VSpacer />
                                             <AddToCartButtonPrimary
                                               @click.stop
-                                              :product-id="node.raw.id"
+                                              :product="node.raw"
                                               :size="52"
                                             />
                                           </VSheet>

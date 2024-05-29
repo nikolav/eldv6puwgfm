@@ -56,7 +56,7 @@ const { submit } = useFormDataFields(
   "QuillEditor:CbmEHEEF",
   {
     // title: (value: string) => 1 < value?.length,
-  },
+  }
   // @@
   // {
   //   onSubmit: async () => {

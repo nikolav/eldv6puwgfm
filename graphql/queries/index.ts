@@ -227,6 +227,7 @@ export const Q_usersSingle = gql`
       email
       products {
         id
+        user_id
         name
         price
         price_history
@@ -380,6 +381,7 @@ export const Q_companiesList = gql`
       products {
         id
         name
+        user_id
         price
         price_history
         stock

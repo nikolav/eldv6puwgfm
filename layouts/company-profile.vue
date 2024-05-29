@@ -29,7 +29,8 @@ const sidebarLinksCompanyProfile = [
   {
     icon: "$iconChecklist",
     tooltip: "Moje narudžbenice",
-    to: "user-orders",
+    // to: "user-orders",
+    to: "user-orders-com",
     title: "narudzbenice",
     size: 22,
     text: "Naručena roba",

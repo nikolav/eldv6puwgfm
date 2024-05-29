@@ -11,7 +11,7 @@ const auth = useStoreApiAuth();
 // defs
 const { authProfile } = useTopics();
 // stores
-const { data, commit } = useDoc<IAuthProfile>(
+const { data, commit } = useDoc<IAuthProfile>(() =>
   authProfile(get(auth.user$, "id"))
 );
 const profile = computed(() => get(data.value, "data"));
@@ -27,13 +27,13 @@ const FIELDS = [
 ];
 
 const { watchProcessing } = useStoreAppProcessing();
-const formProcessing = useProcessMonitor();
+const pc1 = useProcessMonitor();
 const toggleFormUploadStatus = useToggleFlag();
 watchEffect(() => {
-  if (!formProcessing.processing.value && formProcessing.success.value)
+  if (!pc1.processing.value && pc1.success.value)
     toggleFormUploadStatus.on();
 });
-watchProcessing(formProcessing.processing);
+watchProcessing(pc1.processing);
 
 const { form, submit } = useFormDataFields(
   "ejGJAzzWpAmv90TE",
@@ -43,7 +43,6 @@ const { form, submit } = useFormDataFields(
   }, <Record<string, any>>{}),
   {
     onSubmit: async (data) => {
-      let err: any;
       const fdata = transform(
         data,
         (d, value, field) => {
@@ -52,15 +51,14 @@ const { form, submit } = useFormDataFields(
         <Record<string, string>>{}
       );
       try {
-        formProcessing.begin();
+        pc1.begin();
         await commit(fdata);
       } catch (error) {
-        err = error;
-        formProcessing.setError(error);
+        pc1.setError(error);
       } finally {
-        formProcessing.done();
+        pc1.done();
       }
-      if (!err) formProcessing.successful();
+      if (!pc1.error.value) pc1.successful();
     },
   }
 );
@@ -68,11 +66,11 @@ const resetFieldsFromStore = () =>
   FIELDS.forEach((field) => {
     form[field].value = get(profile.value, field);
   });
-onceMountedOn(profile, resetFieldsFromStore);
+ onceMountedOn(profile, resetFieldsFromStore);
 // @@eos
 </script>
 <template>
-  <section class="page--user-profile">
+  <section class="page--user-profile px-1">
     <VSnackbarStatusMessage v-model="toggleFormUploadStatus.isActive.value">
       Profil je uspešno sačuvan.
     </VSnackbarStatusMessage>

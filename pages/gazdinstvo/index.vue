@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
-import type { IStorageFileInfo } from "@/types";
-import { TOKEN_DEFAULT } from "@/config";
 import {
-  TopicRating,
+  CartOpenBadgePrimary,
+  CompanyDisplay,
+  GoogleCalendarIframe,
   LikeDislike,
   TopicChat,
-  GoogleCalendarIframe,
-  CompanyDisplay,
-  CartOpenBadgePrimary,
+  TopicRating,
 } from "@/components/app";
 
 definePageMeta({
@@ -22,7 +20,6 @@ const { smAndUp, height: wHeight } = useDisplay();
 
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND, DEFAULT_TRANSITION },
-  docs: { TAG_COMPANY_PROFILE_prefix, COM_PHOTOS_prefix },
   key: { COM_LIKES_prefix, TOPIC_CHAT_COM_prefix, COM_RATING_prefix },
   urls: { QUERY },
   layout: { CAROUSEL_NAV_OFFSET_product_page },
@@ -38,17 +35,12 @@ onceOn(
 );
 
 const uid_ = Number(last(String(get(route.query, QUERY)).split("-")));
-const companyName = ref();
+const { photos: comPhotos, companyName } = useUserData(uid_);
 const pageTitle$ = computed(() => companyName.value || "");
 useHead({
   title: pageTitle$,
 });
 
-// com:photos
-const { data: comPhotos } = useDocs<IStorageFileInfo>(
-  `${COM_PHOTOS_prefix}${uid_}`
-);
-const { publicUrl } = useApiStorage(true, true);
 // on images loaded: init carousel; run setup once
 const imageFileIdCurrent = ref("");
 const { runSetup: initCarousel } = useRunSetupOnce(() => {
@@ -80,67 +72,63 @@ const calLink$ = ref();
         <VCol cols="12" md="7" class="*bg-green-200 ma-0 pa-0">
           <!-- @row:1 social, rating, calendar -->
           <!-- social, rating, calendar -->
-          <div>
-            <div class="position-relative">
-              <div class="d-flex items-center justify-between px-1 pe-4 *mb-4">
-                <TopicRating
-                  :small="!smAndUp ? true : undefined"
-                  text
-                  :topic="`${COM_RATING_prefix}${uid_}`"
+          <div class="position-relative">
+            <div class="d-flex items-center px-1 pe-3 mb-3 gap-5">
+              <TopicRating
+                :small="!smAndUp ? true : undefined"
+                text
+                :topic="`${COM_RATING_prefix}${uid_}`"
+              />
+              <VSpacer />
+              <TopicChat
+                class="ms-auto"
+                :title="companyName"
+                :topic="`${TOPIC_CHAT_COM_prefix}${uid_}`"
+              />
+              <LikeDislike
+                class="ms-[1.22rem]"
+                :topic="`${COM_LIKES_prefix}${uid_}`"
+              />
+              <!-- @@g.calendar -->
+              <VBtn
+                elevation="2"
+                variant="elevated"
+                color="primary-lighten-1"
+                icon
+                rounded="circle"
+                size="42"
+                class="ms-[1.22rem]"
+              >
+                <VTooltip
+                  activator="parent"
+                  location="bottom"
+                  open-delay="345"
+                  text="Naš raspored događanja..."
                 />
-                <TopicChat
-                  class="ms-auto"
-                  :title="companyName"
-                  :topic="`${TOPIC_CHAT_COM_prefix}${uid_}`"
-                />
-                <LikeDislike
-                  class="ms-[1.22rem]"
-                  :topic="`${COM_LIKES_prefix}${uid_}`"
-                />
-                <!-- @@g.calendar -->
-                <VBtn
-                  elevation="2"
-                  variant="elevated"
-                  color="primary-lighten-1"
-                  icon
-                  rounded="circle"
-                  size="42"
-                  class="ms-[1.22rem]"
+                <VAvatar color="primary-lighten-1" style="font-size: 1.22rem"
+                  ><strong class="-translate-y-px">📆</strong></VAvatar
                 >
-                  <VTooltip
-                    activator="parent"
-                    location="bottom"
-                    open-delay="345"
-                    text="Naš raspored događanja..."
-                  />
-                  <VAvatar color="primary-lighten-1" style="font-size: 1.22rem"
-                    ><strong class="-translate-y-px">📆</strong></VAvatar
-                  >
-                  <VMenu
-                    activator="parent"
-                    :close-on-content-click="false"
-                    :transition="DEFAULT_TRANSITION"
-                    location="center"
-                  >
-                    <VSheet
-                      :width="googleCalendarIframeWidth + 16"
-                      class="pa-2"
-                    >
-                      <GoogleCalendarIframe
-                        :src="calLink$"
-                        ref="googleCalendarIframe"
-                      />
-                    </VSheet>
-                  </VMenu>
-                </VBtn>
-              </div>
-              <div class="position-absolute end-2 mt-2">
-                <CartOpenBadgePrimary
-                  :badge-offset="10"
-                  elevation="4"
-                  color="white"
-                />
-              </div>
+                <VMenu
+                  activator="parent"
+                  :close-on-content-click="false"
+                  :transition="DEFAULT_TRANSITION"
+                  location="center"
+                >
+                  <VSheet :width="googleCalendarIframeWidth + 16" class="pa-2">
+                    <GoogleCalendarIframe
+                      :src="calLink$"
+                      ref="googleCalendarIframe"
+                    />
+                  </VSheet>
+                </VMenu>
+              </VBtn>
+            </div>
+            <div class="position-absolute end-2 mt-2">
+              <CartOpenBadgePrimary
+                :badge-offset="10"
+                elevation="4"
+                color="white"
+              />
             </div>
           </div>
 
@@ -149,7 +137,7 @@ const calLink$ = ref();
           <div class="px-2 mt-6">
             <!-- <Dump :data="comUser" /> -->
             <CompanyDisplay
-              @company-name="(name) => (companyName = startCase(name))"
+              @company-name="noop"
               @google-calendar-embed-link="(link) => (calLink$ = link)"
               :uid="uid_"
             />
@@ -183,7 +171,7 @@ const calLink$ = ref();
                     cover
                     v-for="node in comPhotos"
                     :key="node.id"
-                    :src="publicUrl(get(node, 'data.file_id'))"
+                    :src="resourceUrl(get(node, 'data.file_id'))"
                     :value="get(node, 'data.file_id')"
                   />
                 </VCarousel>
@@ -222,7 +210,7 @@ const calLink$ = ref();
                             @click.stop="
                               imageFileIdCurrent = get(node, 'data.file_id')
                             "
-                            :src="publicUrl(get(node, 'data.file_id'))"
+                            :src="resourceUrl(get(node, 'data.file_id'))"
                           />
                         </VSheet>
                       </template>
@@ -237,5 +225,4 @@ const calLink$ = ref();
     </VContainer>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

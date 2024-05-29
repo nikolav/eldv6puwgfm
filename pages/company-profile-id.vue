@@ -404,7 +404,7 @@ const rulesNoEmpty = (value: any) => !!(value && 0 < String(value).length);
                     </template>
                   </VTextField>
                 </div>
-                <div class="d-flex items-center justify-between gap-5">
+                <div class="d-flex items-center justify-between gap-3">
                   <VTextField
                     name="phone"
                     v-model="form.phone.value"
@@ -433,7 +433,6 @@ const rulesNoEmpty = (value: any) => !!(value && 0 < String(value).length);
                       <VIcon
                         color="primary-darken-2"
                         icon="$iconFacebook"
-                        size="x-large"
                         class="!opacity-20"
                       />
                     </template>
@@ -449,7 +448,21 @@ const rulesNoEmpty = (value: any) => !!(value && 0 < String(value).length);
                       <VIcon
                         color="primary-darken-2"
                         icon="$iconInstagram"
-                        size="x-large"
+                        class="!opacity-20"
+                      />
+                    </template>
+                  </VTextField>
+                  <VTextField
+                    name="youtube_link"
+                    v-model="form.youtube.value"
+                    variant="underlined"
+                    label="Youtube"
+                    clearable
+                  >
+                    <template v-if="smAndUp" #prepend>
+                      <VIcon
+                        color="primary-darken-2"
+                        icon="$iconYotubeVideo"
                         class="!opacity-20"
                       />
                     </template>

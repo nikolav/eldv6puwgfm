@@ -270,7 +270,7 @@ const carouselHeight = computed(
               </VChip>
               <VSpacer />
               <!-- @@ -->
-              <AddToCartButtonPrimary :size="48" :product-id="p$?.id" />
+              <AddToCartButtonPrimary :size="48" :product="p$" />
               <VChipProductPrice class="ms-3" :product="p$" />
             </div>
             <h1 class="text-truncate !font-sans text-h4 font-weight-bold mt-4">

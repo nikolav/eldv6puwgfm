@@ -1,82 +1,78 @@
 <script setup lang="ts">
 import type { OrNoValue, IStorageFileInfo, IDoc, IProduct } from "@/types";
 import {
-  ProductImages,
-  VChipProductPrice,
-  ProductPublicUrl,
-  ProductCategory,
-  TopicChat,
   AddToCartButtonPrimary,
+  ProductCategory,
+  ProductImages,
+  ProductPublicUrl,
+  TopicChat,
+  VChipProductPrice,
 } from "@/components/app";
+const props = defineProps<{ user: any; profile: any }>();
 const emit = defineEmits<{
   (e: "productsLength", length: OrNoValue<number>): void;
 }>();
-const props = defineProps<{ user: any; profile: any }>();
-const PRODUCT_ITEM_MAX_HEIGHT = 102;
+const PRODUCT_ITEM_MAX_HEIGHT = 122;
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
-  key: { APP_PROCESSING, TOPIC_CHAT_PRODUCTS_prefix },
+  key: { TOPIC_CHAT_PRODUCTS_prefix },
 } = useAppConfig();
-const { publicUrl, loading } = useApiStorage(true, true);
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
-watchEffect(() => {
-  appProcessing$.value = loading.value;
-});
 const products = computed(() => get(props.user, "products"));
 watchEffect(() => emit("productsLength", products.value?.length));
 const { $lightbox } = useNuxtApp();
 const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
   map(images, (node) => ({
-    src: publicUrl(node.data.file_id),
+    src: resourceUrl(node.data.file_id),
     caption: p.name,
   }));
 
 // @@eos
 </script>
 <template>
-  <section class="component--CompanyDisplayPaneProducts space-y-4 ps-4 mt-2">
+  <section class="component--CompanyDisplayPaneProducts space-y-2 ps-3 mt-2">
     <template v-for="p in products" :key="p.id">
       <VHover open-delay="345">
         <template #default="{ isHovering, props: props_ }">
           <VSheet
             v-bind="props_"
             elevation="1"
-            class="!grid grid-cols-[92px,1fr,auto] *!bg-red-200 *overflow-hidden"
+            class="!grid grid-cols-[155px,1fr,auto] !bg-stone-50"
             :height="PRODUCT_ITEM_MAX_HEIGHT"
             :max-height="PRODUCT_ITEM_MAX_HEIGHT"
             rounded
           >
+            <!-- image -->
             <ProductImages :product="p" v-slot="{ images }">
-              <div class="*bg-green-200">
-                <VImg
-                  rounded="s"
-                  @click="
-                    0 < images.length
-                      ? $lightbox.open(gallery(p, images))
-                      : noop
-                  "
-                  class="h-full transition-transform hover:scale-105 opacity-90 hover:opacity-100 cursor-pointer *border-2 *border-white *shadow"
-                  :max-height="PRODUCT_ITEM_MAX_HEIGHT"
-                  cover
-                  :src="
-                    images.length
-                      ? publicUrl(get(sample(images), 'data.file_id') || '')
-                      : DEFAULT_NO_PRODUCT_IMAGE_FOUND
-                  "
-                />
-              </div>
+              <VImg
+                rounded="s-lg"
+                @click="
+                  0 < images.length ? $lightbox.open(gallery(p, images)) : noop
+                "
+                class="h-full transition-transform hover:scale-105 opacity-90 hover:opacity-100 cursor-pointer *border-2 *border-white *shadow"
+                :max-height="PRODUCT_ITEM_MAX_HEIGHT"
+                cover
+                :src="
+                  images.length
+                    ? resourceUrl(get(sample(images), 'data.file_id') || '')
+                    : DEFAULT_NO_PRODUCT_IMAGE_FOUND
+                "
+              />
             </ProductImages>
+
+            <!-- body -->
             <div
-              class="*text-sm text-truncate d-flex flex-col justify-between pb-3 ps-4"
+              class="*text-sm text-truncate d-flex flex-col justify-between pb-3 ps-3"
             >
               <ProductPublicUrl :product="p" v-slot="{ url }">
                 <NuxtLink :to="url" external target="_blank"
-                  ><a
-                    class="hover:scale-[102%] d-inline-block transition-transform font-sans font-weight-medium text-primary-darken-2 underline underline-offset-2"
-                    >{{ p.name }}</a
-                  ></NuxtLink
+                  ><VCardTitle
+                    class="ps-3 font-sans font-weight-medium text-primary-darken-2 underline underline-offset-2"
+                  >
+                    {{ p.name }}
+                  </VCardTitle></NuxtLink
                 >
               </ProductPublicUrl>
+
               <div>
                 <ProductCategory :product="p" v-slot="{ category }">
                   <VChip size="small" v-if="category" class="!w-fit">
@@ -117,24 +113,25 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
                 </VChip>
               </div>
             </div>
+
+            <!-- cell:end -->
             <div
-              class="*bg-green-200 d-flex flex-col items-end justify-between pa-1"
+              class="*bg-green-200 d-flex flex-col items-end justify-between pa-2"
             >
-              <div>
+              <div class="d-flex items-center">
                 <!-- @@ -->
-                <AddToCartButtonPrimary :size="48" :product-id="p?.id" />
-                <VChipProductPrice class="ms-4" :product="p" />
+                <span
+                  class="invisible"
+                  :class="isHovering ? '!visible' : undefined"
+                >
+                  <TopicChat
+                    :title="p.name"
+                    :topic="`${TOPIC_CHAT_PRODUCTS_prefix}${p.id}`"
+                  />
+                </span>
+                <AddToCartButtonPrimary class="ms-5" :size="48" :product="p" />
               </div>
-              <span
-                class="invisible me-4 -translate-y-[2px]"
-                :class="isHovering ? '!visible' : undefined"
-              >
-                <TopicChat
-                  class="*scale-[92%]"
-                  :title="p.name"
-                  :topic="`${TOPIC_CHAT_PRODUCTS_prefix}${p.id}`"
-                />
-              </span>
+              <VChipProductPrice :product="p" />
             </div>
           </VSheet>
         </template>
@@ -142,5 +139,4 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
     </template>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

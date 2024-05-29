@@ -6,55 +6,25 @@ import {
   CompanyDisplayPaneContact,
   CompanyDisplayPaneAbout,
 } from "@/components/app";
-import type { ICompanyProfile } from "@/types";
+import { useDisplay } from "vuetify";
+
 const props = defineProps<{ uid: number }>();
 const emit = defineEmits<{
   (e: "companyName", name: string): void;
   (e: "googleCalendarEmbedLink", link: string): void;
 }>();
-const {
-  docs: { TAG_COMPANY_PROFILE_prefix },
-  key: { APP_PROCESSING },
-} = useAppConfig();
-const PROFILE_FIELDS = [
-  "about",
-  "address",
-  "delivery",
-  "district",
-  "facebook",
-  "googleCalendarEmbedLink",
-  "instagram",
-  "name",
-  "ownerFirstName",
-  "ownerLastName",
-  "phone",
-  "pin",
-];
 
-const { user: comUser, loading: qUserLoading } = useQueryUsersSingle(props.uid);
-const { data: comProfile, loading: qProfileLoading } = useDoc<ICompanyProfile>(
-  `${TAG_COMPANY_PROFILE_prefix}${props.uid}`
-);
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
-watchEffect(() => {
-  appProcessing$.value = qUserLoading.value || qProfileLoading.value;
-});
-const profile_ = computed(() =>
-  reduce(
-    PROFILE_FIELDS,
-    (res, field) => {
-      res[field] = computed(() => get(comProfile.value, `data.${field}`));
-      return res;
-    },
-    <Record<string, Ref>>{}
-  )
-);
+const { height: wHeight } = useDisplay();
+const refPanel = ref();
+const { y: yPanel } = useElementBounding(refPanel);
+const maxHPanel = computed(() => wHeight.value - yPanel.value - 1);
 
-// const products = computed(() => get(comUser.value, "products") || []);
-watchEffect(() => emit("companyName", profile_.value.name.value));
-// watchEffect(() => emit("googleCalendarEmbedLink", comProfile.value.data.googleCalendarEmbedLink));
+const { user: comUser } = useQueryUsersSingle(props.uid);
+const { profile } = useProfileData(() => props.uid);
+
+watchEffect(() => emit("companyName", profile.value?.name || ""));
 watchEffect(() =>
-  emit("googleCalendarEmbedLink", profile_.value.googleCalendarEmbedLink.value)
+  emit("googleCalendarEmbedLink", profile.value?.googleCalendarEmbedLink || "")
 );
 
 // tabs
@@ -98,7 +68,8 @@ const PANEL_COMPONENT = <Record<string, any>>{
   Kontakt: CompanyDisplayPaneContact,
   "O Nama": CompanyDisplayPaneAbout,
 };
-const tabSelected$ = useGlobalVariable("panel:active:KYnYvJZfdX2zYlHDrG8N");
+// const tabSelected$ = useGlobalVariable("panel:active:KYnYvJZfdX2zYlHDrG8N");
+const tabSelected$ = useGlobalVariable("ABiEHz");
 onMounted(() => {
   if (!tabSelected$.value) {
     tabSelected$.value = find(panelLinks, "initial")?.title;
@@ -112,19 +83,22 @@ const productsLengthSet = (n: number) => {
 // @@eos
 </script>
 <template>
-  <VSheet class="component--CompanyDisplay *bg-red" v-bind="$attrs">
+  <VSheet class="component--CompanyDisplay">
+    <!-- chip:district -->
     <VChip>
       <template #prepend>
         <VIcon start icon="$iconLocation" class="!opacity-40 ps-[2px]" />
       </template>
-      <small class="*text-medium-emphasis">{{ profile_.district.value }}</small>
+      <small class="*text-medium-emphasis">{{ profile?.district }}</small>
     </VChip>
-    <VChip class="ms-4" v-if="profile_.pin.value">
+
+    <!-- chip:pg# -->
+    <VChip class="ms-4" v-if="profile?.pin">
       <template #prepend>
         <small class="me-1 text-disabled">PG#</small>
       </template>
       <strong class="text-medium-emphasis">
-        <pre>{{ profile_.pin.value }}</pre>
+        <pre>{{ profile?.pin }}</pre>
       </strong>
       <VTooltip
         activator="parent"
@@ -134,30 +108,35 @@ const productsLengthSet = (n: number) => {
         text="Broj registrovanog poljoprivrednog gazdinstva"
       />
     </VChip>
+
     <!-- @@title -->
-    <h2 class="text-truncate !font-sans text-h4 font-weight-bold mt-4">
-      {{ profile_.name.value }}
-    </h2>
-    <VDivider thickness="2" class="border-opacity-50" length="91%" />
+    <VCardTitle class="text-truncate !font-sans text-h4 font-weight-bold my-3">
+      {{ profile?.name || "" }}
+    </VCardTitle>
+
     <!-- @@data -->
-    <VSheet class="*!bg-red-200">
+    <VSheet class="*!bg-red-200" ref="refPanel">
       <VContainer fluid class="pa-0">
         <VRow>
+          
+          <!-- panels -->
           <VCol
-            cols="12"
             sm="9"
-            class="position-relative max-h-[389px] overflow-auto scrollbar-thin-light overflow-x-hidden"
+            class="position-relative overflow-auto scrollbar-thin-light overflow-x-hidden"
+            :style="`max-height: ${maxHPanel}px`"
           >
             <VFadeTransition name="Panel1" mode="out-in" leave-absolute>
               <component
                 :user="comUser"
-                :profile="profile_"
+                :profile="profile"
                 :is="PANEL_COMPONENT[tabSelected$ || '']"
                 @products-length="productsLengthSet"
               />
             </VFadeTransition>
           </VCol>
-          <VCol cols="12" sm="3" class="px-2">
+
+          <!-- links -->
+          <VCol sm="3" class="px-2">
             <VTabs
               hide-slider
               color="primary-lighten-1"
@@ -195,12 +174,10 @@ const productsLengthSet = (n: number) => {
               </VTab>
             </VTabs>
           </VCol>
+
         </VRow>
       </VContainer>
     </VSheet>
-    <!-- <Dump :data="profile_" /> -->
-    <!-- <Dump :data="comUser" /> -->
   </VSheet>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

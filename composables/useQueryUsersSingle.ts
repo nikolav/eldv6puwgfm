@@ -24,7 +24,6 @@ export const useQueryUsersSingle = <TData = IUser>(mayberefUID?: any) => {
   );
   const reload = async () => await refetch();
   onceMountedOn(true, load);
-
   return {
     user,
     reload,

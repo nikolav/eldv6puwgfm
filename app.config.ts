@@ -39,6 +39,7 @@ export default defineAppConfig({
       "district",
       "facebook",
       "instagram",
+      "youtube",
       "name",
       "ownerFirstName",
       "ownerLastName",
