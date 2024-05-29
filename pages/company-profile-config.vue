@@ -298,6 +298,7 @@ const accountUpgradeConfirmed = async () => {
           </VCol>
           <VCol sm="5" class="d-flex items-center justify-center">
             <VBtn
+              :disabled="auth.isCompany$"
               color="success-darken-2"
               rounded
               variant="tonal"
