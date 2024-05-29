@@ -188,3 +188,9 @@ export const M_accountsVeifyEmail = gql`
   }
 `;
 
+export const M_accountsUpgradeUserCompany = gql`
+  mutation m_accountsUpgradeUserCompany($uid: ID!) {
+    accountsUpgradeUserCompany(uid: $uid)
+  }
+`;
+

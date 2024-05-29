@@ -120,3 +120,4 @@ export { default as IconRescue } from "./IconRescue.vue";
 export { default as IconEye } from "./IconEye.vue";
 export { default as IconEyeOff } from "./IconEyeOff.vue";
 export { default as IconWrench } from "./IconWrench.vue";
+export { default as IconAccountConfigure } from "./IconAccountConfigure.vue";

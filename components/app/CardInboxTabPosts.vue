@@ -392,5 +392,4 @@ const postEditOnClick = (ppid: number) => {
     </VForm>
   </VCard>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

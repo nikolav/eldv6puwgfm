@@ -47,12 +47,14 @@ const {
   accountArchive,
   accountDrop,
   accountSendVerifyEmailLink,
+  accountUpgrade,
   profileFieldsIncomplete,
 } = useQueryManageAccount();
 const pc1 = useProcessMonitor();
 watchProcessing(() => pc1.processing.value);
 const toggleAccountArchivedStatus = useToggleFlag();
 const toggleAccountRemovedStatus = useToggleFlag();
+const toggleAccountUpgradedStatus = useToggleFlag();
 const accountArchiveConfirmed = async () => {
   let result;
   try {
@@ -120,6 +122,27 @@ const accountSendVerifyEmailLinkConfirmed = async () => {
 };
 
 const profileComplete = computed(() => isEmpty(profileFieldsIncomplete.value));
+
+const accountUpgradeConfirmed = async () => {
+  console.log("--accountUpgradeConfirmed");
+  let result;
+  try {
+    pc1.begin();
+    result = get(await accountUpgrade(), "data.accountsUpgradeUserCompany");
+  } catch (error) {
+    pc1.setError(error);
+  } finally {
+    pc1.done();
+  }
+  if (!pc1.error.value) {
+    pc1.successful();
+    if (result) {
+      // account upgraded to .company, alert status, redirect /
+      toggleAccountUpgradedStatus.on();
+      setTimeout(() => reloadNuxtApp({ path: "/" }), 1890);
+    }
+  }
+};
 // googleCalendarEmbedLink
 // googleCalendarEditPageLink
 // @@eos
@@ -147,6 +170,13 @@ const profileComplete = computed(() => isEmpty(profileFieldsIncomplete.value));
           >Link za potvrdu email adrese je uspešno poslat. Proverite svoj
           inbox.</strong
         >
+      </p>
+    </VSnackbarStatusMessage>
+    <VSnackbarStatusMessage
+      v-model="toggleAccountUpgradedStatus.isActive.value"
+    >
+      <p class="text-center">
+        <strong>Vaš nalog je uspešno nadograđen. 🏠</strong>
       </p>
     </VSnackbarStatusMessage>
 
@@ -246,6 +276,62 @@ const profileComplete = computed(() => isEmpty(profileFieldsIncomplete.value));
           <span class="ms-1">Podaci profila su uredno popunjeni.</span>
         </VCardTitle>
       </div>
+    </VCard>
+
+    <!-- account upgrade -->
+    <VCard
+      max-width="812"
+      class="mx-auto mt-12 pa-3"
+      elevation="1"
+      :class="[auth.isCompany$ ? 'opacity-20' : undefined]"
+    >
+      <VContainer>
+        <VRow>
+          <VCol sm="7">
+            <VCardTitle> Nadogradnja naloga </VCardTitle>
+            <VCardText>
+              Ako želite da ulistate svoju robu potrebno je da prvo nadogradite
+              svoj nalog. Nadogradnja je besplatna, i daje Vam opciju
+              upravljanja lagerom. Sva naručena roba ostaje i dalje dostupna za
+              pregled na nalogu.
+            </VCardText>
+          </VCol>
+          <VCol sm="5" class="d-flex items-center justify-center">
+            <VBtn
+              color="success-darken-2"
+              rounded
+              variant="tonal"
+              size="x-large"
+              class="text-none"
+            >
+              <VIcon start icon="$iconAccountConfigure" size="large" />
+              <span class="ms-1">Nadogradnja</span>
+              <VMenu
+                :transition="DEFAULT_TRANSITION"
+                activator="parent"
+                location="center"
+                max-width="320"
+              >
+                <VSheet class="pa-5 space-y-5">
+                  <VCardSubtitle>Potvrdi nadogradnju naloga</VCardSubtitle>
+                  <VCardActions>
+                    <VSpacer />
+                    <VBtn
+                      :disabled="auth.isCompany$"
+                      @click="accountUpgradeConfirmed"
+                      class="px-5"
+                      variant="tonal"
+                      size="large"
+                      >ok</VBtn
+                    >
+                    <VSpacer />
+                  </VCardActions>
+                </VSheet>
+              </VMenu>
+            </VBtn>
+          </VCol>
+        </VRow>
+      </VContainer>
     </VCard>
 
     <!-- google.calendar links -->

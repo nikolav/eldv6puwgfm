@@ -5,6 +5,7 @@ import {
   M_accountsDrop,
   M_accountsSendVerifyEmailLink,
   M_accountsVeifyEmail,
+  M_accountsUpgradeUserCompany,
 } from "@/graphql";
 export const useQueryManageAccount = () => {
   const {
@@ -23,6 +24,9 @@ export const useQueryManageAccount = () => {
     useMutation(M_accountsSendVerifyEmailLink);
   const { mutate: mutateVerifyEmail, loading: emailLoading } =
     useMutation(M_accountsVeifyEmail);
+  const { mutate: mutateAccountUpgrade, loading: upgLoading } = useMutation(
+    M_accountsUpgradeUserCompany
+  );
 
   const accountArchive = async () =>
     await mutateAccountArchive({ uid: uid.value });
@@ -31,6 +35,10 @@ export const useQueryManageAccount = () => {
     await mutateSendVerifyEmailLink({ uid: uid.value, url: URL_VERIFY_EMAIL });
   const accountVerifyEmail = async (key: string) =>
     await mutateVerifyEmail({ data: { key } });
+  const accountUpgrade = async () =>
+    !auth.isCompany$
+      ? await mutateAccountUpgrade({ uid: uid.value })
+      : undefined;
 
   // query incomplete profile fields
   const {
@@ -54,7 +62,8 @@ export const useQueryManageAccount = () => {
       rmLoading.value ||
       lnemailLoading.value ||
       emailLoading.value ||
-      qpLoading.value
+      qpLoading.value ||
+      upgLoading.value
   );
   watchProcessing(loading_);
 
@@ -70,6 +79,7 @@ export const useQueryManageAccount = () => {
     accountDrop,
     accountSendVerifyEmailLink,
     accountVerifyEmail,
+    accountUpgrade,
     // profile
     profileFieldsIncomplete,
     // flags
