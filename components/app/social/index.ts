@@ -3,3 +3,4 @@ export { default as ProvideProductMessagesCount } from "./ProvideProductMessages
 export { default as ProvideProductRatingTopic } from "./ProvideProductRatingTopic.vue";
 export { default as OverviewsFake } from "./OverviewsFake.vue";
 export { default as SocialShareTopicButton } from "./SocialShareTopicButton.vue";
+export { default as ProvideTopicChatLength } from "./ProvideTopicChatLength.vue";

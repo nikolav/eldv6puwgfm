@@ -103,6 +103,7 @@ const { submit } = useFormDataFields(
 
 const toggleMenuPostsList = useToggleFlag();
 
+const postsCount = computed(() => posts.value?.length);
 const postSelected$ = computed(() =>
   find(posts.value, { id: postIdSelected$.value })
 );
@@ -284,7 +285,15 @@ const postEditOnClick = (ppid: number) => {
           variant="elevated"
           elevation="5"
         >
-          <VIcon icon="$menu" size="33" />
+          <VBadge
+            :model-value="!isEmpty(posts)"
+            :content="postsCount"
+            color="info-darken-1"
+            offset-x="-4"
+            offset-y="-4"
+          >
+            <VIcon icon="$menu" size="33" />
+          </VBadge>
           <VTooltip activator="parent" open-delay="345" location="bottom">
             <em>Moje priče...</em>
           </VTooltip>

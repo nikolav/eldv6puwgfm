@@ -15,9 +15,6 @@ const ownProduct = computed(
 );
 
 const cart = useStoreCart();
-watchEffect(() => {
-  console.log(props.product);
-});
 // @@eos
 </script>
 <template>
