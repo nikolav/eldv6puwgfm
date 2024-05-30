@@ -204,7 +204,7 @@ const postEditOnClick = (ppid: number) => {
                 <LightboxSlides
                   :slides="[
                     {
-                      src: '/price-pomoc.mp4',
+                      src: 'https://nikolav.rs/price-pomoc.mp4',
                     },
                   ]"
                 >
