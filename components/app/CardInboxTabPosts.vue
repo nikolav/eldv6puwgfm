@@ -219,7 +219,7 @@ const postEditOnClick = (ppid: number) => {
                     >
                       <strong> 🎥 </strong>
                       <VTooltip
-                        text="Kako da upravljam pričama? Pogled kratko video uputstvo..."
+                        text="Kako da upravljam pričama? Pogledaj kratko video uputstvo..."
                         activator="parent"
                         open-delay="345"
                         location="bottom"
