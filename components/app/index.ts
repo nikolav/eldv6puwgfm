@@ -12,7 +12,7 @@ export * from "./search";
 export * from "./social";
 export * from "./user-profile";
 export * from "./menu";
-
+export * from "./posts";
 
 export { default as AppBarMain } from "./AppBarMain.vue";
 export { default as CardInbox } from "./CardInbox.vue";

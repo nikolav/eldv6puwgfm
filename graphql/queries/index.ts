@@ -476,3 +476,24 @@ export const Q_accountsIncompleteProfileFields = gql`
   }
 `;
 
+export const Q_postsListOnly = gql`
+  query q_postsListOnly($sids: [ID!]!) {
+    postsListOnly(sids: $sids) {
+      id
+      title
+      content
+      user_id
+      user {
+        id
+        email
+        created_at
+        updated_at
+      }
+      tags
+      docs
+      created_at
+      updated_at
+    }
+  }
+`;
+

@@ -401,11 +401,11 @@ const { savePdf, printPdf } = useSavePdf();
                                           external
                                           target="_blank"
                                         >
-                                          <a
-                                            class="text-primary link--prominent-base"
+                                          <VCardTitle
+                                            class="pa-0 ma-0 ps-2 text-primary link--prominent-base"
                                           >
                                             {{ p?.name || "" }}
-                                          </a>
+                                          </VCardTitle>
                                         </NuxtLink>
                                       </ProductPublicUrl>
                                     </h2>

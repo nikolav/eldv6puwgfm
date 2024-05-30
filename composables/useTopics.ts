@@ -20,6 +20,9 @@ export const useTopics = () => {
       COM_LIKES_prefix,
       TOPIC_CHAT_PACKAGES,
       POST_IMAGES_prefix,
+      TOPIC_RATING_POSTS_prefix,
+      POSTS_LIKES_prefix,
+      POSTS_CHAT_prefix,
     },
   } = useAppConfig();
   const comChat = (comid: number | undefined) =>
@@ -52,6 +55,12 @@ export const useTopics = () => {
     uid ? `${trimEnd(PAKETI_UPLATA, "/")}/${uid}` : `misc`;
   const postImage = (sid: number | undefined, imageId: number | undefined) =>
     sid && imageId ? `${POST_IMAGES_prefix}${sid}:${imageId}` : "";
+  const ratingPosts = (sid: number | undefined) =>
+    sid ? `${TOPIC_RATING_POSTS_prefix}${sid}` : "";
+  const likesPosts = (sid: number | undefined) =>
+    sid ? `${POSTS_LIKES_prefix}${sid}` : "";
+  const chatPosts = (sid: number | undefined) =>
+    sid ? `${POSTS_CHAT_prefix}${sid}` : "";
 
   return {
     PAKETI_UPLATA,
@@ -71,5 +80,8 @@ export const useTopics = () => {
     userPhotos,
     comLikes,
     postImage,
+    ratingPosts,
+    likesPosts,
+    chatPosts,
   };
 };

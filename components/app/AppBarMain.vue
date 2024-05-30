@@ -2,7 +2,6 @@
 import { useDisplay } from "vuetify";
 import { emojify } from "node-emoji";
 import { AvatarThumb, VCardMainSearchConfig } from "@/components/app";
-import { LightboxSlides } from "@/components/ui";
 
 const props = defineProps<{ height: number }>();
 
@@ -95,29 +94,18 @@ const search$$ = useStoreSearchConfig();
       </VBtn>
 
       <!-- etiketa -->
-      <LightboxSlides
-        :slides="[
-          {
-            src: 'https://docs.google.com/forms/d/e/1FAIpQLSfQF5FTcZlck8_hlmtUlKXT5vuTk-D6nUC6YbntJzTF8W2LKA/viewform?usp=sf_link',
-            type: 'iframe',
-          },
-        ]"
+      <NuxtLink
+        external
+        target="_blank"
+        to="https://docs.google.com/forms/d/e/1FAIpQLSfQF5FTcZlck8_hlmtUlKXT5vuTk-D6nUC6YbntJzTF8W2LKA/viewform?usp=sf_link"
       >
-        <template #activator="{ open }">
-          <VBtn
-            @click="open"
-            icon
-            variant="text"
-            color="primary-darken-1"
-            class="ms-10"
-          >
-            <VIcon :size="41" icon="$iconBrandTag" class="rotate-[5deg]" />
-            <VTooltip activator="parent" location="bottom" open-delay="345">
-              Upitnik za izradu brenda...
-            </VTooltip>
-          </VBtn>
-        </template>
-      </LightboxSlides>
+        <VBtn icon variant="text" color="primary-darken-1" class="ms-10">
+          <VIcon :size="41" icon="$iconBrandTag" class="rotate-[5deg]" />
+          <VTooltip activator="parent" location="bottom" open-delay="345">
+            Upitnik za izradu brenda...
+          </VTooltip>
+        </VBtn>
+      </NuxtLink>
 
       <NuxtLink :to="{ name: 'paketi' }" target="_blank">
         <VBtn icon variant="text" color="primary-darken-1" class="ms-10">

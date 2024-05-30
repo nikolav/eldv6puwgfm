@@ -192,6 +192,7 @@ const postEditOnClick = (ppid: number) => {
               location="bottom end"
             >
               <VSheet
+                elevation="3"
                 max-width="320"
                 min-width="245"
                 class="pa-3 max-w-[320px] min-h-[122px] pb-6"
@@ -209,8 +210,8 @@ const postEditOnClick = (ppid: number) => {
                       class="!italic text-body-2 text-mono"
                       >Priče</em
                     >
-                    možete da koristite da istaknete akciju, najavite značajne
-                    događaje, vodite blog ili kraće članke. Generalno, za
+                    možete da iskoristite da istaknete akciju, najavite značajne
+                    događaje, pišete blog ili kraće članke. Generalno, za
                     sadržaj promotivne prirode... Uključuje i prateću sliku.
                   </p>
                 </div>
