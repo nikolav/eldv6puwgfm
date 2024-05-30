@@ -11,7 +11,7 @@ const iconSize_ = computed(() =>
 );
 const auth = useStoreApiAuth();
 const ownProduct = computed(
-  () => props.product.user_id == get(auth.user$, "id")
+  () => props.product?.user_id == get(auth.user$, "id")
 );
 
 const cart = useStoreCart();
@@ -31,18 +31,18 @@ watchEffect(() => {
     elevation="2"
     variant="elevated"
     color="primary2-darken-1"
-    @click="cart.increase(product.id, 1)"
+    @click="cart.increase(product?.id, 1)"
   >
     <VBadge
       location="top start"
       offset-y="2"
-      :model-value="cart.has(product.id)"
+      :model-value="cart.has(product?.id)"
       icon
       color="primary3"
     >
       <!-- <VBadge :model-value="true" icon color="primary3"> -->
       <template #badge>
-        <pre>{{ cart.count(product.id) }}</pre>
+        <pre>{{ cart.count(product?.id) }}</pre>
       </template>
       <VIcon
         class="transition-transform translate-x-[3px] group-hover/addToCartCircle:scale-[112%] group-hover/addToCartCircle:-rotate-2"

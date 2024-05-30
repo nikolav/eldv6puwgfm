@@ -5,7 +5,14 @@ definePageMeta({
   layout: "blank",
 });
 
-const auth = useStoreApiAuth();
+const { $lightbox } = useNuxtApp();
+const ok = () =>
+  $lightbox.open([
+    {
+      src: "https://docs.google.com/forms/d/e/1FAIpQLSfQF5FTcZlck8_hlmtUlKXT5vuTk-D6nUC6YbntJzTF8W2LKA/viewform?usp=sf_link",
+      type: "iframe",
+    },
+  ]);
 
 // #eos
 </script>
@@ -13,7 +20,10 @@ const auth = useStoreApiAuth();
   <section class="page--demo.index">
     <NuxtLink :to="{ name: 'index' }">-index-</NuxtLink>
     <hr />
-    <Dump :data="{ com: auth.isCompany$, user: auth.user$ }" />
+    <VBtn @click="ok">
+      <VIcon start :size="48" icon="$iconBrandTag" />
+      ok
+    </VBtn>
   </section>
 </template>
 <style lang="scss" scoped></style>

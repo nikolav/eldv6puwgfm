@@ -47,11 +47,7 @@ const p$ = computed(() => first(products.value)!);
 const pid$ = computed(() => get(p$.value, "id"));
 
 const comId$ = computed(() => Number(get(p$.value, "user_id")));
-const {
-  // profile: comProfile,
-  avatar: avatarUrl,
-  publicUrl: comPublicUrl$,
-} = useProfileData(comId$);
+const { avatar: avatarUrl, publicUrl: comPublicUrl$ } = useProfileData(comId$);
 const pName$ = computed(() => startCase(String(get(p$.value, "name") || "")));
 useHead({
   title: pName$,
@@ -85,44 +81,49 @@ const carouselHeight = computed(
 // @@eos
 </script>
 <template>
-  <section class="page--proizvodi fill-height ma-0 pa-0 *bg-red">
-    <VContainer fluid class="*bg-red ma-0 pa-0 fill-height">
-      <VRow class="*bg-lime ma-0 pa-0 fill-height" no-gutters>
+  <section class="page--proizvodi fill-height ma-0 pa-0">
+    <VContainer fluid class="ma-0 pa-0 fill-height">
+      <VRow class="ma-0 pa-0 fill-height" no-gutters>
         <!-- col.product:gallery -->
-        <VCol cols="12" md="6" class="*bg-blue-200 ma-0 pa-0">
+        <VCol md="6" class="*bg-blue-200 ma-0 pa-0">
           <VHover>
             <template #default="{ isHovering, props: props_ }">
               <!-- image gallery .left -->
-              <VSheet class="ma-2 overflow-hidden" rounded>
+              <VSheet class="ma-2 overflow-hidden" rounded elevation="1">
+                <!-- default, no image -->
                 <VImg
                   :height="carouselHeight"
                   :src="DEFAULT_NO_PRODUCT_IMAGE_FOUND"
                   v-if="isEmpty(productImages)"
                 />
+
+                <!-- gallery -->
                 <VCarousel
                   v-else
                   :height="carouselHeight"
                   v-model="imageFileIdCurrent"
-                  v-bind="props_"
                   continuous
                   mandatory
                   hide-delimiters
                   show-arrows="hover"
                   :cycle="!isHovering"
                   :interval="8901"
+                  v-bind="props_"
                 >
                   <VCarouselItem
-                    cover
                     v-for="node in productImages"
+                    cover
                     :key="node.id"
                     :src="resourceUrl(get(node, 'data.file_id'))"
                     :value="get(node, 'data.file_id')"
                   />
                 </VCarousel>
               </VSheet>
+
+              <!-- gallery nav -->
               <div ref="carouselNav" class="mx-2 overflow-hidden pa-2">
                 <VSlideGroup
-                  v-if="productImages.length"
+                  v-if="!isEmpty(productImages)"
                   show-arrows
                   mandatory
                   v-model="imageFileIdCurrent"
@@ -136,10 +137,8 @@ const carouselHeight = computed(
                     <VHover>
                       <template #default="{ isHovering, props: props_ }">
                         <VSheet
-                          v-bind="props_"
                           width="92"
                           height="92"
-                          rounded
                           class="overflow-hidden first:!ms-0 ms-2 cursor-pointer transition"
                           :class="
                             isHovering ||
@@ -147,6 +146,7 @@ const carouselHeight = computed(
                               ? 'opacity-100 scale-105'
                               : 'opacity-70 scale-100'
                           "
+                          v-bind="props_"
                         >
                           <VImg
                             class="w-full h-full"
@@ -165,12 +165,13 @@ const carouselHeight = computed(
             </template>
           </VHover>
         </VCol>
+
         <!-- col.product:data -->
-        <VCol cols="12" md="6" class="*bg-green-200 ma-0 pa-0">
-          <!-- @btn:links prodavac, korpa -->
+        <VCol md="6" class="*bg-green-200 ma-0 pa-0">
+          <!-- @ big links, prodavac -->
           <Teleport to="body">
             <div
-              class="!fixed position-fixed z-[1] w-full d-flex bottom-20"
+              class="!fixed position-fixed z-[1] w-full d-flex bottom-20 pe-16"
               :class="
                 mdAndUp ? '!w-1/2 !end-0' : '!top-2 h-fit *pointer-events-none'
               "
@@ -197,8 +198,8 @@ const carouselHeight = computed(
                         icon="$iconOwner"
                         size="34"
                       />
-                      Proizveo</VChip
-                    >
+                      Gazdinstvo
+                    </VChip>
                   </template>
                   <VBtn
                     rounded="circle"
@@ -211,37 +212,26 @@ const carouselHeight = computed(
                   </VBtn>
                 </VBadge>
               </NuxtLink>
-              <VSpacer />
-              <VSpacer v-if="mdAndUp" />
-              <!-- @btn:cart -->
-              <!-- :size="mdAndUp ? 122 : 75" -->
-              <CartOpenBadgePrimary
-                :badge-offset="mdAndUp ? 22 : 12"
-                :size="mdAndUp ? 122 : 75"
-                color="white"
-                elevation="4"
-              />
-              <VSpacer />
             </div>
           </Teleport>
-          <div class="d-flex items-center justify-between px-1 pe-4 *mb-4">
+
+          <div class="d-flex items-center px-1 pe-4 gap-5">
             <TopicRating
               :small="!smAndUp ? true : undefined"
               text
               :topic="`${PRODUCT_RATING_prefix}${pid$}`"
             />
+            <VSpacer />
 
             <TopicChat
-              class="ms-auto"
               :title="p$?.name"
               :topic="`${TOPIC_CHAT_PRODUCTS_prefix}${pid$}`"
             />
-            <LikeDislike
-              class="ms-[1.22rem]"
-              :topic="`${PRODUCTS_LIKES_prefix}${pid$}`"
-            />
+            <LikeDislike :topic="`${PRODUCTS_LIKES_prefix}${pid$}`" />
           </div>
+
           <div class="px-2 mt-6">
+            <!-- row:2 -->
             <div class="d-flex items-center pe-2">
               <VChip size="small" v-if="pCategory$">
                 <template #prepend>
@@ -270,17 +260,31 @@ const carouselHeight = computed(
               </VChip>
               <VSpacer />
               <!-- @@ -->
-              <AddToCartButtonPrimary :size="48" :product="p$" />
-              <VChipProductPrice class="ms-3" :product="p$" />
+              <AddToCartButtonPrimary class="ms-3" :size="55" :product="p$" />
+              <CartOpenBadgePrimary
+                :badge-offset="7"
+                :size="55"
+                color="white"
+                elevation="3"
+                class="ms-5"
+              />
             </div>
-            <h1 class="text-truncate !font-sans text-h4 font-weight-bold mt-4">
-              {{ p$?.name }}
-            </h1>
-            <VDivider thickness="2" class="border-opacity-50" />
-            <VSheet
-              class="mt-6 mx-auto pa-4 overflow-auto scrollbar-thin-light indent-2 sm:prose"
+            <div class="mt-3">
+              <VChipProductPrice :product="p$" />
+            </div>
+
+            <VCardTitle
+              class="ps-1 text-truncate text-h4 font-weight-bold mt-3"
             >
-              <p class="!max-h-[211px]">{{ p$?.description }}</p>
+              {{ p$?.name }}
+            </VCardTitle>
+            <VDivider class="border-opacity-75" />
+            <VSheet
+              class="mt-6 mx-auto pa-4 overflow-auto scrollbar-thin-light indent-5 sm:prose"
+            >
+              <p class="!max-h-[211px]">
+                {{ p$?.description }}
+              </p>
             </VSheet>
           </div>
         </VCol>

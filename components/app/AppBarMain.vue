@@ -2,6 +2,7 @@
 import { useDisplay } from "vuetify";
 import { emojify } from "node-emoji";
 import { AvatarThumb, VCardMainSearchConfig } from "@/components/app";
+import { LightboxSlides } from "@/components/ui";
 
 const props = defineProps<{ height: number }>();
 
@@ -56,7 +57,7 @@ const search$$ = useStoreSearchConfig();
       </strong>
 
       <!-- @@demo.dev -->
-      <!-- <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink> -->
+      <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
       <!--<NuxtLink :to="{ name: 'pretraga-proizvoda' }">-rez</NuxtLink> -->
     </VAppBarTitle>
 
@@ -93,9 +94,34 @@ const search$$ = useStoreSearchConfig();
         </VMenu>
       </VBtn>
 
+      <!-- etiketa -->
+      <LightboxSlides
+        :slides="[
+          {
+            src: 'https://docs.google.com/forms/d/e/1FAIpQLSfQF5FTcZlck8_hlmtUlKXT5vuTk-D6nUC6YbntJzTF8W2LKA/viewform?usp=sf_link',
+            type: 'iframe',
+          },
+        ]"
+      >
+        <template #activator="{ open }">
+          <VBtn
+            @click="open"
+            icon
+            variant="text"
+            color="primary-darken-1"
+            class="ms-10"
+          >
+            <VIcon :size="44" icon="$iconBrandTag" class="rotate-[5deg]" />
+            <VTooltip activator="parent" location="bottom" open-delay="345">
+              Upit za izradu brenda...
+            </VTooltip>
+          </VBtn>
+        </template>
+      </LightboxSlides>
+
       <NuxtLink :to="{ name: 'paketi' }" target="_blank">
-        <VBtn icon variant="text" color="primary" class="ms-6">
-          <VIcon :size="30" icon="$iconMedal" class="-rotate-[4deg]" />
+        <VBtn icon variant="text" color="primary-darken-1" class="ms-10">
+          <VIcon :size="32" icon="$iconMedal" class="-rotate-[4deg]" />
           <VTooltip activator="parent" location="bottom" open-delay="345">
             Postanite
             <em class="!tracking-wider text-body-2 text-warning !font-bold"
@@ -136,7 +162,7 @@ const search$$ = useStoreSearchConfig();
           variant="text"
           icon
           color="primary"
-          class="ms-6"
+          class="ms-10"
         >
           <VIcon icon="$iconStoreFront" size="35" />
           <VTooltip activator="parent" location="bottom" open-delay="345">
@@ -153,7 +179,7 @@ const search$$ = useStoreSearchConfig();
           variant="text"
           icon
           color="primary"
-          class="ms-4 ms-sm-6"
+          class="ms-4 ms-sm-10"
         >
           <VIcon
             :icon="auth.isCompany$ ? '$iconAdjustSettings' : '$iconUserCircle'"
