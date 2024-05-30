@@ -57,7 +57,7 @@ const search$$ = useStoreSearchConfig();
       </strong>
 
       <!-- @@demo.dev -->
-      <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink>
+      <!-- <NuxtLink :to="{ name: 'demo' }">-demo</NuxtLink> -->
       <!--<NuxtLink :to="{ name: 'pretraga-proizvoda' }">-rez</NuxtLink> -->
     </VAppBarTitle>
 
@@ -111,9 +111,9 @@ const search$$ = useStoreSearchConfig();
             color="primary-darken-1"
             class="ms-10"
           >
-            <VIcon :size="44" icon="$iconBrandTag" class="rotate-[5deg]" />
+            <VIcon :size="41" icon="$iconBrandTag" class="rotate-[5deg]" />
             <VTooltip activator="parent" location="bottom" open-delay="345">
-              Upit za izradu brenda...
+              Upitnik za izradu brenda...
             </VTooltip>
           </VBtn>
         </template>

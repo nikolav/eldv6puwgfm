@@ -7,7 +7,9 @@ const props = defineProps<{ user: any; profile: any }>();
 <template>
   <section class="component--CompanyDisplayPaneContact pa-2 space-y-4 pt-4">
     <VTextField
-      :model-value="`${props.profile.ownerFirstName} ${props.profile.ownerLastName}`"
+      :model-value="`${props.profile.ownerFirstName || ''} ${
+        props.profile.ownerLastName || ''
+      }`"
       readonly
       variant="underlined"
       label="Preduzetnik, ime i prezime"
@@ -18,7 +20,7 @@ const props = defineProps<{ user: any; profile: any }>();
     </VTextField>
     <div class="d-flex items-center justify-between gap-6">
       <VTextField
-        :model-value="`${props.profile.phone}`"
+        :model-value="`${props.profile.phone || ''}`"
         readonly
         variant="underlined"
         label="Broj telefona"
@@ -40,7 +42,7 @@ const props = defineProps<{ user: any; profile: any }>();
     </div>
     <div class="d-flex items-end gap-5">
       <VTextField
-        :model-value="`${props.profile.city}`"
+        :model-value="`${props.profile.city || ''}`"
         label="Mesto"
         readonly
         variant="underlined"
@@ -51,7 +53,7 @@ const props = defineProps<{ user: any; profile: any }>();
         </template>
       </VTextField>
       <VTextField
-        :model-value="`${props.profile.address}`"
+        :model-value="`${props.profile.address || ''}`"
         readonly
         variant="underlined"
         label="Adresa"

@@ -12,14 +12,23 @@ const uid = computed(() => get(auth.user$, "id"));
 const topic = `${TOPIC_CHAT_COM_prefix}${uid.value}`;
 const {
   data,
+  commit,
   remove,
-  loading: chatProcessing,
+  length: comChatLength,
 } = useDocs<ITopicChatMessage>(topic);
 const chat = computed(() => docsSortedDesc(data.value));
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
-watchEffect(() => {
-  appProcessing$.value = chatProcessing.value;
-});
+onceMountedOn(
+  () => 0 == comChatLength.value,
+  async () => {
+    await nextTick();
+    if (!comChatLength.value) {
+      await commit({
+        message: "Dobrodošli na platformu!",
+        name: "🤖",
+      });
+    }
+  }
+);
 
 // @@eos
 </script>
@@ -47,5 +56,4 @@ watchEffect(() => {
     </VContainer>
   </section>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

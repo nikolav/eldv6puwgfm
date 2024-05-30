@@ -8,7 +8,7 @@ import {
 
 const props = defineProps<{ reload: () => void }>();
 const {
-  key: { INBOX_TAB_ACTIVE, TOPIC_CHAT_COM_prefix },
+  key: { INBOX_TAB_ACTIVE },
 } = useAppConfig();
 
 const TABS = [
@@ -44,23 +44,21 @@ const isSelectedTab = (value: string) => value == tabs$.value;
 // store:com.chat
 const auth = useStoreApiAuth();
 const uid = computed(() => get(auth.user$, "id"));
-const { length: comChatLength } = useDocs(
-  `${TOPIC_CHAT_COM_prefix}${uid.value}`
-);
+const { comChat } = useTopics();
+
+const { length: comChatLength } = useDocs(() => comChat(uid.value));
 
 // @@eos
 </script>
 <template>
-  <VCard class="component--CardInbox" v-bind="$attrs">
+  <VCard class="component--CardInbox" rounded="t-lg">
     <VToolbar color="primary" flat extended density="comfortable">
-      <VToolbarTitle class="*bg-red">
-        <strong class="tracking-wide opacity-50">Poštansko sanduče</strong>
+      <VToolbarTitle class="*bg-red pt-3 ps-3">
+        <strong class="tracking-wide opacity-50">Obaveštenja</strong>
       </VToolbarTitle>
-      <VToolbarTitle class="d-flex items-center justify-end *bg-lime pe-1">
-        <VBtn @click="props.reload" icon variant="plain" color="on-primary"
-          ><VIcon icon="$loading"
-        /></VBtn>
-      </VToolbarTitle>
+      <VBtn @click="props.reload" icon variant="plain" color="on-primary"
+        ><VIcon icon="$loading"
+      /></VBtn>
       <template #extension>
         <VTabs show-arrows v-model="tabs$" mandatory grow>
           <VTab
@@ -101,17 +99,33 @@ const { length: comChatLength } = useDocs(
         :show-arrows="false"
         :touch="false"
       >
-        <VWindowItem value="objave">
+        <VWindowItem
+          value="objave"
+          transition="fade-transition"
+          reverse-transition="fade-transition"
+        >
           <CardInboxTabPosts />
         </VWindowItem>
-        <VWindowItem value="poruke"><CardInboxTabMessages /></VWindowItem>
-        <VWindowItem value="kalendar"><CardInboxTabCalendar /></VWindowItem>
-        <VWindowItem value="obavestenja"
+        <VWindowItem
+          value="poruke"
+          transition="fade-transition"
+          reverse-transition="fade-transition"
+          ><CardInboxTabMessages
+        /></VWindowItem>
+        <VWindowItem
+          value="kalendar"
+          transition="fade-transition"
+          reverse-transition="fade-transition"
+          ><CardInboxTabCalendar
+        /></VWindowItem>
+        <VWindowItem
+          value="obavestenja"
+          transition="fade-transition"
+          reverse-transition="fade-transition"
           ><CardInboxTabNotificationsSys
         /></VWindowItem>
       </VWindow>
     </VCardText>
   </VCard>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -5,14 +5,13 @@ export const useStoryImage = (SID?: any) => {
   const {
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
     io: { IOEVENT_STORY_PHOTOS_CHANGE_prefix },
-    key: { POST_IMAGES_prefix },
   } = useAppConfig();
   const sid$ = ref();
   watchEffect(() => {
     sid$.value = toValue(SID);
   });
   const enabled_ = computed(() => !!sid$.value);
-  const { upload, publicUrl } = useApiStorage();
+  const { upload } = useApiStorage();
   const { tags } = useDocs();
   const { result, refetch, load, loading, error } = useLazyQuery<{
     postsImages: IDoc<IStorageFileInfo>[];
@@ -28,23 +27,25 @@ export const useStoryImage = (SID?: any) => {
     }
   );
   const image = computed(() => first(get(result.value, "postsImages")));
-  const src = computed(() => publicUrl(get(image.value, "data.file_id")));
+  const src = computed(() => resourceUrl(get(image.value, "data.file_id")));
   onceMountedOn(true, load);
   const reload = async () => await refetch();
 
-  const { mutate: mutatePostsImagesDrop } = useMutation(M_postsImagesDrop);
+  const { mutate: mutatePostsImagesDrop, loading: rmLoading } =
+    useMutation(M_postsImagesDrop);
   const dropImages = async () =>
     enabled_.value
       ? await mutatePostsImagesDrop({ id: sid$.value })
       : undefined;
 
   // set new story image
+  const { postImage } = useTopics();
   const update = async (file: OrNoValue<File> = null) => {
     if (!enabled_.value) return;
     if (!file) return;
-    if (image.value) {
-      await dropImages();
-    }
+    // drop old
+    if (image.value) await dropImages();
+    // set new
     const newImageId = Number(
       get(
         await upload({
@@ -53,12 +54,17 @@ export const useStoryImage = (SID?: any) => {
         "image.id"
       )
     );
+    // bind new
     if (newImageId) {
       await tags(newImageId, {
-        [`${POST_IMAGES_prefix}${sid$.value}:${newImageId}`]: true,
+        [postImage(sid$.value, newImageId)]: true,
       });
     }
   };
+
+  const { watchProcessing } = useStoreAppProcessing();
+  const loading_ = computed(() => loading.value || rmLoading.value);
+  watchProcessing(loading_);
 
   const ioEvent = computed(() =>
     enabled_.value ? `${IOEVENT_STORY_PHOTOS_CHANGE_prefix}${sid$.value}` : ""
@@ -73,7 +79,7 @@ export const useStoryImage = (SID?: any) => {
     dropImages,
     reload,
     error,
-    loading,
+    loading: loading_,
     IO: ioEvent,
   };
 };

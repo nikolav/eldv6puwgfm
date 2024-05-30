@@ -2,21 +2,22 @@ export const useStoryPublicUrl = (
   mayberefStoryId: any,
   mayberefStoryTitle: any
 ) => {
-  const url$ = ref();
+  const puburl = ref();
   const {
     urls: { appPublic, QUERY, storyPages },
   } = useAppConfig();
   watchEffect(() => {
-    const name = toValue(mayberefStoryTitle);
     const sid = toValue(mayberefStoryId);
-    if (!name || !sid) return;
-    url$.value = `${trimEnd(appPublic, "/")}/${trim(
+    const name = toValue(mayberefStoryTitle);
+    if (!(name && sid)) return;
+    // concat domain + path + query + id
+    puburl.value = `${trimEnd(appPublic, "/")}/${trim(
       storyPages,
       "/"
     )}?${QUERY}=${encodeURIComponent(
-      words(name).concat(String(sid)).join("-").toLocaleLowerCase()
+      words(name).concat(String(sid)).join("-").toLowerCase()
     )}`;
   });
 
-  return url$;
+  return puburl;
 };

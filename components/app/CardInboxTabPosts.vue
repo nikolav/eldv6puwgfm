@@ -1,11 +1,8 @@
 <script setup lang="ts">
 // import { Dump } from "@/components/dev";
-import { FilePicker } from "@/components/ui";
+import { FilePicker, VSnackbarStatusMessage } from "@/components/ui";
 import { PostsItem } from "@/components/app";
 
-const {
-  key: { APP_PROCESSING },
-} = useAppConfig();
 const auth = useStoreApiAuth();
 const uid_ = computed(() => get(auth.user$, "id"));
 const {
@@ -13,40 +10,41 @@ const {
   upsert: postsUpsert,
   remove: postsRemove,
   reload: postsReload,
-  loading: postsLoading,
 } = useQueryPosts(uid_);
-// @@
-// const editor = useQuillEditor("#editorMyyL2ThnLsV", {
-//   bounds: "#quill--bounds",
-//   placeholder: "Moja priča...\n   (što bogatije to bolje...)",
-// });
 
-const appProcessing$ = useGlobalFlag(APP_PROCESSING);
+// @@quill:setup
+const editor = useQuillEditor("#editorMyyL2ThnLsV", {
+  bounds: "#quill--bounds",
+  placeholder: "Moja priča...\n\n",
+});
+
 const title_ = ref();
 const fileSelected$ = ref();
 const upl = useProcessMonitor();
+
+// toggle alert:status:saved
+//  auto set @upload:success
+//   reset at confirm
 const postSaved$ = computed({
   get: () => !upl.processing.value && upl.success.value,
   set: (flag: boolean) => (upl.success.value = flag),
 });
 watch(postSaved$, (saved) => {
   if (saved) {
+    // reset flag @success:saved
     fileSelected$.value = undefined;
   }
 });
-watchEffect(() => {
-  appProcessing$.value = upl.processing.value || postsLoading.value;
-});
-const storyIdSaved$ = ref();
-const storyTitleSaved$ = ref();
-const storyPublicUrl$ = useStoryPublicUrl(storyIdSaved$, storyTitleSaved$);
+
+const { watchProcessing } = useStoreAppProcessing();
+watchProcessing(() => upl.processing.value);
+
 const postIdSelected$ = ref();
-watch(storyIdSaved$, (id) => {
-  if (id) postIdSelected$.value = id;
-});
+const storyTitleSaved$ = ref();
+const storyPublicUrl$ = useStoryPublicUrl(postIdSelected$, storyTitleSaved$);
 const storyImageRemoved$ = ref(false);
 const {
-  image: storyImage,
+  // image: storyImage,
   dropImages: storyImagesDrop,
   reload: storyImagesReload,
   update: storyImageUpdate,
@@ -58,55 +56,53 @@ const { submit } = useFormDataFields(
     // title: (value: string) => 1 < value?.length,
   },
   // @@
-  // {
-  //   onSubmit: async () => {
-  //     // @@todo reuse component
-  //     editor.getContent(
-  //       async ({ text, content }: { text: string; content: any }) => {
-  //         if (!text) return;
-  //         if (!title_.value) return;
-  //         upl.begin();
+  {
+    onSubmit: async () => {
+      // @@todo reuse component
+      editor.getContent(
+        async ({ text, content }: { text: string; content: any }) => {
+          if (!text) return;
+          if (!title_.value) return;
 
-  //         let postId;
-  //         try {
-  //           if (storyImageRemoved$.value) {
-  //             await storyImagesDrop();
-  //           }
+          let postId;
 
-  //           postId = Number(
-  //             get(
-  //               await postsUpsert(
-  //                 {
-  //                   title: title_.value,
-  //                   content: JSON.stringify(content),
-  //                 },
-  //                 postIdSelected$.value
-  //               ),
-  //               "data.postsUpsert.id"
-  //             )
-  //           );
-  //           if (!postId) throw "--error-post-failed";
-  //           storyTitleSaved$.value = title_.value;
-  //           postIdSelected$.value = postId;
+          try {
+            upl.begin();
+            if (storyImageRemoved$.value) await storyImagesDrop();
+            postId = Number(
+              get(
+                await postsUpsert(
+                  {
+                    title: title_.value,
+                    content: JSON.stringify(content),
+                  },
+                  postIdSelected$.value
+                ),
+                "data.postsUpsert.id"
+              )
+            );
+            if (!postId) throw "--error-post-failed";
+            storyTitleSaved$.value = title_.value;
+            postIdSelected$.value = postId;
 
-  //           if (!fileSelected$.value) {
-  //             upl.successful();
-  //             return;
-  //           }
-  //           await nextTick();
-  //           await storyImageUpdate(fileSelected$.value);
-  //           upl.successful();
-  //         } catch (error) {
-  //           upl.setError(error);
-  //         } finally {
-  //           upl.done();
-  //         }
-  //       }
-  //     );
-  //   },
-  // }
+            if (fileSelected$.value) {
+              await nextTick();
+              await storyImageUpdate(fileSelected$.value);
+            }
+          } catch (error) {
+            upl.setError(error);
+          } finally {
+            upl.done();
+          }
+          if (!upl.error.value) upl.successful();
+        }
+      );
+    },
+  }
 );
+
 const toggleMenuPostsList = useToggleFlag();
+
 const postSelected$ = computed(() =>
   find(posts.value, { id: postIdSelected$.value })
 );
@@ -114,29 +110,32 @@ watchEffect(() => {
   if (!postIdSelected$.value) return;
   title_.value = postSelected$.value?.title || title_.value;
   const jsondata = postSelected$.value?.content;
-  // if (jsondata) editor.setContent(JSON.parse(jsondata));
+  if (jsondata) editor.setContent(JSON.parse(jsondata));
 });
 watch(postIdSelected$, (ppid) => {
   // new story loaded; release flag
   if (ppid) storyImageRemoved$.value = false;
 });
 
+// show image if not manualy removed from filepicker
 const fallbackUrl_ = computed(() =>
   !(!storyImageRemoved$.value && postIdSelected$.value)
     ? undefined
     : storyImageSrc.value
 );
+
+// clear fields from new post
 const clearStory = () => {
   postIdSelected$.value = undefined;
   storyImageRemoved$.value = false;
   fileSelected$.value = undefined;
-  // editor.clear();
+  editor.clear();
   title_.value = undefined;
 };
 
 // @@
 const postEditOnClick = (ppid: number) => {
-  setTimeout(toggleMenuPostsList.off, 23);
+  setTimeout(toggleMenuPostsList.off, 22);
   postIdSelected$.value = ppid;
   fileSelected$.value = null;
   storyImageRemoved$.value = false;
@@ -155,40 +154,26 @@ const postEditOnClick = (ppid: number) => {
 <template>
   <VCard class="component--CardInboxTabPosts" min-height="412">
     <!-- @signal:order-sent -->
-    <VSnackbar
-      v-model="postSaved$"
-      color="transparent"
-      variant="text"
-      width="489"
-    >
-      <VAlert :icon="false" prominent rounded="lg" type="success" elevation="4">
-        <div class="d-flex justify-between items-center gap-4">
-          <NuxtLink
-            :to="storyPublicUrl$"
-            external
-            target="_blank"
-            class="d-flex items-center text-truncate"
-          >
-            <strong class="me-4 text-3xl">👌🏻 </strong>
-            <a class="text-decoration-underline"> 📃 {{ storyTitleSaved$ }} </a>
-          </NuxtLink>
-          <VBtn
-            class="ma-4"
-            @click="postSaved$ = false"
-            color="on-success"
-            variant="tonal"
-            >ok</VBtn
-          >
-        </div>
-      </VAlert>
-    </VSnackbar>
+    <VSnackbarStatusMessage v-model="postSaved$">
+      <p class="text-center ps-1" style="font-size: 133%">
+        <NuxtLink
+          :to="storyPublicUrl$"
+          external
+          target="_blank"
+          class="d-flex items-center text-truncate"
+        >
+          <a class="text-decoration-underline"> 📃 {{ storyTitleSaved$ }} </a>
+        </NuxtLink>
+      </p>
+    </VSnackbarStatusMessage>
 
     <VForm class="*bg-red" @submit.prevent="submit" autocomplete="off">
-      <div class="!grid grid-cols-[1fr,222px] *bg-red-200 min-h-[392px]">
-        <!-- @@col.post -->
+      <div class="!grid grid-cols-[1fr,222px] *bg-red-200 min-h-[402px]">
+        <!-- @@col.post -left -->
         <div
-          class="*bg-red pb-2 ms-4 min-h-[262px] !max-h-[442px] overflow-auto scrollbar-thin-light relative"
+          class="*bg-red pb-3 ms-3 min-h-[262px] !max-h-[442px] overflow-auto scrollbar-thin-light relative"
         >
+          <!-- @@btn:about -->
           <VBtn
             position="absolute"
             class="top-0 end-2 z-[1]"
@@ -198,7 +183,7 @@ const postEditOnClick = (ppid: number) => {
             icon
             density="comfortable"
           >
-            <VIcon size="25" icon="$iconHelpCircle" />
+            <VIcon :size="25" icon="$iconHelpCircle" />
             <VMenu
               activator="parent"
               open-on-hover
@@ -211,18 +196,29 @@ const postEditOnClick = (ppid: number) => {
                 min-width="245"
                 class="pa-3 max-w-[320px] min-h-[122px] pb-6"
               >
-                <p class="!text-sm pa-1">
-                  <strong class="text-xl d-inline-block tracking-widest pa-2">
-                    📣 🏆 📜 🥳 </strong
-                  ><br />
-                  <em class="!italic text-body-2 text-mono">Priče</em> možete da
-                  koristite da opišete trendove, najavite značajne događaje,
-                  vodite blog, članke, i istaknete dolazeću akciju. Generalan
-                  sadržaj promotivne prirode... Uključuje i prateću sliku.
-                </p>
+                <div class="!text-sm pa-1">
+                  <p
+                    style="font-size: 166%"
+                    class="text-center text-xl tracking-widest pa-3"
+                  >
+                    📣 🏆 📜 🥳
+                  </p>
+                  <p class="prose indent-4">
+                    <em
+                      style="font-size: 122% !important"
+                      class="!italic text-body-2 text-mono"
+                      >Priče</em
+                    >
+                    možete da koristite da istaknete akciju, najavite značajne
+                    događaje, vodite blog ili kraće članke. Generalno, za
+                    sadržaj promotivne prirode... Uključuje i prateću sliku.
+                  </p>
+                </div>
               </VSheet>
             </VMenu>
           </VBtn>
+
+          <!-- @@title -->
           <VTextField
             v-model="title_"
             clearable
@@ -240,13 +236,13 @@ const postEditOnClick = (ppid: number) => {
               />
             </template>
           </VTextField>
+
+          <!-- @@editor quill -->
           <div class="mt-5 me-1 *bg-red" id="quill--bounds">
-            <!-- @@ -->
-            <!-- @editor quill -->
             <section
               id="editorMyyL2ThnLsV"
-              class="fill-height border-0"
-              style="font-size: 111%"
+              class="fill-height border-0 border-s"
+              style="font-size: 125%"
             />
           </div>
         </div>
@@ -373,16 +369,17 @@ const postEditOnClick = (ppid: number) => {
         <VBtn
           elevation="4"
           color="on-surface"
-          class="px-5 !min-w-[242px]"
+          class="px-3 !min-w-[242px] ms-5"
           variant="elevated"
           type="submit"
           size="x-large"
+          rounded
         >
           <VIcon size="x-large" start icon="$iconCloudUp" />
           {{ postIdSelected$ ? "Ažuriraj" : "Objavi" }} priču
           <VTooltip activator="parent" open-delay="892" location="top">
             <em
-              >Priča je odmah vidljiva i otvorena za reakcije, deljenje,
+              >Priča je odmah vidljiva i otvorena za reakcije, deljenje i
               pretragu</em
             >
             <VIcon class="mb-[2px] ms-4 opacity-30" end icon="$iconGlobe" />

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mergeProps } from "vue";
-const TIP_DEFAULT = "Jedna slika uz priču...";
+const TIP_DEFAULT = "Prateća slika...";
 const ICON_SIZE_SCALE = 0.62;
 
 const props = withDefaults(
@@ -48,7 +48,6 @@ const fileClear = () => {
     <VHover v-if="!(url || props.fallback)">
       <template #default="{ isHovering, props: props_ }">
         <VAvatar
-          v-bind="props_"
           @click="fileDialogOpen"
           @mousedown="togglePostImagePointerDown.on"
           @mouseup="togglePostImagePointerDown.off"
@@ -60,6 +59,7 @@ const fileClear = () => {
           ]"
           class="!bg-stone-200 cursor-pointer !transition-colors"
           :size="props.size"
+          v-bind="props_"
         >
           <VIcon
             :class="[
@@ -117,5 +117,4 @@ const fileClear = () => {
     </slot>
   </FileDataUrl>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -9,8 +9,8 @@ import { Q_postsList, M_postsUpsert, M_postsRemove } from "@/graphql";
 export const useQueryPosts = (UID?: any) => {
   const {
     io: {
-      // IOEVENT_POST_CHANGE_SINGLE_prefix,
       IOEVENT_USER_POSTS_CHANGE_prefix,
+      // IOEVENT_POST_CHANGE_SINGLE_prefix,
       // IOEVENT_POSTS_CHANGE,
     },
     graphql: { STORAGE_QUERY_POLL_INTERVAL },
@@ -21,7 +21,6 @@ export const useQueryPosts = (UID?: any) => {
   watchEffect(() => {
     uid$.value = toValue(UID) || uid_.value;
   });
-  const enabled_ = computed(() => auth.isAuth$);
   const { result, refetch, load, loading, error } = useLazyQuery<{
     postsList: IPost[];
   }>(
@@ -30,40 +29,35 @@ export const useQueryPosts = (UID?: any) => {
       uid: uid$,
     },
     {
-      enabled: enabled_,
       pollInterval: STORAGE_QUERY_POLL_INTERVAL,
     }
   );
-  const posts_ = computed(
-    () => (enabled_.value ? get(result.value, "postsList") : undefined) || []
-  );
-  onceMountedOn(enabled_, load);
+  const posts_ = computed(() => get(result.value, "postsList") || []);
+  onceMountedOn(true, load);
   const reload = async () => await refetch();
 
-  // const ioEventPostsSingle = computed(() =>
-  //   enabled_.value ? `${IOEVENT_POST_CHANGE_SINGLE_prefix}${uid$.value}` : ""
-  // );
-  const ioEvent = computed(() =>
-    enabled_.value ? `${IOEVENT_USER_POSTS_CHANGE_prefix}${uid$.value}` : ""
-  );
-  // const ioEventPostsAny = computed(() =>
-  //   enabled_.value ? IOEVENT_POSTS_CHANGE : ""
-  // );
+  const { mutate: mutatePostsUpsert, loading: upsLoading } =
+    useMutation<IPost>(M_postsUpsert);
+  const { mutate: mutatePostsRemove, loading: rmLoading } =
+    useMutation<IPost>(M_postsRemove);
 
-  const { mutate: mutatePostsUpsert } = useMutation<IPost>(M_postsUpsert);
-  const { mutate: mutatePostsRemove } = useMutation<IPost>(M_postsRemove);
-
-  const upsert = async (data: IPostInputData, id?: OrNoValue<number>) => {
-    if (enabled_.value) return await mutatePostsUpsert({ data, id });
-  };
-  const remove = async (id: number) => {
-    if (enabled_.value) return await mutatePostsRemove({ id });
-  };
+  const upsert = async (data: IPostInputData, id?: OrNoValue<number>) =>
+    await mutatePostsUpsert({ data, id });
+  const remove = async (id: number) => await mutatePostsRemove({ id });
 
   // @io/listen
-  // watchEffect(() => useIOEvent(ioEventPostsSingle.value, reload));
+  const ioEvent = computed(() =>
+    uid$.value ? `${IOEVENT_USER_POSTS_CHANGE_prefix}${uid$.value}` : ""
+  );
   watchEffect(() => useIOEvent(ioEvent.value, reload));
+  // watchEffect(() => useIOEvent(ioEventPostsSingle.value, reload));
   // watchEffect(() => useIOEvent(ioEventPostsAny.value, reload));
+
+  const { watchProcessing } = useStoreAppProcessing();
+  const loading_ = computed(
+    () => loading.value || upsLoading.value || rmLoading.value
+  );
+  watchProcessing(loading_);
 
   return {
     // switch posts manually
@@ -79,8 +73,7 @@ export const useQueryPosts = (UID?: any) => {
 
     // # flags
     error,
-    loading,
-    enabled: enabled_,
+    loading: loading_,
 
     // # io
     IO: ioEvent,
