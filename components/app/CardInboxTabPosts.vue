@@ -1,6 +1,10 @@
 <script setup lang="ts">
 // import { Dump } from "@/components/dev";
-import { FilePicker, VSnackbarStatusMessage } from "@/components/ui";
+import {
+  FilePicker,
+  VSnackbarStatusMessage,
+  LightboxSlides,
+} from "@/components/ui";
 import { PostsItem } from "@/components/app";
 
 const auth = useStoreApiAuth();
@@ -189,7 +193,6 @@ const postEditOnClick = (ppid: number) => {
               activator="parent"
               open-on-hover
               open-delay="345"
-              :close-on-content-click="false"
               location="bottom end"
             >
               <VSheet
@@ -198,10 +201,36 @@ const postEditOnClick = (ppid: number) => {
                 min-width="245"
                 class="pa-3 max-w-[320px] min-h-[122px] pb-6"
               >
+                <LightboxSlides
+                  :slides="[
+                    {
+                      src: '/price-pomoc.mp4',
+                    },
+                  ]"
+                >
+                  <template #activator="{ open: helpOpen }">
+                    <VBtn
+                      @click="helpOpen"
+                      class="position-absolute top-2 end-2"
+                      variant="tonal"
+                      size="large"
+                      icon
+                      style="font-size: 128%"
+                    >
+                      <strong> 🎥 </strong>
+                      <VTooltip
+                        text="Kako da upravljam pričama? Pogled kratko video uputstvo..."
+                        activator="parent"
+                        open-delay="345"
+                        location="bottom"
+                      />
+                    </VBtn>
+                  </template>
+                </LightboxSlides>
                 <div class="!text-sm pa-1">
                   <p
                     style="font-size: 166%"
-                    class="text-center text-xl tracking-widest pa-3"
+                    class="text-xl tracking-widest pa-3"
                   >
                     📣 🏆 📜 🥳
                   </p>
