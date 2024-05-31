@@ -33,6 +33,7 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconCompleted,
   IconBrandTag,
   IconAccountConfigure,
   IconWrench,
@@ -286,6 +287,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconCompleted: IconCompleted,
         iconBrandTag: IconBrandTag,
         iconAccountConfigure: IconAccountConfigure,
         iconWrench: IconWrench,

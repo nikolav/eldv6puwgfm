@@ -194,3 +194,9 @@ export const M_accountsUpgradeUserCompany = gql`
   }
 `;
 
+export const M_ordersSetCompleted = gql`
+  mutation m_ordersSetCompleted($oid: ID!, $completed: Boolean) {
+    ordersSetCompleted(oid: $oid, completed: $completed)
+  }
+`;
+

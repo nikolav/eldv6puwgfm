@@ -122,3 +122,4 @@ export { default as IconEyeOff } from "./IconEyeOff.vue";
 export { default as IconWrench } from "./IconWrench.vue";
 export { default as IconAccountConfigure } from "./IconAccountConfigure.vue";
 export { default as IconBrandTag } from "./IconBrandTag.vue";
+export { default as IconCompleted } from "./IconCompleted.vue";

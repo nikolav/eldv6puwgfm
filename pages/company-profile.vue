@@ -6,11 +6,12 @@ import {
   ChatOrder,
   NoDataOrders,
   OrdersProduct,
+  ProvideOrderProductsDeliveryAt,
+  VBtnOrderProductsDeliveryAt,
+  VBtnToggleOrdersShowCompleted,
   VCardOrderDetails,
   VSelectManageOrderStatus,
-  VBtnOrderProductsDeliveryAt,
   WithProfileData,
-  ProvideOrderProductsDeliveryAt,
 } from "@/components/app";
 // defs
 definePageMeta({
@@ -31,10 +32,18 @@ const toggleOrderDetails = useToggleFlag();
 
 // stores
 const auth = useStoreApiAuth();
+const uid = computed(() => get(auth.user$, "id"));
 const { users } = useQueryUsers();
-const { orders: orders_, reload: ordersReload } = useQueryOrdersReceived();
+const { orders: ordersAll, reload: ordersReload } = useQueryOrdersReceived();
 const { order_id$, products: products_ } = useQueryOrdersProducts();
 const { topic$: chatId$, data: chatOrder$ } = useDocs();
+
+const { ordersShowCompleted } = useDocConfig(uid);
+const orders_ = computed(() =>
+  ordersShowCompleted.value
+    ? ordersAll.value
+    : filter(ordersAll.value, (o) => !o.completed)
+);
 
 // utils
 const { chatOrder } = useTopics();
@@ -56,7 +65,6 @@ const {
 } = usePaginateData({ data: orders_, perPage: 5 });
 
 // computes
-const uid = computed(() => get(auth.user$, "id"));
 const orderIdActive = (id: number) => id == orderActive$.value;
 const order_ = computed(() =>
   orderActive$.value
@@ -163,23 +171,39 @@ const orderPrint = async () => {
           <!-- :actions -->
           <template #append>
             <div class="space-x-3 d-inline-flex items-center">
+              <strong v-if="order_?.completed" class="d-inline-flex">
+                <VIcon icon="$iconCompleted" class="opacity-50" />
+                <VTooltip location="bottom" open-delay="345" activator="parent">
+                  <span
+                    >Kupac je označio narudžbu
+                    <pre class="d-inline-block opacity-40">
+#{{ order_?.id }}</pre
+                    >
+                    kao
+                    <pre class="d-inline-block underline opacity-40">
+gotova</pre
+                    >
+                  </span>
+                </VTooltip>
+              </strong>
+
               <!-- @@order-products deliver-at by com -->
               <VBtnOrderProductsDeliveryAt
-                :disabled="!orderActive$"
-                class="me-2"
+                :disabled="isEmpty(orders_) || !orderActive$"
+                class="me-2 ms-2"
                 :oid="orderActive$"
               />
 
               <!-- @@order-products status by com -->
               <VSelectManageOrderStatus
-                :disabled="!orderActive$"
+                :disabled="isEmpty(orders_) || !orderActive$"
                 :oid="orderActive$"
               />
 
               <!-- order:details -->
               <VBtn
                 @click="toggleOrderDetails"
-                :disabled="!(order_?.code || order_?.description)"
+                :disabled="isEmpty(orders_) || !(order_?.code || order_?.description)"
                 icon
                 variant="text"
                 color="on-primary"
@@ -195,7 +219,7 @@ const orderPrint = async () => {
 
               <!-- order:char -->
               <VBtn
-                :disabled="!topicChatOrderUser$"
+                :disabled="isEmpty(orders_) || !topicChatOrderUser$"
                 variant="text"
                 color="on-primary"
                 icon
@@ -217,7 +241,7 @@ const orderPrint = async () => {
 
               <!-- order:dl -->
               <VBtn
-                :disabled="!orderActive$"
+                :disabled="isEmpty(orders_) || !orderActive$"
                 @click="orderDownload"
                 color="on-primary"
                 icon
@@ -234,7 +258,7 @@ const orderPrint = async () => {
 
               <!-- order:print -->
               <VBtn
-                :disabled="!orderActive$"
+                :disabled="isEmpty(orders_) || !orderActive$"
                 @click="orderPrint"
                 color="on-primary"
                 icon
@@ -264,6 +288,9 @@ const orderPrint = async () => {
                   text="Osveži listu narudžbi"
                 />
               </VBtn>
+
+              <!-- orders toggle show completed -->
+              <VBtnToggleOrdersShowCompleted :uid="uid" />
             </div>
           </template>
         </VCardItem>
@@ -271,7 +298,7 @@ const orderPrint = async () => {
         <VContainer fluid class="ma-0 pa-1 bg-stone-50">
           <VRow dense>
             <VCol :order="1" :order-sm="0" sm="7">
-              <VDataIterator :items="products_">
+              <VDataIterator :items="!isEmpty(orders_) ? products_ : []">
                 <template #no-data>
                   <NoDataOrders />
                 </template>

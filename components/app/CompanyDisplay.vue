@@ -18,7 +18,6 @@ const { height: wHeight } = useDisplay();
 const refPanel = ref();
 const { y: yPanel } = useElementBounding(refPanel);
 const maxHPanel = computed(() => wHeight.value - yPanel.value - 1);
-
 const { user: comUser } = useQueryUsersSingle(props.uid);
 const { profile } = useProfileData(() => props.uid);
 
@@ -118,7 +117,6 @@ const productsLengthSet = (n: number) => {
     <VSheet class="*!bg-red-200" ref="refPanel">
       <VContainer fluid class="pa-0">
         <VRow>
-          
           <!-- panels -->
           <VCol
             sm="9"
@@ -174,7 +172,6 @@ const productsLengthSet = (n: number) => {
               </VTab>
             </VTabs>
           </VCol>
-
         </VRow>
       </VContainer>
     </VSheet>

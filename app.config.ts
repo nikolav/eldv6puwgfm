@@ -154,6 +154,7 @@ export default defineAppConfig({
   },
   //
   key: {
+    USER_CONFIG_PREFERENCES: "config:98BAXCnOynhYgm640So:",
     PAKETI_UPLATA: "uplata-paketa",
     MAILING_LIST: "cSd5Bq0rtwfHFZtQdu",
     MAP_DISTRICT_ACTIVE: "wYx1m0LMtLib1t7JgJ",

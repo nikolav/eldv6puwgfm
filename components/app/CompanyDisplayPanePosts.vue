@@ -12,7 +12,7 @@ const sortedPosts = computed(() => dataSortedByDateDesc(posts.value));
     <!-- list user stories -->
     <VDataIterator :items="sortedPosts" :items-per-page="-1" :loading="loading">
       <template #no-data>
-        <VCardSubtitle class="text-center"
+        <VCardSubtitle class="text-center pa-3"
           >Trenutno nema postova.</VCardSubtitle
         >
         <VSkeletonLoader boilerplate type="card-avatar" class="opacity-60" />

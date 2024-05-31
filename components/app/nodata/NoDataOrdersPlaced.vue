@@ -1,17 +1,24 @@
 <script setup lang="ts">
+import { VBtnToggleOrdersShowCompleted } from "@/components/app";
+const auth = useStoreApiAuth();
 // @@eos
 </script>
 <template>
   <div class="__spacer__ *bg-red border-s mt-10">
-    <VCardTitle class="text-medium-emphasis text-center">
-      <h4>Nemate nijednu narudžbenicu.</h4>
-      <h5>
-        Još uvek niste poručili robu na
-        <NuxtLink :to="{ name: 'index' }" target="_blank"
-          ><a class="link--prominent-base text-primary"> kantar.rs </a>
-        </NuxtLink>
-      </h5>
-    </VCardTitle>
+    <VCardItem>
+      <template #append>
+        <VBtnToggleOrdersShowCompleted :uid="get(auth.user$, 'id')" />
+      </template>
+      <VCardTitle class="text-medium-emphasis text-center">
+        <h4>Nemate nijednu narudžbenicu.</h4>
+        <h5>
+          Još uvek niste poručili robu na
+          <NuxtLink :to="{ name: 'index' }" target="_blank"
+            ><a class="link--prominent-base text-primary"> kantar.rs </a>
+          </NuxtLink>
+        </h5>
+      </VCardTitle>
+    </VCardItem>
     <VContainer>
       <VRow>
         <VCol sm="7">

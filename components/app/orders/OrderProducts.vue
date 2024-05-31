@@ -8,18 +8,22 @@ import {
   ProductPublicUrl,
   ProductsForOrderWithDetails,
   ProvideChatData,
+  ProvideOrderProductsDeliveryAt,
+  ProvideOrderProductsPackageStatus,
   TopicRatingStatus,
+  VBtnToggleOrderCompleted,
+  VBtnToggleOrdersShowCompleted,
   VChipProductCategory,
   VChipProductPrice,
   VChipProductPriceBase,
   WithComProfile,
   WithComPublicUrl,
   WithProfileData,
-  ProvideOrderProductsDeliveryAt,
-  ProvideOrderProductsPackageStatus,
 } from "@/components/app";
 
 const props = defineProps<{ user: any }>();
+
+const auth = useStoreApiAuth();
 const uid$ = computed(() => get(props.user, "id"));
 
 const PRODUCTS_LIST_OFFSET_BOTTOM = 18;
@@ -58,7 +62,14 @@ const { top: boxProductsListTop } = useElementBounding(boxProductsList);
 const topicChatMain = useGlobalVariable(CHAT_MAIN);
 
 // stores
-const { orders, reload: ordersReload } = useQueryOrdersByUser(uid$);
+const { orders: ordersAll, reload: ordersReload } = useQueryOrdersByUser(uid$);
+// filter @completed
+const { ordersShowCompleted } = useDocConfig(() => get(auth.user$, "id"));
+const orders = computed(() =>
+  ordersShowCompleted.value
+    ? ordersAll.value
+    : filter(ordersAll.value, (o) => !o.completed)
+);
 watchEffect(() => {
   order_.value = find(orders.value, { id: oid$.value });
 });
@@ -125,7 +136,6 @@ const { savePdf, printPdf } = useSavePdf();
             color="on-primary"
             elevation="1"
           >
-            <!-- @@doesnt show orig price -->
             <!-- orderTotal -->
             <VChipProductPrice
               v-if="orderTotal"
@@ -144,6 +154,7 @@ const { savePdf, printPdf } = useSavePdf();
             </VChipProductPrice>
 
             <!-- @@ -->
+            <!-- show invoices btn -->
             <VBtn
               :disabled="isEmpty(companiesForOrder)"
               class="ms-12 -rotate-2"
@@ -258,6 +269,14 @@ const { savePdf, printPdf } = useSavePdf();
               />
             </VBtn>
 
+            <!-- toggle completed btn -->
+            <VBtnToggleOrderCompleted
+              @change-completed="ordersReload"
+              :order="order_"
+              class="ms-5"
+            />
+
+            <!-- page orders -->
             <VSpacer />
             <VPagination
               v-if="1 < paginationLength"
@@ -334,7 +353,7 @@ const { savePdf, printPdf } = useSavePdf();
                                   elevation="1"
                                   rounded="lg2"
                                   class="d-flex overflow-hidden !bg-slate-50"
-                                  :height="deliveryAt || orderStatus ? 128 : 93"
+                                  :height="deliveryAt || orderStatus ? 133 : 93"
                                   v-bind="props_"
                                 >
                                   <!-- @@image -->
@@ -521,55 +540,73 @@ const { savePdf, printPdf } = useSavePdf();
                                   <div
                                     class="*bg-blue-200 pa-0 *fill-height d-flex flex-col items-end"
                                   >
-                                    <!-- @@btn:chat -->
-                                    <ProvideChatData
-                                      :topic="
-                                        topicChatOnOrder(
-                                          order_?.id,
-                                          p.user.id,
-                                          uid$
-                                        )
-                                      "
-                                      v-slot="{ length: currentChatLength }"
-                                    >
-                                      <VBtn
-                                        @click="
-                                          topicChatMain = topicChatOnOrder(
+                                    <strong class="d-flex items-center gap-1">
+                                      <em
+                                        v-if="order_?.completed"
+                                        class="d-inline-flex"
+                                      >
+                                        <VIcon
+                                          color="success-darken-1"
+                                          icon="$iconCompleted"
+                                          class="!opacity-40"
+                                        />
+                                        <VTooltip
+                                          text="Narudžba gotova"
+                                          location="bottom"
+                                          open-delay="345"
+                                          activator="parent"
+                                        />
+                                      </em>
+                                      <!-- @@btn:chat -->
+                                      <ProvideChatData
+                                        :topic="
+                                          topicChatOnOrder(
                                             order_?.id,
                                             p.user.id,
                                             uid$
                                           )
                                         "
-                                        class="ma-1 z-[1] transition-opacity"
-                                        :class="
-                                          isHovering_
-                                            ? 'opacity-100'
-                                            : 'opacity-40'
-                                        "
-                                        density="comfortable"
-                                        icon
-                                        variant="text"
+                                        v-slot="{ length: currentChatLength }"
                                       >
-                                        <VBadge
-                                          :model-value="0 < currentChatLength"
-                                          :content="currentChatLength"
-                                          color="primary3"
-                                          location="top start"
-                                          :offset-y="5"
+                                        <VBtn
+                                          @click="
+                                            topicChatMain = topicChatOnOrder(
+                                              order_?.id,
+                                              p.user.id,
+                                              uid$
+                                            )
+                                          "
+                                          class="ma-1 z-[1] transition-opacity"
+                                          :class="
+                                            isHovering_
+                                              ? 'opacity-100'
+                                              : 'opacity-40'
+                                          "
+                                          density="comfortable"
+                                          icon
+                                          variant="text"
                                         >
-                                          <VIcon
-                                            :size="28"
-                                            icon="$iconChatDots"
+                                          <VBadge
+                                            :model-value="0 < currentChatLength"
+                                            :content="currentChatLength"
+                                            color="primary3"
+                                            location="top start"
+                                            :offset-y="5"
+                                          >
+                                            <VIcon
+                                              :size="28"
+                                              icon="$iconChatDots"
+                                            />
+                                          </VBadge>
+                                          <VTooltip
+                                            text="Poruka prodavcu..."
+                                            activator="parent"
+                                            open-delay="345"
+                                            location="bottom"
                                           />
-                                        </VBadge>
-                                        <VTooltip
-                                          text="Poruka prodavcu..."
-                                          activator="parent"
-                                          open-delay="345"
-                                          location="bottom"
-                                        />
-                                      </VBtn>
-                                    </ProvideChatData>
+                                        </VBtn>
+                                      </ProvideChatData>
+                                    </strong>
 
                                     <VSpacer />
                                     <div
@@ -640,6 +677,8 @@ const { savePdf, printPdf } = useSavePdf();
                         activator="parent"
                       />
                     </VBtn>
+                    <!-- dotsv toggle show-completed -->
+                    <VBtnToggleOrdersShowCompleted :uid="uid$" />
                   </VCardTitle>
                   <!-- @@orders:list:right -->
                   <VList mandatory class="py-0" density="compact">

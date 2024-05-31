@@ -1,11 +1,12 @@
 import type { IOrder } from "@/types";
 import {
-  Q_ordersOne,
   M_manageOrder,
   M_orderProductsDeliveryDateByCompany,
   M_orderProductsStatusByCompany,
+  M_ordersSetCompleted,
   Q_getOrderProductsDeliveryDate,
   Q_getOrderProductsStatusByCompany,
+  Q_ordersOne,
 } from "@/graphql";
 export const useQueryManageOrder = (OID?: any, UID?: any) => {
   const oid = ref();
@@ -105,13 +106,15 @@ export const useQueryManageOrder = (OID?: any, UID?: any) => {
   const { mutate: mutateOrderProductsDeliveryDate } = useMutation(
     M_orderProductsDeliveryDateByCompany
   );
+  const { mutate: mutateOrdersSetCompleted, loading: cmplLoading } =
+    useMutation(M_ordersSetCompleted);
+
   const updateProductsDeliveryDate = async (date: Date) =>
     await mutateOrderProductsDeliveryDate({
       oid: oid.value,
       uid: uid.value,
       date,
     });
-
   const orderData = async (data: Record<string, any>) =>
     enabled.value ? await mutateOrderData({ oid: oid.value, data }) : undefined;
   const updateProductsStatus = async (status: number) =>
@@ -122,6 +125,8 @@ export const useQueryManageOrder = (OID?: any, UID?: any) => {
           status,
         })
       : undefined;
+  const setCompleted = async (completed: boolean) =>
+    await mutateOrdersSetCompleted({ oid: oid.value, completed });
 
   const orderLoading = computed(
     () =>
@@ -129,7 +134,8 @@ export const useQueryManageOrder = (OID?: any, UID?: any) => {
       mutateLoading.value ||
       prodStatusLoading.value ||
       pLoading.value ||
-      dLoading.value
+      dLoading.value ||
+      cmplLoading.value
   );
   watchProcessing(orderLoading);
 
@@ -159,5 +165,8 @@ export const useQueryManageOrder = (OID?: any, UID?: any) => {
     // order products delivery date
     productsDelivery,
     updateProductsDeliveryDate,
+
+    // .completed
+    setCompleted,
   };
 };

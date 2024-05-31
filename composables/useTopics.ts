@@ -23,6 +23,7 @@ export const useTopics = () => {
       TOPIC_RATING_POSTS_prefix,
       POSTS_LIKES_prefix,
       POSTS_CHAT_prefix,
+      USER_CONFIG_PREFERENCES,
     },
   } = useAppConfig();
   const comChat = (comid: number | undefined) =>
@@ -61,6 +62,8 @@ export const useTopics = () => {
     sid ? `${POSTS_LIKES_prefix}${sid}` : "";
   const chatPosts = (sid: number | undefined) =>
     sid ? `${POSTS_CHAT_prefix}${sid}` : "";
+  const userConfig = (uid: number | undefined) =>
+    uid ? `${USER_CONFIG_PREFERENCES}${uid}` : "";
 
   return {
     PAKETI_UPLATA,
@@ -83,5 +86,6 @@ export const useTopics = () => {
     ratingPosts,
     likesPosts,
     chatPosts,
+    userConfig,
   };
 };
