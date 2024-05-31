@@ -394,4 +394,7 @@ export default defineAppConfig({
       pin: "Broj PG",
     },
   },
+  date: {
+    ISO_FORMAT: "YYYY-MM-DD HH:mm:ss.SSSSSS",
+  },
 });

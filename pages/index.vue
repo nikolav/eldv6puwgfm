@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // https://github.com/surmon-china/videojs-player
-
+import dayjs from "dayjs";
 import { useDisplay } from "vuetify";
 import {
   // LikeDislike,
@@ -14,86 +14,59 @@ import {
   VCardCompanyDisplay,
 } from "@/components/app";
 import { LightboxSlides, VSnackbarStatusMessage } from "@/components/ui";
-import { Dump } from "@/components/dev";
 
 definePageMeta({
   scrollToTop: false,
 });
 
 // utils
-const auth = useStoreApiAuth();
 const { smAndUp, mdAndUp, lgAndUp } = useDisplay();
+const {
+  date: { ISO_FORMAT },
+} = useAppConfig();
 
-// products selection
-// const qPidsRandomRWD = computed(() =>
-//   lgAndUp.value
-//     ? {
-//         random: true,
-//         limit: 10,
-//       }
-//     : mdAndUp.value
-//     ? {
-//         random: true,
-//         limit: 8,
-//       }
-//     : smAndUp.value
-//     ? {
-//         random: true,
-//         limit: 6,
-//       }
-//     : {
-//         random: true,
-//         limit: 3,
-//       }
-// );
-// const { products: productsSelection } = useQueryProductsSearch(qPidsRandomRWD);
+// const
+const d1MonthAgo = dayjs().subtract(1, "month");
 
 // products popular
-const qPidsPopularRWD = computed(() =>
-  lgAndUp.value
-    ? {
-        sortBy: 8,
-        limit: 10,
-      }
-    : mdAndUp.value
-    ? {
-        sortBy: 8,
-        limit: 8,
-      }
-    : smAndUp.value
-    ? {
-        sortBy: 8,
-        limit: 6,
-      }
-    : {
-        sortBy: 8,
-        limit: 3,
-      }
+const { products: productsPopular_ } = useQueryProductsSearch({
+  sortBy: 8,
+  limit: 20,
+});
+const productsPopular = computed(() =>
+  take(
+    shuffle(productsPopular_.value),
+    lgAndUp.value ? 10 : mdAndUp.value ? 8 : smAndUp.value ? 6 : 3
+  )
 );
-const { products: productsPopular } = useQueryProductsSearch(qPidsPopularRWD);
 
-const qPidsLatestRWD = computed(() =>
-  lgAndUp.value
-    ? {
-        sortBy: 5,
-        limit: 10,
-      }
-    : mdAndUp.value
-    ? {
-        sortBy: 5,
-        limit: 8,
-      }
-    : smAndUp.value
-    ? {
-        sortBy: 5,
-        limit: 6,
-      }
-    : {
-        sortBy: 5,
-        limit: 3,
-      }
+// get random rwd-based number products newer than 1month
+const { products: productsLatest1Month } = useQueryProductsSearch({
+  date_after: d1MonthAgo.format(ISO_FORMAT),
+});
+const productsLatest = computed(() =>
+  take(
+    shuffle(productsLatest1Month.value),
+    lgAndUp.value ? 10 : mdAndUp.value ? 8 : smAndUp.value ? 6 : 3
+  )
 );
-const { products: productsLatest } = useQueryProductsSearch(qPidsLatestRWD);
+
+const { products: productsPromo } = useQueryProductsPromo();
+
+// take 10:max random users:com newer than 1month
+const { companies: companiesAll } = useQueryCompaniesList(
+  undefined,
+  false,
+  true
+);
+const companiesNew = computed(() =>
+  sampleSize(
+    filter(companiesAll.value, (com) =>
+      dayjs(com.created_at).isAfter(d1MonthAgo)
+    ),
+    10
+  )
+);
 
 // --slides-promo
 const slidesPromoMaterial = [
@@ -116,17 +89,6 @@ const slidesPromoMaterial = [
 
 const saveEmail$ = ref();
 const toggleEmailSaved = useToggleFlag();
-
-const { products: productsPromo } = useQueryProductsPromo();
-
-const { companies: companiesAll } = useQueryCompaniesList(
-  undefined,
-  false,
-  true
-);
-const companiesNew = computed(() =>
-  dataSortedByDateDesc(companiesAll.value).slice(0, 4)
-);
 // #eos
 </script>
 
@@ -208,6 +170,7 @@ const companiesNew = computed(() =>
     <!-- sponzorisano -->
     <div class="__spacer__ mt-32" />
     <HeaderProminent
+      v-if="0 < productsPromo?.length"
       class="ps-12 mt-12 text-medium-emphasis"
       style="font-size: 2.55rem"
     >
@@ -229,7 +192,7 @@ const companiesNew = computed(() =>
         </h2>
       </template>
     </HeaderProminent>
-    <VContainer fluid class="products--list">
+    <VContainer fluid class="products--list" v-if="0 < productsPromo?.length">
       <VRow dense>
         <VCol
           :class="lgAndUp ? 'cols5' : undefined"
@@ -243,30 +206,6 @@ const companiesNew = computed(() =>
         </VCol>
       </VRow>
     </VContainer>
-    <!-- <VContainer class="mx-auto">
-      <VRow dense>
-        <VCol :sm="6" :md="4" v-for="p in productsSelection" :key="p.id">
-          <CardProductDisplay @product-photos-change="noop" :product="p" />
-        </VCol>
-      </VRow>
-    </VContainer> -->
-
-    <!-- 
-      <VContainer fluid class="products--list">
-      <VRow dense>
-        <VCol
-          :class="lgAndUp ? 'cols5' : undefined"
-          :sm="4"
-          :md="3"
-          lg="auto"
-          v-for="p in products$"
-          :key="p.id"
-        >
-          <CardProductDisplay @product-photos-change="reloadAll" :product="p" />
-        </VCol>
-      </VRow>
-    </VContainer>
-  -->
 
     <!-- footer, info -->
     <VSpacer class="__scacer__ mt-36" />
@@ -294,7 +233,7 @@ const companiesNew = computed(() =>
 
     <!-- welcome -->
     <div class="__scacer__ mt-32" />
-    <div class="max-w-[1366px] mx-auto">
+    <div v-if="0 < companiesNew?.length" class="max-w-[1366px] mx-auto">
       <HeaderProminent
         class="ps-10 mt-12 text-medium-emphasis"
         text="Veliki pozdrav novim članovima 🚀💪🏻"
