@@ -123,3 +123,5 @@ export { default as IconWrench } from "./IconWrench.vue";
 export { default as IconAccountConfigure } from "./IconAccountConfigure.vue";
 export { default as IconBrandTag } from "./IconBrandTag.vue";
 export { default as IconCompleted } from "./IconCompleted.vue";
+export { default as IconPinterest } from "./IconPinterest.vue";
+export { default as IconReddit } from "./IconReddit.vue";

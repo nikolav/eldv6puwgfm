@@ -1,14 +1,27 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import { HeaderProminent } from "@/components/app";
 import { TopicChat } from "@/components/app";
+const { width } = useDisplay();
 // @@eos
 </script>
 <template>
   <VContainer class="bg-stone-200 rounded-lg mx-auto pa-10 border-s-lg shadow">
     <HeaderProminent
-      style="font-size: 2rem"
-      class="ps-12 text-medium-emphasis"
-      text="KANTAR.RS, kako ovo funkcioniše?"
+      :style="`font-size: ${
+        855 < width
+          ? '2rem'
+          : 722 < width
+          ? '1.55rem'
+          : 555 < width
+          ? '1.22rem'
+          : 512 < width
+          ? '1rem'
+          : '1.55rem'
+      }`"
+      class="text-medium-emphasis"
+      :class="[600 < width ? 'ps-12' : 'ps-0']"
+      :text="512 < width ? 'kantar.rs, kako ovo funkcioniše?' : 'kantar.rs'"
     >
       <template #prepend>
         <VIcon class="opacity-20" :size="42" icon="$iconHelpCircle" />
@@ -16,10 +29,11 @@ import { TopicChat } from "@/components/app";
       <template #append>
         <VSpacer />
         <TopicChat
+          v-if="333 < width"
           class="scale-[122%]"
           title="Postavite nam pitanje..."
           topic="kako-ovo-funkcionise--05rlDPdqpMiZ8bc"
-          color="info-darken-2"
+          color="info"
         />
         <div class="__spacer__ me-5" />
       </template>

@@ -501,9 +501,24 @@ const toggleEmailSaved = useToggleFlag();
     <div class="__spacer__ mt-32" />
     <div class="max-w-[1492px] mx-auto">
       <HeaderProminent
-        class="ps-12 mt-20 pb-4 text-medium-emphasis"
-        text="Ovako su nas ocenili naši korisnici i kupci"
-        style="font-size: 2rem"
+        class="mt-20 pb-4 text-medium-emphasis"
+        :class="[500 < width ? 'ps-12' : 'ps-0']"
+        :text="
+          355 < width
+            ? 'Ovako su nas ocenili naši korisnici i kupci'
+            : 'Ovako ste nas ocenili'
+        "
+        :style="`font-size: ${
+          852 < width
+            ? '2rem'
+            : 612 < width
+            ? '1.55rem'
+            : 466 < width
+            ? '1.22rem'
+            : 388 < width
+            ? '1rem'
+            : '.88rem'
+        }`"
       >
         <template #prepend>
           <svg
@@ -535,9 +550,12 @@ const toggleEmailSaved = useToggleFlag();
         v-slot="{ save: mailSave }"
       >
         <HeaderProminent
-          class="ps-10 mt-8 text-medium-emphasis"
-          text="Ostanite informisani o novostima na KANTAR.RS"
-          style="font-size: 2rem"
+          class="mt-8 text-medium-emphasis"
+          :class="[355 < width ? 'ps-10' : 'ps-2']"
+          text="Ostanite informisani"
+          :style="`font-size: ${
+            422 < width ? '2rem' : 292 < width ? '1.33rem' : '1rem'
+          }`"
         >
           <template #prepend>
             <VIcon
@@ -548,16 +566,20 @@ const toggleEmailSaved = useToggleFlag();
             />
           </template>
         </HeaderProminent>
-        <VCol offset-sm="1" class="*bg-red !max-w-[912px]">
+        <VCol class="*bg-red !max-w-[912px]">
           <VContainer>
-            <VRow class="!ms-20">
-              <VCol sm="6">
+            <VRow
+              :class="
+                1022 < width ? '!ms-20' : 972 < width ? '!ms-10' : '!ms-0'
+              "
+            >
+              <VCol md="6">
                 <VCardText style="font-size: 106%" class="opacity-80">
                   Želim da povremeno dobijam obaveštenja o proizvodima i
                   uslugama na KANTAR.RS na ovu email adresu:
                 </VCardText>
               </VCol>
-              <VCol sm="6">
+              <VCol md="6">
                 <VForm
                   @submit.prevent="mailSave(saveEmail$)"
                   autocomplete="off"
@@ -566,12 +588,16 @@ const toggleEmailSaved = useToggleFlag();
                   <VTextField
                     type="email"
                     name="save_email"
-                    prepend-icon="$iconEmailAt"
+                    :prepend-icon="322 < width ? '$iconEmailAt' : undefined"
                     v-model.trim="saveEmail$"
                     variant="underlined"
                     clearable
                   />
-                  <VBtn class="ms-3" size="x-large" type="submit" variant="text"
+                  <VBtn
+                    class="ms-3"
+                    :size="422 < width ? 'x-large' : undefined"
+                    type="submit"
+                    variant="text"
                     >ok</VBtn
                   >
                 </VForm>

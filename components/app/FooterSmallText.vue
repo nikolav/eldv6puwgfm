@@ -8,7 +8,7 @@
       fluid
       class="pt-12 !pb-32 bg-stone-400 border-t-lg border-primary border-opacity-100"
     >
-      <div class="mx-12 space-y-3">
+      <div class="space-y-5">
         <section>
           <h2>Ko smo mi?</h2>
           <p>
@@ -136,29 +136,58 @@
       style="font-size: 81%"
     >
       <VCol sm="4" class="d-flex flex-col items-center">
-        <NuxtLink to="/">
-          <strong class="">
+        <div class="d-flex flex-col items-center justify-center">
+          <NuxtLink to="/">
             <VIcon
               color="primary-darken-1"
-              style="font-size: 8rem"
+              class="scale-[2.55]"
+              style="font-size: 5.6rem"
               icon="$iconLogoKantarH"
-              class="-translate-y-[3rem] -translate-x-[5rem]"
             />
+          </NuxtLink>
+          <strong
+            style="font-size: 1rem"
+            class="d-flex items-center gap-3 px-1 -translate-x-1"
+          >
+            <NuxtLink to="#" external target="_blank">
+              <a class="link--primary-base text-primary-darken-1">
+                <VIcon size="large" icon="$iconFacebook" />
+              </a>
+            </NuxtLink>
+            <NuxtLink to="#" external target="_blank">
+              <a class="link--primary-base text-primary-darken-1">
+                <VIcon icon="$iconInstagram" />
+              </a>
+            </NuxtLink>
+            <NuxtLink to="#" external target="_blank">
+              <a class="link--primary-base text-primary-darken-1">
+                <VIcon icon="$iconTwitterX" />
+              </a>
+            </NuxtLink>
+            <NuxtLink to="#" external target="_blank">
+              <a class="link--primary-base text-primary-darken-1">
+                <VIcon icon="$iconPinterest" />
+              </a>
+            </NuxtLink>
+            <NuxtLink to="#" external target="_blank">
+              <a class="link--primary-base text-primary-darken-1">
+                <VIcon icon="$iconLinkedin" />
+              </a>
+            </NuxtLink>
+            <NuxtLink to="#" external target="_blank">
+              <a class="link--primary-base text-primary-darken-1">
+                <VIcon icon="$iconYotubeVideo" />
+              </a>
+            </NuxtLink>
+            <NuxtLink to="#" external target="_blank">
+              <a class="link--primary-base text-primary-darken-1">
+                <VIcon icon="$iconReddit" />
+              </a>
+            </NuxtLink>
           </strong>
-        </NuxtLink>
+        </div>
       </VCol>
-      <VCol sm="4">
-        <h2>KANTAR.RS</h2>
-        <h5>
-          <NuxtLink to="/">
-            <a>Kako ovo radi?</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>Sponzori</a>
-          </NuxtLink>
-        </h5>
+      <VCol sm="4" class="">
         <h5>
           <NuxtLink to="/">
             <a>Česta pitanja</a>
@@ -166,12 +195,7 @@
         </h5>
         <h5>
           <NuxtLink to="/">
-            <a>Izbor</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
-            <a>KANTAR.RS recenzije</a>
+            <a>Uslovi korišćenja</a>
           </NuxtLink>
         </h5>
         <h5>
@@ -179,12 +203,46 @@
             <a>Svi naši proizvođači i zanatlije</a>
           </NuxtLink>
         </h5>
-      </VCol>
-      <VCol sm="4">
-        <h2>Kontaktirajte nas</h2>
         <h5>
           <NuxtLink to="/">
-            <a>Pitanje ? Kontaktirajte nas</a>
+            <a>O nama</a>
+          </NuxtLink>
+        </h5>
+        <h5>
+          <NuxtLink to="/">
+            <a>Uputstvo za poručivanje</a>
+          </NuxtLink>
+        </h5>
+        <h5>
+          <NuxtLink to="/">
+            <a>Kontakt za prodavce</a>
+          </NuxtLink>
+        </h5>
+        <h5>
+          <NuxtLink to="/">
+            <a>Politika privatnosti</a>
+          </NuxtLink>
+        </h5>
+      </VCol>
+      <VCol sm="4">
+        <h5>
+          <NuxtLink to="/">
+            <a>Cenovnik</a>
+          </NuxtLink>
+        </h5>
+        <h5>
+          <NuxtLink to="/">
+            <a>Dostava i plaćanje</a>
+          </NuxtLink>
+        </h5>
+        <h5>
+          <NuxtLink to="/">
+            <a>Reklamacije i otkaz</a>
+          </NuxtLink>
+        </h5>
+        <h5>
+          <NuxtLink to="/">
+            <a>Pravna lica</a>
           </NuxtLink>
         </h5>
         <h5>
@@ -194,17 +252,12 @@
         </h5>
         <h5>
           <NuxtLink to="/">
-            <a>Zapošljavamo</a>
-          </NuxtLink>
-        </h5>
-        <h5>
-          <NuxtLink to="/">
             <a>Da li ste ozbiljan kupac?</a>
           </NuxtLink>
         </h5>
         <h5>
           <NuxtLink to="/">
-            <a>Da li želite da prodajete na KANTAR.RS?</a>
+            <a>Zapošljavamo</a>
           </NuxtLink>
         </h5>
       </VCol>

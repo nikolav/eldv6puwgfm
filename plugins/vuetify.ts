@@ -33,6 +33,8 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconReddit,
+  IconPinterest,
   IconCompleted,
   IconBrandTag,
   IconAccountConfigure,
@@ -267,6 +269,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         menu: IconMenu,
         // # add: <VIcon icon="$other">
         // # @icons:kantar.rs
+        iconReddit: IconReddit,
         iconFacebookColor: IconFacebookColor,
         iconBrasno: IconBrasno,
         iconGlobeKantar: IconGlobeKantar,
@@ -287,6 +290,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconPinterest: IconPinterest,
         iconCompleted: IconCompleted,
         iconBrandTag: IconBrandTag,
         iconAccountConfigure: IconAccountConfigure,
