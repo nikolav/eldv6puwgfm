@@ -327,7 +327,6 @@ const dsBlank = { search: "", value: "" };
       >
         <template #default="{ props, isHovering }">
           <path
-            v-bind="props"
             :d="data.d"
             :fill-opacity="
               selected$ == data.value
@@ -339,6 +338,7 @@ const dsBlank = { search: "", value: "" };
             @mouseover="$emit('update:hoverDistrict', omit(data, ['d']))"
             @click="districtSelected(omit(data, ['d']))"
             class="cursor-pointer"
+            v-bind="props"
           />
           <text
             v-if="0 < Number(counted[data.search])"
@@ -356,6 +356,9 @@ const dsBlank = { search: "", value: "" };
   </svg>
 </template>
 <style lang="scss" scoped>
+svg g {
+  scale: 1;
+}
 path {
   transition-property: fill-opacity;
   transition-duration: 333ms;

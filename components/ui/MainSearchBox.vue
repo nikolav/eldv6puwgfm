@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 const props = defineProps<{
   modelValue?: string;
 }>();
@@ -8,6 +9,8 @@ const emit = defineEmits<{
 
 const submitSearch = noop;
 
+const { width } = useDisplay();
+
 // @@eos
 </script>
 <template>
@@ -15,7 +18,11 @@ const submitSearch = noop;
     <!-- @main:search -->
     <VForm
       @submit.prevent
-      class="*bg-red mx-auto mt-[92px] max-w-[512px] sm:max-w-[550px] sm:mt-[122px] sm:translate-x-[7.45rem] 2xl:mt-[109px] 2xl:translate-x-[20rem]"
+      class="*bg-red mx-auto mt-[92px] max-w-[512px] sm:mt-[122px] translate-x-[7.45rem] 2xl:mt-[109px] 2xl:translate-x-[20rem]"
+      :class="[
+        width < 800 ? 'translate-x-0' : undefined,
+        width < 650 ? 'mt-[104px] max-w-[92%]' : undefined,
+      ]"
     >
       <VTextField
         :model-value="props.modelValue"

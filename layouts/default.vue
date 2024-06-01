@@ -166,7 +166,7 @@ watch(search_, debounceSearchHandle);
               open-delay="222"
               close-delay="222"
               location="bottom"
-              :offset="[-5, 0]"
+              :offset="[-2, 0]"
               width="100%"
               class="w-full"
             >
@@ -178,15 +178,7 @@ watch(search_, debounceSearchHandle);
                       isActiveMenu.value = false;
                     }
                   "
-                >
-                  <p>
-                    [{{ isActiveMenu }}] Lorem ipsum dolor sit, amet consectetur
-                    adipisicing elit. Corporis, repellat? Suscipit corrupti eum
-                    laboriosam deserunt, culpa consequatur. Modi, blanditiis
-                    debitis inventore soluta ratione quos eligendi eum nisi,
-                    odio obcaecati earum.
-                  </p>
-                </VCardMenuPopup>
+                />
               </template>
             </VMenu>
           </VBtn>

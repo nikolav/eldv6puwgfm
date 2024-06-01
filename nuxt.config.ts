@@ -39,6 +39,11 @@ export default defineNuxtConfig({
   // target: "static",
   // generate: { routes: ["/gazdinstvo"] },
 
+  // #https://nuxt.com/docs/guide/concepts/rendering#:~:text=defineNuxtConfig(%7B-,routeRules,-%3A%20%7B
+  // routeRules: {
+  //   "/": { prerender: true },
+  // },
+
   modules: [
     "@vueuse/nuxt",
     "@pinia/nuxt",
@@ -98,8 +103,6 @@ export default defineNuxtConfig({
     //   },
     // ],
   },
-  // #https://nuxt.com/docs/guide/concepts/rendering#:~:text=defineNuxtConfig(%7B-,routeRules,-%3A%20%7B
-  // routeRules: {},
   app: {
     //
     baseURL: BASE_DIR,
@@ -209,8 +212,8 @@ export default defineNuxtConfig({
   // #Selective Pre-rendering @nitro
   // nitro: {
   //   prerender: {
-  //     routes: ["/user/1", "/user/2"],
-  //     ignore: ["/dynamic"],
+  //     // routes: ["/"],
+  //     // ignore: ["/dynamic"],
   //   },
   // },
   //

@@ -5,7 +5,7 @@ import { AvatarThumb, VCardMainSearchConfig } from "@/components/app";
 
 const props = defineProps<{ height: number }>();
 
-const { smAndUp } = useDisplay();
+const { smAndUp, width } = useDisplay();
 const {
   app: { DEFAULT_TRANSITION },
   key: { APP_PROCESSING },
@@ -36,17 +36,18 @@ const search$$ = useStoreSearchConfig();
   <VAppBar flat :height="height" elevation="1" id="appbar--main">
     <!-- @@ -->
     <VAppBarTitle
-      v-if="smAndUp"
+      v-if="420 < width"
       id="appbar-main--title"
       class="*bg-red opacity-95 hover:opacity-100"
     >
       <AvatarThumb
-        v-if="auth.isAuth$ && !auth.isDefault$"
+        v-if="710 < width && auth.isAuth$ && !auth.isDefault$"
         class="me-2"
         :size="42"
       />
       <!-- logo -->
       <strong
+        v-if="620 < width ? true : auth.isAuthenticated$ ? false : true"
         @click="appMenuCache(current$)"
         class="d-inline-block hover:scale-105 transition-transform"
       >
@@ -62,7 +63,13 @@ const search$$ = useStoreSearchConfig();
 
     <template #append>
       <!-- :search -->
-      <VBtn :id="search$$.BUTTON_ID" icon variant="text" color="primary">
+      <VBtn
+        v-if="300 < width || !auth.isAuthenticated$"
+        :id="search$$.BUTTON_ID"
+        icon
+        variant="text"
+        color="primary"
+      >
         <VIcon icon="$iconSearchSettings" :size="32" />
         <VTooltip
           location="bottom"
@@ -99,7 +106,12 @@ const search$$ = useStoreSearchConfig();
         target="_blank"
         to="https://docs.google.com/forms/d/e/1FAIpQLSfQF5FTcZlck8_hlmtUlKXT5vuTk-D6nUC6YbntJzTF8W2LKA/viewform?usp=sf_link"
       >
-        <VBtn icon variant="text" color="primary-darken-1" class="ms-10">
+        <VBtn
+          icon
+          variant="text"
+          color="primary-darken-1"
+          :class="[480 < width ? 'ms-10' : 400 < width ? 'ms-5' : 'ms-1']"
+        >
           <VIcon :size="41" icon="$iconBrandTag" class="rotate-[5deg]" />
           <VTooltip activator="parent" location="bottom" open-delay="345">
             Upitnik za izradu brenda...
@@ -108,7 +120,12 @@ const search$$ = useStoreSearchConfig();
       </NuxtLink>
 
       <NuxtLink :to="{ name: 'paketi' }" target="_blank">
-        <VBtn icon variant="text" color="primary-darken-1" class="ms-10">
+        <VBtn
+          icon
+          variant="text"
+          color="primary-darken-1"
+          :class="[480 < width ? 'ms-10' : 400 < width ? 'ms-5' : 'ms-1']"
+        >
           <VIcon :size="32" icon="$iconMedal" class="-rotate-[4deg]" />
           <VTooltip activator="parent" location="bottom" open-delay="345">
             Postanite
@@ -124,23 +141,22 @@ const search$$ = useStoreSearchConfig();
       <VBtn
         v-if="!auth.isAuth$ || auth.isDefault$"
         :to="{ name: 'auth-login' }"
-        class="text-none group/auth fill-height ms-5"
-        color="primary-darken-1"
+        class="text-none fill-height"
+        :class="[512 < width ? 'ms-12' : 'ms-2']"
+        color="primary"
         rounded="0"
+        icon
+        width="61"
       >
-        <VIcon
-          size="xx-large"
-          start
-          icon="$iconPerson"
-          class="group-hover/auth:scale-110 transition-transform"
-        />
-        <strong> Prijava/Registracija </strong>
-        <VTooltip
-          location="bottom"
-          text="Kupci, prodavci, članovi"
-          activator="parent"
-          open-delay="456"
-        />
+        <VIcon size="xx-large" icon="$iconUserShield" />
+        <VTooltip location="bottom" activator="parent" open-delay="456">
+          <VIcon
+            size="small"
+            icon="$iconLock"
+            class="opacity-40 -translate-y-[2px]"
+          />
+          <em class="ms-1"> Prijava </em>
+        </VTooltip>
       </VBtn>
 
       <!-- :nav -->
@@ -150,7 +166,7 @@ const search$$ = useStoreSearchConfig();
           variant="text"
           icon
           color="primary"
-          class="ms-10"
+          :class="[480 < width ? 'ms-10' : 400 < width ? 'ms-5' : 'ms-1']"
         >
           <VIcon icon="$iconStoreFront" size="35" />
           <VTooltip activator="parent" location="bottom" open-delay="345">
@@ -160,6 +176,7 @@ const search$$ = useStoreSearchConfig();
             <span style="font-size: 111%">Pijaca</span>
           </VTooltip>
         </VBtn>
+
         <VBtn
           :to="{
             name: auth.isCompany$ ? 'company-profile' : 'user-orders',
@@ -167,7 +184,7 @@ const search$$ = useStoreSearchConfig();
           variant="text"
           icon
           color="primary"
-          class="ms-4 ms-sm-10"
+          :class="[480 < width ? 'ms-10' : 400 < width ? 'ms-5' : 'ms-1']"
         >
           <VIcon
             :icon="auth.isCompany$ ? '$iconAdjustSettings' : '$iconUserCircle'"
@@ -180,6 +197,7 @@ const search$$ = useStoreSearchConfig();
             open-delay="345"
           />
         </VBtn>
+
         <VForm @submit.prevent="authSubmitLogout" autocomplete="off">
           <VBtn
             type="submit"
@@ -187,18 +205,23 @@ const search$$ = useStoreSearchConfig();
             variant="text"
             color="primary-darken-1"
             size="small"
-            class="ms-8 ms-sm-16 me-1 me-sm-2"
+            class="me-1 me-sm-2"
+            :class="[
+              width < 660 ? (width < 400 ? 'ms-0' : 'ms-5') : 'ms-sm-16',
+            ]"
           >
             <VIcon icon="$iconPowerOff" />
             <VTooltip
               location="bottom"
               open-delay="345"
               activator="parent"
-              text="Odjava/Kraj"
+              text="Kraj"
             />
           </VBtn>
         </VForm>
+
         <VBtn
+          v-if="false"
           @click="topicChatMain = 'chat:main'"
           variant="text"
           icon

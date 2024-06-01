@@ -20,7 +20,7 @@ definePageMeta({
 });
 
 // utils
-const { smAndUp, mdAndUp, lgAndUp } = useDisplay();
+const { smAndUp, mdAndUp, lgAndUp, width } = useDisplay();
 const {
   date: { ISO_FORMAT },
 } = useAppConfig();
@@ -72,12 +72,12 @@ const companiesNew = computed(() =>
 const slidesPromoMaterial = [
   {
     type: "pdf",
-    src: "/prodajna-prezentacija.pdf",
+    src: "/prodajna-prezentacija-12941639168.pdf",
     caption: "Prodajna prezentacija | KANTAR.RS",
   },
   {
     type: "pdf",
-    src: "/uputstvo-za-fotografisanje-hrane.pdf",
+    src: "/uputstvo-za-fotografisanje-hrane-12941639168.pdf",
     caption: "Uputstvo za fotografisanje hrane | KANTAR.RS",
   },
   {
@@ -139,8 +139,11 @@ const toggleEmailSaved = useToggleFlag();
     <!-- popularno -->
     <HeaderProminent
       text="Najtraženije na kantar.rs "
-      class="ps-12 mt-6 text-medium-emphasis"
-      style="font-size: 2.55rem"
+      class="mt-6 text-medium-emphasis"
+      :class="[620 < width ? 'ps-12' : '!ps-0']"
+      :style="`font-size: ${
+        612 < width ? '2.55rem' : 420 < width ? '1.77rem' : '1rem'
+      }`"
     >
       <template #prepend>
         <VIcon
@@ -184,9 +187,11 @@ const toggleEmailSaved = useToggleFlag();
       </template>
       <template #text>
         <h2
-          class="ps-16 mt-12 text-truncate font-sans tracking-wider text-medium-emphasis"
-          style="font-size: 3.14rem"
-          text="Ovog meseca za Vas smo izdvojili: "
+          class="mt-12 text-truncate font-sans tracking-wider text-medium-emphasis"
+          :class="[720 < width ? 'ps-16' : 'ps-3']"
+          :style="`font-size: ${
+            580 < width ? '3.14rem' : 400 < width ? '2rem' : '1.22rem'
+          }`"
         >
           Premium članovi
         </h2>
@@ -209,15 +214,20 @@ const toggleEmailSaved = useToggleFlag();
 
     <!-- footer, info -->
     <VSpacer class="__scacer__ mt-36" />
-    <FooterKakoOvoFunkcionise class="mt-16 !max-w-[1350px] !mx-auto" />
+    <div class="px-2">
+      <FooterKakoOvoFunkcionise class="mt-16 !max-w-[1350px] !mx-auto" />
+    </div>
 
     <!-- blog, receipt, links -->
     <VSpacer class="__scacer__ mt-36" />
     <div class="max-w-[1366px] mx-auto">
       <HeaderProminent
-        style="font-size: 2.44rem"
-        class="ps-10 mt-8 text-medium-emphasis"
-        text="Budite u toku sa trendovima"
+        :style="`font-size: ${
+          480 < width ? '2.44rem' : 322 < width ? '1.88rem' : '1.22rem'
+        }`"
+        class="mt-8 text-medium-emphasis"
+        :class="[420 < width ? 'ps-10' : 'ps-2']"
+        text="Ispratite trendove"
       >
         <template #prepend>
           <VIcon
@@ -235,9 +245,20 @@ const toggleEmailSaved = useToggleFlag();
     <div class="__scacer__ mt-32" />
     <div v-if="0 < companiesNew?.length" class="max-w-[1366px] mx-auto">
       <HeaderProminent
-        class="ps-10 mt-12 text-medium-emphasis"
-        text="Veliki pozdrav novim članovima 🚀💪🏻"
-        style="font-size: 2.44rem"
+        class="mt-12 text-medium-emphasis"
+        :class="[555 < width ? 'ps-10' : 'ps-2']"
+        text="Pozdrav novim članovima"
+        :style="`font-size: ${
+          750 < width
+            ? '2.44rem'
+            : 555 < width
+            ? '2.22rem'
+            : 455 < width
+            ? '1.88rem'
+            : 300 < width
+            ? '1.22rem'
+            : '1rem'
+        }`"
       >
         <template #prepend>
           <div
@@ -275,9 +296,20 @@ const toggleEmailSaved = useToggleFlag();
     <!-- novi proizvode -->
     <div class="__spacer__ mt-24" />
     <HeaderProminent
-      class="ps-12 mt-32 pb-5 text-medium-emphasis"
+      class="mt-32 pb-5 text-medium-emphasis"
+      :class="[566 < width ? 'ps-12' : 'ps-2']"
       text="Najnoviji ulistani proizvodi"
-      style="font-size: 2.44rem"
+      :style="`font-size: ${
+        777 < width
+          ? '2.44rem'
+          : 532 < width
+          ? '2.22rem'
+          : 420 < width
+          ? '1.66rem'
+          : 320 < width
+          ? '1.22rem'
+          : '1rem'
+      }`"
     >
       <template #prepend>
         <VIcon
@@ -314,15 +346,26 @@ const toggleEmailSaved = useToggleFlag();
     <VSpacer class="__spacer__ mt-40" />
     <div class="max-w-[1366px] mx-auto">
       <HeaderProminent
-        class="ps-10 mt-5 text-medium-emphasis"
-        text="Pomažemo Vam da se Vaš proizvod vidi"
-        style="font-size: 2.55rem"
+        class="mt-5 text-medium-emphasis"
+        :class="[820 < width ? 'ps-10' : 'ps-0']"
+        text="Prepoznatljiv proizvod"
+        :style="`font-size: ${
+          777 < width
+            ? '2.55rem'
+            : 555 < width
+            ? '2.22rem'
+            : 420 < width
+            ? '1.55rem'
+            : 370 < width
+            ? '1.22rem'
+            : '1rem'
+        }`"
       >
         <template #append>
           <VSpacer />
-          <div class="scale-125 translate-y-2 me-10">
+          <div v-if="344 < width" class="scale-125 translate-y-2 me-10">
             <TopicChat
-              color="info-darken-2"
+              color="on-primary"
               title="Korisnička podrška"
               topic="user-assist:web"
             />

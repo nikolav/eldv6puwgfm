@@ -11,7 +11,7 @@ const { nodeMain } = useStoreMenuCategoriesFull();
 const main = computed(() =>
   nodeMain
     .ls()
-    .find((node) => props.menuItem?.category === node.value()?.category)
+    .find((node) => props.menuItem?.category == node.value()?.category)
 );
 const dataNodeMain = computed(() => main.value?.value());
 
@@ -30,21 +30,6 @@ onClickOutside(refVCardMenuPopup, props.close);
     class="component--VCardMenuPopup w-full !bg-stone-50 pa-0 ma-0 border-primary border-opacity-100 bg--popup"
     border="t-lg"
   >
-    <!-- 
-
-      <VCardTitle
-        style="font-size: 1.72rem"
-        class="opacity-75 !tracking-wider d-flex"
-      >
-        <VSpacer />
-        <VSpacer />
-        <span>
-          {{ dataNodeMain?.title }}
-        </span>
-        <VSpacer />
-      </VCardTitle> 
-
-    -->
     <VContainer class="pa-0 ma-0" fluid>
       <VRow class="pa-0 ma-0">
         <VCol md="5">

@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import fakeOverviews from "@/assets/fake-overviews-db.json";
+
+const { width } = useDisplay();
 
 const c0$ = useLocalStorage("FJffMgUzA37", () => random(90123, 901234));
 const { count: c$, inc: counterIncrement } = useCounter(c0$.value);
@@ -31,13 +34,25 @@ const { height: hOverviews } = useElementSize(refVSheet);
 </script>
 <template>
   <VCol
-    offset-sm="2"
-    class="grid grid-cols-[355px,1fr] !max-w-[920px] bg-stone-100 pa-3 rounded rounded-s-lg"
+    :offset-sm="1120 < width ? 2 : 1022 < width ? 1 : undefined"
+    class="!max-w-[920px] bg-stone-100 rounded rounded-s-lg"
+    :class="[
+      1022 < width ? 'pa-3' : 940 < width ? 'ps-10' : 'ps-2',
+      800 < width
+        ? 'grid grid-cols-[355px,1fr]'
+        : 640 < width
+        ? 'grid grid-cols-[1fr,1fr]'
+        : 'd-block',
+    ]"
   >
     <!-- :cell-l -->
     <div>
       <VSheet ref="refVSheet" class="pa-2" rounded="lg" elevation="2">
-        <VResponsive :aspect-ratio="16 / 9" class="*bgred text-center">
+        <VResponsive
+          :max-height="640 < width ? undefined : 212"
+          :aspect-ratio="16 / 9"
+          class="*bgred text-center"
+        >
           <VCardTitle class="text-medium-emphasis">Prosečna ocena:</VCardTitle>
           <div class="mb-auto">
             <div class="d-flex items-center justify-center mt-2">
@@ -56,7 +71,9 @@ const { height: hOverviews } = useElementSize(refVSheet);
             >
           </div>
           <VSpacer class="mb-4" />
-          <VCardSubtitle style="font-size: 0.88rem">
+          <VCardSubtitle
+            :style="`font-size: ${322 < width ? '0.88rem' : '.66rem'}`"
+          >
             <span class="text-medium-emphasis">Na osnovu</span>
             <pre class="d-inline-block mx-1 font-bold">{{
               numberFormatLocale(c$)
@@ -67,7 +84,7 @@ const { height: hOverviews } = useElementSize(refVSheet);
       </VSheet>
     </div>
     <!-- :cell-r -->
-    <div>
+    <div :class="640 < width ? undefined : 'pt-3'">
       <div
         :style="`height: ${hOverviews + 16}px !important`"
         class="pt-1 pb-3 overflow-auto scrollbar-thin-light space-y-3 overflow-x-hidden"

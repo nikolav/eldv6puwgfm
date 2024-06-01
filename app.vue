@@ -1,15 +1,9 @@
 <script setup lang="ts">
-// # force the color mode at the page level (only parent)
-// # by setting the colorMode property, nuxt3 only
-// definePageMeta({
-//   colorMode: "light",
-// });
-
-import { SpinnerAppProcessing } from "@/components/ui";
+import { SpinnerAppProcessing, VSnackbarStatusMessage } from "@/components/ui";
 import {
   Cart,
-  TopicChatSidebarMain,
   NotifyUnauthenticated,
+  TopicChatSidebarMain,
 } from "@/components/app";
 import { PROFILE, AVATAR } from "@/src";
 
@@ -40,22 +34,22 @@ const auth = useStoreApiAuth();
 const cart = useStoreCart();
 const { destroy: appMenuCacheDestroy } = useAppMenu();
 
-// ensure defaultauth .readonly
+// default guest key @!auth
 onceOn(
   () => auth.initialized$ && !auth.isAuth$,
   () => {
     nextTick(() => {
-      // console.clear();
       if (!auth.token$) auth.tokenPutDefault();
     });
   }
 );
-// auth update
+// @auth update
 watch(
   [() => auth.isAuth$, () => auth.isDefault$],
   async ([isAuth, isDefault]) => {
     if (!isDefault) {
       if (!isAuth) {
+        // logouts handle; clear cache, hard reload
         appMenuCacheDestroy();
         return reloadNuxtApp({
           path: "/",
@@ -76,10 +70,7 @@ watch(
 );
 
 // # provides:profile
-const { profile } = useUserData(() => get(auth.user$, "id"));
-const avatarUrl = computed(() =>
-  resourceUrl(get(profile.value, "avatar.data.file_id"))
-);
+const { profile, avatar: avatarUrl } = useUserData(() => get(auth.user$, "id"));
 provide(PROFILE, profile);
 provide(AVATAR, avatarUrl);
 
@@ -111,23 +102,9 @@ useSeoMeta({
     <TopicChatSidebarMain />
 
     <!-- @signal:order-sent -->
-    <VSnackbar
-      v-model="flagOrderSendStatus$"
-      color="transparent"
-      variant="text"
-    >
-      <VAlert type="success" prominent elevation="4">
-        <div class="d-flex justify-between items-center gap-4 sm:gap-8">
-          <p>Narudžba je uspešno poslata.</p>
-          <VBtn
-            @click="flagOrderSendStatus$ = false"
-            color="on-success"
-            variant="tonal"
-            >ok</VBtn
-          >
-        </div>
-      </VAlert>
-    </VSnackbar>
+    <VSnackbarStatusMessage v-model="flagOrderSendStatus$">
+      <p>Narudžba je uspešno poslata.</p>
+    </VSnackbarStatusMessage>
 
     <!-- @screen:cart -->
     <!-- default dialog z-index [1004] -->
