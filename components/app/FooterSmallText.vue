@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
+const { smAndUp } = useDisplay();
 // @@eos
 </script>
 <template>
@@ -132,7 +134,7 @@
     </VContainer>
     <VRow
       no-gutters
-      class="pa-12 bg-stone-500 ma-0 border-t border-primary-darken-1 border-opacity-100"
+      class="pa-12 bg-stone-500 ma-0 border-t border-primary-darken-1 border-opacity-100 space-y-10"
       style="font-size: 81%"
     >
       <VCol sm="4" class="d-flex flex-col items-center">
@@ -187,7 +189,12 @@
           </strong>
         </div>
       </VCol>
-      <VCol sm="4" class="">
+      <VCol
+        offset-sm="1"
+        sm="2"
+        :class="smAndUp ? 'translate-x-3' : 'text-center'"
+        class="space-y-1"
+      >
         <h5>
           <NuxtLink to="/">
             <a>Česta pitanja</a>
@@ -224,7 +231,12 @@
           </NuxtLink>
         </h5>
       </VCol>
-      <VCol sm="4">
+      <VCol
+        offset-sm="1"
+        sm="2"
+        :class="smAndUp ? 'translate-x-3' : 'text-center'"
+        class="space-y-1"
+      >
         <h5>
           <NuxtLink to="/">
             <a>Cenovnik</a>
