@@ -1,11 +1,22 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
+const { width, mdAndUp } = useDisplay();
+
 // @@eos
 </script>
 <template>
-  <VContainer>
+  <VContainer
+    fluid
+    :class="1333 < width ? '!px-32' : 1022 < width ? '!px-24' : 512 < width ? '!px-12' : '!px-1'"
+  >
     <VRow>
       <VCol md="6">
-        <VSheet rounded="xl" class="overflow-hidden" elevation="2">
+        <VSheet
+          :max-height="mdAndUp ? undefined : 322"
+          rounded="xl"
+          class="overflow-hidden"
+          elevation="2"
+        >
           <VImg
             height="322"
             cover
@@ -16,33 +27,67 @@
               class="shadow-lg py-3 px-5 bg-black/50 text-white/95 position-absolute w-full min-h-[82px] bottom-0 inset-x-0"
             >
               <VCardTitle>
-                <h2 class="tracking-widest mb-3" style="font-size: 3.12rem">
-                  KANTAR.RS blog
-                </h2>
-                <VBtn
-                  :to="{ name: 'blog' }"
-                  variant="elevated"
-                  elevation="3"
-                  size="x-large"
-                  rounded="pill"
-                  color="primary-lighten-1"
-                  class="px-8 mb-3"
-                  height="64"
+                <h2
+                  class="tracking-widest mb-3"
+                  :style="`font-size: ${
+                    522 < width
+                      ? '2.72rem'
+                      : 472 < width
+                      ? '2rem'
+                      : 372 < width
+                      ? '1.55rem'
+                      : '1rem'
+                  }`"
                 >
-                  <VIcon class="opacity-40" icon="$iconBook" start :size="34" />
-                  <h2 style="font-size: 1.43rem" class="ms-2 d-inline-block">
-                    Priče naših proizvođača...
-                  </h2>
-                </VBtn>
+                  kantar.rs blog
+                </h2>
               </VCardTitle>
+              <VBtn
+                :to="{ name: 'blog' }"
+                variant="elevated"
+                elevation="2"
+                :size="472 < width ? 'large' : undefined"
+                rounded="pill"
+                color="primary-lighten-1"
+                class="px-8 mb-2"
+                height="64"
+                :class="
+                  372 < width
+                    ? undefined
+                    : 333 < width
+                    ? 'scale-90'
+                    : 'scale-75'
+                "
+              >
+                <VIcon
+                  v-if="522 < width"
+                  class="opacity-40"
+                  icon="$iconBook"
+                  start
+                  :size="34"
+                />
+                <span> Priče proizvođača </span>
+              </VBtn>
             </div>
           </VImg>
         </VSheet>
       </VCol>
       <VCol md="6">
-        <VSheet class="fill-height overflow-hidden" elevation="2" rounded="xl">
+        <VSheet
+          :min-height="mdAndUp ? undefined : 356"
+          class="fill-height overflow-hidden"
+          elevation="2"
+          rounded="xl"
+        >
           <div
-            class="grid grid-cols-4 fill-height gap-3 pa-5 bg-primary-darken-2"
+            class="fill-height gap-3 pa-5 bg-primary-darken-2 grid-rows-2"
+            :class="[
+              572 < width
+                ? 'grid grid-cols-4'
+                : 512 < width
+                ? 'grid grid-cols-3'
+                : 'grid grid-cols-2',
+            ]"
           >
             <VSheet
               color="transparent"
@@ -69,6 +114,7 @@
               />
             </VSheet>
             <VSheet
+              v-if="512 < width"
               color="transparent"
               elevation="2"
               rounded="lg"
@@ -81,6 +127,7 @@
               />
             </VSheet>
             <VSheet
+              v-if="572 < width"
               color="transparent"
               elevation="2"
               rounded="lg"
@@ -98,9 +145,10 @@
                   class="z-10 position-absolute start-2 bottom-4 !tracking-wide"
                 >
                   <span
-                    class="link--prominent-base !underline !underline-offset-2"
+                    class="mb-3 link--prominent-base !underline !underline-offset-2"
+                    :style="420 < width ? undefined : 'font-size: 1rem;'"
                   >
-                    Omiljeni recepti naših korisnika...
+                    {{ 372 < width ? "Recepti naših korisnika" : "Recepti" }}
                   </span>
                 </VCardTitle>
               </NuxtLink>
@@ -115,6 +163,7 @@
               </VSheet>
             </div>
             <VSheet
+              v-if="572 < width"
               color="transparent"
               elevation="2"
               rounded="lg"
@@ -132,5 +181,4 @@
     </VRow>
   </VContainer>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
