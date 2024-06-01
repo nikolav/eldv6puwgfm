@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {
   AvatarThumb,
-  ProvideProfileDataFull,
   ProvideCompanyData,
-  VChipDistrict,
+  ProvideProfileDataFull,
   TopicChat,
+  VChipDistrict,
 } from "@/components/app";
 const props = defineProps<{ user: any }>();
 
@@ -15,12 +15,8 @@ const props = defineProps<{ user: any }>();
     :user="user"
     v-slot="{ avatar, companyName, publicUrl, profile, topicCompanyChat }"
   >
-    <VCard
-      elevation="2"
-      width="270"
-      min-height="400"
-      class="pa-2 space-y-2 !bg-stone-50"
-    >
+    <!-- width="270" -->
+    <VCard elevation="2" class="pa-2 space-y-2 !bg-stone-50">
       <!-- title link -->
       <VCardItem>
         <VCardTitle>
@@ -43,7 +39,7 @@ const props = defineProps<{ user: any }>();
         />
       </div>
       <!-- about -->
-      <VCardText>
+      <VCardText class="min-h-[102px]">
         <p class="line-clamp-3 indent-3">
           {{ profile.value?.about }}
         </p>
@@ -77,5 +73,4 @@ const props = defineProps<{ user: any }>();
     </VCard>
   </ProvideProfileDataFull>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

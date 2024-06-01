@@ -59,12 +59,18 @@ const { companies: companiesAll } = useQueryCompaniesList(
   false,
   true
 );
-const companiesNew = computed(() =>
+const companiesNew_ = computed(() =>
   sampleSize(
     filter(companiesAll.value, (com) =>
       dayjs(com.created_at).isAfter(d1MonthAgo)
     ),
-    10
+    lgAndUp.value ? 8 : mdAndUp.value ? 6 : smAndUp.value ? 4 : 2
+  )
+);
+const companiesNew = computed(() =>
+  sampleSize(
+    Array.from({ length: 22 }, (a) => first(companiesAll.value)),
+    lgAndUp.value ? 8 : mdAndUp.value ? 6 : smAndUp.value ? 4 : 2
   )
 );
 
@@ -103,7 +109,7 @@ const toggleEmailSaved = useToggleFlag();
       </VCardText>
     </VSnackbarStatusMessage>
 
-    <div class="__spacer__ mt-10" />
+    <div class="__spacer__" :class="smAndUp ? 'mt-12' : 'mt-3'" />
 
     <!-- izdvajamo -->
     <!-- <HeaderProminent
@@ -171,7 +177,7 @@ const toggleEmailSaved = useToggleFlag();
     </VContainer>
 
     <!-- sponzorisano -->
-    <div class="__spacer__ mt-32" />
+    <div class="__spacer__" :class="smAndUp ? 'mt-32' : 'mt-5'" />
     <HeaderProminent
       v-if="0 < productsPromo?.length"
       class="ps-12 mt-12 text-medium-emphasis"
@@ -213,13 +219,13 @@ const toggleEmailSaved = useToggleFlag();
     </VContainer>
 
     <!-- footer, info -->
-    <VSpacer class="__scacer__ mt-36" />
+    <VSpacer class="__scacer__" :class="smAndUp ? 'mt-36' : 'mt-5'" />
     <div class="px-2">
       <FooterKakoOvoFunkcionise class="mt-16 !max-w-[1350px] !mx-auto" />
     </div>
 
     <!-- blog, receipt, links -->
-    <VSpacer class="__scacer__ mt-36" />
+    <VSpacer class="__spacer__" :class="smAndUp ? 'mt-36' : 'mt-5'" />
     <div class="max-w-[1366px] mx-auto">
       <HeaderProminent
         :style="`font-size: ${
@@ -242,7 +248,7 @@ const toggleEmailSaved = useToggleFlag();
     </div>
 
     <!-- welcome -->
-    <div class="__scacer__ mt-32" />
+    <div class="__spacer__" :class="smAndUp ? 'mt-32' : 'mt-5'" />
     <div v-if="0 < companiesNew?.length" class="max-w-[1366px] mx-auto">
       <HeaderProminent
         class="mt-12 text-medium-emphasis"
@@ -282,22 +288,34 @@ const toggleEmailSaved = useToggleFlag();
           </div>
         </template>
       </HeaderProminent>
-      <VContainer>
-        <div class="__placer__ d-flex items-start gap-2 px-12">
+      <VContainer class="mx-auto">
+        <VRow dense justify="center">
+          <VCol
+            v-for="com in companiesNew"
+            :sm="6"
+            :md="4"
+            :lg="3"
+            :key="com?.id"
+          >
+            <VCardCompanyDisplay :key="com?.id" :user="com" />
+            <!-- <CardProductDisplay @product-photos-change="noop" :product="p" /> -->
+          </VCol>
+        </VRow>
+        <!-- <div class="__placer__ d-flex items-start gap-2 px-12">
           <VCardCompanyDisplay
             v-for="com in companiesNew"
             :key="com.id"
             :user="com"
           />
-        </div>
+        </div> -->
       </VContainer>
     </div>
 
-    <!-- novi proizvode -->
-    <div class="__spacer__ mt-24" />
+    <!-- novi proizvodi -->
+    <div class="__spacer__" />
     <HeaderProminent
-      class="mt-32 pb-5 text-medium-emphasis"
-      :class="[566 < width ? 'ps-12' : 'ps-2']"
+      class="pb-5 text-medium-emphasis"
+      :class="[566 < width ? 'ps-12' : 'ps-2', smAndUp ? 'mt-32' : 'mt-5']"
       text="Najnoviji ulistani proizvodi"
       :style="`font-size: ${
         777 < width
@@ -343,7 +361,7 @@ const toggleEmailSaved = useToggleFlag();
     </VContainer>
 
     <!-- user help -->
-    <VSpacer class="__spacer__ mt-40" />
+    <VSpacer class="__spacer__" :class="smAndUp ? 'mt-40' : 'mt-5'" />
     <div class="max-w-[1366px] mx-auto">
       <HeaderProminent
         class="mt-5 text-medium-emphasis"
@@ -396,8 +414,10 @@ const toggleEmailSaved = useToggleFlag();
           <VContainer class="mx-auto">
             <VRow>
               <!-- :cell-1 -->
-              <VCol sm="4">
+              <VCol md="4">
                 <VSheet
+                  :max-width="mdAndUp ? undefined : 455"
+                  :class="mdAndUp ? undefined : 'mx-auto'"
                   @click="galleryOpen"
                   v-ripple
                   height="256"
@@ -410,12 +430,19 @@ const toggleEmailSaved = useToggleFlag();
                   <div
                     class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
                   >
-                    <VSpacer class="mb-8" />
+                    <VSpacer class="mb-5" />
                     <VCardTitle
                       style="font-size: 120% !important"
-                      class="text-center text-h5 !font-sans"
+                      class="text-center text-h5 !font-sans mb-"
                     >
-                      <h3 class="text-white">Onlajn prisustvo i obrt</h3>
+                      <h3
+                        :style="
+                          312 < width ? undefined : 'font-size: 1rem !important'
+                        "
+                        class="text-white"
+                      >
+                        Onlajn prisustvo i obrt
+                      </h3>
                     </VCardTitle>
                     <VCardSubtitle
                       class="!text-white text-body-2 !font-mono text-end !opacity-50"
@@ -427,7 +454,7 @@ const toggleEmailSaved = useToggleFlag();
                 </VSheet>
               </VCol>
               <!-- :cell-2 -->
-              <VCol sm="4">
+              <VCol md="4">
                 <VSheet
                   @click="galleryOpen({ startIndex: 1 })"
                   v-ripple
@@ -437,6 +464,8 @@ const toggleEmailSaved = useToggleFlag();
                   elevation="2"
                   id="bg-image--Kqn6iKlGsN1zeu"
                   rounded="lg"
+                  :max-width="mdAndUp ? undefined : 455"
+                  :class="mdAndUp ? undefined : 'mx-auto'"
                 >
                   <div
                     class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
@@ -446,7 +475,10 @@ const toggleEmailSaved = useToggleFlag();
                       style="font-size: 1.33rem !important"
                       class="text-center text-h5 !font-sans"
                     >
-                      <h3 class="text-white" style="font-size: 81%">
+                      <h3
+                        class="text-white"
+                        :style="`font-size: ${322 < width ? '81%' : '66%'}`"
+                      >
                         Dobra reklama dobar proizvod
                       </h3>
                     </VCardTitle>
@@ -460,7 +492,7 @@ const toggleEmailSaved = useToggleFlag();
                 </VSheet>
               </VCol>
               <!-- :cell-3 -->
-              <VCol sm="4">
+              <VCol md="4">
                 <VSheet
                   @click="galleryOpen({ startIndex: 2 })"
                   v-ripple
@@ -470,6 +502,8 @@ const toggleEmailSaved = useToggleFlag();
                   elevation="2"
                   id="bg-image--MwnPyfU7q"
                   rounded="lg"
+                  :max-width="mdAndUp ? undefined : 455"
+                  :class="mdAndUp ? undefined : 'mx-auto'"
                 >
                   <div
                     class="bg-black/60 position-absolute bottom-0 inset-x-0 min-h-[55%] shadow pt-2"
@@ -498,7 +532,7 @@ const toggleEmailSaved = useToggleFlag();
       </LightboxSlides>
     </div>
 
-    <div class="__spacer__ mt-32" />
+    <div class="__spacer__" :class="smAndUp ? 'mt-32' : 'mt-5'" />
     <div class="max-w-[1492px] mx-auto">
       <HeaderProminent
         class="mt-20 pb-4 text-medium-emphasis"
@@ -543,7 +577,7 @@ const toggleEmailSaved = useToggleFlag();
     </div>
 
     <!-- mail-lista --prijava -->
-    <div class="__spacer__ mt-40" />
+    <div class="__spacer__" :class="smAndUp ? 'mt-40' : 'mt-5'" />
     <div class="max-w-[1492px] mx-auto">
       <MailingListSave
         @email-saved="toggleEmailSaved.on"
@@ -613,19 +647,19 @@ const toggleEmailSaved = useToggleFlag();
 <style scoped lang="scss">
 #bg-image--rHZRlaBLqOX {
   background: white url("~/assets/images/prezentacija-demo.png");
-  background-size: 155%;
+  background-size: cover;
   background-position: 20% 32%;
   background-repeat: no-repeat;
 }
 #bg-image--Kqn6iKlGsN1zeu {
   background: white url("~/assets/images/photography01.jpg");
-  background-size: 152%;
+  background-size: cover;
   background-position: 33% 33%;
   background-repeat: no-repeat;
 }
 #bg-image--MwnPyfU7q {
   background: white url("~/assets/images/marketing-dm.jpg");
-  background-size: 112%;
+  background-size: cover;
   background-position: 15% 59%;
   background-repeat: no-repeat;
 }

@@ -234,7 +234,7 @@ const cart = useStoreCart();
               </VChip>
             </VChipGroup>
           </div>
-          <VCardText class="mt-2 line-clamp-4 *text-truncate">
+          <VCardText class="mt-2 line-clamp-4 *text-truncate min-h-[133px]">
             {{ props.product.description }}
           </VCardText>
           <VCardActions class="pa-4 mt-5 d-block">

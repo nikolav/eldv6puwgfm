@@ -201,7 +201,7 @@ const { smAndUp } = useDisplay();
           </NuxtLink>
         </h5>
         <h5>
-          <NuxtLink to="/">
+          <NuxtLink to="/tos.html" external target="_blank">
             <a>Uslovi korišćenja</a>
           </NuxtLink>
         </h5>
@@ -211,7 +211,7 @@ const { smAndUp } = useDisplay();
           </NuxtLink>
         </h5>
         <h5>
-          <NuxtLink to="/">
+          <NuxtLink :to="{ name: 'o-nama' }">
             <a>O nama</a>
           </NuxtLink>
         </h5>
