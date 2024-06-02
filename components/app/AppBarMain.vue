@@ -220,8 +220,8 @@ const search$$ = useStoreSearchConfig();
           </VBtn>
         </VForm>
 
+        <!-- chat:main -->
         <VBtn
-          v-if="false"
           @click="topicChatMain = 'chat:main'"
           variant="text"
           icon

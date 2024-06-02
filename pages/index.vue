@@ -59,17 +59,11 @@ const { companies: companiesAll } = useQueryCompaniesList(
   false,
   true
 );
-const companiesNew_ = computed(() =>
+const companiesNew = computed(() =>
   sampleSize(
     filter(companiesAll.value, (com) =>
       dayjs(com.created_at).isAfter(d1MonthAgo)
     ),
-    lgAndUp.value ? 8 : mdAndUp.value ? 6 : smAndUp.value ? 4 : 2
-  )
-);
-const companiesNew = computed(() =>
-  sampleSize(
-    Array.from({ length: 22 }, (a) => first(companiesAll.value)),
     lgAndUp.value ? 8 : mdAndUp.value ? 6 : smAndUp.value ? 4 : 2
   )
 );
@@ -78,12 +72,12 @@ const companiesNew = computed(() =>
 const slidesPromoMaterial = [
   {
     type: "pdf",
-    src: "/prodajna-prezentacija-12941639168.pdf",
+    src: "/prodajna-prezentacija-31487243233.pdf",
     caption: "Prodajna prezentacija | KANTAR.RS",
   },
   {
     type: "pdf",
-    src: "/uputstvo-za-fotografisanje-hrane-12941639168.pdf",
+    src: "/uputstvo-za-fotografisanje-hrane-31487243233.pdf",
     caption: "Uputstvo za fotografisanje hrane | KANTAR.RS",
   },
   {

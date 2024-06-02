@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import { schemaAuthCredentials } from "@/schemas";
 
 definePageMeta({
   layout: "auth",
   middleware: "guest",
 });
+
+const { width, mdAndUp } = useDisplay();
 
 const auth = useStoreApiAuthProvideSocial();
 const authEmail$ = ref("");
@@ -71,20 +74,25 @@ const authSubmitRegister = async () => {
       <VContainer class="pa-0 ma-0">
         <VRow no-gutters class="pa-0 ma-0 gap-0">
           <!-- cell:l -->
-          <VCol sm="6" class="pa-0 ma-0">
+          <VCol :order="mdAndUp ? 0 : 1" md="6" class="pa-0 ma-0">
             <VCard
-              max-width="422"
-              rounded="s-xl e-0"
-              class="border-primary border-opacity-75 pa-3 ma-0 fill-height ms-auto !bg-stone-50 d-flex flex-col"
+              :max-width="mdAndUp ? 422 : 489"
+              :rounded="mdAndUp ? 's-xl e-0' : 'b-xl t-0'"
+              class="pa-3 ma-0 fill-height !bg-stone-50 d-flex flex-col"
+              :class="
+                mdAndUp ? 'ms-auto border-primary border-opacity-75' : 'mx-auto'
+              "
               elevation="1"
               id="id--EOpcLONp"
               border="e"
             >
               <VCardItem
+                v-if="mdAndUp"
                 class="opacity-75 text-center text-medium-emphasis font-italic !font-sans text-body-1"
               >
                 Dobrodošli na kantar.rs
               </VCardItem>
+
               <VCardText
                 class="space-y-8 *text-medium-emphasis pa-5"
                 style="font-size: 1.22rem"
@@ -145,14 +153,34 @@ const authSubmitRegister = async () => {
           </VCol>
 
           <!-- cell:r -->
-          <VCol sm="6" class="pa-0 m-0">
+          <VCol md="6" class="pa-0 m-0">
             <VCard
               elevation="1"
-              class="py-3 mr-auto backdrop-blur-lg pb-6"
+              class="py-3 backdrop-blur-lg pb-6"
               color="rgba(255,255,255,.55)"
-              rounded="e-xl s-0"
+              :rounded="mdAndUp ? 'e-xl s-0' : 't-xl b-0'"
               max-width="489"
+              :class="mdAndUp ? 'mr-auto' : 'mx-auto'"
             >
+              <VCardItem
+                v-if="!mdAndUp"
+                class="opacity-75 text-center text-medium-emphasis font-italic !font-sans text-body-1"
+              >
+                Dobrodošli na kantar.rs
+              </VCardItem>
+              <VCardItem v-if="!mdAndUp" class="*bg-red ps-1 my-5">
+                <VBtn :to="{ name: 'auth-login' }" variant="plain" icon>
+                  <VIcon icon="$prev" size="large" />
+                </VBtn>
+                <NuxtLink :to="{ name: 'auth-login' }">
+                  <a
+                    style="font-size: 88%"
+                    class="opacity-60 text-primary-darken-1 link--prominent-base"
+                  >
+                    Prijava, imam nalog
+                  </a>
+                </NuxtLink>
+              </VCardItem>
               <VCardText class="px-6 mt-2 mt-sm-4">
                 <VTextField
                   v-effect="{ watch: watchIDEmail.ID }"
@@ -211,8 +239,16 @@ const authSubmitRegister = async () => {
                   v-model="authIsCompany$"
                   color="primary-darken-1"
                   class="mt-3 *bg-red *ps-2 w-fit mx-auto -translate-x-3 scale-110"
-                  label="Registrujem se kao prodavac"
-                />
+                >
+                  <template #label>
+                    <span
+                      :class="412 < width ? undefined : 'd-flex flex-col ms-1'"
+                    >
+                      <span> Registrujem se kao </span>
+                      <span> prodavac </span>
+                    </span>
+                  </template>
+                </VCheckbox>
                 <VCheckbox
                   v-effect="{ watch: watchIDTOS.ID }"
                   v-model="authIsTOS$"
@@ -220,27 +256,35 @@ const authSubmitRegister = async () => {
                   class="*bg-red *ps-2 w-fit mx-auto -translate-x-3 scale-90 opacity-75"
                 >
                   <template #label>
-                    Pristajem na
-                    <NuxtLink :to="{ name: 'tos' }" target="_blank">
-                      <a
-                        class="text-primary-lighten-1 link--prominent-base mx-1 font-italic text-body-1 !font-sans"
-                      >
-                        prava korišćenja
-                      </a>
-                    </NuxtLink>
-                    kantar.rs
+                    <div
+                      :class="[
+                        412 < width ? undefined : 'd-flex flex-col text-center',
+                      ]"
+                    >
+                      <span> Pristajem na </span>
+                      <NuxtLink to="/tos.html" external target="_blank">
+                        <a
+                          class="text-primary-lighten-1 link--prominent-base mx-1 font-italic text-body-1 !font-sans"
+                        >
+                          uslove korišćenja
+                        </a>
+                      </NuxtLink>
+                      <span v-if="412 < width"> kantar.rs </span>
+                    </div>
                   </template>
                 </VCheckbox>
               </VCardText>
               <VCardActions class="pt-4">
                 <VSpacer />
                 <VBtn
-                  size="x-large"
+                  :size="355 < width ? 'x-large' : undefined"
                   variant="tonal"
                   color="primary-darken-1 text-none"
                   type="submit"
                   min-width="69%"
                   rounded="lg2"
+                  :height="width <= 355 ? 64 : undefined"
+                  :stacked="width < 312"
                 >
                   <strong> REGISTRACIJA </strong>
                   <small class="ms-2 opacity-80 text-medium-emphasis"
@@ -269,6 +313,7 @@ const authSubmitRegister = async () => {
                   "
                 >
                   <VIcon
+                    v-if="333 < width"
                     class="position-absolute start-3 top-1/2 -translate-y-[50%]"
                     icon="$iconFacebookColor"
                   />
@@ -311,6 +356,7 @@ const authSubmitRegister = async () => {
                   "
                 >
                   <VIcon
+                    v-if="333 < width"
                     class="position-absolute start-3 top-1/2 -translate-y-[50%]"
                     icon="$iconGoogleColor"
                   />

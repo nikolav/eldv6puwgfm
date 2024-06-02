@@ -20,8 +20,8 @@ const { width } = useDisplay();
       @submit.prevent
       class="*bg-red mx-auto mt-[92px] max-w-[512px] sm:mt-[122px] translate-x-[7.45rem] 2xl:mt-[109px] 2xl:translate-x-[20rem]"
       :class="[
-        width < 800 ? 'translate-x-0' : undefined,
-        width < 650 ? 'mt-[104px] max-w-[92%]' : undefined,
+        width < 832 ? '!translate-x-0' : undefined,
+        width < 650 ? '!mt-[112px] max-w-[92%]' : undefined,
       ]"
     >
       <VTextField

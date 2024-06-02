@@ -1,11 +1,18 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import { schemaAuthCredentials } from "@/schemas";
-import { NotifyLoginUnsuccessfull, ResetPasswordRequestLink } from "@/components/app";
+import {
+  NotifyLoginUnsuccessfull,
+  ResetPasswordRequestLink,
+} from "@/components/app";
 
 definePageMeta({
   layout: "auth",
   middleware: "guest",
 });
+
+const { width, mdAndUp } = useDisplay();
+
 const auth = useStoreApiAuthProvideSocial();
 const authEmail$ = ref("");
 const authPassword$ = ref("");
@@ -61,17 +68,28 @@ const authSubmitLogin = async () => {
   <section class="page-auth-login">
     <NotifyLoginUnsuccessfull v-model="toggleAuthSubmitError.isActive.value" />
     <VForm class="mt-5" @submit.prevent="authSubmitLogin" autocomplete="off">
-      <VContainer class="pa-0 ma-0">
+      <VContainer :fluid="!mdAndUp" class="pa-0 ma-0">
         <VRow no-gutters class="pa-0 ma-0 gap-0">
           <!-- cell:l -->
-          <VCol sm="6" class="pa-0 m-0">
+          <VCol md="6" offset-md="0" sm="8" offset-sm="2" class="pa-0 m-0">
             <VCard
               elevation="1"
-              class="py-3 ms-auto backdrop-blur-lg pb-6"
+              class="py-3 backdrop-blur-lg pb-6"
+              :class="[mdAndUp ? 'ms-auto' : 'mx-auto']"
               color="rgba(255,255,255,.55)"
-              rounded="s-xl e-0"
+              :rounded="mdAndUp ? 's-xl e-0' : 'xl'"
               max-width="392"
             >
+              <VCardSubtitle v-if="!mdAndUp" class="*bg-red pe-1 text-end">
+                <NuxtLink :to="{ name: 'auth-register' }">
+                  <a class="text-primary-darken-1 link--prominent-base">
+                    Registracija, nemam nalog
+                  </a>
+                </NuxtLink>
+                <VBtn :to="{ name: 'auth-register' }" variant="plain" icon>
+                  <VIcon icon="$next" size="large" />
+                </VBtn>
+              </VCardSubtitle>
               <VCardText class="px-6 mt-2 mt-sm-4">
                 <VTextField
                   v-effect="{ watch: watchIDEmail.ID }"
@@ -140,6 +158,7 @@ const authSubmitLogin = async () => {
                   @click="auth.loginFacebook"
                 >
                   <VIcon
+                    v-if="322 < width"
                     class="position-absolute start-3 top-1/2 -translate-y-[50%]"
                     icon="$iconFacebookColor"
                   />
@@ -178,6 +197,7 @@ const authSubmitLogin = async () => {
                   @click="auth.loginGoogle"
                 >
                   <VIcon
+                    v-if="322 < width"
                     class="position-absolute start-3 top-1/2 -translate-y-[50%]"
                     icon="$iconGoogleColor"
                   />
@@ -208,11 +228,12 @@ const authSubmitLogin = async () => {
             </VCard>
           </VCol>
           <!-- cell:r -->
-          <VCol sm="6" class="pa-0 ma-0">
+          <VCol v-if="mdAndUp" md="6" class="pa-0 ma-0">
             <VCard
               max-width="392"
               rounded="s-0 e-xl"
-              class="border-primary border-opacity-75 pa-3 ma-0 fill-height me-auto !bg-stone-50 d-flex flex-col"
+              class="border-primary border-opacity-75 pa-3 ma-0 fill-height !bg-stone-50 d-flex flex-col"
+              :class="[mdAndUp ? 'me-auto' : 'mx-auto']"
               elevation="1"
               id="id--tpy4lTkbF"
               border="s"

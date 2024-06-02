@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import { schemaEmail } from "@/schemas";
 import {
   URL_PASSWORD_RESET_REQUEST,
@@ -6,6 +7,7 @@ import {
 } from "@/config";
 import { VSnackbarStatusMessage } from "@/components/ui";
 
+const { width } = useDisplay();
 const {
   app: { DEFAULT_TRANSITION },
 } = useAppConfig();
@@ -68,6 +70,7 @@ const toggleShowResetRequestScreen = useToggleFlag();
       </p>
     </VSnackbarStatusMessage>
     <VDialog
+      :fullscreen="width <= 456"
       max-width="456"
       v-model="toggleShowResetRequestScreen.isActive.value"
       location="center"
@@ -75,7 +78,7 @@ const toggleShowResetRequestScreen = useToggleFlag();
       :transition="DEFAULT_TRANSITION"
       scrim="white"
     >
-      <VCard rounded="lg" class="pa-3">
+      <VCard rounded="lg" :class="422 < width ? 'pa-3' : 'pa-0'">
         <VCardActions>
           <VSpacer />
           <VCardSubtitle class="text-center">
@@ -92,7 +95,11 @@ const toggleShowResetRequestScreen = useToggleFlag();
           </VBtn>
         </VCardActions>
         <VCardText>
-          <VForm @submit.prevent="submit" autocomplete="off" class="pa-2">
+          <VForm
+            @submit.prevent="submit"
+            autocomplete="off"
+            :class="422 < width ? 'pa-2' : 'px-0 py-2'"
+          >
             <div class="min-h-[92px]">
               <VTextField
                 v-model.trim="form.email.value"
@@ -103,6 +110,7 @@ const toggleShowResetRequestScreen = useToggleFlag();
               >
                 <template #prepend>
                   <VIcon
+                    v-if="422 < width"
                     color="primary-darken-2"
                     size="small"
                     start
@@ -133,8 +141,10 @@ const toggleShowResetRequestScreen = useToggleFlag();
         @click="toggleShowResetRequestScreen.on"
         class="link--prominent-base text-primary-darken-1"
       >
-        <VIcon start icon="$iconRescue" class="opacity-30" />
-        <span class="ms-1"> Zaboravljena lozinka? </span>
+        <VIcon v-if="322 < width" start icon="$iconRescue" class="opacity-30" />
+        <span :style="322 < width ? undefined : 'font-size: 88%'" class="ms-1">
+          Zaboravljena lozinka?
+        </span>
         <VTooltip
           location="bottom"
           open-delay="345"

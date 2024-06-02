@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import { ServiceDescriptionAuth } from "@/components/app";
+
+const { width } = useDisplay();
 
 const { routeNameByTitle, cache } = useAppMenu();
 
@@ -29,19 +32,25 @@ const { routeNameByTitle, cache } = useAppMenu();
           color="primary-lighten-1"
           icon="$iconLogoKantarH"
           class="hover:scale-105 transition-transform"
+          :class="[322 < width ? undefined : 'scale-75 -translate-x-5']"
         />
       </NuxtLink>
       <VSpacer />
       <VBtn icon :to="{ name: routeNameByTitle(cache.get()) }"
-        ><VIcon icon="$close" size="large" />
+        ><VIcon
+          icon="$close"
+          size="large"
+          :class="322 < width ? undefined : '-translate-x-3'"
+        />
       </VBtn>
     </VToolbar>
 
     <VMain>
-      <VContainer class="*bg-red mt-2 mt-sm-8">
-        <slot>
-          <p>@auth</p>
-        </slot>
+      <VContainer
+        class="*bg-red mt-2 mt-sm-8 *!px-0"
+        :class="422 < width ? undefined : '!px-1'"
+      >
+        <slot />
       </VContainer>
     </VMain>
   </section>
