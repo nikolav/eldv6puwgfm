@@ -4,8 +4,9 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import type { IProduct } from "@/types";
 import districtsSerbia from "~/assets/districts-serbia.json";
+import { useDisplay } from "vuetify";
+import type { IProduct } from "@/types";
 
 // defs
 const props = defineProps<{
@@ -15,6 +16,8 @@ const {
   key: { PRODUCTS_SEARCH },
   products: { categories, searchSortBy },
 } = useAppConfig();
+
+const { width, smAndUp } = useDisplay();
 
 // utils
 const { categoriesTopInclusive } = useStoreMenuCategoriesFull();
@@ -38,7 +41,7 @@ const {
   {
     onSubmit: (data) => {
       // console.log({ data });
-      // transform .category field to mapped categories from subtree 
+      // transform .category field to mapped categories from subtree
       const q = transform(
         data,
         (data, value, field: string) => {
@@ -87,19 +90,21 @@ onceMountedOn(true, () => {
       rounded="t-lg"
       variant="elevated"
       elevation="10"
-      v-bind="$attrs"
       class="bg-image--search-config-01 *pa-3 border-primary border-opacity-100"
+      v-bind="$attrs"
     >
       <VCardItem class="ps-5 pt-4">
         <VCardTitle>
           <h4
-            class="d-inline-block scale-[91%] ms-1 text-h4 !font-sans opacity-50 font-italic"
+            class="d-inline-block scale-[91%] ms-1 !font-sans opacity-50 font-italic"
+            :class="482 < width ? 'text-h4' : undefined"
           >
-            Pretraga proizvoda
+            {{ 322 < width ? "Pretraga proizvoda" : "Pretraga" }}
           </h4>
         </VCardTitle>
         <template #prepend>
           <VIcon
+            v-if="472 < width"
             class="ms-3 opacity-20 !text-stone-800"
             :size="36"
             icon="$iIconProductSearch"
@@ -114,7 +119,11 @@ onceMountedOn(true, () => {
       <!-- @@search:fields -->
       <VCardText>
         <VCol class="pa-4 *bg-green-100 space-y-4">
-          <div class="grid grid-cols-[2fr,1fr] gap-5">
+          <div
+            :class="
+              482 < width ? 'grid grid-cols-[2fr,1fr] gap-5' : 'd-flex flex-col'
+            "
+          >
             <VTextField
               v-model="form.text.value"
               placeholder="meso, kajmak, dobra, mile, izuva"
@@ -138,7 +147,11 @@ onceMountedOn(true, () => {
               type="number"
             />
           </div>
-          <div class="grid grid-cols-[1fr,1fr] gap-5">
+          <div
+            :class="
+              482 < width ? 'grid grid-cols-[2fr,1fr] gap-5' : 'd-flex flex-col'
+            "
+          >
             <VSelect
               v-model="form.category.value"
               center-affix
@@ -165,7 +178,13 @@ onceMountedOn(true, () => {
               </template>
             </VSelect>
           </div>
-          <div class="grid grid-cols-[1fr,1fr] gap-5 items-end mt-5">
+          <div
+            :class="
+              482 < width
+                ? 'mt-5 items-end grid grid-cols-[2fr,1fr] gap-5'
+                : 'd-flex flex-col'
+            "
+          >
             <VTextField
               v-model.number="form.priceMax.value"
               placeholder="4999"
@@ -193,32 +212,39 @@ onceMountedOn(true, () => {
       </VCardText>
 
       <!-- @@push actions end -->
-      <VCardActions class="*mt-2 *pa-5 pb-8 px-10">
+      <VCardActions
+        class="*mt-2 *pa-5 pb-8"
+        :class="smAndUp ? 'px-10' : 'px-5'"
+      >
         <VBtn
           variant="plain"
           @click="searchFormClear"
-          size="x-large"
+          :size="444 < width ? 'x-large' : undefined"
           class="px-3"
         >
-          <VIcon start icon="$iconEraser" />
+          <VIcon v-if="382 < width" start icon="$iconEraser" />
           <span>Poništi</span>
         </VBtn>
         <VSpacer />
         <VBtn
           type="submit"
           class="px-6"
-          size="x-large"
+          :size="444 < width ? 'x-large' : undefined"
           color="primary"
           variant="elevated"
           rounded
         >
           <VIcon
+            v-if="382 < width"
             class="opacity-60"
             size="large"
-            start
             icon="$iconSearchSettings"
+            start
           />
-          <span style="font-size: 122%" class="translate-x-[2px] d-inline-block"
+          <span
+            style="font-size: 122%"
+            class="d-inline-block"
+            :class="382 < width ? 'translate-x-[2px]' : undefined"
             >Traži</span
           >
         </VBtn>
