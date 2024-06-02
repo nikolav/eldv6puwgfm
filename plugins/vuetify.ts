@@ -33,6 +33,9 @@ import {
 } from "@/components/icons/kantar-rs";
 
 import {
+  IconYoutubeText,
+  IconTwitterBird,
+  IconInstagramPourdebon,
   IconReddit,
   IconPinterest,
   IconCompleted,
@@ -290,6 +293,9 @@ export default defineNuxtPlugin((nuxtApp) => {
         iconZacin: IconZacin,
         iconZimnica: IconZimnica,
         //
+        iconYoutubeText: IconYoutubeText,
+        iconTwitterBird: IconTwitterBird,
+        iconInstagramPourdebon: IconInstagramPourdebon,
         iconPinterest: IconPinterest,
         iconCompleted: IconCompleted,
         iconBrandTag: IconBrandTag,

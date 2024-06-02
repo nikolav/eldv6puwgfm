@@ -125,3 +125,6 @@ export { default as IconBrandTag } from "./IconBrandTag.vue";
 export { default as IconCompleted } from "./IconCompleted.vue";
 export { default as IconPinterest } from "./IconPinterest.vue";
 export { default as IconReddit } from "./IconReddit.vue";
+export { default as IconYoutubeText } from "./IconYoutubeText.vue";
+export { default as IconTwitterBird } from "./IconTwitterBird.vue";
+export { default as IconInstagramPourdebon } from "./IconInstagramPourdebon.vue";

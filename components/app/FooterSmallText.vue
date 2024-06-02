@@ -149,7 +149,7 @@ const { smAndUp } = useDisplay();
           </NuxtLink>
           <strong
             style="font-size: 1rem"
-            class="d-flex items-center gap-3 px-1 -translate-x-1"
+            class="d-flex items-center gap-4 px-1 -translate-x-1"
           >
             <NuxtLink to="#" external target="_blank">
               <a class="link--primary-base text-primary-darken-1">
@@ -158,12 +158,12 @@ const { smAndUp } = useDisplay();
             </NuxtLink>
             <NuxtLink to="#" external target="_blank">
               <a class="link--primary-base text-primary-darken-1">
-                <VIcon icon="$iconInstagram" />
+                <VIcon icon="$iconInstagramPourdebon" class="-translate-x-1" />
               </a>
             </NuxtLink>
             <NuxtLink to="#" external target="_blank">
               <a class="link--primary-base text-primary-darken-1">
-                <VIcon icon="$iconTwitterX" />
+                <VIcon icon="$iconTwitterBird" />
               </a>
             </NuxtLink>
             <NuxtLink to="#" external target="_blank">
@@ -178,7 +178,7 @@ const { smAndUp } = useDisplay();
             </NuxtLink>
             <NuxtLink to="#" external target="_blank">
               <a class="link--primary-base text-primary-darken-1">
-                <VIcon icon="$iconYotubeVideo" />
+                <VIcon icon="$iconYoutubeText" />
               </a>
             </NuxtLink>
             <NuxtLink to="#" external target="_blank">
