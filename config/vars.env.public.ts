@@ -10,9 +10,9 @@ export const DEBUG$ = !PRODUCTION$ && LOGGING_;
 //   ? "http://70.34.223.252:3001/"
 //   : "http://localhost:3000/";
 export const URL_APP_PUBLIC = PRODUCTION$
-  ? // ? "https://golden-malasada-69c9b4.netlify.app/"
-    "https://nikolav.rs/"
-  : "http://localhost:3000/";
+  ? "https://golden-malasada-69c9b4.netlify.app/"
+  : // ?  "https://nikolav.rs/"
+    "http://localhost:3000/";
 
 export const URL_PASSWORD_RESET_FORM_LINK = `${trimEnd(
   URL_APP_PUBLIC,
