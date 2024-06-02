@@ -8,6 +8,7 @@ import {
   TopicChat,
   TopicRating,
 } from "@/components/app";
+import { LightboxImages } from "@/components/ui";
 
 definePageMeta({
   layout: "blank",
@@ -16,7 +17,7 @@ definePageMeta({
 const auth = useStoreApiAuth();
 const route = useRoute();
 
-const { smAndUp, height: wHeight } = useDisplay();
+const { smAndUp, mdAndUp, lgAndUp, height: wHeight } = useDisplay();
 
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND, DEFAULT_TRANSITION },
@@ -68,23 +69,47 @@ const calLink$ = ref();
   <section class="page--gazdinstvo:q fill-height pa-0 ma-0">
     <VContainer fluid class="*bg-red ma-0 pa-0 fill-height">
       <VRow class="*bg-lime ma-0 pa-0 fill-height" no-gutters>
+        <!--  -->
         <!-- col.product:data -->
-        <VCol cols="12" md="7" class="*bg-green-200 ma-0 pa-0">
+        <VCol lg="7" class="*bg-green-200 ma-0 pa-0">
+          <!--  -->
           <!-- @row:1 social, rating, calendar -->
           <!-- social, rating, calendar -->
           <div class="position-relative">
+            <!-- social, images -->
             <div class="d-flex items-center px-1 pe-3 mb-3 gap-5">
+              <!-- ratings -->
               <TopicRating
                 :small="!smAndUp ? true : undefined"
                 text
                 :topic="`${COM_RATING_prefix}${uid_}`"
               />
               <VSpacer />
+              <!-- user gallery @lgAndDown  -->
+              <LightboxImages v-if="!lgAndUp" :images="comPhotos">
+                <template
+                  #activator="{ onClick: onClickShow, disabled: disabled_ }"
+                >
+                  <VBtn
+                    v-if="!lgAndUp"
+                    :size="43"
+                    color="primary-lighten-1"
+                    @click="onClickShow"
+                    :disabled="disabled_"
+                    icon
+                    variant="elevated"
+                  >
+                    <VIcon size="large" icon="$iconImages" class="opacity-75" />
+                  </VBtn>
+                </template>
+              </LightboxImages>
+              <!-- @chat user -->
               <TopicChat
-                class="ms-auto"
+                :class="lgAndUp ? 'ms-auto' : 'ms-[1.22rem]'"
                 :title="companyName"
                 :topic="`${TOPIC_CHAT_COM_prefix}${uid_}`"
               />
+              <!-- @likes user -->
               <LikeDislike
                 class="ms-[1.22rem]"
                 :topic="`${COM_LIKES_prefix}${uid_}`"
@@ -123,6 +148,7 @@ const calLink$ = ref();
                 </VMenu>
               </VBtn>
             </div>
+            <!-- cart:open -->
             <div class="position-absolute end-2 mt-2">
               <CartOpenBadgePrimary
                 :badge-offset="10"
@@ -133,8 +159,8 @@ const calLink$ = ref();
           </div>
 
           <!-- @row:2 -->
-          <!-- company card -->
-          <div class="px-2 mt-6">
+          <!-- company info -->
+          <div class="px-2 mt-5 *min-h-[90vh]">
             <!-- <Dump :data="comUser" /> -->
             <CompanyDisplay
               @company-name="noop"
@@ -143,9 +169,9 @@ const calLink$ = ref();
             />
           </div>
         </VCol>
-
+        <!--  -->
         <!-- col.product:gallery -->
-        <VCol cols="12" md="5" class="*bg-blue-200 ma-0 pa-0">
+        <VCol v-if="lgAndUp" lg="5" class="*bg-blue-200 ma-0 pa-0">
           <VHover>
             <template #default="{ isHovering, props: props_ }">
               <!-- image gallery .left -->

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {
+  CompanyDisplayPaneAbout,
+  CompanyDisplayPaneContact,
+  CompanyDisplayPaneDelivery,
   CompanyDisplayPanePosts,
   CompanyDisplayPaneProducts,
-  CompanyDisplayPaneDelivery,
-  CompanyDisplayPaneContact,
-  CompanyDisplayPaneAbout,
 } from "@/components/app";
 import { useDisplay } from "vuetify";
 
@@ -14,10 +14,18 @@ const emit = defineEmits<{
   (e: "googleCalendarEmbedLink", link: string): void;
 }>();
 
-const { height: wHeight } = useDisplay();
+const { width, height: wHeight, mdAndUp, lgAndUp } = useDisplay();
 const refPanel = ref();
 const { y: yPanel } = useElementBounding(refPanel);
-const maxHPanel = computed(() => wHeight.value - yPanel.value - 1);
+const TABS_HEIGHT_AT_MDANDDOWN = 48;
+const maxHPanel = computed(() =>
+  Math.floor(
+    wHeight.value -
+      Math.max(0, yPanel.value) -
+      1 -
+      (!mdAndUp.value ? TABS_HEIGHT_AT_MDANDDOWN : 0)
+  )
+);
 const { user: comUser } = useQueryUsersSingle(props.uid);
 const { profile } = useProfileData(() => props.uid);
 
@@ -79,10 +87,13 @@ const productsLength = ref<number>();
 const productsLengthSet = (n: number) => {
   productsLength.value = n;
 };
+
 // @@eos
 </script>
 <template>
   <VSheet class="component--CompanyDisplay">
+    <Html class="overflow-hidden" />
+
     <!-- chip:district -->
     <VChip>
       <template #prepend>
@@ -115,12 +126,52 @@ const productsLengthSet = (n: number) => {
 
     <!-- @@data -->
     <VSheet class="*!bg-red-200" ref="refPanel">
-      <VContainer fluid class="pa-0">
-        <VRow>
+      <!-- show tabs @mdAndDown -->
+      <VTabs
+        v-if="!mdAndUp"
+        v-model="tabSelected$"
+        color="primary-lighten-1"
+        mandatory
+        :height="TABS_HEIGHT_AT_MDANDDOWN"
+        class="pa-0 ma-0 border-b"
+        grow
+      >
+        <VTab
+          v-for="node in panelLinks"
+          :variant="node.title == tabSelected$ ? 'flat' : 'plain'"
+          :key="node.title"
+          :value="node.title"
+          class="text-none"
+        >
+          <span>{{ node.title }}</span>
+          <template #prepend>
+            <VBadge
+              :model-value="
+                'Proizvodi' == node.title && 0 < Number(productsLength)
+              "
+              :inline="!(712 < width)"
+              :offset-x="712 < width ? 6 : undefined"
+              color="primary3"
+            >
+              <template #badge>
+                <pre>{{ productsLength }}</pre>
+              </template>
+              <VIcon
+                v-if="712 < width"
+                start
+                :size="node.size"
+                :icon="node.icon"
+              />
+            </VBadge>
+          </template>
+        </VTab>
+      </VTabs>
+      <VContainer fluid class="pa-0 ma-0">
+        <VRow no-gutters class="pa-0 ma-0">
           <!-- panels -->
           <VCol
-            sm="9"
-            class="position-relative overflow-auto scrollbar-thin-light overflow-x-hidden"
+            md="9"
+            class="pa-0 ma-0 position-relative overflow-auto scrollbar-thin-light overflow-x-hidden"
             :style="`max-height: ${maxHPanel}px`"
           >
             <VFadeTransition name="Panel1" mode="out-in" leave-absolute>
@@ -133,9 +184,10 @@ const productsLengthSet = (n: number) => {
             </VFadeTransition>
           </VCol>
 
-          <!-- links -->
-          <VCol sm="3" class="px-2">
+          <!-- nav links -->
+          <VCol v-if="mdAndUp" md="3" class="px-2">
             <VTabs
+              v-if="mdAndUp"
               hide-slider
               color="primary-lighten-1"
               mandatory
@@ -162,6 +214,7 @@ const productsLengthSet = (n: number) => {
                       'Proizvodi' == node.title && 0 < Number(productsLength)
                     "
                     color="primary3"
+                    offset-x="5"
                   >
                     <template #badge>
                       <pre>{{ productsLength }}</pre>

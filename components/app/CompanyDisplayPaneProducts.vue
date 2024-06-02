@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import type { OrNoValue, IStorageFileInfo, IDoc, IProduct } from "@/types";
 import {
   AddToCartButtonPrimary,
@@ -12,6 +13,9 @@ const props = defineProps<{ user: any; profile: any }>();
 const emit = defineEmits<{
   (e: "productsLength", length: OrNoValue<number>): void;
 }>();
+
+const { width } = useDisplay();
+
 const PRODUCT_ITEM_MAX_HEIGHT = 122;
 const {
   app: { DEFAULT_NO_PRODUCT_IMAGE_FOUND },
@@ -29,20 +33,25 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
 // @@eos
 </script>
 <template>
-  <section class="component--CompanyDisplayPaneProducts space-y-2 ps-3 mt-2">
+  <section class="component--CompanyDisplayPaneProducts space-y-2 ps-1 mt-1">
     <template v-for="p in products" :key="p.id">
       <VHover open-delay="345">
         <template #default="{ isHovering, props: props_ }">
           <VSheet
             v-bind="props_"
             elevation="1"
-            class="!grid grid-cols-[155px,1fr,auto] !bg-stone-50"
+            class="!bg-stone-50 me-2"
+            :class="
+              555 < width
+                ? '!grid grid-cols-[155px,1fr,auto]'
+                : '!grid grid-cols-[1fr,auto]'
+            "
             :height="PRODUCT_ITEM_MAX_HEIGHT"
             :max-height="PRODUCT_ITEM_MAX_HEIGHT"
             rounded
           >
             <!-- image -->
-            <ProductImages :product="p" v-slot="{ images }">
+            <ProductImages v-if="555 < width" :product="p" v-slot="{ images }">
               <VImg
                 rounded="s-lg"
                 @click="
@@ -66,14 +75,31 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
               <ProductPublicUrl :product="p" v-slot="{ url }">
                 <NuxtLink :to="url" external target="_blank"
                   ><VCardTitle
-                    class="ps-3 font-sans font-weight-medium text-primary-darken-2 underline underline-offset-2"
+                    class="ps-3 font-sans font-weight-medium text-primary-darken-2 underline"
                   >
                     {{ p.name }}
                   </VCardTitle></NuxtLink
                 >
               </ProductPublicUrl>
 
-              <div>
+              <div class="d-flex flex-col gap-1">
+                <VChip size="small" class="!w-fit">
+                  <template #prepend>
+                    <VIcon
+                      start
+                      icon="$iconBattery"
+                      class="!opacity-30 *ps-[2px] translate-x-1"
+                    />
+                  </template>
+                  <pre
+                    class="ps-1">{{ p.stock }}<small class="ps-[3px]">{{ p.stockType }}</small></pre>
+                  <VTooltip
+                    activator="parent"
+                    location="bottom"
+                    open-delay="122"
+                    text="Zaliha"
+                  />
+                </VChip>
                 <ProductCategory :product="p" v-slot="{ category }">
                   <VChip size="small" v-if="category" class="!w-fit">
                     <template #prepend>
@@ -94,23 +120,6 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
                     />
                   </VChip>
                 </ProductCategory>
-                <VChip size="small" class="!w-fit ms-2">
-                  <template #prepend>
-                    <VIcon
-                      start
-                      icon="$iconBattery"
-                      class="!opacity-30 *ps-[2px] translate-x-1"
-                    />
-                  </template>
-                  <pre
-                    class="ps-1">{{ p.stock }}<small class="ps-[3px]">{{ p.stockType }}</small></pre>
-                  <VTooltip
-                    activator="parent"
-                    location="bottom"
-                    open-delay="122"
-                    text="Zaliha"
-                  />
-                </VChip>
               </div>
             </div>
 

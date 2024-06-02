@@ -93,7 +93,7 @@ watch(search_, debounceSearchHandle);
       <!-- @header:top -->
       <!-- image="/header-main-06-huge.png" -->
       <!-- <VImg position="0 81%" /> -->
-      <VCard flat elevation="0" rounded="0" variant="flat" class="grow">
+      <VCard flat elevation="0" rounded="0" variant="flat" class="grow d-flex flex-col">
         <template #image>
           <!--  -->
           <!-- src="/header-main-06-scaled-150.png" -->
@@ -101,10 +101,11 @@ watch(search_, debounceSearchHandle);
           <VParallax
             :position="`${xs ? 0 : 14}px 98%`"
             :scale="0.95"
-            src="/header-main-07.png"
+            src="/summer-desktop.jpg"
           />
         </template>
 
+        <VSpacer />
         <!-- @@search:main -->
         <MainSearchBox v-model="search_" />
       </VCard>

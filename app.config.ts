@@ -302,6 +302,7 @@ export default defineAppConfig({
   },
   theme: {
     DEFAULT: themeLight,
+    // DEFAULT: themeDark,
     DARK: themeDark,
     LIGHT: themeLight,
   },
