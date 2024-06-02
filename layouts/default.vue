@@ -101,7 +101,7 @@ watch(search_, debounceSearchHandle);
           <VParallax
             :position="`${xs ? 0 : 14}px 98%`"
             :scale="0.95"
-            src="/summer-desktop-02.jpg"
+            src="/summer-desktop-03.jpg"
           />
         </template>
 
