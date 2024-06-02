@@ -142,48 +142,46 @@ const { smAndUp } = useDisplay();
           <NuxtLink to="/">
             <VIcon
               color="primary-darken-1"
-              class="scale-[2.55]"
+              class="scale-[2.55] translate-x-1"
               style="font-size: 5.6rem"
               icon="$iconLogoKantarH"
             />
           </NuxtLink>
           <strong
             style="font-size: 1rem"
-            class="d-flex items-center gap-4 px-1 -translate-x-1"
+            class="d-flex items-center gap-5 px-1 -translate-x-1"
           >
             <NuxtLink to="#" external target="_blank">
               <a class="link--primary-base text-primary-darken-1">
-                <VIcon size="large" icon="$iconFacebook" />
+                <VIcon :size="41" icon="$iconFacebook" />
               </a>
             </NuxtLink>
             <NuxtLink to="#" external target="_blank">
               <a class="link--primary-base text-primary-darken-1">
-                <VIcon icon="$iconInstagramPourdebon" class="-translate-x-1" />
+                <VIcon
+                  :size="30"
+                  icon="$iconTwitterBird"
+                  class="-translate-x-[2px]"
+                />
               </a>
             </NuxtLink>
             <NuxtLink to="#" external target="_blank">
               <a class="link--primary-base text-primary-darken-1">
-                <VIcon icon="$iconTwitterBird" />
+                <VIcon :size="30" icon="$iconPinterest" />
               </a>
             </NuxtLink>
             <NuxtLink to="#" external target="_blank">
               <a class="link--primary-base text-primary-darken-1">
-                <VIcon icon="$iconPinterest" />
+                <VIcon :size="30" icon="$iconYoutubeText" />
               </a>
             </NuxtLink>
             <NuxtLink to="#" external target="_blank">
               <a class="link--primary-base text-primary-darken-1">
-                <VIcon icon="$iconLinkedin" />
-              </a>
-            </NuxtLink>
-            <NuxtLink to="#" external target="_blank">
-              <a class="link--primary-base text-primary-darken-1">
-                <VIcon icon="$iconYoutubeText" />
-              </a>
-            </NuxtLink>
-            <NuxtLink to="#" external target="_blank">
-              <a class="link--primary-base text-primary-darken-1">
-                <VIcon icon="$iconReddit" />
+                <VIcon
+                  :size="30"
+                  icon="$iconInstagramPourdebon"
+                  class="translate-x-[2px]"
+                />
               </a>
             </NuxtLink>
           </strong>

@@ -97,10 +97,11 @@ watch(search_, debounceSearchHandle);
         <template #image>
           <!--  -->
           <!-- src="/header-main-06-scaled-150.png" -->
+          <!-- src="/header-main-07.png" -->
           <VParallax
             :position="`${xs ? 0 : 14}px 98%`"
             :scale="0.95"
-            src="/header-main-07.png"
+            src="/summer-desktop-02.jpg"
           />
         </template>
 
