@@ -7,7 +7,6 @@ import {
   CompanyDisplayPaneProducts,
 } from "@/components/app";
 import { useDisplay } from "vuetify";
-
 const props = defineProps<{ uid: number }>();
 const emit = defineEmits<{
   (e: "companyName", name: string): void;
@@ -134,7 +133,7 @@ const productsLengthSet = (n: number) => {
         mandatory
         :height="TABS_HEIGHT_AT_MDANDDOWN"
         class="pa-0 ma-0 border-b"
-        grow
+        :grow="712 < width"
       >
         <VTab
           v-for="node in panelLinks"
