@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify";
 import {
+  ProductPublicUrl,
   VChipProductPrice,
   VChipProductPriceBase,
-  ProductPublicUrl,
 } from "@/components/app";
 
 // defs
-const CALC_HEIGHT_PRODUCTS_LIST_OFFSET = 282;
+// const CALC_HEIGHT_PRODUCTS_LIST_OFFSET = 282;
 const props = defineProps<{
   close: () => void;
 }>();
@@ -50,7 +50,7 @@ const {
 );
 
 // computes
-const lHeight = computed(() => height.value - CALC_HEIGHT_PRODUCTS_LIST_OFFSET);
+// const lHeight = computed(() => height.value - CALC_HEIGHT_PRODUCTS_LIST_OFFSET);
 const email_ = computed(() => get(auth.user$, "email"));
 
 // watches
@@ -66,13 +66,20 @@ watch(ID$, async (oid) => {
   props.close();
 });
 
+const refProductsListContainer = ref();
+const { top: topPlsContainer } = useElementBounding(refProductsListContainer);
+const hPlsContainer = computed(() =>
+  Math.floor(height.value - topPlsContainer.value - 1)
+);
+
 // @@eos
 </script>
 <template>
   <VCard
     :min-height="height * 0.91"
-    rounded="t-xl"
-    class="cart-order-confirm--bg-image-svg pt-10 px-6 !bg-stone-100"
+    rounded="ts-xl"
+    class="cart-order-confirm--bg-image-svg pt-10 !bg-stone-100"
+    :class="492 < width ? 'px-6' : 'px-0'"
   >
     <VBtn
       @click="close"
@@ -85,6 +92,7 @@ watch(ID$, async (oid) => {
     >
       <VIcon icon="$close" size="large" />
     </VBtn>
+
     <div class="order--palcer !max-w-[1372px] mx-auto grow !w-full">
       <!-- @@order:title -->
       <VSheet color="transparent">
@@ -123,10 +131,13 @@ watch(ID$, async (oid) => {
         </div>
       </VSheet>
 
-      <VDivider thickness="2" class="border-opacity-50 w-[91%]" />
+      <VDivider class="border-opacity-50 mt-5" />
 
       <!-- @@order:details -->
-      <div class="VContainer--placer pa-4 *bg-blue-100">
+      <div
+        class="VContainer--placer *bg-blue-100"
+        :class="492 < width ? 'pa-4' : 'py-4 px-0'"
+      >
         <VContainer fluid class="*bg-blue-200 pa-0">
           <VRow class="*bg-blue-300" no-gutters>
             <VCol md="6" class="*bg-blue-400">
@@ -141,15 +152,20 @@ watch(ID$, async (oid) => {
                   </template>
                 </VBadge>
               </VCardTitle>
+              <!-- lista artikala -->
               <VCardText
-                :style="mdAndUp ? `height: ${lHeight}px` : undefined"
-                class="max-h-[812px] pt-2 *bg-stone-200 overflow-auto *bg-blue scrollbar-thin-light"
+                ref="refProductsListContainer"
+                :style="mdAndUp ? `height: ${hPlsContainer}px` : undefined"
+                class="pt-2 *bg-stone-200 overflow-auto *bg-blue scrollbar-thin-light"
+                :class="mdAndUp ? 'max-h-[812px]' : undefined"
               >
                 <VDataIterator :items="products" :items-per-page="-1">
                   <template #default="{ items }">
                     <div class="VDataIterator--placer space-y-3">
                       <template v-for="node in items" :key="node.raw.id">
                         <VCard elevation="1" density="comfortable">
+                          <!-- selected product card -->
+                          <!-- row:1 -->
                           <VCardTitle
                             class="d-flex items-center justify-between text-start"
                           >
@@ -172,16 +188,25 @@ watch(ID$, async (oid) => {
                                 </a>
                               </NuxtLink>
                             </ProductPublicUrl>
+
                             <VChipProductPriceBase
                               class="opacity-40"
                               :product="node.raw"
                             />
                           </VCardTitle>
+
+                          <!-- selected product card -->
+                          <!-- row:2 -->
                           <VCardText class="pb-3">
                             <div
                               class="d-flex justify-between items-center pe-3 pt-2"
+                              :class="
+                                512 < width ? 'flex-row' : 'flex-col gap-1'
+                              "
                             >
-                              <p>
+                              <p
+                                :class="512 < width ? undefined : 'text-center'"
+                              >
                                 <small style="font-size: 88%" class="opacity-40"
                                   >Ref#{{ node.raw.id }}</small
                                 >
@@ -198,7 +223,9 @@ watch(ID$, async (oid) => {
                                   node.raw.stockType
                                 }}</small>
                               </p>
-                              <p>
+                              <p
+                                :class="512 < width ? undefined : 'text-center'"
+                              >
                                 <span class="text-medium-emphasis">
                                   Iznos:
                                 </span>
