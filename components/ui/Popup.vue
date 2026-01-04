@@ -6,7 +6,7 @@ import "@/assets/styles/components/Popup.scss";
 // @@eos
 </script>
 <template>
-  <Popper v-bind="$attrs">
+  <Popper>
     <slot></slot>
     <template #content="props">
       <slot name="content" v-bind="props"></slot>

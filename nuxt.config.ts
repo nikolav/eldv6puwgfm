@@ -244,7 +244,6 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       "Open+Sans": true,
-      "Roboto+Mono": true,
     },
     useStylesheet: true,
     download: false,

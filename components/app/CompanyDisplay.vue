@@ -125,22 +125,49 @@ const productsLengthSet = (n: number) => {
 
     <!-- @@data -->
     <VSheet class="*!bg-red-200" ref="refPanel">
-      <!-- show tabs @mdAndDown -->
-      <VTabs
+      <!-- show nav @mdAndDown -->
+      <VItemGroup v-if="!mdAndUp" v-model="tabSelected$" mandatory>
+        <VItem v-for="node in panelLinks" :key="node.title" :value="node.title">
+          <template #default="{ toggle, isSelected }">
+            <VBtn
+              :size="432 < width ? 'large' : 366 < width ? undefined : 36"
+              rounded="0"
+              @click="toggle"
+              :variant="isSelected ? 'flat' : 'plain'"
+              class="text-none"
+              :color="isSelected ? 'primary-lighten-1' : undefined"
+            >
+              <VIcon
+                v-if="766 < width || width < 612"
+                :start="612 < width"
+                :icon="node.icon"
+                :size="432 < width ? node.size : 22"
+              />
+              <span v-if="612 < width">
+                {{ node.title }}
+              </span>
+            </VBtn>
+          </template>
+        </VItem>
+      </VItemGroup>
+      <!-- :height="TABS_HEIGHT_AT_MDANDDOWN" -->
+      <!-- <VTabs
         v-if="!mdAndUp"
         v-model="tabSelected$"
         color="primary-lighten-1"
         mandatory
-        :height="TABS_HEIGHT_AT_MDANDDOWN"
         class="pa-0 ma-0 border-b"
         :grow="712 < width"
+        density="compact"
       >
         <VTab
           v-for="node in panelLinks"
+          size="x-small"
+          density="compact"
           :variant="node.title == tabSelected$ ? 'flat' : 'plain'"
           :key="node.title"
           :value="node.title"
-          class="text-none"
+          class="text-none px-0"
         >
           <span>{{ node.title }}</span>
           <template #prepend>
@@ -164,7 +191,7 @@ const productsLengthSet = (n: number) => {
             </VBadge>
           </template>
         </VTab>
-      </VTabs>
+      </VTabs> -->
       <VContainer fluid class="pa-0 ma-0">
         <VRow no-gutters class="pa-0 ma-0">
           <!-- panels -->

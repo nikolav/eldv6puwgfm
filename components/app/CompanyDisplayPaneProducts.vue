@@ -38,20 +38,19 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
       <VHover open-delay="345">
         <template #default="{ isHovering, props: props_ }">
           <VSheet
-            v-bind="props_"
             elevation="1"
             class="!bg-stone-50 me-2"
             :class="
-              555 < width
+              582 < width
                 ? '!grid grid-cols-[155px,1fr,auto]'
                 : '!grid grid-cols-[1fr,auto]'
             "
             :height="PRODUCT_ITEM_MAX_HEIGHT"
-            :max-height="PRODUCT_ITEM_MAX_HEIGHT"
             rounded
+            v-bind="props_"
           >
             <!-- image -->
-            <ProductImages v-if="555 < width" :product="p" v-slot="{ images }">
+            <ProductImages v-if="582 < width" :product="p" v-slot="{ images }">
               <VImg
                 rounded="s-lg"
                 @click="
@@ -70,7 +69,7 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
 
             <!-- body -->
             <div
-              class="*text-sm text-truncate d-flex flex-col justify-between pb-3 ps-3"
+              class="bg-red-200 text-truncate d-flex flex-col justify-between pb-3 ps-3"
             >
               <ProductPublicUrl :product="p" v-slot="{ url }">
                 <NuxtLink :to="url" external target="_blank"
@@ -100,7 +99,12 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
                     text="Zaliha"
                   />
                 </VChip>
-                <ProductCategory :product="p" v-slot="{ category }">
+
+                <ProductCategory
+                  v-if="422 < width"
+                  :product="p"
+                  v-slot="{ category }"
+                >
                   <VChip size="small" v-if="category" class="!w-fit">
                     <template #prepend>
                       <VIcon
@@ -125,7 +129,7 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
 
             <!-- cell:end -->
             <div
-              class="*bg-green-200 d-flex flex-col items-end justify-between pa-2"
+              class="bg-green-200 d-flex flex-col items-end justify-between pa-2"
             >
               <div class="d-flex items-center">
                 <!-- @@ -->
@@ -140,7 +144,7 @@ const gallery = (p: IProduct, images: IDoc<IStorageFileInfo>[]) =>
                 </span>
                 <AddToCartButtonPrimary class="ms-5" :size="48" :product="p" />
               </div>
-              <VChipProductPrice :product="p" />
+              <VChipProductPrice size="small" :product="p" />
             </div>
           </VSheet>
         </template>

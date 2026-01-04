@@ -80,11 +80,12 @@ const calLink$ = ref();
             <div class="d-flex items-center px-1 pe-3 mb-3 gap-5">
               <!-- ratings -->
               <TopicRating
+                v-if="false"
                 :small="!smAndUp ? true : undefined"
                 text
                 :topic="`${COM_RATING_prefix}${uid_}`"
               />
-              <VSpacer />
+              <VSpacer v-if="false" />
               <!-- user gallery @lgAndDown  -->
               <LightboxImages v-if="!lgAndUp" :images="comPhotos">
                 <template
@@ -149,7 +150,7 @@ const calLink$ = ref();
               </VBtn>
             </div>
             <!-- cart:open -->
-            <div class="position-absolute end-2 mt-2">
+            <div v-if="false" class="position-absolute end-2 mt-2">
               <CartOpenBadgePrimary
                 :badge-offset="10"
                 elevation="4"
