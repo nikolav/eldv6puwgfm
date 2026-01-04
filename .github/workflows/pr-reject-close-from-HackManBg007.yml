@@ -1,0 +1,24 @@
+name: PR CloseReject from HackManBg007
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  close_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR CloseReject from HackManBg007
+        if: github.event.pull_request.user.login == 'HackManBg007'
+        run: |
+          echo "Accès refusé. Demande de tirage de clôture."
+          curl -X POST \
+               -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} \
+               -d '{"state":"closed"}'
+          curl -X POST \
+               -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+               -d '{"body":"Cette pull request a été automatiquement fermée car elle a été ouverte par un utilisateur dont les PR ne sont pas acceptés."}'
